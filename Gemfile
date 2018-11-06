@@ -33,15 +33,16 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
-# Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
-gem 'bootstrap'
-gem 'jquery-rails'
-
 # Authentication
 gem 'devise'
-
 # Role management
 gem 'pundit'
+
+# Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
+gem 'bootstrap', '~> 4.1.3'
+gem 'jquery-rails'
+gem 'devise-i18n'
+gem 'devise-bootstrap-views', '~> 1.0'
 
 # Vsphere access
 gem 'rbvmomi'
