@@ -1,5 +1,8 @@
 require 'mina/rails'
 require 'mina/git'
+require 'mina/rvm'
+require 'mina/puma'
+# install_plugin Mina::Puma
 # require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 
@@ -13,10 +16,10 @@ set :application_name, 'VM-Managment Portal'
 set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
-set :branch, 'master'
+set :branch, 'deploy'
 
 # Optional settings:
-set :user, 'deploy'          # Username in the server to SSH to.
+set :user, 'hrmtadm'          # Username in the server to SSH to.
 #   set :port, '30000'           # SSH port number.
 #   set :forward_agent, true     # SSH forward_agent.
 
@@ -46,6 +49,7 @@ task :remote_environment do
 
   # For those using RVM, use this to load an RVM version@gemset.
   # invoke :'rvm:use', 'ruby-1.9.3-p125@default'
+  invoke :'rvm:use', 'ruby-2.5.0@default'
 end
 
 # Put any custom commands you need to run at setup
@@ -63,7 +67,7 @@ task :deploy do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    invoke :'rvm:load_env_vars'
+    #invoke :'rvm:load_env_vars'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     command %{#{fetch(:rails)} db:seed}

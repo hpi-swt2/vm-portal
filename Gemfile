@@ -47,6 +47,12 @@ gem 'devise-bootstrap-views', '~> 1.0'
 # Vsphere access
 gem 'rbvmomi'
 
+# Mina for deployment
+gem 'mina', require: false
+gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
+gem 'therubyracer', require: false
+gem 'execjs', require: false
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -75,8 +81,8 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Mina for deployment
-  gem 'mina', require: false
-  gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
+  #gem 'mina', require: false
+  #gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 end
 
 group :test do
