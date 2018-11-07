@@ -74,6 +74,9 @@ group :development do
   # Much nicer error pages https://github.com/BetterErrors/better_errors
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Mina for deployment
+  gem 'mina', require: false
+  gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 end
 
 group :test do
