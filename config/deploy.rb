@@ -32,6 +32,7 @@ set :user, 'hrmtadm'          # Username in the server to SSH to.
 set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/sockets', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml', 'config/puma.rb')
 set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
+set :linked_files, %w{config/master.key}
 
 task :setup do
   command %[touch "#{fetch(:shared_path)}/config/database.yml"]
