@@ -20,6 +20,7 @@ set :branch, 'deploy'
 
 # Optional settings:
 set :user, 'hrmtadm'          # Username in the server to SSH to.
+set :identity_file, '/home/hrmtadm/.ssh/id_rsa'
 #   set :port, '30000'           # SSH port number.
 #   set :forward_agent, true     # SSH forward_agent.
 
