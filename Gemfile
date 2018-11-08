@@ -51,7 +51,7 @@ gem 'rbvmomi'
 # Mina for deployment
 gem 'mina', require: false
 gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
-gem 'therubyracer', require: false
+gem 'mini_racer', require: false
 gem 'execjs', require: false
 
 # Use Capistrano for deployment
