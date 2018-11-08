@@ -88,6 +88,12 @@ task :deploy do
   # run(:local){ say 'done' }
 end
 
+desc "Restarts the puma server"
+task :restart => :remote_environment do
+ invoke :'puma:stop'
+ invoke :'puma:start'
+end
+
 # For help in making your deploy script, see the Mina documentation:
 #
 #  - https://github.com/mina-deploy/mina/tree/master/docs
