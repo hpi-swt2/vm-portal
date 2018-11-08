@@ -1,5 +1,15 @@
-<h1>Vm#index</h1>
-<% @vms.each do |vm| %>
-  <p><%= vm[:name]%></p>
-<% end %>
-<p>Find me in app/views/vm/index.html.erb</p>
+<h1>
+  Virtual Machines
+  <small class="text-muted">This is the overview page for all currently existing vms</small>
+</h1>
+<ul class="list-group">
+  <% @vms.each do |vm| %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="col-4"><%= vm[:name]%></span>
+        <span class="col-4">Running since: <%= vm[:boot_time]%></span>
+        <div class="col-1"><%= button_to "Delete",
+                           {controller: :vm, action: 'destroy', id: vm[:name] },
+                           method: :delete, class: "btn btn-danger" %></div>
+      </li>
+  <% end %>
+</ul>
