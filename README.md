@@ -1,6 +1,6 @@
 # VM-Portal
 
-This rails app enables managing of VMs via VSphere
+This [Ruby on Rails](https://rubyonrails.org/) application enables managing of VMs via [VMware vSphere](https://en.wikipedia.org/wiki/VMware_vSphere).
 
 ## Local Setup
 
