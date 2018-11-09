@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.0'
 
-# Gems to instalL: faker, shoulda matchers
+# Gems to install: faker, shoulda matchers
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use sqlite3 and postgres as the database for Active Record
@@ -17,7 +17,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'mini_racer', platforms: :ruby
+gem 'mini_racer', platforms: :ruby
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -33,9 +33,11 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
-# Authentication
+# Flexible authentication solution for Rails with Warden
+# https://github.com/plataformatec/devise
 gem 'devise'
-# Role management
+# Role management, minimal authorization through OO design and pure Ruby classes
+# https://github.com/varvet/pundit
 gem 'pundit'
 
 # Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
@@ -44,7 +46,8 @@ gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'jquery-rails'
 
-# Vsphere access
+# Ruby interface to the VMware vSphere API
+# https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
 # Mina for deployment 
@@ -54,9 +57,6 @@ gem 'mina', require: false
 gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 gem 'mini_racer', require: false
 gem 'execjs', require: false
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

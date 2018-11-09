@@ -3,5 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "can be created using the User factory" do
+    @user = FactoryBot.create(:user)
+    expect(@user.email).to include '@'
+  end
 end

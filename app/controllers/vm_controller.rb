@@ -15,7 +15,6 @@ class VmController < ApplicationController
   end
 
   def create
-    puts params
     VmApi.new.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
     redirect_to action: :index
   end
