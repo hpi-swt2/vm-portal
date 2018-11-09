@@ -35,20 +35,9 @@ set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/
 set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
 #set :linked_files, %w{config/master.key}
 
-task :setup do
-  command %[touch "#{fetch(:shared_path)}/config/database.yml"]
-  command %[touch "#{fetch(:shared_path)}/config/secrets.yml"]
-  command %[touch "#{fetch(:shared_path)}/config/puma.rb"]
-  comment "Be sure to edit '#{fetch(:shared_path)}/config/database.yml', 'secrets.yml' and puma.rb."
-end
-
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
 task :remote_environment do
-  # If you're using rbenv, use this to load the rbenv environment.
-  # Be sure to commit your .ruby-version or .rbenv-version to your repository.
-  # invoke :'rbenv:load'
-
   # For those using RVM, use this to load an RVM version@gemset.
   # invoke :'rvm:use', 'ruby-1.9.3-p125@default'
   invoke :'rvm:use', 'ruby-2.5.0@default'
@@ -57,7 +46,8 @@ end
 # Put any custom commands you need to run at setup
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
-  # command %{rbenv install 2.3.0 --skip-existing}
+  invoke :'rails:db_create'
+  invoke :'puma:start'
 end
 
 desc "Deploys the current version to the server."
@@ -77,10 +67,6 @@ task :deploy do
     invoke :'deploy:cleanup'
 
     on :launch do
-      in_path(fetch(:current_path)) do
-        command %{mkdir -p tmp/}
-        command %{touch tmp/restart.txt}
-      end
       invoke :'puma:phased_restart'
     end
   end
