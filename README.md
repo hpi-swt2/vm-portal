@@ -10,27 +10,8 @@ This rails app enables managing of VMs via VSphere
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
 * `bundle exec rspec` Run all the tests (using the [RSpec](http://rspec.info/) test framework)
 
-## Setup using Vagrant (Virtual Machine)
-
-If you want to use a VM to setup the project (e.g. when on Windows), we recommend [Vagrant](https://www.vagrantup.com/).
+If you want to use a VM to setup the project (e.g. when on Windows), we recommend [Vagrant](https://www.vagrantup.com/) in combination with [Virtualbox](https://www.virtualbox.org/).
 Please keep in mind that this method may lead to a loss in performance, due to the added abstraction layer.
-
-```
-vagrant up # bring up the VM
-vagrant ssh # login using SSH
-cd hpi-swt2
-echo "gem: --no-document" >> ~/.gemrc # disable docs for gems
-bundle install # install dependencies
-gem install pg # required for Postgres usage
-cp config/database.psql.yml config/database.yml # in case you want to use Postgres
-cp config/database.sqlite.yml config/database.yml # in case you want to user SQLite
-exit # restart the session, required step
-vagrant ssh # reconnect to the VM
-cd hpi-swt2
-rails s -b 0 # start the rails server
-# the -b part is necessary since the app is running in a VM and would
-# otherwise drop the requests coming from the host OS
-```
 
 ## Developer guide
 1. Testing  
