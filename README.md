@@ -1,6 +1,6 @@
 # VM-Portal
 
-This [Ruby on Rails](https://rubyonrails.org/) application enables managing of VMs via [VMware vSphere](https://en.wikipedia.org/wiki/VMware_vSphere).
+This [Ruby on Rails](https://rubyonrails.org/) application enables managing of VMs via [VMware vSphere](https://en.wikipedia.org/wiki/VMware_vSphere). [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hpi-swt2/vm-portal/blob/master/LICENSE)
 
 Branch | Travis CI  | Code Analysis
 ------ | ---------- | -------------
