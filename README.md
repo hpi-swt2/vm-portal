@@ -21,3 +21,14 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 2. Linting  
 * Rubocop is installed, run `bundle exec rubocop` to find problems.
 * Use `--auto-correct` to fix what can be fixed automatically.
+
+### Development Commands
+* `bundle exec rails db:migrate RAILS_ENV=development && bundle exec rails db:migrate RAILS_ENV=test` Migrate dbs
+* `bundle exec rails assets:clobber && bundle exec rails assets:precompile` Redo asset generation
+* `bundle exec rspec spec/<rest_of_file_path>.rb` Specify a folder or test file to run
+* `rails c --sandbox` Test out some code in the Rails console without changing any data
+* `rails g migration DoSomething` Create migration _db/migrate/*_DoSomething.rb_.
+* `rails dbconsole` Starts the CLI of the database you're using
+* `bundle exec rails routes` Show all the routes (and their names) of the application
+* `bundle exec rails about` Show stats on current Rails installation, including version numbers
+* `bundle exec rspec --profile` examine how much time individual tests take
