@@ -1,0 +1,20 @@
+# If the ruby version is not specified by the 'rvm' key,
+# Travis CI uses the version specified in the .ruby-version file
+# in the root of the repository if one is available.
+# https://docs.travis-ci.com/user/languages/ruby/#using-ruby-version
+language: ruby
+# Caching the bundle between builds drastically reduces the time a build takes to run
+# https://docs.travis-ci.com/user/caching/#enabling-bundler-caching
+cache: bundler
+# https://docs.travis-ci.com/user/job-lifecycle#customizing-the-installation-phase
+install:
+ - bundle install
+# You can run custom commands before the installation phase (before_install),
+# and before (before_script) or after (after_script) the script phase.
+# https://docs.travis-ci.com/user/job-lifecycle#the-job-lifecycle
+before_script:
+ - RAILS_ENV=test bundle exec rails db:migrate
+# script: run the build script
+# https://docs.travis-ci.com/user/job-lifecycle#customizing-the-build-phase
+script:
+ - bundle exec rspec spec/
