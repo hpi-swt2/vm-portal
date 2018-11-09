@@ -2,6 +2,10 @@
 
 This [Ruby on Rails](https://rubyonrails.org/) application enables managing of VMs via [VMware vSphere](https://en.wikipedia.org/wiki/VMware_vSphere).
 
+Branch | Travis CI  | Code Analysis
+------ | ---------- | -------------
+master  | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/vm-portal) | --- |
+
 ## Local Setup
 
 * `bundle install` Install the required Ruby gem dependencies defined in the Gemfile
