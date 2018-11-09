@@ -4,7 +4,7 @@ This rails app enables managing of VMs via VSphere
 
 ## Local Setup
 
-* `bundle install` Install the required Ruby gem dependencies defined in the [Gemfile](https://github.com/hpi-swt2/workshop-portal/blob/production/Gemfile)
+* `bundle install` Install the required Ruby gem dependencies defined in the Gemfile
 * Check `database.yml` for the correct database config (for development we recommend SQLite) 
 * `rake db:create db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
