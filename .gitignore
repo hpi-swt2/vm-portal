@@ -30,9 +30,5 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Ignore config files
-/config/database.yml
-/config/puma.yml
-
 # Ignore idea development environment files
 /.idea

@@ -21,9 +21,5 @@ test:
   database: db/test.sqlite3
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: production
-  pool: 5
-  username: hrmtadm
-  password:
+  <<: *default
+  database: db/production.sqlite3
