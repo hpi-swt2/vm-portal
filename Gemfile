@@ -10,7 +10,6 @@ ruby '2.5.0'
 gem 'rails', '~> 5.2.1'
 # Use sqlite3 and postgres as the database for Active Record
 gem 'sqlite3' # development and testing
-gem 'pg'      # production
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -48,7 +47,9 @@ gem 'jquery-rails'
 # Vsphere access
 gem 'rbvmomi'
 
-# Mina for deployment
+# Mina for deployment 
+# Have a look in the tutorial:
+# https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
 gem 'mina', require: false
 gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 gem 'mini_racer', require: false
@@ -81,9 +82,6 @@ group :development do
   # Much nicer error pages https://github.com/BetterErrors/better_errors
   gem 'better_errors'
   gem 'binding_of_caller'
-  # Mina for deployment
-  #gem 'mina', require: false
-  #gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 end
 
 group :test do
@@ -96,6 +94,10 @@ group :test do
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', '4.0.0.rc1'
+end
+
+group :production do
+  gem 'pg'      # production database runs on postgres
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
