@@ -8,8 +8,8 @@ ruby '2.5.0'
 # Gems to install: faker, shoulda matchers
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# Use sqlite3 and postgres as the database for Active Record
+gem 'sqlite3' # development and testing
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -50,6 +50,14 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
+# Mina for deployment 
+# Have a look in the tutorial:
+# https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
+gem 'mina', require: false
+gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
+gem 'mini_racer', require: false
+gem 'execjs', require: false
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
@@ -86,6 +94,10 @@ group :test do
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', '4.0.0.rc1'
+end
+
+group :production do
+  gem 'pg'      # production database runs on postgres
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
