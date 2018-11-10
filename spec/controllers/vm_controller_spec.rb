@@ -4,37 +4,46 @@ require 'rails_helper'
 
 RSpec.describe VmController, type: :controller do
   describe 'GET #index' do
+
+    before :each do
+      double_api = double
+      expect(double_api).to receive(:all_vms).and_return [{name:'My insanely cool vm', state: true, boot_time: 'Thursday'}]
+      allow(VmApi).to receive(:new).and_return double_api
+    end
+
     it 'returns http success' do
       get :index
       expect(response).to have_http_status(:success)
     end
+
+    it 'renders index page' do
+      expect(get :index).to render_template('vm/index')
+    end
   end
 
-  describe 'GET #show' do
+  describe 'DELETE #destroy' do
+    before :each do
+      double_api = double
+      expect(double_api).to receive(:delete_vm)
+      allow(VmApi).to receive(:new).and_return double_api
+    end
+
     it 'returns http success' do
-      get :show
+      delete :destroy, params: {id: 'my insanely cool vm'}
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe 'GET #update' do
-    it 'returns http success' do
-      get :update
-      expect(response).to have_http_status(:success)
+  describe 'POST #create' do
+    before :each do
+      double_api = double
+      expect(double_api).to receive(:create_vm)
+      allow(VmApi).to receive(:new).and_return double_api
     end
-  end
 
-  describe 'GET #delete' do
     it 'returns http success' do
-      get :delete
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe 'GET #create' do
-    it 'returns http success' do
-      get :create
-      expect(response).to have_http_status(:success)
+      post :create, params: {name: 'My insanely cool vm', ram: '1024', capacity: '10000', cpu: 2}
+      expect(response).to redirect_to(vm_index_path)
     end
   end
 
@@ -43,5 +52,10 @@ RSpec.describe VmController, type: :controller do
       get :new
       expect(response).to have_http_status(:success)
     end
+
+    it 'renders new page' do
+      expect(get :new).to render_template('vm/new')
+    end
+
   end
 end
