@@ -2,9 +2,6 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
-# install_plugin Mina::Puma
-# require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
-# require 'mina/rvm'    # for rvm support. (https://rvm.io)
 
 # Basic settings:
 #   domain       - The hostname to SSH to.
@@ -16,7 +13,7 @@ set :application_name, 'VM-Managment Portal'
 set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
-set :branch, 'deploy'
+set :branch, 'master'
 
 # Optional settings:
 set :user, 'hrmtadm'          # Username in the server to SSH to.
