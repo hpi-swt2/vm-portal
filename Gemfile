@@ -57,6 +57,7 @@ gem 'mina', require: false
 gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
 gem 'mini_racer', require: false
 gem 'execjs', require: false
+gem 'mina-slack', github: 'krichly/mina-slack'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
