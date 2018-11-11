@@ -77,7 +77,7 @@ task :deploy do
 
     on :launch do
       invoke :'puma:phased_restart'
-      invoke :'slack:postinfo'
+      invoke :'slack:post_info'
     end
   end
 
