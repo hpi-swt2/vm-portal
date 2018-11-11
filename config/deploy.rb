@@ -3,16 +3,18 @@ require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
 
-# Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
+# For help in making your deploy script, see the Mina documentation:
+# https://github.com/mina-deploy/mina/tree/master/docs
 
-set :application_name, 'VM-Managment Portal'
+# Basic settings:
+set :application_name, 'VM-Management Portal'
+# The hostname to SSH to.
 set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
+# Path to deploy into.
 set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
+# Git repo to clone from. (needed by mina/git)
 set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
+# Branch name to deploy. (needed by mina/git)
 set :branch, 'master'
 
 # Optional settings:
@@ -54,6 +56,7 @@ task :deploy do
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
+    comment "Deploying #{fetch(:repository)} (#{fetch(:branch)}) to #{fetch(:domain)}"
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     #invoke :'rvm:load_env_vars'
@@ -77,7 +80,3 @@ task :restart => :remote_environment do
  invoke :'puma:stop'
  invoke :'puma:start'
 end
-
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - https://github.com/mina-deploy/mina/tree/master/docs
