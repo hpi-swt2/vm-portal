@@ -4,9 +4,22 @@ require './app/api/vmapi.rb'
 
 RSpec.describe VmApi do
   let(:api) {VmApi.new}
+
   describe '#connect' do
+    let(:setup_methods) do
+      [:serviceInstance, :find_datacenter, :hostFolder, :vmFolder, :children, :first, :resourcePool]
+    end
+
+    let(:double_api) do
+      doub_api = double
+      setup_methods.each do |method|
+        allow(doub_api).to receive(method).and_return(doub_api)
+      end
+      doub_api
+    end
+
     it 'connects to server and retrieves basic information' do
-      mock_connect
+      expect(RbVmomi::VIM).to receive(:connect).and_return(double_api)
       api.send(:connect)
     end
   end
@@ -80,7 +93,7 @@ RSpec.describe VmApi do
           super()
       end
 
-      it 'deletes vm' do
+      it 'turns vm off and deletes vm' do
         api.delete_vm Faker::FunnyName.name
       end
     end
@@ -121,19 +134,7 @@ RSpec.describe VmApi do
       it 'changes PowerState' do
         api.change_power_state(Faker::FunnyName.name, false)
       end
-
     end
-  end
-end
 
-def mock_connect
-  double_api = double
-  callable_methods.each do |method|
-    allow(double_api).to receive(method).and_return(double_api)
   end
-  expect(RbVmomi::VIM).to receive(:connect).and_return(double_api)
-end
-
-def callable_methods
-  [:serviceInstance, :find_datacenter, :hostFolder, :vmFolder, :children, :first, :resourcePool]
 end

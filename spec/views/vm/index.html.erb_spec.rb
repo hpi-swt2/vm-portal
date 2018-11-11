@@ -17,10 +17,10 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   end
 
   it 'renders the vms name' do
-    rendered.should include vm[:name]
+    expect(rendered).to include vm[:name]
   end
 
   it 'renders the boot time' do
-    rendered.should include vm[:boot_time]
+    expect(rendered).to include vm[:boot_time]
   end
 end
