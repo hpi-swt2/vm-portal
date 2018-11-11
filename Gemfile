@@ -55,6 +55,9 @@ gem 'rbvmomi'
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
 gem 'mina', require: false
 gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
+# Tail production logs, https://github.com/windy/mina-logs
+# $ mina logs # tail -f log/production.log
+gem 'mina-logs', require: false
 gem 'execjs', require: false
 
 # Reduces boot times through caching; required in config/boot.rb

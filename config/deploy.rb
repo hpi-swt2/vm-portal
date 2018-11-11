@@ -2,6 +2,7 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
+require 'mina/logs'
 
 # For help in making your deploy script, see the Mina documentation:
 # https://github.com/mina-deploy/mina/tree/master/docs
