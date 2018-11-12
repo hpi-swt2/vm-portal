@@ -23,6 +23,13 @@ class VmApi
     end
   end
 
+  def all_hosts
+    connect
+    @hosts.map do |host|
+      { name: host.name, stats: host.stats, cores: host.summary[:numCpuCores], threads: host.summary[:numCpuThreads] }
+    end
+  end
+
   def delete_vm(name)
     connect
     vm = find_vm(name)
