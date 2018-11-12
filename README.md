@@ -53,8 +53,10 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 * `bundle exec rspec --profile` examine how much time individual tests take
 
 ### Linting
-* Rubocop is installed, run `bundle exec rubocop` to find problems.
+* [RuboCop](https://github.com/rubocop-hq) is a Ruby static code analyzer and formatter, based on the community [Ruby style guide](https://github.com/rubocop-hq/ruby-style-guide)
+* It is installed in the project. Run `bundle exec rubocop` to find possible issues.
 * Use `--auto-correct` to fix what can be fixed automatically.
+* The behavior of RuboCop can be [controlled](https://docs.rubocop.org/en/latest/configuration/) via a `.rubocop.yml` configuration file
 
 ### Debugging
 * `rails c --sandbox` Test out some code in the Rails console without changing any data
