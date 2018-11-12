@@ -1,7 +1,7 @@
 # Configuration for mina dev deployment.
 # Loaded from config/deploy.rb
 
-# The hostname to SSH to
+# The hostname to SSH to (dev)
 set :domain, 'vm-swt-hrmt-dev.eaalab.hpi.uni-potsdam.de'
 # Path to deploy into
 set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de/'
