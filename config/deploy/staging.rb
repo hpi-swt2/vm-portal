@@ -9,6 +9,5 @@ set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de/'
 set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
 # Branch name to deploy. (needed by mina/git)
 set :branch, 'dev'
-# Slack stage identifier
+# Slack stage identifier (needed by mina/slack)
 set :slack_stage, 'dev'
-
