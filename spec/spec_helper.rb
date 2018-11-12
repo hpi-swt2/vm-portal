@@ -28,7 +28,13 @@ SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter,
   Coveralls::SimpleCov::Formatter
 ]
-SimpleCov.start('rails')
+SimpleCov.start('rails') do
+  add_filter do |source_file|
+    # Ignore files for code coverage that have 4 lines or fewer of code
+    # https://www.rubydoc.info/github/colszowka/simplecov/SimpleCov/SourceFile#lines_of_code-instance_method
+    source_file.lines_of_code <= 4
+  end
+end
 
 # Load FactoryBot config
 require 'support/factory_bot'
