@@ -3,20 +3,21 @@ require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
 require 'mina/logs'
+require 'mina/multistage'
 
 # For help in making your deploy script, see the Mina documentation:
 # https://github.com/mina-deploy/mina/tree/master/docs
 
 # Basic settings:
-set :application_name, 'VM-Management Portal'
+#set :application_name, 'VM-Management Portal'
 # The hostname to SSH to.
-set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
+#set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 # Path to deploy into.
-set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
+#set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
 # Git repo to clone from. (needed by mina/git)
-set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
+#set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
 # Branch name to deploy. (needed by mina/git)
-set :branch, 'master'
+#set :branch, 'master'
 
 # Optional settings:
 set :user, 'hrmtadm'          # Username in the server to SSH to.
