@@ -9,7 +9,7 @@ master  | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=m
 ## Local Setup
 
 * `bundle install` Install the required Ruby gem dependencies defined in the Gemfile
-* Check `database.yml` for the correct database config (for development we recommend SQLite) 
+* Check `config/database.yml` for the correct database config (for development we recommend SQLite)
 * `rails db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
 * `bundle exec rspec` Run all the tests (using the [RSpec](http://rspec.info/) test framework)
