@@ -9,7 +9,7 @@ dev    |    ---     | [![Maintainability](https://api.codeclimate.com/v1/badges/
 
 ## Local Setup
 
-* `bundle install` Install the required Ruby gem dependencies defined in the Gemfile
+* `bundle install --without production` Install the required Ruby gem dependencies defined in the Gemfile, skipping gems used for production (like [pg](https://rubygems.org/gems/pg/))
 * Check `config/database.yml` for the correct database config (for development we recommend SQLite)
 * `rails db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
@@ -26,7 +26,7 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 
 ### Inside the VM
 * `cd hpi-swt2`
-* `bundle install` Update dependencies
+* `bundle install --without production` Update dependencies
 * `rails db:migrate db:seed` Run migrations, update database
 * `rails s -b 0` Start the rails server, the -b part is necessary since the app is running in a VM and would otherwise drop the requests coming from the host OS
 * `exit` Exit SSH session
