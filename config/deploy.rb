@@ -9,15 +9,9 @@ require 'mina/multistage'
 # https://github.com/mina-deploy/mina/tree/master/docs
 
 # Basic settings:
-#set :application_name, 'VM-Management Portal'
-# The hostname to SSH to.
-#set :domain, 'vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
-# Path to deploy into.
-#set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de'
-# Git repo to clone from. (needed by mina/git)
-#set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
-# Branch name to deploy. (needed by mina/git)
-#set :branch, 'master'
+# domain, deploy_to, repository and branch are defined in stage files
+# see config/deploy/<stage>.rb
+set :application_name, 'VM-Management Portal'
 
 # Optional settings:
 set :user, 'hrmtadm'          # Username in the server to SSH to.
