@@ -42,7 +42,7 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 ## Developer Guide
 
 ### Setup
-* `bundle exec rails db:migrate RAILS_ENV=development && bundle exec rails db:migrate RAILS_ENV=test` Migrate dbs
+* `bundle exec rails db:migrate RAILS_ENV=development && bundle exec rails db:migrate RAILS_ENV=test` Migrate both test and development databases
 * `bundle exec rails assets:clobber && bundle exec rails assets:precompile` Redo asset generation
 
 ### Testing
