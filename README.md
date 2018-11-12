@@ -10,12 +10,31 @@ master  | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=m
 
 * `bundle install` Install the required Ruby gem dependencies defined in the Gemfile
 * Check `database.yml` for the correct database config (for development we recommend SQLite) 
-* `rails db:create db:migrate db:seed` Setup database, run migrations, seed the database with defaults
+* `rails db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
 * `bundle exec rspec` Run all the tests (using the [RSpec](http://rspec.info/) test framework)
 
-If you want to use a VM to setup the project (e.g. when on Windows), we recommend [Vagrant](https://www.vagrantup.com/) in combination with [Virtualbox](https://www.virtualbox.org/).
+## Setup using Vagrant (Virtual Machine)
+
+If you want to use a VM to setup the project (e.g. when on Windows), we recommend [Vagrant](https://www.vagrantup.com/) in combination with [Virtualbox](https://www.virtualbox.org/). The `Vagrantfile` in the project root contains the needed configuration. If you have trouble starting the VM, try changing the parameters to adapt to your hardware.
 Please keep in mind that this method may lead to a loss in performance, due to the added abstraction layer.
+
+### Start VM
+* `vagrant up` Download and start the VM
+* `vagrant ssh` Login using SSH
+
+### Inside the VM
+* `cd hpi-swt2`
+* `bundle install` Update dependencies
+* `rails db:migrate db:seed` Run migrations, update database
+* `rails s -b 0` Start the rails server, the -b part is necessary since the app is running in a VM and would otherwise drop the requests coming from the host OS
+* `exit` Exit SSH session
+
+### Stop VM
+
+* `vagrant halt` Shuts down the VM
+* `vagrant global-status` Shows status of all Vagrant VMs
+
 
 ## Developer guide
 
