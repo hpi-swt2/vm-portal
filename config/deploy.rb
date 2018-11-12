@@ -2,6 +2,7 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
+require 'mina/slack'
 require 'mina/logs'
 require 'mina/multistage'
 
@@ -29,6 +30,14 @@ set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/sockets',
 set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb', 'config/master.key')
 set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
 #set :linked_files, %w{config/master.key}
+
+# Settings for Slack Integration
+# Documentation: https://github.com/krichly/mina-slack
+set :slack_hook, 'https://hooks.slack.com/services/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' # Slack hook URL
+set :slack_username, 'Deploy Bot' # displayed as name of message sender
+set :slack_emoji, ':cloud:' # will be used as the avatar for the message
+# slack stage defined in stage files (config/deploy/*.rb)
+
 
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -64,6 +73,7 @@ task :deploy do
 
     on :launch do
       invoke :'puma:phased_restart'
+      invoke :'slack:post_info'
     end
   end
 
