@@ -6,11 +6,8 @@ class VmController < ApplicationController
     @vms = VmApi.new.all_vms
   end
 
-  def show; end
-
-  def update; end
-
   def destroy
+    # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
     VmApi.new.delete_vm(params[:id])
   end
 
@@ -21,5 +18,7 @@ class VmController < ApplicationController
 
   def new; end
 
-  def edit; end
+  # This controller doesn't use strong parameters
+  # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
+  # Because no Active Record model is being wrapped
 end
