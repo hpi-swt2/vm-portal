@@ -36,7 +36,7 @@ set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
 set :slack_hook, 'https://hooks.slack.com/services/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' # Slack hook URL
 set :slack_username, 'Deploy Bot' # displayed as name of message sender
 set :slack_emoji, ':cloud:' # will be used as the avatar for the message
-set :slack_stage, 'master' # will be used to specify the deployment environment
+# slack stage defined in stage files (config/deploy/*.rb)
 
 
 # This task is the environment that is loaded for all remote run commands, such as
