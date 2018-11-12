@@ -105,6 +105,8 @@ group :test do
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', '4.0.0.rc1'
+  # Code coverage for Ruby, https://github.com/colszowka/simplecov
+  gem 'simplecov', require: false
 end
 
 group :production do

@@ -17,9 +17,18 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 # https://docs.coveralls.io/ruby-on-rails
+require 'simplecov'
 require 'coveralls'
 # https://docs.coveralls.io/ruby-on-rails#simplecov-customization
-Coveralls.wear!('rails')
+# Generate local coverage report as well as send data to coveralls.io
+# Usage of 'MultiFormatter' (used in the coveralls docs) is deprecated, see:
+# https://github.com/colszowka/simplecov/blob/master/features/config_formatters.feature
+# https://github.com/lemurheavy/coveralls-public/issues/1223
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start('rails')
 
 # Load FactoryBot config
 require 'support/factory_bot'
