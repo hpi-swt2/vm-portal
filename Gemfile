@@ -67,6 +67,11 @@ gem 'execjs', require: false
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+# Coveralls is a web service to help you track your code coverage
+# over time, and ensure that all your new code is fully covered
+# https://coveralls.io/github/hpi-swt2/vm-portal
+gem 'coveralls', require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

@@ -16,6 +16,11 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+# https://docs.coveralls.io/ruby-on-rails
+require 'coveralls'
+# https://docs.coveralls.io/ruby-on-rails#simplecov-customization
+Coveralls.wear!('rails')
+
 # Load FactoryBot config
 require 'support/factory_bot'
 

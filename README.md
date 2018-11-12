@@ -2,10 +2,10 @@
 
 This [Ruby on Rails](https://rubyonrails.org/) application enables managing of virtual machines via [VMware vSphere](https://en.wikipedia.org/wiki/VMware_vSphere). [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hpi-swt2/vm-portal/blob/master/LICENSE)
 
-Branch | Travis CI  | CodeClimate | Codefactor | Codebeat
------- | ---------- | ----------- | ---------- | --------
-master | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/vm-portal) | --- | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/master)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/master) | [![codebeat badge](https://codebeat.co/badges/ff3d0842-e199-4f44-8bb1-c9dde7a7d53f)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-master)
-dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=dev)](https://travis-ci.com/hpi-swt2/vm-portal/branches) | [![Maintainability](https://api.codeclimate.com/v1/badges/bc93de388c2d75383166/maintainability)](https://codeclimate.com/github/hpi-swt2/vm-portal/maintainability) | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/dev)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/dev) | [![codebeat badge](https://codebeat.co/badges/97624360-62ce-4dbe-b935-857ab163b495)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-dev)
+Branch | Travis CI  | Coverage | CodeClimate | Codefactor | Codebeat
+------ | ---------- | -------- | ----------- | ---------- | --------
+master | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/vm-portal) | --- | --- | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/master)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/master) | [![codebeat badge](https://codebeat.co/badges/ff3d0842-e199-4f44-8bb1-c9dde7a7d53f)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-master)
+dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=dev)](https://travis-ci.com/hpi-swt2/vm-portal/branches) | --- | [![Maintainability](https://api.codeclimate.com/v1/badges/bc93de388c2d75383166/maintainability)](https://codeclimate.com/github/hpi-swt2/vm-portal/maintainability) | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/dev)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/dev) | [![codebeat badge](https://codebeat.co/badges/97624360-62ce-4dbe-b935-857ab163b495)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-dev)
 
 ## Application Setup
 
