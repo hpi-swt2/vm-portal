@@ -32,3 +32,6 @@
 
 # Ignore idea development environment files
 /.idea
+
+# Ignore coverage directory
+coverage
