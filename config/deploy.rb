@@ -2,9 +2,9 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 require 'mina/puma'
-require 'mina/slack'
 require 'mina/logs'
 require 'mina/multistage'
+require 'mina/slack'
 
 # For help in making your deploy script, see the Mina documentation:
 # https://github.com/mina-deploy/mina/tree/master/docs
@@ -34,8 +34,6 @@ set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
 # Settings for Slack Integration
 # Documentation: https://github.com/krichly/mina-slack
 set :slack_hook, 'https://hooks.slack.com/services/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' # Slack hook URL
-set :slack_username, 'Deploy Bot' # displayed as name of message sender
-set :slack_emoji, ':cloud:' # will be used as the avatar for the message
 # slack stage defined in stage files (config/deploy/*.rb)
 
 
@@ -73,8 +71,9 @@ task :deploy do
 
     on :launch do
       invoke :'puma:phased_restart'
-      invoke :'slack:post_info'
     end
+
+    invoke :'slack:post_info'
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts

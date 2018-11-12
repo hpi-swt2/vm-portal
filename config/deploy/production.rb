@@ -9,5 +9,7 @@ set :deploy_to, '/var/www/vm-swt-hrmt-master.eaalab.hpi.uni-potsdam.de/'
 set :repository, 'git@github.com:hpi-swt2/vm-portal.git'
 # Branch name to deploy. (needed by mina/git)
 set :branch, 'master'
-# Slack stage identifier (needed by mina/slack)
+# Slack settings (needed by mina/slack)
+set :slack_username, 'Production System' # displayed as name of message sender
+set :slack_emoji, ':production:' # will be used as the avatar for the message
 set :slack_stage, 'master'
