@@ -60,7 +60,7 @@ gem 'mina-multistage', require: false
 # $ mina logs # tail -f log/production.log
 gem 'mina-logs', require: false
 gem 'execjs', require: false
-gem 'mina-slack', github: 'krichly/mina-slack'
+gem 'mina-slack', require: false, github: 'krichly/mina-slack'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
