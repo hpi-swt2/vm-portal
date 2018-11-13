@@ -9,6 +9,8 @@ dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=de
 
 ## Application Setup
 
+**Note:** Please be aware that the application is designed to manage internal university resources. These are only available from the internal network. Therefore, currently a [VPN connection](https://vpn.hpi.de/) to the university network is required for those parts of the application that interact with internal resources.
+
 ### Local
 
 * `bundle install --without production` Install the required Ruby gem dependencies defined in the Gemfile, skipping gems used for production (like [pg](https://rubygems.org/gems/pg/))
