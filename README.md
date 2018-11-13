@@ -38,6 +38,14 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 * `vagrant halt` Shuts down the VM
 * `vagrant global-status` Shows status of all Vagrant VMs
 
+## Deployment
+
+The application requires access to internal ressources, which are not directly available from the general internet.
+Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
+* master: http://hart.epic-hpi.de/
+* dev: http://hart-dev.epic-hpi.de
+
+Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
 
 ## Developer Guide
 
