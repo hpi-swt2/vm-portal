@@ -11,17 +11,13 @@ RSpec.describe 'vm/index.html.erb', type: :view do
     }
   end
   let(:host) do
-    {
-        name: 'someHostMachine',
-        cores: 99,
-        threads: 99,
-        stats: {
-            usedCPU: 33,
-            totalCPU: 44,
-            usedMem: 5777,
-            totalMem: 63536
-        }
-    }
+    {  name: 'someHostMachine',
+       cores: 99,
+       threads: 99,
+       stats: {  usedCPU: 33,
+                 totalCPU: 44,
+                 usedMem: 5777,
+                 totalMem: 6336 } }
   end
 
   before :each do
@@ -42,14 +38,23 @@ RSpec.describe 'vm/index.html.erb', type: :view do
     expect(rendered).to include host[:name]
   end
 
-  it 'calculates host information' do
-    expect(rendered).to include (Float(host[:stats][:usedCPU]) / Float(host[:stats][:totalCPU]) * 100.00).round(2).to_s
-    expect(rendered).to include ((host[:stats][:usedMem] / 1000).round(2)).to_s
-    expect(rendered).to include ((host[:stats][:totalMem] / 1000).round(2)).to_s
+  it 'calculates host cpu usage' do
+    expect(rendered).to include((Float(host[:stats][:usedCPU]) / Float(host[:stats][:totalCPU]) * 100.00).round(2).to_s)
   end
 
-  it 'renders host information' do
+  it 'renders used RAM' do
+    expect(rendered).to include((host[:stats][:usedMem] / 1000).round(2).to_s)
+  end
+
+  it 'renders available RAM' do
+    expect(rendered).to include((host[:stats][:totalMem] / 1000).round(2).to_s)
+  end
+
+  it 'renders host cpu cores' do
     expect(rendered).to include host[:cores].to_s
+  end
+
+  it 'renders host cpu threads' do
     expect(rendered).to include host[:threads].to_s
   end
 end

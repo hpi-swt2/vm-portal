@@ -8,17 +8,13 @@ RSpec.describe VmController, type: :controller do
     before :each do
       double_api = double
       expect(double_api).to receive(:all_vms).and_return [{name:'My insanely cool vm', state: true, boot_time: 'Thursday'}]
-      expect(double_api).to receive(:all_hosts).and_return [{
-                                                                name: 'someHostMachine',
-                                                                cores: 99,
-                                                                threads: 99,
-                                                                stats: {
-                                                                    usedCPU: 3,
-                                                                    totalCPU: 4,
-                                                                    usedMem: 5,
-                                                                    totalMem: 6
-                                                                }
-                                                            }]
+      allow(double_api).to receive(:all_hosts).and_return [{  name: 'someHostMachine',
+                                                              cores: 99,
+                                                              threads: 99,
+                                                              stats: {  usedCPU: 3,
+                                                                        totalCPU: 4,
+                                                                        usedMem: 5,
+                                                                        totalMem: 6 } }]
       allow(VmApi).to receive(:new).and_return double_api
     end
 
