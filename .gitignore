@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+.vagrant/
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -35,3 +36,5 @@
 
 # Ignore coverage directory
 coverage
+
+.DS_Store
