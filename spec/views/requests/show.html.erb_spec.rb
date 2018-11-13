@@ -1,24 +1,57 @@
 require 'rails_helper'
 
-RSpec.describe 'requests/show', type: :view do
-  before(:each) do
-    @request = assign(:request, Request.create!(
-      operating_system: 'Operating System',
-      ram_mb: 2,
-      cpu_cores: 3,
-      software: 'Software',
-      comment: 'Comment',
-      accepted: false
-    ))
+RSpec.describe 'requests/show', type: :feature do
+  context 'pending request' do
+    before(:each) do
+      @request=FactoryBot.create :request
+    end
+
+    it 'renders attributes in <p>' do
+      visit request_path(@request)
+
+      expect(page).to have_text(@request.operating_system)
+      expect(page).to have_text(@request.ram_mb)
+      expect(page).to have_text(@request.cpu_cores)
+      expect(page).to have_text(@request.software)
+      expect(page).to have_text(@request.status)
+    end
+
+    it 'has accept button' do
+      visit request_path(@request)
+
+      click_button('Accept')
+      @request.reload
+      expect(@request.status).to eq('accepted')
+    end
+
+    it 'has reject button' do
+      visit request_path(@request)
+
+      click_button('Reject')
+      @request.reload
+      expect(@request.status).to eq('rejected')
+    end
+
+    it 'has comment input field' do
+      visit request_path(@request)
+
+      page.fill_in 'request[comment]', with: 'Comment'
+      click_button('Reject')
+      @request.reload
+      expect(@request.comment).to eq('Comment')
+    end
   end
 
-  it 'renders attributes in <p>' do
-    render
-    expect(rendered).to match(/Operating System/)
-    expect(rendered).to match(/2/)
-    expect(rendered).to match(/3/)
-    expect(rendered).to match(/Software/)
-    expect(rendered).to match(/Comment/)
-    expect(rendered).to match(/false/)
+  context 'rejected request' do
+    before(:each) do
+      @request=FactoryBot.create :rejected_request
+    end
+
+    it 'Has comment field' do
+      visit request_path(@request)
+      
+      expect(page).to have_text(@request.comment)
+    end
   end
+
 end

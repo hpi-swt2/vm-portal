@@ -11,7 +11,7 @@ RSpec.describe 'requests/index', type: :view do
         cpu_cores: 3,
         software: 'Software',
         comment: 'Comment',
-        accepted: false
+        status: 'pending'
       ),
       Request.create!(
         operating_system: 'Operating System',
@@ -19,7 +19,7 @@ RSpec.describe 'requests/index', type: :view do
         cpu_cores: 3,
         software: 'Software',
         comment: 'Comment',
-        accepted: false
+        status: 'pending'
       )
     ])
   end
@@ -31,6 +31,6 @@ RSpec.describe 'requests/index', type: :view do
     assert_select 'tr>td', text: 3.to_s, count: 2
     assert_select 'tr>td', text: 'Software'.to_s, count: 2
     assert_select 'tr>td', text: 'Comment'.to_s, count: 2
-    assert_select 'tr>td', text: false.to_s, count: 2
+    assert_select 'tr>td', text: 'pending'.to_s, count: 2
   end
 end

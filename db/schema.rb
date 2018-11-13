@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_194553) do
     t.integer "cpu_cores"
     t.string "software"
     t.text "comment"
-    t.boolean "accepted"
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

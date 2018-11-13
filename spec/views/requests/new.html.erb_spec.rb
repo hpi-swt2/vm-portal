@@ -10,7 +10,7 @@ RSpec.describe 'requests/new', type: :view do
       cpu_cores: 1,
       software: 'MyString',
       comment: 'Comment',
-      accepted: false
+      status: 'pending'
     ))
   end
 
@@ -26,10 +26,7 @@ RSpec.describe 'requests/new', type: :view do
       assert_select 'input[name=?]', 'request[cpu_cores]'
 
       assert_select 'input[name=?]', 'request[software]'
-
-      assert_select 'input[name=?]', 'request[comment]'
-
-      assert_select 'input[name=?]', 'request[accepted]'
+      
     end
   end
 end

@@ -26,9 +26,30 @@
 </p>
 
 <p>
-  <strong>Accepted:</strong>
-  <%= @request.accepted %>
+  <strong>Status:</strong>
+  <%= @request.status %>
 </p>
+
+<% if @request.pending? %>
+  <%= form_with(model: @request, local: true) do |form| %>
+    <div class="actions">
+      <%= form.hidden_field :status, value: 'accepted' %>
+      <%= form.submit 'Accept' %>
+    </div>
+  <% end %>
+
+  <%= form_with(model: @request, local: true) do |form| %>
+    <div class="field">
+      <%= form.label :comment %>
+      <%= form.text_field :comment %>
+    </div>
+
+    <div class="actions">
+      <%= form.hidden_field :status, value: 'rejected' %>
+      <%= form.submit 'Reject' %>
+    </div>
+  <% end %>
+<% end %>
 
 <%= link_to 'Edit', edit_request_path(@request) %> |
 <%= link_to 'Back', requests_path %>
