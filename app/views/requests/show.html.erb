@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Operating system:</strong>
+  <%= @request.operating_system %>
+</p>
+
+<p>
+  <strong>Ram mb:</strong>
+  <%= @request.ram_mb %>
+</p>
+
+<p>
+  <strong>Cpu cores:</strong>
+  <%= @request.cpu_cores %>
+</p>
+
+<p>
+  <strong>Software:</strong>
+  <%= @request.software %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @request.comment %>
+</p>
+
+<p>
+  <strong>Accepted:</strong>
+  <%= @request.accepted %>
+</p>
+
+<%= link_to 'Edit', edit_request_path(@request) %> |
+<%= link_to 'Back', requests_path %>

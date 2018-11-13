@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_06_135924) do
+ActiveRecord::Schema.define(version: 2018_11_13_194553) do
+
+  create_table "requests", force: :cascade do |t|
+    t.string "operating_system"
+    t.integer "ram_mb"
+    t.integer "cpu_cores"
+    t.string "software"
+    t.text "comment"
+    t.boolean "accepted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
