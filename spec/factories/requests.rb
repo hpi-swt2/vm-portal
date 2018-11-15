@@ -6,7 +6,11 @@ FactoryBot.define do
     ram_mb { 1 }
     cpu_cores { 1 }
     software { 'MyString' }
-    comment { 'MyString' }
-    accepted { false }
+    comment { 'Comment' }
+    status { 'pending' }
+  end
+  factory :rejected_request, parent: :request do
+    status { 'rejected' }
+    rejection_information { 'Info' }
   end
 end

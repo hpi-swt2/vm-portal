@@ -10,7 +10,7 @@ RSpec.describe 'requests/edit', type: :view do
       cpu_cores: 1,
       software: 'MyString',
       comment: 'MyString',
-      accepted: false
+      status: 'pending'
     ))
   end
 
@@ -18,7 +18,6 @@ RSpec.describe 'requests/edit', type: :view do
     render
 
     assert_select 'form[action=?][method=?]', request_path(@request), 'post' do
-
       assert_select 'input[name=?]', 'request[operating_system]'
 
       assert_select 'input[name=?]', 'request[ram_mb]'
@@ -28,8 +27,6 @@ RSpec.describe 'requests/edit', type: :view do
       assert_select 'input[name=?]', 'request[software]'
 
       assert_select 'input[name=?]', 'request[comment]'
-
-      assert_select 'input[name=?]', 'request[accepted]'
     end
   end
 end
