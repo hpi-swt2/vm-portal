@@ -12,6 +12,7 @@ RSpec.describe 'requests/show', type: :feature do
       expect(page).to have_text(request.cpu_cores)
       expect(page).to have_text(request.software)
       expect(page).to have_text(request.status)
+      expect(page).to have_text(request.comment)
     end
 
     it 'has accept button' do
@@ -30,23 +31,23 @@ RSpec.describe 'requests/show', type: :feature do
       expect(request.status).to eq('rejected')
     end
 
-    it 'has comment input field' do
+    it 'has rejection_information input field' do
       visit request_path(request)
 
-      page.fill_in 'request[comment]', with: 'Comment'
+      page.fill_in 'request[rejection_information]', with: 'Info'
       click_button('Reject')
       request.reload
-      expect(request.comment).to eq('Comment')
+      expect(request.rejection_information).to eq('Info')
     end
   end
 
   context 'when request is rejected' do
     let(:rejected_request) { FactoryBot.create :rejected_request }
 
-    it 'Has comment field' do
+    it 'Has rejection Information field' do
       visit request_path(rejected_request)
 
-      expect(page).to have_text(rejected_request.comment)
+      expect(page).to have_text(rejected_request.rejection_information)
     end
   end
 end

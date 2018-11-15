@@ -8,6 +8,7 @@ class CreateRequests < ActiveRecord::Migration[5.2]
       t.integer :cpu_cores
       t.string :software
       t.text :comment
+      t.text :rejection_information
       t.integer :status, default: 0
 
       t.timestamps

@@ -72,6 +72,6 @@ class RequestsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def request_params
-      params.require(:request).permit(:operating_system, :ram_mb, :cpu_cores, :software, :comment, :status)
+      params.require(:request).permit(:operating_system, :ram_mb, :cpu_cores, :software, :comment, :rejection_information, :status)
     end
 end

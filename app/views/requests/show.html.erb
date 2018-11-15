@@ -30,6 +30,13 @@
   <%= @request.status %>
 </p>
 
+<% if @request.rejected? %>
+  <p>
+    <strong>Rejection Information:</strong>
+    <%= @request.rejection_information %>
+  </p>
+<% end %>
+
 <% if @request.pending? %>
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="actions">
@@ -40,8 +47,8 @@
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
-      <%= form.label :comment %>
-      <%= form.text_field :comment %>
+      <%= form.label :rejection_information %>
+      <%= form.text_field :rejection_information %>
     </div>
 
     <div class="actions">
