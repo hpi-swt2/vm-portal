@@ -7,12 +7,14 @@ RSpec.describe 'requests/show', type: :feature do
     it 'renders attributes in <p>' do
       visit request_path(request)
 
-      expect(page).to have_text(request.operating_system)
-      expect(page).to have_text(request.ram_mb)
+      expect(page).to have_text(request.name)
       expect(page).to have_text(request.cpu_cores)
+      expect(page).to have_text(request.ram_mb)
+      expect(page).to have_text(request.storage_mb)
+      expect(page).to have_text(request.operating_system)
       expect(page).to have_text(request.software)
-      expect(page).to have_text(request.status)
       expect(page).to have_text(request.comment)
+      expect(page).to have_text(request.status)
     end
 
     it 'has accept button' do

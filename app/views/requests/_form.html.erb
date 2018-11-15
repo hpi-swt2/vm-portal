@@ -12,8 +12,13 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :operating_system %>
-    <%= form.text_field :operating_system %>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cpu_cores %>
+    <%= form.number_field :cpu_cores %>
   </div>
 
   <div class="field">
@@ -22,8 +27,13 @@
   </div>
 
   <div class="field">
-    <%= form.label :cpu_cores %>
-    <%= form.number_field :cpu_cores %>
+    <%= form.label :storage_mb %>
+    <%= form.number_field :storage_mb %>
+  </div>
+
+  <div class="field">
+    <%= form.label :operating_system %>
+    <%= form.text_field :operating_system %>
   </div>
 
   <div class="field">

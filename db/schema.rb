@@ -13,9 +13,11 @@
 ActiveRecord::Schema.define(version: 2018_11_13_194553) do
 
   create_table "requests", force: :cascade do |t|
-    t.string "operating_system"
-    t.integer "ram_mb"
+    t.string "name"
     t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "operating_system"
     t.string "software"
     t.text "comment"
     t.text "rejection_information"

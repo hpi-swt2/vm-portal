@@ -5,9 +5,11 @@
 <table>
   <thead>
     <tr>
-      <th>Operating system</th>
-      <th>MB RAM</th>
+      <th>Name</th>
       <th>Cpu-Cores</th>
+      <th>MB RAM</th>
+      <th>MB Storage</th>
+      <th>Operating system</th>
       <th>Software</th>
       <th>Comment</th>
       <th>Status </th>
@@ -18,9 +20,11 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= request.operating_system %></td>
-        <td><%= request.ram_mb %></td>
+        <td><%= request.name %></td>
         <td><%= request.cpu_cores %></td>
+        <td><%= request.ram_mb %></td>
+        <td><%= request.storage_mb %></td>
+        <td><%= request.operating_system %></td>
         <td><%= request.software %></td>
         <td><%= request.comment %></td>
         <td><%= request.status %></td>

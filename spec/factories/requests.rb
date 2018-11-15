@@ -2,10 +2,12 @@
 
 FactoryBot.define do
   factory :request do
-    operating_system { 'MyString' }
-    ram_mb { 1 }
-    cpu_cores { 1 }
-    software { 'MyString' }
+    name { 'MyVM' }
+    cpu_cores { 2 }
+    ram_mb { 1000 }
+    storage_mb { 2000 }
+    operating_system { 'MyOS' }
+    software { 'MySoftware' }
     comment { 'Comment' }
     status { 'pending' }
   end
