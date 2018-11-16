@@ -22,4 +22,19 @@ describe 'devise/sessions/new.html.erb', type: :feature do
   it 'has an oauth button' do
     expect(page).to have_button 'Sign in using OAuth'
   end
+
+  it 'shows an error message if email is not found' do
+    page.fill_in 'user[email]', with: 'login@email.com'
+    page.fill_in 'user[password]', with: 'secret_password'
+    page.find('input[type=submit]').click
+    expect(page).to have_text 'This user account does not exist.'
+  end
+
+  it 'shows an error message if password is incorrect' do
+    user = FactoryBot.create :user
+    page.fill_in 'user[email]', with: user.email
+    page.fill_in 'user[password]', with: 'secret'
+    page.find('input[type=submit]').click
+    expect(page).to have_text 'Invalid password.'
+  end
 end
