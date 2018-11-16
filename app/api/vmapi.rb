@@ -110,7 +110,21 @@ class VmApi
     @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
     @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
     @vm_folder = @dc.vmFolder
-    @hosts = @dc.hostFolder.children
+    @host_folder = @dc.hostFolder
+    @hosts = extract_hosts(@host_folder).flatten
+    @vms = @vm_folder.children
     @resource_pool = @hosts.first.resourcePool
+  end
+
+  def extract_hosts(element)
+    if element.class == RbVmomi::VIM::Folder
+      a = []
+      element.children.each do |child|
+        a << extract_hosts(child)
+      end
+      a
+    else
+      [element]
+    end
   end
 end
