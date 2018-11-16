@@ -15,6 +15,51 @@ RSpec.describe VmController, type: :controller do
                                                                         totalCPU: 4,
                                                                         usedMem: 5,
                                                                         totalMem: 6 } }]
+
+      allow(double_api).to receive(:get_vm).and_return({ name:'My insanely cool vm', 
+                                                          state: true, 
+                                                          boot_time: 'Thursday', 
+                                                          guest: {
+                                                            disk: {
+                                                              capacity: 100,
+                                                              freeSpace: 50
+                                                            },
+                                                            guestFamily: 'Windows',
+                                                            guestFullName: 'Win10 Enterprise',
+                                                            guestState: 'running',
+                                                            hostName: 'aHost',
+                                                            ipAddress: '0.0.0.0'
+                                                          },
+                                                          guestHeartbeatStatus: 'green',
+                                                          resourceConfig: {
+                                                            cpuAllocation: 100,
+                                                            memoryAllocation: 2048
+                                                          },
+                                                          resourcePool: {
+                                                            summary: {
+                                                              configuredMemoryMB: 2048,
+                                                              quickStats: {
+                                                                overallCpuUsage: 50,
+                                                                guestMemoryUsage: 1024
+                                                              }
+                                                            }
+                                                          }
+                                                        })
+    allow(double_api).to receive(:get_host).and_return({ name: 'someHostMachine',
+                                                        cores: 99,
+                                                        threads: 99,
+                                                        stats: {  usedCPU: 3,
+                                                                  totalCPU: 4,
+                                                                  usedMem: 5,
+                                                                  totalMem: 6 },                                                                                                                     
+                                                        hosts: [{
+                                                                  vm: [{
+                                                                      name: 'My insanely cool vm'
+                                                                      }]
+                                                              }]}
+                                                          )
+
+
       allow(VmApi).to receive(:new).and_return double_api
     end
 

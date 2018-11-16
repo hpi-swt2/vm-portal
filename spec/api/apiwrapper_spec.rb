@@ -80,6 +80,50 @@ RSpec.describe VmApi do
     end
   end
 
+  describe '#get_vm' do
+    vm_name = "VM"
+    subject { api.get_vm(vm_name) }
+    let(:vm_mock) do
+      {name: vm_name}
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.stub(:find_vm).and_return(vm_mock)
+    end
+
+    it 'searches for vm' do
+      api.get_vm vm_name
+    end
+
+    it "finds the correct vm" do
+      expect(subject.name).to equal vm_name
+    end
+
+  end
+
+  describe '#get_host' do
+    host_name = "host"
+    subject { api.get_host(host_name) }
+
+    let(:hosts_mock) do
+      [{name: host_name}]
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@hosts, hosts_mock
+    end
+
+    it 'asks @hosts to find host' do
+      api.get_host host_name
+    end
+
+    it 'responds with correct host' do
+      expect(subject.name).to equal host_name
+    end
+  end  
+
   describe '#delete_vm' do
     let(:vm_mock) do
       mock = double
