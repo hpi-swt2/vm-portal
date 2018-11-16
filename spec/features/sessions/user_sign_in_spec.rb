@@ -23,14 +23,6 @@ describe 'devise/sessions/new.html.erb', type: :feature do
     expect(page).to have_button 'Sign in using OAuth'
   end
 
-  it 'shows a success message after successful login' do
-    user = FactoryBot.create :user, password: 'secret_password'
-    page.fill_in 'user[email]', with: user.email
-    page.fill_in 'user[password]', with: 'secret_password'
-    page.find('input[type=submit]').click
-    expect(page).to have_current_path vm_index_path
-  end
-
   it 'shows an error message if email is not found' do
     page.fill_in 'user[email]', with: 'login@email.com'
     page.fill_in 'user[password]', with: 'secret_password'
