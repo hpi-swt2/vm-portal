@@ -59,6 +59,27 @@ RSpec.describe VmApi do
     end
   end
 
+  describe 'all_hosts' do
+    subject { api.all_hosts }
+
+    let(:hosts_mock) do
+      [] # @hosts contains all hosts as an array
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@hosts, hosts_mock
+    end
+
+    it 'asks @hosts for all hosts' do
+      api.all_hosts
+    end
+
+    it 'responds with an array' do
+      expect(subject.class).to equal Array
+    end
+  end
+
   describe '#delete_vm' do
     let(:vm_mock) do
       mock = double

@@ -2,14 +2,51 @@
   Virtual Machines
   <small class="text-muted">This is the overview page for all currently existing vms</small>
 </h1>
-<ul class="list-group">
+
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">VM Name</th>
+    <th scope="col">Running Since</th>
+    <th scope="col">Delete</th>
+  </tr>
+  </thead>
+  <tbody>
   <% @vms.each do |vm| %>
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span class="col-4"><%= vm[:name]%></span>
-        <span class="col-4">Running since: <%= vm[:boot_time]%></span>
-        <div class="col-1"><%= button_to "Delete",
-                           {controller: :vm, action: 'destroy', id: vm[:name] },
-                           method: :delete, class: "btn btn-danger" %></div>
-      </li>
+    <tr>
+      <th scope="row"><%= vm[:name]%></th>
+      <td><%= vm[:boot_time]%></td>
+      <td><%= button_to "Delete",
+                        {controller: :vm, action: 'destroy', id: vm[:name] },
+                        method: :delete, class: "btn btn-danger" %></td>
+    <tr>
   <% end %>
-</ul>
+  </tbody>
+</table>
+
+<br>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">Hostname</th>
+    <th scope="col">Cores</th>
+    <th scope="col">Threads</th>
+    <th scope="col">Used CPU [%]</th>
+    <th scope="col">Available Memory [GB]</th>
+    <th scope="col">Used Memory [GB]</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @hosts.each do |host| %>
+    <tr>
+      <th scope="row"><%= host[:name]%></th>
+      <td><%= host[:cores]%></td>
+      <td><%= host[:threads]%></td>
+      <td><%= (Float(host[:stats][:usedCPU]) / Float(host[:stats][:totalCPU]) * 100.00).round(2)%> </td>
+      <td><%= (Float( host[:stats][:totalMem]) / 1000).round(2)%></td>
+      <td><%= (Float( host[:stats][:usedMem]) / 1000).round(2)%></td>
+    <tr>
+  <% end %>
+  </tbody>
+</table>
