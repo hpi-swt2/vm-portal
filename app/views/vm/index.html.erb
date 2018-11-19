@@ -30,23 +30,29 @@
   <thead>
   <tr>
     <th scope="col">Hostname</th>
-    <th scope="col">Cores</th>
-    <th scope="col">Threads</th>
-    <th scope="col">Used CPU [%]</th>
-    <th scope="col">Available Memory [GB]</th>
-    <th scope="col">Used Memory [GB]</th>
+    <th scope="col">Model</th>
+    <th scope="col">Vendor</th>
+    <th scope="col">Status</th>
+    <th scope="col">Running Since</th>
+    <th scope="col">vms</th>
   </tr>
   </thead>
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
       <th scope="row"><%= host[:name]%></th>
-      <td><%= host[:cores]%></td>
-      <td><%= host[:threads]%></td>
-      <td><%= (Float(host[:stats][:usedCPU]) / Float(host[:stats][:totalCPU]) * 100.00).round(2)%> </td>
-      <td><%= (Float( host[:stats][:totalMem]) / 1000).round(2)%></td>
-      <td><%= (Float( host[:stats][:usedMem]) / 1000).round(2)%></td>
-    <tr>
+      <td><%= host[:model]%></td>
+      <td><%= host[:vendor]%></td>
+      <td><%= host[:connectionState]%></td>
+      <td><%= host[:bootTime]%></td>
+      <td>
+        <ul>
+          <% host[:vm_names].each do |vm_name|%>
+          <li> <%= vm_name %></li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
   <% end %>
   </tbody>
 </table>

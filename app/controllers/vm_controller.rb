@@ -5,6 +5,7 @@ class VmController < ApplicationController
   def index
     @vms = VmApi.new.all_vms
     @hosts = VmApi.new.all_hosts
+
   end
 
   def destroy
