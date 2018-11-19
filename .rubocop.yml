@@ -9,3 +9,5 @@ Metrics/BlockLength:
 
 Documentation:
   Enabled: false
+
+EnforcedStyle: expanded
