@@ -1,62 +1,59 @@
-
 <% flash.each do |key, value| %>
   <div class="alert alert-danger">
-  <%= content_tag :div, value %>
-    </div>
+    <%= content_tag :div, value %>
+  </div>
 <% end %>
 
 <div class='row'>
-<div class='col-7'>
-  <li>
-    <ul>This website does stuff</ul>
-    <ul>some more stuff</ul>
-    <ul>LOROR IPSUM</ul>
-    <ul>LOROR IPSUM</ul>
-    <ul>LOROR IPSUM</ul>
-    <ul>LOROR IPSUM</ul>
-  </li>
-</div>
-<div class='col-5'>
-<div class='card' >
-
-  <div class="card-header">
-    <h2>Log in</h2>
+  <div class='col-7'>
+    <li>
+      <ul>This website does stuff</ul>
+      <ul>some more stuff</ul>
+      <ul>LOROR IPSUM</ul>
+      <ul>LOROR IPSUM</ul>
+      <ul>LOROR IPSUM</ul>
+      <ul>LOROR IPSUM</ul>
+    </li>
   </div>
+  <div class='col-5'>
+    <div class='card'>
 
-
-
-  <div class="card-body">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <div class="form-group input-group">
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: :email, class: 'form-control' %>
+      <div class="card-header">
+        <h2>Log in</h2>
       </div>
 
-      <div class="form-group input-group">
-        <%= f_password_field = f.password_field :password, autocomplete: "current-password", placeholder: :password, class: 'form-control'
-            f_password_field %>
-      </div>
 
-      <% if devise_mapping.rememberable? -%>
-        <div class="form-group">
-          <div class="form-check">
-            <%= f.check_box :remember_me, class: 'form-check-input' %>
-            <%= f.label :remember_me, class: 'form-check-label' %>
+      <div class="card-body">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="form-group input-group">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: :email, class: 'form-control' %>
           </div>
-        </div>
-      <% end -%>
-      <div class="form-group actions">
-        <%= f.submit "Log in", class: 'btn btn-block btn-primary float-right' %>
-        <button class='btn btn-block btn-secondary float-right' id="oauth">Sign in using OAuth</button>
+
+          <div class="form-group input-group">
+            <%= f_password_field = f.password_field :password, autocomplete: "current-password", placeholder: :password, class: 'form-control'
+                f_password_field %>
+          </div>
+
+          <% if devise_mapping.rememberable? -%>
+            <div class="form-group">
+              <div class="form-check">
+                <%= f.check_box :remember_me, class: 'form-check-input' %>
+                <%= f.label :remember_me, class: 'form-check-label' %>
+              </div>
+            </div>
+          <% end -%>
+          <div class="form-group actions">
+            <%= f.submit "Log in", class: 'btn btn-block btn-primary float-right' %>
+            <button class='btn btn-block btn-secondary float-right' id="oauth">Sign in using OAuth</button>
+          </div>
+
+        <% end -%>
+
       </div>
 
-    <% end -%>
-
+      <div class='card-footer'>
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class='card-footer'>
-    <%= render "devise/shared/links" %>
-  </div>
-</div>
-</div>
-</div>
 </div>
