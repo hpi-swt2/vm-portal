@@ -9,25 +9,7 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
+
+ *= require_self
+ *= require_tree .
  */
-@import "bootstrap";
-
-html, body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-#content {
-  flex: 1 0 auto;
-}
-
-#footer {
-  flex-shrink: 0;
-  padding: 10px 0;
-  background-color: #212529;
-  color: #ffffff;
-}
