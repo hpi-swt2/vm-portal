@@ -62,13 +62,40 @@ RSpec.describe VmApi do
   describe 'all_hosts' do
     subject { api.all_hosts }
 
-    let(:hosts_mock) do
-      [] # @hosts contains all hosts as an array
+    let(:clusters_mock) do
+      [cluster_mock]
+    end
+
+    let(:cluster_mock) do
+      mock = double
+      expect(mock).to receive(:host).and_return([host_mock])
+      mock
+    end
+
+    let(:host_mock) do
+      mock = double
+      expect(mock).to receive(:vm).and_return([vm_mock])
+      expect(mock).to receive(:name).and_return('a name')
+      allow(mock).to receive_message_chain(:hardware, :systemInfo, :vendor).and_return('name')
+      allow(mock).to receive_message_chain(:hardware, :systemInfo, :model).and_return('brot')
+      allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('101010')
+      allow(mock).to receive_message_chain(:runtime, :connectionState).and_return('no idea lol')
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive(:name).and_return(vm)
+      mock
+    end
+
+    let(:vm) do
+      ['name', 'another name']
     end
 
     before do
       allow(api).to receive(:connect)
-      api.instance_variable_set :@hosts, hosts_mock
+      api.instance_variable_set :@clusters, clusters_mock
     end
 
     it 'asks @hosts for all hosts' do
