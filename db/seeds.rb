@@ -9,4 +9,4 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Test Users
-User.create(email: 'test@test.de', password: 'test')
+User.create(email: 'test@test.de', password: '123456')
