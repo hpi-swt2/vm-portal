@@ -64,6 +64,7 @@ class VmApi
         return host
       end
     end
+    nil
   end
     
 

@@ -1,6 +1,5 @@
 <h1>
-  Virtual Machine "<%= @vm[:name]%>"
-  <small class="text-muted">This is the details page for the VM</small>
+  Detail for Virtual Machine "<%= @vm[:name]%>"
 </h1>
 
 <table class="table">
@@ -23,14 +22,14 @@
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "vm", action: "show_host", id: @vm[:host] %>
+    <%= link_to @vm[:host], controller: "vm", action: "show_host", id: (@vm[:host].gsub '.', '%2E') %>
     </td>
 
     <% 
     committed = @vm[:summary].storage.committed
     uncommitted = @vm[:summary].storage.uncommitted
-    committed_mb = committed / (8 * (1024 ** 2))
-    uncommitted_mb = uncommitted / (8 * (1024 ** 2))
+    committed_mb = committed / (1024 ** 2)
+    uncommitted_mb = uncommitted / (1024 ** 2)
     total_mb = committed_mb + uncommitted_mb
     total = committed + uncommitted
     space_usage_percentage = 0

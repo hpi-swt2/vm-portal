@@ -25,7 +25,7 @@ class VmController < ApplicationController
   end
 
   def show_host
-    @host = VmApi.new.get_host(params[:id])
+    @host = VmApi.new.get_host(params[:id].gsub '%2E', '.')
   end
 
   # This controller doesn't use strong parameters
