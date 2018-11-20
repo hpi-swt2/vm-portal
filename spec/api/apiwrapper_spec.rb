@@ -124,11 +124,8 @@ RSpec.describe VmApi do
     end
 
     before do
+      allow(api).to receive(:connect)
       allow(api).to receive(:find_vm).and_return(vm_mock)
-    end
-
-    it 'searches for vm' do
-      api.get_vm vm_name
     end
 
     it "finds the correct vm" do
