@@ -20,7 +20,7 @@ RSpec.describe 'vm/index.html.erb', type: :view do
                  totalMem: 6336 } }
   end
 
-  before :each do
+  before do
     assign(:vms, [vm])
     assign(:hosts, [host])
     render
@@ -56,5 +56,14 @@ RSpec.describe 'vm/index.html.erb', type: :view do
 
   it 'renders host cpu threads' do
     expect(rendered).to include host[:threads].to_s
+  end
+
+  it 'links to resource detail pages' do
+    @vms.each do |vm|
+      expect(rendered).to have_link("details", href: "./#{vm[:name]}")
+    end
+    @hosts.each do |host|
+      expect(rendered).to have_link("details", href: "../host/#{host[:name]}")
+    end
   end
 end

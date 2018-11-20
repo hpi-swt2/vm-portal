@@ -6,4 +6,6 @@ Rails.application.routes.draw do
 
   devise_for :users, path: 'users'
   resources :vm
+
+  get '/host/:id' => 'vm#show_controller'
 end
