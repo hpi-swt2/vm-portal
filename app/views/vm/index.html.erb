@@ -61,7 +61,7 @@
         </ul>
       </td>
       <td><%= button_to "Details",
-                        {controller: :vm, action: 'show_host', id: host[:name] },
+                        {controller: :vm, action: 'show_host', id: (host[:name].gsub '.', '%2E')},
                         method: :get, class: "btn btn-info"  %></td>
     </tr>
   <% end %>
