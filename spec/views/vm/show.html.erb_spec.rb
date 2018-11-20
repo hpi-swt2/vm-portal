@@ -5,39 +5,28 @@ require 'rails_helper'
 
 RSpec.describe 'vm/show.html.erb', type: :view do
   let(:vm) do
-    { name:'My insanely cool vm', 
-        state: true, 
-        boot_time: 'Thursday', 
-        guest: {
-          disk: {
-            capacity: 100,
-            freeSpace: 50
-          },
-          guestFamily: 'Windows',
-          guestFullName: 'Win10 Enterprise',
-          guestState: 'running',
-          hostName: 'aHost',
-          ipAddress: '0.0.0.0'
-        },
-        guestHeartbeatStatus: 'green',
-        resourceConfig: {
-          cpuAllocation: 100,
-          memoryAllocation: 2048
-        },
-        resourcePool: {
-          summary: {
-            configuredMemoryMB: 2048,
-            quickStats: {
-              overallCpuUsage: 50,
-              guestMemoryUsage: 1024
-            }
-          }
-        }
-      }
+    summary = double
+    allow(summary).to receive_message_chain(:storage, :committed).and_return(0)
+    allow(summary).to receive_message_chain(:storage, :uncommitted).and_return(0)
+    allow(summary).to receive_message_chain(:config, :guestId).and_return("Win10")
+    allow(summary).to receive_message_chain(:config, :guestFullName).and_return("Win10 EE")
+    allow(summary).to receive_message_chain(:guest, :ipAddress).and_return("0.0.0.0")
+    allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
+    allow(summary).to receive_message_chain(:config, :cpuReservation).and_return(0)
+    allow(summary).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(0)
+    allow(summary).to receive_message_chain(:config, :memoryReservation).and_return(0)
+    allow(summary).to receive_message_chain(:runtime, :powerState).and_return(0)
+
+    { name: 'VM',
+      boot_time: 'Thursday',
+      host: 'aHost',
+      guestHeartbeatStatus: 'green',
+      summary: summary }
+
   end
 
   before do
-    assign(:vm, [vm])
+    assign(:vm, vm)
     render
   end
 
@@ -50,27 +39,15 @@ RSpec.describe 'vm/show.html.erb', type: :view do
   end
 
   it 'shows vm OS' do
-    expect(rendered).to include vm[:guest[:guestFamily]]
+    expect(rendered).to include vm[:summary].config.guestId
   end
 
   it 'shows vm OS version' do
-    expect(rendered).to include vm[:guest[:ipAddress]]
+    expect(rendered).to include vm[:summary].config.guestFullName
   end
 
   it 'shows vm IP address' do
-    expect(rendered).to include vm[:guest[:ipAddress]]
-  end
-
-  it 'shows vm disk capacity' do
-    expect(rendered).to include vm[:guest[:disk[:capacity]]]
-  end
-  
-  it 'shows vm disk free space' do
-    expect(rendered).to include vm[:guest[:disk[:freeSpace]]]
-  end
-  
-  it 'shows vm disk capacity' do
-    expect(rendered).to include vm[:guest[:disk]]
+    expect(rendered).to include vm[:summary].guest.ipAddress
   end
 
 end

@@ -5,6 +5,7 @@ class VmController < ApplicationController
   def index
     @vms = VmApi.new.all_vms
     @hosts = VmApi.new.all_hosts
+
   end
 
   def destroy
@@ -18,6 +19,14 @@ class VmController < ApplicationController
   end
 
   def new; end
+
+  def show
+    @vm = VmApi.new.get_vm(params[:id])
+  end
+
+  def show_host
+    @host = VmApi.new.get_host(params[:id])
+  end
 
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html

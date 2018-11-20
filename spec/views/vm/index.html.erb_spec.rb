@@ -12,12 +12,12 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   end
   let(:host) do
     {  name: 'someHostMachine',
-       cores: 99,
-       threads: 99,
-       stats: {  usedCPU: 33,
-                 totalCPU: 44,
-                 usedMem: 5777,
-                 totalMem: 6336 } }
+       model: 'cool machine',
+       vendor: 'nice vendor',
+       bootTime: 'some long while',
+       connectionState: 'connected',
+       vm_names: ['a name', 'another name'],
+    }
   end
 
   before do
@@ -38,32 +38,29 @@ RSpec.describe 'vm/index.html.erb', type: :view do
     expect(rendered).to include host[:name]
   end
 
-  it 'calculates host cpu usage' do
-    expect(rendered).to include((Float(host[:stats][:usedCPU]) / Float(host[:stats][:totalCPU]) * 100.00).round(2).to_s)
+  it 'renders model name' do
+    expect(rendered).to include host[:model]
   end
 
-  it 'renders used RAM' do
-    expect(rendered).to include((host[:stats][:usedMem] / 1000).round(2).to_s)
+  it 'renders vendor name' do
+    expect(rendered).to include host[:vendor]
   end
 
-  it 'renders available RAM' do
-    expect(rendered).to include((host[:stats][:totalMem] / 1000).round(2).to_s)
+  it 'renders boot time' do
+    expect(rendered).to include host[:bootTime]
   end
 
-  it 'renders host cpu cores' do
-    expect(rendered).to include host[:cores].to_s
+  it 'renders connectionState' do
+    expect(rendered).to include host[:connectionState]
   end
 
-  it 'renders host cpu threads' do
-    expect(rendered).to include host[:threads].to_s
+  it 'renders vm names' do
+    host[:vm_names].each do |name|
+      expect(rendered).to include name
+    end
   end
 
   it 'links to resource detail pages' do
-    @vms.each do |vm|
-      expect(rendered).to have_link("details", href: "./#{vm[:name]}")
-    end
-    @hosts.each do |host|
-      expect(rendered).to have_link("details", href: "../host/#{host[:name]}")
-    end
+    expect(rendered).to have_button("Details", count: 2)
   end
 end

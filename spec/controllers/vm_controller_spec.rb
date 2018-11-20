@@ -52,11 +52,8 @@ RSpec.describe VmController, type: :controller do
                                                                   totalCPU: 4,
                                                                   usedMem: 5,
                                                                   totalMem: 6 },                                                                                                                     
-                                                        hosts: [{
-                                                                  vm: [{
-                                                                      name: 'My insanely cool vm'
-                                                                      }]
-                                                              }]}
+                                                        vm_names: ['My insanely cool vm']
+                                                              }
                                                           )
 
 
@@ -110,4 +107,29 @@ RSpec.describe VmController, type: :controller do
     end
 
   end
+
+  describe 'get #show' do
+    it 'returns http success' do
+      get :show, params: {id: 1}
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders show page' do
+      expect(get :show, params: {id: 1}).to render_template('vm/show')
+    end
+  end
+
+  describe 'get #show_host' do
+    it 'returns http success' do
+      get :show_host, params: {id: 1}
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders show page' do
+      expect(get :show_host, params: {id: 1}).to render_template('vm/show_host')
+    end
+
+  end
+
+
 end

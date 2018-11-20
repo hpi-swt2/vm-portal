@@ -23,12 +23,49 @@ class VmApi
     end
   end
 
-  def all_hosts
+  def all_clusters
     connect
-    @hosts.map do |host|
-      { name: host.name, stats: host.stats, cores: host.summary[:numCpuCores], threads: host.summary[:numCpuThreads] }
+    @clusters.map do |cluster|
+      { name: cluster.name, stats: cluster.stats, cores: cluster.summary[:numCpuCores], threads: cluster.summary[:numCpuThreads] }
     end
   end
+
+  def all_hosts
+    connect
+    @hosts = Array.new([])
+    @clusters.map do |cluster|
+      cluster.host.map do |host|
+        vm_names = Array.new([])
+        host.vm.map do |vm|
+          vm_names << vm.name
+        end
+        @hosts << { name: host.name, vm_names: vm_names, model: host.hardware.systemInfo.model, vendor: host.hardware.systemInfo.vendor, bootTime: host.runtime.bootTime, connectionState: host.runtime.connectionState, summary: host.summary}
+      end
+    end
+    @hosts
+  end
+
+  def get_vm(name)
+    connect
+    if vm = find_vm(name)
+    { name: vm.name, 
+      boot_time: vm.runtime.bootTime,
+      host: vm.summary.runtime.host.name,
+      guestHeartbeatStatus: vm.guestHeartbeatStatus, 
+      summary: vm.summary}
+    else nil
+    end
+  end
+
+  def get_host(name)
+    all_hosts
+    @hosts.each do |host|
+      if host[:name] == name
+        return host
+      end
+    end
+  end
+    
 
   def delete_vm(name)
     connect
@@ -110,17 +147,17 @@ class VmApi
     @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
     @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
     @vm_folder = @dc.vmFolder
-    @host_folder = @dc.hostFolder
-    @hosts = extract_hosts(@host_folder).flatten
+    @cluster_folder = @dc.hostFolder
+    @clusters = extract_clusters(@cluster_folder).flatten
     @vms = @vm_folder.children
-    @resource_pool = @hosts.first.resourcePool
+    @resource_pool = @clusters.first.resourcePool
   end
 
-  def extract_hosts(element)
+  def extract_clusters(element)
     if element.class == RbVmomi::VIM::Folder
       a = []
       element.children.each do |child|
-        a << extract_hosts(child)
+        a << extract_clusters(child)
       end
       a
     else

@@ -4,8 +4,8 @@
 Rails.application.routes.draw do
   root to: redirect('/users/sign_in')
 
+  get '/host/:id' => 'vm#show_host'
+
   devise_for :users, path: 'users'
   resources :vm
-
-  get '/host/:id' => 'vm#show_controller'
 end
