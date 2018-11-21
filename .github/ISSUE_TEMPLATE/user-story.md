@@ -8,6 +8,6 @@ about: This template should be used for all user stories
 
 **Akzeptanzkriterien**
 
-**Priorität:**
+**Priorität**
 
 **Aufwandsschätzung**
