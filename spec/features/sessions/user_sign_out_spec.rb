@@ -17,5 +17,4 @@ describe 'Sign Out', type: :feature do
     click_link 'Logout'
     expect(page).not_to have_link 'Logout', href: destroy_user_session_path
   end
-
 end
