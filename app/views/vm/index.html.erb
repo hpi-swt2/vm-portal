@@ -1,14 +1,13 @@
 <h1>
   Virtual Machines
-  <small class="text-muted">This is the overview page for all currently existing vms</small>
 </h1>
+<small class="text-muted">This is the overview page for all currently existing VMs</small>
 
-
-<table class="table">
+<table data-toggle="table" class="table">
   <thead>
   <tr>
-    <th scope="col">VM Name</th>
-    <th scope="col">Running Since</th>
+    <th scope="col" data-sortable="true">VM Name</th>
+    <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">Details</th>
     <th scope="col">Delete</th>
   </tr>
@@ -16,13 +15,13 @@
   <tbody>
   <% @vms.each do |vm| %>
     <tr>
-      <th scope="row"><%= vm[:name]%></th>
-      <td><%= vm[:boot_time]%></td>
+      <td><%= vm[:name] %></td>
+      <td><%= vm[:boot_time] %></td>
       <td><%= button_to "Details",
-                        {controller: :vm, action: 'show', id: vm[:name] },
-                        method: :get, class: "btn btn-info"  %></td>
+                        {controller: :vm, action: 'show', id: vm[:name]},
+                        method: :get, class: "btn btn-info" %></td>
       <td><%= button_to "Delete",
-                        {controller: :vm, action: 'destroy', id: vm[:name] },
+                        {controller: :vm, action: 'destroy', id: vm[:name]},
                         method: :delete, class: "btn btn-danger" %></td>
     <tr>
   <% end %>
@@ -31,39 +30,44 @@
 
 <br>
 
-<table class="table">
+<table data-toggle="table" class="table">
   <thead>
   <tr>
     <th scope="col">Hostname</th>
-    <th scope="col">Model</th>
-    <th scope="col">Vendor</th>
-    <th scope="col">Status</th>
-    <th scope="col">Running Since</th>
-    <th scope="col">vms</th>
+    <th scope="col" data-sortable="true">Model</th>
+    <th scope="col" data-sortable="true">Vendor</th>
+    <th scope="col" data-sortable="true">Status</th>
+    <th scope="col" data-sortable="true">Running Since</th>
+    <th scope="col">VMs</th>
     <th scope="col">Details</th>
   </tr>
   </thead>
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
-      <th scope="row"><%= host[:name]%></th>
-      <td><%= host[:model]%></td>
-      <td><%= host[:vendor]%></td>
-      <td><%= host[:connectionState]%></td>
-      <td><%= host[:bootTime]%></td>
+      <td><%= host[:name] %></td>
+      <td><%= host[:model] %></td>
+      <td><%= host[:vendor] %></td>
+      <td><%= host[:connectionState] %></td>
+      <td><%= host[:bootTime] %></td>
       <td>
         <ul>
           <% if not host[:vm_names].nil?
-           host[:vm_names].each do |vm_name|%>
-          <li> <%= vm_name %></li>
-          <% end
-          end %>
+               host[:vm_names].each do |vm_name| %>
+              <li> <%= vm_name %></li>
+            <% end
+               end %>
         </ul>
       </td>
       <td><%= button_to "Details",
                         {controller: :vm, action: 'show_host', id: (host[:name].gsub '.', '%2E')},
-                        method: :get, class: "btn btn-info"  %></td>
+                        method: :get, class: "btn btn-info" %></td>
     </tr>
   <% end %>
   </tbody>
 </table>
+
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
