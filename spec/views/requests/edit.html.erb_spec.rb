@@ -28,7 +28,7 @@ RSpec.describe 'requests/edit', type: :view do
 
       assert_select 'input[name=?]', 'request[storage_mb]'
 
-      assert_select 'input[name=?]', 'request[operating_system]'
+      assert_select 'select[name=?]', 'request[operating_system]'
 
       assert_select 'input[name=?]', 'request[software]'
 
