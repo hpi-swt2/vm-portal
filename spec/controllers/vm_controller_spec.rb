@@ -15,6 +15,7 @@ RSpec.describe VmController, type: :controller do
                                                                         totalCPU: 4,
                                                                         usedMem: 5,
                                                                         totalMem: 6 } }]
+
       allow(VmApi).to receive(:new).and_return double_api
     end
 
@@ -62,6 +63,42 @@ RSpec.describe VmController, type: :controller do
 
     it 'renders new page' do
       expect(get :new).to render_template('vm/new')
+    end
+
+  end
+
+  describe 'get #show' do
+    before do
+      double_api = double
+      allow(double_api).to receive(:get_vm).and_return(nil)
+      allow(VmApi).to receive(:new).and_return double_api
+    end
+
+    it 'returns http success' do
+      get :show, params: {id: 1}
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders show page' do
+      expect(get :show, params: {id: 1}).to render_template('vm/show')
+    end
+  end
+
+  describe 'get #show_host' do
+
+    before do
+      double_api = double
+      allow(double_api).to receive(:get_host).and_return(nil)
+      allow(VmApi).to receive(:new).and_return double_api
+    end
+
+    it 'returns http success' do
+      get :show_host, params: {id: 1}
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders show page' do
+      expect(get :show_host, params: {id: 1}).to render_template('vm/show_host')
     end
 
   end

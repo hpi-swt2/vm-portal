@@ -20,7 +20,7 @@ RSpec.describe 'vm/index.html.erb', type: :view do
     }
   end
 
-  before :each do
+  before do
     assign(:vms, [vm])
     assign(:hosts, [host])
     render
@@ -58,5 +58,9 @@ RSpec.describe 'vm/index.html.erb', type: :view do
     host[:vm_names].each do |name|
       expect(rendered).to include name
     end
+  end
+
+  it 'links to resource detail pages' do
+    expect(rendered).to have_button("Details", count: 2)
   end
 end

@@ -3,11 +3,13 @@
   <small class="text-muted">This is the overview page for all currently existing vms</small>
 </h1>
 
+
 <table class="table">
   <thead>
   <tr>
     <th scope="col">VM Name</th>
     <th scope="col">Running Since</th>
+    <th scope="col">Details</th>
     <th scope="col">Delete</th>
   </tr>
   </thead>
@@ -16,6 +18,9 @@
     <tr>
       <th scope="row"><%= vm[:name]%></th>
       <td><%= vm[:boot_time]%></td>
+      <td><%= button_to "Details",
+                        {controller: :vm, action: 'show', id: vm[:name] },
+                        method: :get, class: "btn btn-info"  %></td>
       <td><%= button_to "Delete",
                         {controller: :vm, action: 'destroy', id: vm[:name] },
                         method: :delete, class: "btn btn-danger" %></td>
@@ -35,6 +40,7 @@
     <th scope="col">Status</th>
     <th scope="col">Running Since</th>
     <th scope="col">vms</th>
+    <th scope="col">Details</th>
   </tr>
   </thead>
   <tbody>
@@ -47,11 +53,16 @@
       <td><%= host[:bootTime]%></td>
       <td>
         <ul>
-          <% host[:vm_names].each do |vm_name|%>
+          <% if not host[:vm_names].nil?
+           host[:vm_names].each do |vm_name|%>
           <li> <%= vm_name %></li>
-          <% end %>
+          <% end
+          end %>
         </ul>
       </td>
+      <td><%= button_to "Details",
+                        {controller: :vm, action: 'show_host', id: (host[:name].gsub '.', '%2E')},
+                        method: :get, class: "btn btn-info"  %></td>
     </tr>
   <% end %>
   </tbody>

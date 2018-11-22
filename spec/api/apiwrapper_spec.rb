@@ -7,7 +7,7 @@ RSpec.describe VmApi do
 
   describe '#connect' do
     let(:setup_methods) do
-      [:serviceInstance, :find_datacenter, :hostFolder, :vmFolder, :children, :first, :resourcePool]
+      [:serviceInstance, :find_datacenter, :hostFolder, :vmFolder, :children, :first, :resourcePool, :all_hosts, :find_vm]
     end
 
     let(:double_api) do
@@ -80,6 +80,7 @@ RSpec.describe VmApi do
       allow(mock).to receive_message_chain(:hardware, :systemInfo, :model).and_return('brot')
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('101010')
       allow(mock).to receive_message_chain(:runtime, :connectionState).and_return('no idea lol')
+      allow(mock).to receive(:summary).and_return(nil)
       mock
     end
 
@@ -106,6 +107,56 @@ RSpec.describe VmApi do
       expect(subject.class).to equal Array
     end
   end
+
+  describe '#get_vm' do
+    vm_name = "VM"
+    subject { api.get_vm(vm_name) }
+    let(:vm_mock) do
+      mock = double
+      summary = double
+      expect(mock).to receive(:name).and_return(vm_name)
+      allow(mock).to receive(:summary).and_return(summary)
+      allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
+      allow(mock).to receive_message_chain(:summary, :runtime, :host, :name).and_return('aHost')
+      allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('Thursday')
+      allow(mock).to receive(:guestHeartbeatStatus).and_return('running')
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      allow(api).to receive(:find_vm).and_return(vm_mock)
+    end
+
+    it "finds the correct vm" do
+      expect(subject[:name]).to equal vm_name
+    end
+
+  end
+
+  describe '#get_host' do
+    host_name = "host"
+    subject { api.get_host(host_name) }
+
+
+    let(:hosts_mock) do
+      [{name: host_name}]
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      expect(api).to receive(:all_hosts)
+      api.instance_variable_set :@hosts, hosts_mock
+    end
+
+    it 'asks @hosts to find host' do
+      api.get_host host_name
+    end
+
+    it 'responds with correct host' do
+      expect(subject[:name]).to equal host_name
+    end
+  end  
 
   describe '#delete_vm' do
     let(:vm_mock) do

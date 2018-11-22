@@ -20,6 +20,14 @@ class VmController < ApplicationController
 
   def new; end
 
+  def show
+    @vm = VmApi.new.get_vm(params[:id])
+  end
+
+  def show_host
+    @host = VmApi.new.get_host(params[:id].gsub '%2E', '.')
+  end
+
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
   # Because no Active Record model is being wrapped
