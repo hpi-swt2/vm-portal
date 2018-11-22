@@ -4,9 +4,9 @@ require 'rails_helper'
 
 describe 'Sign Out', type: :feature do
   before do
-    @user = FactoryBot.create :user
-    sign_in(@user)
-    visit root_path
+    user = FactoryBot.create :user
+    sign_in(user)
+    visit new_user_session_path
   end
 
   it 'has a logout button' do
