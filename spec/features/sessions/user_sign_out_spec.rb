@@ -6,7 +6,7 @@ describe 'Sign Out', type: :feature do
   before do
     user = FactoryBot.create :user
     sign_in(user)
-    visit new_user_session_path
+    visit root_path
   end
 
   it 'has a logout button' do
