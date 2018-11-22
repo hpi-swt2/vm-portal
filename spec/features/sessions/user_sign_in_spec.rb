@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'devise/sessions/new.html.erb', type: :feature do
+describe 'Sign In Page', type: :feature do
   before do
     visit new_user_session_path
   end
