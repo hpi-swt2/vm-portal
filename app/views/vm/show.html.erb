@@ -22,7 +22,7 @@
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "vm", action: "show_host", id: (@vm[:host].gsub '.', '%2E') %>
+    <%= link_to @vm[:host], controller: "vm", action: "show_host", id: @vm[:host] %>
     </td>
 
     <% 

@@ -63,4 +63,8 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   it 'links to resource detail pages' do
     expect(rendered).to have_button("Details", count: 2)
   end
+
+  it 'can filter resources' do
+    expect(rendered).to have_button("Filter")
+  end
 end

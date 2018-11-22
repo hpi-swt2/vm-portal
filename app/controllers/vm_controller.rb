@@ -2,10 +2,12 @@
 
 require 'vmapi.rb'
 class VmController < ApplicationController
-  def index
-    @vms = VmApi.new.all_vms
-    @hosts = VmApi.new.all_hosts
 
+  attr :vms, :hosts
+
+  def index
+    @vms = filter_vms VmApi.new.all_vms
+    @hosts = filter_hosts VmApi.new.all_hosts
   end
 
   def destroy
@@ -25,10 +27,46 @@ class VmController < ApplicationController
   end
 
   def show_host
-    @host = VmApi.new.get_host(params[:id].gsub '%2E', '.')
+    @host = VmApi.new.get_host(params[:id])
   end
 
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
   # Because no Active Record model is being wrapped
+
+  private
+  def filter_vms(vms)
+    filter(vms, :vm_filter)
+  end
+
+  def filter_hosts(hosts)
+    filter(hosts, :host_filter)
+  end
+
+  def filter(list, filter)
+    if no_params_set? then list
+    else
+      result = []
+      send(filter).keys.each do |key|
+        if params[key].present?
+          result += list.select{ |object| send(filter)[key].call(object) }
+        end
+      end
+      result
+    end
+  end
+
+  def no_params_set?
+    parameters = (vm_filter.keys + host_filter.keys).map! {|x| x.to_s }
+    actual_params = params.keys.map! {|x| x.to_s }
+    (parameters - actual_params).size == parameters.size
+  end
+
+  def vm_filter
+    {up_vms: Proc.new { |vm| vm[:state] }, down_vms: Proc.new { |vm| !vm[:state] } }
+  end
+
+  def host_filter
+    {up_hosts: Proc.new {|host| host[:connectionState] == 'connected' }, down_hosts: Proc.new {|host| host[:connectionState] != 'connected' } }
+  end
 end
