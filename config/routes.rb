@@ -3,8 +3,10 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :requests
-  root to: redirect('/vm')
+  root to: redirect('/users/sign_in')
 
   devise_for :users, path: 'users'
   resources :vm
+
+  root 'landing#index'
 end

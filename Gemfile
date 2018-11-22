@@ -93,6 +93,8 @@ group :development do
   # Much nicer error pages https://github.com/BetterErrors/better_errors
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Continous execution of unit tests
+  gem 'guard'
 end
 
 group :test do

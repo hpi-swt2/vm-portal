@@ -9,6 +9,8 @@ dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=de
 
 ## Application Setup
 
+**Note:** Please be aware that the application is designed to manage internal university resources. These are only available from the internal network. Therefore, currently a [VPN connection](https://vpn.hpi.de/) to the university network is required for those parts of the application that interact with internal resources.
+
 ### Local
 
 * `bundle install --without production` Install the required Ruby gem dependencies defined in the Gemfile, skipping gems used for production (like [pg](https://rubygems.org/gems/pg/))
@@ -38,6 +40,14 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 * `vagrant halt` Shuts down the VM
 * `vagrant global-status` Shows status of all Vagrant VMs
 
+## Deployment
+
+The application requires access to internal ressources, which are not directly available from the general internet.
+Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
+* master: http://hart.epic-hpi.de/
+* dev: http://hart-dev.epic-hpi.de
+
+Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
 
 ## Developer Guide
 
