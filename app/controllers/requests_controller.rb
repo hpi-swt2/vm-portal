@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
+  include RequestsHelper
   before_action :set_request, only: %i[show edit update destroy]
   helper_method :accept
 
@@ -14,16 +15,6 @@ class RequestsController < ApplicationController
   # GET /requests/1.json
   def show
     @request = Request.find(params[:id])
-
-    @accepted_request = @request.accept 
-  end
-
-  def accept
-    @request.status = 'accepted'
-    #visit new_request_path
-    #session[:current_request] = @request
-    #@vm = VmApi.new
-    #@vm.filling(@request)
   end
 
   # GET /requests/new

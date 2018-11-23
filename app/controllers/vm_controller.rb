@@ -2,6 +2,7 @@
 
 require 'vmapi.rb'
 class VmController < ApplicationController
+  include RequestsHelper
   def index
     @vms = VmApi.new.all_vms
   end
@@ -18,27 +19,15 @@ class VmController < ApplicationController
 
   def new
     @vm = VmApi.new
+    @request = !(params[:request].nil?) ? Request.find(params[:request]) : default_request
   end
 
   def show
-    #request = session[:current_request]
-    #if request.status = 'accepted'
-      #fill(request)
-    #  page.fill_in('name'), with request.name
-    #end
   end
 
-  def filling(request)
-    #page.fill_in('name'), with request.name
-    #page.fill_in('cpu'), with request.cpu
-    #page.fill_in('ram'), with request.ram
-    #page.fill_in('capacity'), with request.capacity
-  end
+  private
 
-  def fill(request)
-    create(request.name, request.cpu, request.ram, request.capacity)
-  end
-  # This controller doesn't use strong parameters
-  # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
-  # Because no Active Record model is being wrapped
+    def default_request
+      { name: 'VM', cpu_cores: 1, ram_mb: 1000, storage_mb: 1000 }
+    end
 end

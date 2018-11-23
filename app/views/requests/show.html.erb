@@ -48,15 +48,12 @@
 <% end %>
 
 <% if @request.accepted? %>
-  <p>
-    <%= @request.accept %>
-  </p>
 <% end %>
 
 <% if @request.pending? %>
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="actions">
-      <%= link_to '<button>Accept</button>'.html_safe, new_vm_path, :onclick => {:status => 'accepted'} %>
+      <%= link_to '<button>Accept</button>'.html_safe, new_vm_path, onclick: (accept(@request)) %>
     </div>
   <% end %>
 
