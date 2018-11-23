@@ -3,6 +3,39 @@
 </h1>
 <small class="text-muted">This is the overview page for all currently existing VMs</small>
 
+
+
+<%= form_tag({controller: "vm", action: "index"}, method: "get", class: "nifty_form") do %>
+<table class="table">
+  <tbody>
+    <tr>
+      <th scope="row">VMs</th>
+      <td>
+        <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
+        <%= label_tag(:up_vms, "connected") %>  
+      </td>
+      <td>
+        <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
+        <%= label_tag(:down_vms, "not connected") %>
+      </td>
+      <td rowspan="2">
+        <%= submit_tag"Filter", class: "btn btn-info" %>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Hosts</th>
+      <td>
+        <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
+        <%= label_tag(:up_hosts, "connected") %>  
+      </td>
+      <td>
+        <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
+        <%= label_tag(:down_hosts, "not connected") %>
+      </td>
+    </tr></tbody></table>
+<% end %>
+
+
 <table data-toggle="table" class="table">
   <thead>
   <tr>
@@ -60,7 +93,7 @@
         </ul>
       </td>
       <td><%= button_to "Details",
-                        {controller: :vm, action: 'show_host', id: (host[:name].gsub '.', '%2E')},
+                        {controller: :vm, action: 'show_host', id: host[:name]},
                         method: :get, class: "btn btn-info" %></td>
     </tr>
   <% end %>
