@@ -19,10 +19,14 @@ RSpec.describe 'vm/index.html.erb', type: :view do
        vm_names: ['a name', 'another name'],
     }
   end
+  let(:param) do
+    ['up_vms', 'down_vms', 'up_hosts', 'down_hosts']
+  end
 
   before do
     assign(:vms, [vm])
     assign(:hosts, [host])
+    assign(:parameters, [param])
     render
   end
 
