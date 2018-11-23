@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe 'vm/index.html.erb', type: :view do
   let(:vm) do
     {
-        name: 'My insanely cool vm',
-        state: true,
-        boot_time: 'Yesterday'
+      name: 'My insanely cool vm',
+      state: true,
+      boot_time: 'Yesterday'
     }
   end
   let(:host) do
@@ -16,11 +16,11 @@ RSpec.describe 'vm/index.html.erb', type: :view do
        vendor: 'nice vendor',
        bootTime: 'some long while',
        connectionState: 'connected',
-       vm_names: ['a name', 'another name'],
+       vm_names: ['a name', 'another name']
     }
   end
   let(:param) do
-    ['up_vms', 'down_vms', 'up_hosts', 'down_hosts']
+    %w[up_vms down_vms up_hosts down_hosts]
   end
 
   before do
@@ -65,10 +65,10 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   end
 
   it 'links to resource detail pages' do
-    expect(rendered).to have_button("Details", count: 2)
+    expect(rendered).to have_button('Details', count: 2)
   end
 
   it 'can filter resources' do
-    expect(rendered).to have_button("Filter")
+    expect(rendered).to have_button('Filter')
   end
 end

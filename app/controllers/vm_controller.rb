@@ -2,8 +2,7 @@
 
 require 'vmapi.rb'
 class VmController < ApplicationController
-
-  attr :vms, :hosts
+  attr_reader :vms, :hosts
 
   def index
     @vms = filter_vms VmApi.new.all_vms
@@ -36,6 +35,7 @@ class VmController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
   def filter_vms(vms)
     filter(vms, :vm_filter)
   end
@@ -49,34 +49,32 @@ class VmController < ApplicationController
     else
       result = []
       send(filter).keys.each do |key|
-        if params[key].present?
-          result += list.select{ |object| send(filter)[key].call(object) }
-        end
+        result += list.select { |object| send(filter)[key].call(object) } if params[key].present?
       end
       result
     end
   end
 
   def determine_params
-    all_parameters = (vm_filter.keys + host_filter.keys).map! { |x| x.to_s }
-    actual_params = params.keys.map { |x| x.to_s }
-    if no_params_set? 
+    all_parameters = (vm_filter.keys + host_filter.keys).map!(&:to_s)
+    actual_params = params.keys.map(&:to_s)
+    if no_params_set?
     then all_parameters
     else all_parameters - (all_parameters - actual_params)
     end
   end
 
   def no_params_set?
-    all_parameters = (vm_filter.keys + host_filter.keys).map! { |x| x.to_s }
-    actual_params = params.keys.map { |x| x.to_s }
+    all_parameters = (vm_filter.keys + host_filter.keys).map!(&:to_s)
+    actual_params = params.keys.map(&:to_s)
     (all_parameters - actual_params).size == all_parameters.size
   end
 
   def vm_filter
-    {up_vms: Proc.new { |vm| vm[:state] }, down_vms: Proc.new { |vm| !vm[:state] } }
+    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
   end
 
   def host_filter
-    {up_hosts: Proc.new { |host| host[:connectionState] == 'connected' }, down_hosts: Proc.new { |host| host[:connectionState] != 'connected' } }
+    { up_hosts: proc { |host| host[:connectionState] == 'connected' }, down_hosts: proc { |host| host[:connectionState] != 'connected' } }
   end
 end

@@ -39,7 +39,7 @@ class VmApi
         host.vm.map do |vm|
           vm_names << vm.name
         end
-        @hosts << { name: host.name, vm_names: vm_names, model: host.hardware.systemInfo.model, vendor: host.hardware.systemInfo.vendor, bootTime: host.runtime.bootTime, connectionState: host.runtime.connectionState, summary: host.summary}
+        @hosts << { name: host.name, vm_names: vm_names, model: host.hardware.systemInfo.model, vendor: host.hardware.systemInfo.vendor, bootTime: host.runtime.bootTime, connectionState: host.runtime.connectionState, summary: host.summary }
       end
     end
     @hosts
@@ -48,11 +48,11 @@ class VmApi
   def get_vm(name)
     connect
     if vm = find_vm(name)
-    { name: vm.name, 
-      boot_time: vm.runtime.bootTime,
-      host: vm.summary.runtime.host.name,
-      guestHeartbeatStatus: vm.guestHeartbeatStatus, 
-      summary: vm.summary}
+      { name: vm.name,
+        boot_time: vm.runtime.bootTime,
+        host: vm.summary.runtime.host.name,
+        guestHeartbeatStatus: vm.guestHeartbeatStatus,
+        summary: vm.summary }
     else nil
     end
   end
@@ -60,13 +60,10 @@ class VmApi
   def get_host(name)
     all_hosts
     @hosts.each do |host|
-      if host[:name] == name
-        return host
-      end
+      return host if host[:name] == name
     end
     nil
   end
-    
 
   def delete_vm(name)
     connect
