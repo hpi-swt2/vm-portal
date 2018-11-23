@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get '/host/:id' => 'vm#show_host', constraints: { id: /.*/ }
 
-  devise_for :users, path: 'users'
+  devise_for :users, controllers: { registrations: 'users/registrations' }
   resources :vm
 
   root 'landing#index'
