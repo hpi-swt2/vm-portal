@@ -4,6 +4,9 @@
 Rails.application.routes.draw do
   root to: redirect('/users/sign_in')
 
+  get 'slack' => 'slack_spike#index'
+  get 'slack/auth' => 'slack_spike#auth'
+
   devise_for :users, path: 'users'
   resources :vm
 
