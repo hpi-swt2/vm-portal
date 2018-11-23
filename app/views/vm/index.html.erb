@@ -11,11 +11,11 @@
     <tr>
       <th scope="row">VMs</th>
       <td>
-        <%= check_box_tag(:up_vms, true, true) %>
+        <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
         <%= label_tag(:up_vms, "connected") %>  
       </td>
       <td>
-        <%= check_box_tag(:down_vms, true, true) %>
+        <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
         <%= label_tag(:down_vms, "not connected") %>
       </td>
       <td rowspan="2">
@@ -25,11 +25,11 @@
     <tr>
       <th scope="row">Hosts</th>
       <td>
-        <%= check_box_tag(:up_hosts, true, true) %>
+        <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
         <%= label_tag(:up_hosts, "connected") %>  
       </td>
       <td>
-        <%= check_box_tag(:down_hosts, true, true) %>
+        <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
         <%= label_tag(:down_hosts, "not connected") %>
       </td>
     </tr></tbody></table>

@@ -8,6 +8,7 @@ class VmController < ApplicationController
   def index
     @vms = filter_vms VmApi.new.all_vms
     @hosts = filter_hosts VmApi.new.all_hosts
+    @parameters = determine_params
   end
 
   def destroy
@@ -56,10 +57,19 @@ class VmController < ApplicationController
     end
   end
 
+  def determine_params
+    all_parameters = (vm_filter.keys + host_filter.keys).map! { |x| x.to_s }
+    actual_params = params.keys.map { |x| x.to_s }
+    if no_params_set? 
+    then all_parameters
+    else all_parameters - (all_parameters - actual_params)
+    end
+  end
+
   def no_params_set?
-    parameters = (vm_filter.keys + host_filter.keys).map! {|x| x.to_s }
-    actual_params = params.keys.map! {|x| x.to_s }
-    (parameters - actual_params).size == parameters.size
+    all_parameters = (vm_filter.keys + host_filter.keys).map! { |x| x.to_s }
+    actual_params = params.keys.map { |x| x.to_s }
+    (all_parameters - actual_params).size == all_parameters.size
   end
 
   def vm_filter
@@ -67,6 +77,6 @@ class VmController < ApplicationController
   end
 
   def host_filter
-    {up_hosts: Proc.new {|host| host[:connectionState] == 'connected' }, down_hosts: Proc.new {|host| host[:connectionState] != 'connected' } }
+    {up_hosts: Proc.new { |host| host[:connectionState] == 'connected' }, down_hosts: Proc.new { |host| host[:connectionState] != 'connected' } }
   end
 end
