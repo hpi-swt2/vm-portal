@@ -16,8 +16,28 @@ class VmController < ApplicationController
     redirect_to action: :index
   end
 
-  def new; end
+  def new
+    @vm = VmApi.new
+  end
 
+  def show
+    #request = session[:current_request]
+    #if request.status = 'accepted'
+      #fill(request)
+    #  page.fill_in('name'), with request.name
+    #end
+  end
+
+  def filling(request)
+    #page.fill_in('name'), with request.name
+    #page.fill_in('cpu'), with request.cpu
+    #page.fill_in('ram'), with request.ram
+    #page.fill_in('capacity'), with request.capacity
+  end
+
+  def fill(request)
+    create(request.name, request.cpu, request.ram, request.capacity)
+  end
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
   # Because no Active Record model is being wrapped

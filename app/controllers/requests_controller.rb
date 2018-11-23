@@ -2,6 +2,7 @@
 
 class RequestsController < ApplicationController
   before_action :set_request, only: %i[show edit update destroy]
+  helper_method :accept
 
   # GET /requests
   # GET /requests.json
@@ -12,6 +13,17 @@ class RequestsController < ApplicationController
   # GET /requests/1
   # GET /requests/1.json
   def show
+    @request = Request.find(params[:id])
+
+    @accepted_request = @request.accept 
+  end
+
+  def accept
+    @request.status = 'accepted'
+    #visit new_request_path
+    #session[:current_request] = @request
+    #@vm = VmApi.new
+    #@vm.filling(@request)
   end
 
   # GET /requests/new

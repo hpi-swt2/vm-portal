@@ -17,13 +17,13 @@ RSpec.describe 'requests/show', type: :feature do
       expect(page).to have_text(request.status)
     end
 
-    it 'has accept button' do
-      visit request_path(request)
+    #it 'has accept button' do
+    #  visit request_path(request)
 
-      click_button('Accept')
-      request.reload
-      expect(request.status).to eq('accepted')
-    end
+    #  click_button('Accept')
+    #  request.reload
+    #  expect(request.status).to eq('accepted')
+    #end
 
     it 'has reject button' do
       visit request_path(request)
@@ -50,6 +50,17 @@ RSpec.describe 'requests/show', type: :feature do
       visit request_path(rejected_request)
 
       expect(page).to have_text(rejected_request.rejection_information)
+    end
+  end
+
+  context 'when request is accepted' do
+    let(:request) { FactoryBot.create :request }
+
+    it 'refers to vm_new_path' do
+      visit request_path(request)
+
+      click_button('Accept')
+      expect(current_path).to eq(new_vm_path)
     end
   end
 end
