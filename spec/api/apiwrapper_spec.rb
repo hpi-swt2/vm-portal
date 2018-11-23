@@ -1,13 +1,14 @@
+# frozen_string_literal: true
 
 require 'rails_helper'
 require './app/api/vmapi.rb'
 
 RSpec.describe VmApi do
-  let(:api) {VmApi.new}
+  let(:api) { VmApi.new }
 
   describe '#connect' do
     let(:setup_methods) do
-      [:serviceInstance, :find_datacenter, :hostFolder, :vmFolder, :children, :first, :resourcePool]
+      %i[serviceInstance find_datacenter hostFolder vmFolder children first resourcePool]
     end
 
     let(:double_api) do
@@ -33,7 +34,7 @@ RSpec.describe VmApi do
     it 'asks API to create a vm' do
       expect(api).to receive(:connect)
       api.instance_variable_set :@vm_folder, vm_folder_mock
-      api.create_vm(2, 1024, 10000, 'cool vm')
+      api.create_vm(2, 1024, 10_000, 'cool vm')
     end
   end
 
@@ -48,7 +49,7 @@ RSpec.describe VmApi do
       api.instance_variable_set :@vm_folder, vm_folder_mock
     end
 
-    subject {api.all_vms}
+    subject { api.all_vms }
 
     it 'asks @vm_folder for all vms' do
       api.all_vms
@@ -79,7 +80,7 @@ RSpec.describe VmApi do
     end
 
     context 'when vm is off' do
-      let(:power_state) {'poweredOff'}
+      let(:power_state) { 'poweredOff' }
 
       it 'deletes vm' do
         api.delete_vm Faker::FunnyName.name
@@ -87,10 +88,10 @@ RSpec.describe VmApi do
     end
 
     context 'when vm is on' do
-      let(:power_state) {'poweredOn'}
+      let(:power_state) { 'poweredOn' }
       let(:vm_mock) do
-          expect(super()).to receive_message_chain(:PowerOffVM_Task, :wait_for_completion)
-          super()
+        expect(super()).to receive_message_chain(:PowerOffVM_Task, :wait_for_completion)
+        super()
       end
 
       it 'turns vm off and deletes vm' do
@@ -121,7 +122,6 @@ RSpec.describe VmApi do
       it 'changes PowerState' do
         api.change_power_state(Faker::FunnyName.name, true)
       end
-
     end
 
     context 'to off' do
@@ -135,6 +135,5 @@ RSpec.describe VmApi do
         api.change_power_state(Faker::FunnyName.name, false)
       end
     end
-
   end
 end

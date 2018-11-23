@@ -14,7 +14,6 @@ RSpec.describe 'vm/new.html.erb', type: :view do
     expect(rendered).to have_selector 'form input[name="cpu"]'
   end
 
-
   it 'has input field for ram' do
     expect(rendered).to have_selector 'form input[name="ram"]'
   end

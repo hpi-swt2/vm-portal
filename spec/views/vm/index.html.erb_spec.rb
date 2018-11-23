@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe 'vm/index.html.erb', type: :view do
   let(:vm) do
     {
-        name: 'My insanely cool vm',
-        state: true,
-        boot_time: 'Yesterday'
+      name: 'My insanely cool vm',
+      state: true,
+      boot_time: 'Yesterday'
     }
   end
 
