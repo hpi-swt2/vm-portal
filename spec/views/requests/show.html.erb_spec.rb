@@ -1,66 +1,29 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe 'requests/show', type: :feature do
-  context 'when request status is pending' do
-    let(:request) { FactoryBot.create :request }
+ RSpec.describe 'requests/show', type: :view do
+   before(:each) do
+     @request = assign(:request, Request.create!(
+       name: 'MyVM',
+       cpu_cores: 2,
+       ram_mb: 1000,
+       storage_mb: 2000,
+       operating_system: 'MyOS',
+       software: 'MySoftware',
+       comment: 'Comment',
+       status: 'pending'
+     ))
+   end
 
-    it 'renders attributes in <p>' do
-      visit request_path(request)
-
-      expect(page).to have_text(request.name)
-      expect(page).to have_text(request.cpu_cores)
-      expect(page).to have_text(request.ram_mb)
-      expect(page).to have_text(request.storage_mb)
-      expect(page).to have_text(request.operating_system)
-      expect(page).to have_text(request.software)
-      expect(page).to have_text(request.comment)
-      expect(page).to have_text(request.status)
-    end
-
-    #it 'has accept button' do
-    #  visit request_path(request)
-
-    #  click_button('Accept')
-    #  request.reload
-    #  expect(request.status).to eq('accepted')
-    #end
-
-    it 'has reject button' do
-      visit request_path(request)
-
-      click_button('Reject')
-      request.reload
-      expect(request.status).to eq('rejected')
-    end
-
-    it 'has rejection_information input field' do
-      visit request_path(request)
-
-      page.fill_in 'request[rejection_information]', with: 'Info'
-      click_button('Reject')
-      request.reload
-      expect(request.rejection_information).to eq('Info')
-    end
-  end
-
-  context 'when request is rejected' do
-    let(:rejected_request) { FactoryBot.create :rejected_request }
-
-    it 'Has rejection Information field' do
-      visit request_path(rejected_request)
-
-      expect(page).to have_text(rejected_request.rejection_information)
-    end
-  end
-
-  context 'when request is accepted' do
-    let(:request) { FactoryBot.create :request }
-
-    it 'refers to vm_new_path' do
-      visit request_path(request)
-
-      click_button('Accept')
-      expect(current_path).to eq(new_vm_path)
-    end
-  end
+   it 'renders attributes in <p>' do
+     render
+     expect(rendered).to match(/MyVM/)
+     expect(rendered).to match(/2/)
+     expect(rendered).to match(/1000/)
+     expect(rendered).to match(/2000/)
+     expect(rendered).to match(/MySoftware/)
+     expect(rendered).to match(/Comment/)
+     expect(rendered).to match(/pending/)
+   end
 end
