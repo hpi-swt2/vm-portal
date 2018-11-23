@@ -6,10 +6,10 @@ RSpec.describe VmController, type: :controller do
   describe 'GET #index' do
     before do
       double_api = double
-      allow(double_api).to receive(:all_vms).and_return [ { name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
-                                                          { name: 'another VM', state: false, bootTime: 'now' } ]
-      allow(double_api).to receive(:all_hosts).and_return [ { name: 'someHostMachine', connectionState: 'connected' },
-                                                            { name: 'anotherHost', connectionState: 'not connected' } ]
+      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
+                                                          { name: 'another VM', state: false, bootTime: 'now' }]
+      allow(double_api).to receive(:all_hosts).and_return [{ name: 'someHostMachine', connectionState: 'connected' },
+                                                            { name: 'anotherHost', connectionState: 'not connected' }]
 
       allow(VmApi).to receive(:new).and_return double_api
     end
