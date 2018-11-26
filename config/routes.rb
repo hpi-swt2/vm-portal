@@ -3,6 +3,11 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :requests, path: '/vms/requests'
+  resources :notifications, only: [:index, :new, :created, :destroy] do
+    member do
+      get :mark_as_read
+    end
+  end
 
   root to: redirect('/users/sign_in')
 

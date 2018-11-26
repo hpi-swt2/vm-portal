@@ -1,0 +1,8 @@
+FactoryBot.define do
+  factory :notification do
+    association :user, factory: :user
+    title { 'Test Notification' }
+    message { 'This is a test' }
+    read { false  }
+  end
+end

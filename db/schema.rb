@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(version: 20_181_119_090_111) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index ['user_id'], name: 'index_user_profiles_on_user_id'
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "title"
+    t.string "message"
+    t.boolean "read"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table 'users', force: :cascade do |t|
