@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
-  before_action :set_notification, only: %i(show edit update destroy mark_as_read)
+  before_action :set_notification, only: %i[show edit update destroy mark_as_read]
 
   # GET /notifications
   # GET /notifications.json
@@ -24,14 +24,11 @@ class NotificationsController < ApplicationController
     respond_to do |format|
       if @notification.save
         format.html { redirect_to notifications_path, notice: 'Notification was successfully created.' }
-        format.json { render :show, status: :created, location: @notification }
       else
         format.html { render :new }
-        format.json { render json: @notification.errors, status: :unprocessable_entity }
       end
     end
   end
-
 
   # DELETE /notifications/1
   # DELETE /notifications/1.json
@@ -49,20 +46,20 @@ class NotificationsController < ApplicationController
       if @notification.save
         format.html { redirect_to notifications_path }
       else
-        format.html { redirect_to notifications_path, alert: 'Something went wrong.'}
+        format.html { redirect_to notifications_path, alert: 'Something went wrong.' }
       end
     end
-
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_notification
-      @notification = Notification.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def notification_params
-      params.require(:notification).permit(:title, :message)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_notification
+    @notification = Notification.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def notification_params
+    params.require(:notification).permit(:title, :message)
+  end
 end
