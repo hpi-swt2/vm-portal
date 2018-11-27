@@ -51,11 +51,10 @@
 <% end %>
 
 <% if @request.pending? %>
-  <%= form_with(model: @request, local: true) do |form| %>
-    <div class="actions">
-      <%= link_to '<button>Accept</button>'.html_safe, new_vm_path, onclick: (accept(@request)) %>
-    </div>
-  <% end %>
+
+  <div class="actions">
+    <%= link_to '<button>Accept</button>'.html_safe, new_vm_path(request:@request), onclick: request_accept(@request) %>
+  </div>
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
@@ -64,8 +63,7 @@
     </div>
 
     <div class="actions">
-      <%= form.hidden_field :status, value: 'rejected' %>
-      <%= form.submit 'Reject' %>
+      <%= form.submit 'Reject', onclick: request_reject(@request) %>
     </div>
   <% end %>
 <% end %>
