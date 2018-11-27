@@ -18,17 +18,18 @@ RSpec.describe 'requests/new', type: :view do
 
   it 'renders new request form' do
     render
+    expect(rendered).to match(/Windows/)
 
     assert_select 'form[action=?][method=?]', requests_path, 'post' do
       assert_select 'input[name=?]', 'request[name]'
 
-      assert_select 'input[name=?]', 'request[cpu_cores]'
+      assert_select 'input[name=?][min=?]', 'request[cpu_cores]', '0'
 
-      assert_select 'input[name=?]', 'request[ram_mb]'
+      assert_select 'input[name=?][min=?]', 'request[ram_mb]', '0'
 
-      assert_select 'input[name=?]', 'request[storage_mb]'
+      assert_select 'input[name=?][min=?]', 'request[storage_mb]', '0'
 
-      assert_select 'input[name=?]', 'request[operating_system]'
+      assert_select 'select[name=?]', 'request[operating_system]'
 
       assert_select 'input[name=?]', 'request[software]'
 
