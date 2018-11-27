@@ -17,4 +17,9 @@ describe 'Index page', type: :feature do
     visit root_path
     expect(page).to have_css('#footer')
   end
+
+  it 'should have an icon' do
+    visit root_path
+    expect(page).to have_css('.fa')
+  end
 end

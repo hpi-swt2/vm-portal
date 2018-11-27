@@ -1,34 +1,54 @@
-<h2>Log in</h2>
-
 <% flash.each do |key, value| %>
-  <%= content_tag :div, value, class: "flash #{key}" %>
+  <div class="alert alert-danger">
+    <%= content_tag :div, value %>
+  </div>
 <% end %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+<div class='row'>
+  <div class='col-7'>
+    <h1>VM-Portal</h1>
+    <p>This Ruby on Rails application enables managing of virtual machines via VMware vSphere.
+      Mehr Informationen findet man <a href="https://github.com/hpi-swt2/vm-portal">hier</a>.</p>
   </div>
+  <div class='col-5'>
+    <div class='card'>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+      <div class="card-header">
+        <h2>Log in</h2>
+      </div>
 
-  <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+
+      <div class="card-body">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="form-group input-group">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: :email, class: 'form-control' %>
+          </div>
+
+          <div class="form-group input-group">
+            <%= f_password_field = f.password_field :password, autocomplete: "current-password", placeholder: :password, class: 'form-control'
+                f_password_field %>
+          </div>
+
+          <% if devise_mapping.rememberable? -%>
+            <div class="form-group">
+              <div class="form-check">
+                <%= f.check_box :remember_me, class: 'form-check-input' %>
+                <%= f.label :remember_me, class: 'form-check-label' %>
+              </div>
+            </div>
+          <% end -%>
+          <div class="form-group actions">
+            <%= f.submit "Log in", class: 'btn btn-block btn-primary float-right' %>
+            <button class='btn btn-block btn-secondary float-right' id="oauth">Sign in using OAuth</button>
+          </div>
+
+        <% end -%>
+
+      </div>
+
+      <div class='card-footer'>
+        <%= render "devise/shared/links" %>
+      </div>
     </div>
-  <% end -%>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
   </div>
-<% end %>
-
-<div>
-  <button id="oauth">Sign in using OAuth</button>
 </div>
-
-<%= render "devise/shared/links" %>
