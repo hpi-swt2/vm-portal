@@ -30,13 +30,31 @@ RSpec.describe RequestsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip('Add a hash of attributes valid for your model')
-  }
+  let(:valid_attributes) do
+    {
+      name: 'MyVM',
+      cpu_cores: 2,
+      ram_mb: 1000,
+      storage_mb: 2000,
+      operating_system: 'MyOS',
+      software: 'MySoftware',
+      comment: 'Comment',
+      status: 'pending'
+    }
+  end
 
-  let(:invalid_attributes) {
-    skip('Add a hash of attributes invalid for your model')
-  }
+  let(:invalid_attributes) do
+    {
+      name: '',
+      cpu_cores: 2,
+      ram_mb: 1000,
+      storage_mb: -2000,
+      operating_system: '',
+      software: 'MySoftware',
+      comment: 'Comment',
+      status: 'pending'
+    }
+  end
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -54,7 +72,7 @@ RSpec.describe RequestsController, type: :controller do
   describe 'GET #show' do
     it 'returns a success response' do
       request = Request.create! valid_attributes
-      get :show, params: {id: request.to_param}, session: valid_session
+      get :show, params: { id: request.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -69,7 +87,7 @@ RSpec.describe RequestsController, type: :controller do
   describe 'GET #edit' do
     it 'returns a success response' do
       request = Request.create! valid_attributes
-      get :edit, params: {id: request.to_param}, session: valid_session
+      get :edit, params: { id: request.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -78,19 +96,19 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       it 'creates a new Request' do
         expect {
-          post :create, params: {request: valid_attributes}, session: valid_session
+          post :create, params: { request: valid_attributes }, session: valid_session
         }.to change(Request, :count).by(1)
       end
 
       it 'redirects to the created request' do
-        post :create, params: {request: valid_attributes}, session: valid_session
+        post :create, params: { request: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Request.last)
       end
     end
 
     context 'with invalid params' do
       it 'returns a success response (i.e. to display the "new" template)' do
-        post :create, params: {request: invalid_attributes}, session: valid_session
+        post :create, params: { request: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -98,20 +116,29 @@ RSpec.describe RequestsController, type: :controller do
 
   describe 'PUT #update' do
     context 'with valid params' do
-      let(:new_attributes) {
-        skip('Add a hash of attributes valid for your model')
-      }
+      let(:new_attributes) do
+        {
+          name: 'MyVM',
+          cpu_cores: 2,
+          ram_mb: 1000,
+          storage_mb: 2000,
+          operating_system: 'MyOS',
+          software: 'MySoftware',
+          comment: 'Comment',
+          status: 'pending'
+        }
+      end
 
       it 'updates the requested request' do
         request = Request.create! valid_attributes
-        put :update, params: {id: request.to_param, request: new_attributes}, session: valid_session
+        put :update, params: { id: request.to_param, request: new_attributes }, session: valid_session
         request.reload
         skip('Add assertions for updated state')
       end
 
       it 'redirects to the request' do
         request = Request.create! valid_attributes
-        put :update, params: {id: request.to_param, request: valid_attributes}, session: valid_session
+        put :update, params: { id: request.to_param, request: valid_attributes }, session: valid_session
         expect(response).to redirect_to(request)
       end
     end
@@ -119,7 +146,7 @@ RSpec.describe RequestsController, type: :controller do
     context 'with invalid params' do
       it 'returns a success response (i.e. to display the "edit" template)' do
         request = Request.create! valid_attributes
-        put :update, params: {id: request.to_param, request: invalid_attributes}, session: valid_session
+        put :update, params: { id: request.to_param, request: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -129,13 +156,13 @@ RSpec.describe RequestsController, type: :controller do
     it 'destroys the requested request' do
       request = Request.create! valid_attributes
       expect {
-        delete :destroy, params: {id: request.to_param}, session: valid_session
+        delete :destroy, params: { id: request.to_param }, session: valid_session
       }.to change(Request, :count).by(-1)
     end
 
     it 'redirects to the requests list' do
       request = Request.create! valid_attributes
-      delete :destroy, params: {id: request.to_param}, session: valid_session
+      delete :destroy, params: { id: request.to_param }, session: valid_session
       expect(response).to redirect_to(requests_url)
     end
   end
