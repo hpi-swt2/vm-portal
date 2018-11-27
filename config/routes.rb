@@ -9,5 +9,7 @@ Rails.application.routes.draw do
   devise_for :users, path: 'users'
   resources :vm
 
+  get '/dashboard' => 'dashboard#index'
+
   root 'landing#index'
 end

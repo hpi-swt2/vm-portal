@@ -1,0 +1,89 @@
+<h1>Dashboard</h1>
+
+<div class="card-group">
+  <div class="col-8">
+    <div class="row">
+      <div class="card">
+        <div class="card-header">
+          <h3>VMs</h3>
+        </div>
+        <div class="card-body">
+          <table data-toggle="table" class="table">
+            <thead>
+            <tr>
+
+            </tr>
+            <tbody>
+            <% @vms.each do |vm| %>
+              <tr>
+                <td><%= vm[:name] %></td>
+                <td><%= vm[:boot_time] %></td>
+                <td><%= button_to "Details",
+                                  {controller: :vm, action: 'show', id: vm[:name]},
+                                  method: :get, class: "btn btn-info" %></td>
+                <td><%= button_to "Delete",
+                                  {controller: :vm, action: 'destroy', id: vm[:name]},
+                                  method: :delete, class: "btn btn-danger" %></td>
+              <tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <div class="card-header">
+          <h3>VMs</h3>
+        </div>
+        <div class="card-body">
+
+          <table data-toggle="table" class="table">
+            <thead>
+            <tr>
+              <th scope="col" data-sortable="true">Hostname</th>
+              <th scope="col" data-sortable="true">Vendor</th>
+              <th scope="col" data-sortable="true">Status</th>
+              <th scope="col">VMs</th>
+              <th scope="col">Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @hosts.each do |host| %>
+              <tr>
+                <td><%= host[:name] %></td>
+                <td><%= host[:vendor] %></td>
+                <td><%= host[:connectionState] %></td>
+                <td>
+                  <ul>
+                    <% if not host[:vm_names].nil?
+                         host[:vm_names].each do |vm_name| %>
+                        <li> <%= vm_name %></li>
+                      <% end
+                         end %>
+                  </ul>
+                </td>
+                <td><%= button_to "Details",
+                                  {controller: :vm, action: 'show_host', id: host[:name]},
+                                  method: :get, class: "btn btn-info" %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">
+        <h3>Some other category</h3>
+      </div>
+      <div class="card-body">
+        <p>this text explains that category and maybe shows some graphs later</p>
+      </div>
+    </div>
+  </div>
+</div>
