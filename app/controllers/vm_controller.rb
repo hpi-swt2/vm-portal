@@ -26,11 +26,6 @@ class VmController < ApplicationController
   end
 
   def show
-  end
-
-  private
-
-  def show
     @vm = VmApi.new.get_vm(params[:id])
   end
 
