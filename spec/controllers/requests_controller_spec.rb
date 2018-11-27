@@ -26,7 +26,6 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
@@ -95,9 +94,9 @@ RSpec.describe RequestsController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Request' do
-        expect {
+        expect do
           post :create, params: { request: valid_attributes }, session: valid_session
-        }.to change(Request, :count).by(1)
+        end.to change(Request, :count).by(1)
       end
 
       it 'redirects to the created request' do
@@ -155,9 +154,9 @@ RSpec.describe RequestsController, type: :controller do
   describe 'DELETE #destroy' do
     it 'destroys the requested request' do
       request = Request.create! valid_attributes
-      expect {
+      expect do
         delete :destroy, params: { id: request.to_param }, session: valid_session
-      }.to change(Request, :count).by(-1)
+      end.to change(Request, :count).by(-1)
     end
 
     it 'redirects to the requests list' do
@@ -166,5 +165,4 @@ RSpec.describe RequestsController, type: :controller do
       expect(response).to redirect_to(requests_url)
     end
   end
-
 end
