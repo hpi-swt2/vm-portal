@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-# TODO: klären, inwieweit View tests gemacht werden sollen
+
+# TODO: klÃ¤ren, inwieweit View tests gemacht werden sollen
 
 require 'rails_helper'
 
@@ -8,9 +9,9 @@ RSpec.describe 'vm/show.html.erb', type: :view do
     summary = double
     allow(summary).to receive_message_chain(:storage, :committed).and_return(0)
     allow(summary).to receive_message_chain(:storage, :uncommitted).and_return(0)
-    allow(summary).to receive_message_chain(:config, :guestId).and_return("Win10")
-    allow(summary).to receive_message_chain(:config, :guestFullName).and_return("Win10 EE")
-    allow(summary).to receive_message_chain(:guest, :ipAddress).and_return("0.0.0.0")
+    allow(summary).to receive_message_chain(:config, :guestId).and_return('Win10')
+    allow(summary).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
+    allow(summary).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
     allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
     allow(summary).to receive_message_chain(:config, :cpuReservation).and_return(0)
     allow(summary).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(0)
@@ -22,7 +23,6 @@ RSpec.describe 'vm/show.html.erb', type: :view do
       host: 'aHost',
       guestHeartbeatStatus: 'green',
       summary: summary }
-
   end
 
   before do
@@ -49,6 +49,4 @@ RSpec.describe 'vm/show.html.erb', type: :view do
   it 'shows vm IP address' do
     expect(rendered).to include vm[:summary].guest.ipAddress
   end
-
 end
-
