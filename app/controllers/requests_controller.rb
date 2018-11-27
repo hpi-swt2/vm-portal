@@ -66,6 +66,13 @@ class RequestsController < ApplicationController
     end
   end
 
+  def request_accept_button
+    @request = Request.find(params[:request])
+    @request.status = 'accepted'
+    @request.save
+    redirect_to new_vm_path(request: @request)
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.

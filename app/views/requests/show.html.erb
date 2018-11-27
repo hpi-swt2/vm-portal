@@ -47,14 +47,12 @@
   </p>
 <% end %>
 
-<% if @request.accepted? %>
-<% end %>
-
 <% if @request.pending? %>
 
   <div class="actions">
-    <%= link_to '<button>Accept</button>'.html_safe, new_vm_path(request:@request), onclick: request_accept(@request) %>
+      <%= button_to 'Accept', request_accept_button_path(request: @request), method: :patch %>
   </div>
+
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
@@ -63,7 +61,8 @@
     </div>
 
     <div class="actions">
-      <%= form.submit 'Reject', onclick: request_reject(@request) %>
+      <%= form.hidden_field :status, value: 'rejected' %>
+      <%= form.submit 'Reject' %>
     </div>
   <% end %>
 <% end %>
