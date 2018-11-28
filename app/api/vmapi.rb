@@ -149,23 +149,21 @@ class VmApi
   end
 
   def connect
-    begin
-      @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
-      @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
-      @vm_folder = @dc.vmFolder
-      @cluster_folder = @dc.hostFolder
-      @clusters = extract_clusters(@cluster_folder).flatten
-      @vms = @vm_folder.children
-      @resource_pool = @clusters.first.resourcePool
-    rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
-      folder = {}
-      folder['children'] = []
-      @vm_folder = folder.to_dot
-      @cluster_folder = []
-      @clusters = []
-      @vms = []
-      @resource_pool = []
-    end
+    @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
+    @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
+    @vm_folder = @dc.vmFolder
+    @cluster_folder = @dc.hostFolder
+    @clusters = extract_clusters(@cluster_folder).flatten
+    @vms = @vm_folder.children
+    @resource_pool = @clusters.first.resourcePool
+  rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
+    folder = {}
+    folder['children'] = []
+    @vm_folder = folder.to_dot
+    @cluster_folder = []
+    @clusters = []
+    @vms = []
+    @resource_pool = []
   end
 
   def extract_clusters(element)
