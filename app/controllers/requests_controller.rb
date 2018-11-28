@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
-  include RequestsHelper
   before_action :set_request, only: %i[show edit update destroy]
-  helper_method :accept
 
   # GET /requests
   # GET /requests.json

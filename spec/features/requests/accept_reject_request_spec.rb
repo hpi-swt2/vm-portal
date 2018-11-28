@@ -41,4 +41,34 @@ RSpec.describe 'requests/show', type: :feature do
       expect(page).to have_text(rejected_request.rejection_information)
     end
   end
+
+  context 'when request is accepted' do
+    let(:request) { FactoryBot.create :request }
+
+    it 'routes to the new_vm_path' do 
+      visit request_path(request)
+
+      click_button('Accept')
+      expect(current_path).to eq(new_vm_path)
+    end
+
+    it 'has automatically filled fields' do 
+      visit request_path(request)
+
+      click_button('Accept')
+      find('input[name="name"][placeholder*="MyVM"]')
+      find('input[name="cpu"][placeholder*="2"]')
+      find('input[name="ram"][placeholder*="1000"]')
+      find('input[name="capacity"][placeholder*="2000"]')
+    end
+
+    it 'has an accepted status' do
+      visit request_path(request)
+
+      click_button('Accept')
+      visit request_path(request)
+
+      expect(page).to have_text('accepted')
+    end
+  end
 end
