@@ -12,7 +12,7 @@ class RequestsController < ApplicationController
   # GET /requests/1
   # GET /requests/1.json
   def show
-    @request = Request.find(params[:id])
+    set_request
   end
 
   # GET /requests/new
@@ -22,6 +22,7 @@ class RequestsController < ApplicationController
 
   # GET /requests/1/edit
   def edit
+    set_request
   end
 
   # POST /requests

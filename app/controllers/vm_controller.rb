@@ -22,7 +22,7 @@ class VmController < ApplicationController
 
   def new
     @vm = VmApi.new
-    @request = !(params[:request].nil?) ? Request.find(params[:request]) : default_request
+    @request = !params[:request].nil? ? Request.find(params[:request]) : default_request
   end
 
   def show

@@ -45,14 +45,14 @@ RSpec.describe 'requests/show', type: :feature do
   context 'when request is accepted' do
     let(:request) { FactoryBot.create :request }
 
-    it 'routes to the new_vm_path' do 
+    it 'routes to the new_vm_path' do
       visit request_path(request)
 
       click_button('Accept')
       expect(current_path).to eq(new_vm_path)
     end
 
-    it 'has automatically filled fields' do 
+    it 'has automatically filled fields' do
       visit request_path(request)
 
       click_button('Accept')
