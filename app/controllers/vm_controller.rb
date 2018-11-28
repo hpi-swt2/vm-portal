@@ -8,6 +8,7 @@ class VmController < ApplicationController
     @vms = filter_vms VmApi.new.all_vms
     @hosts = filter_hosts VmApi.new.all_hosts
     @parameters = determine_params
+    flash[:danger] = 'You seem to have lost connection to the HPI network :(' if @vms == [] && @hosts == []
   end
 
   def destroy

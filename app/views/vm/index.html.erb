@@ -3,7 +3,11 @@
 </h1>
 <small class="text-muted">This is the overview page for all currently existing VMs</small>
 
-
+<div class="container">
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>"><%= value %></div>
+  <% end %>
+</div>
 
 <%= form_tag({controller: "vm", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
