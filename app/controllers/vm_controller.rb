@@ -5,14 +5,12 @@ class VmController < ApplicationController
   attr_reader :vms, :hosts
 
   def index
-    begin
-      @vms = filter_vms VmApi.new.all_vms
-      @hosts = filter_hosts VmApi.new.all_hosts
-      @parameters = determine_params
-    rescue
-      flash[:error] = "You're not connected to the HPI network"
-      redirect_to root_path
-    end
+    @vms = filter_vms VmApi.new.all_vms
+    @hosts = filter_hosts VmApi.new.all_hosts
+    @parameters = determine_params
+  rescue StandardError
+    flash[:error] = "You're not connected to the HPI network"
+    redirect_to root_path
   end
 
   def destroy
