@@ -40,7 +40,8 @@ class ServerController < ApplicationController
   def no_params_set?
     all_parameters = host_filter.keys.map(&:to_s)
     actual_params = params.keys.map(&:to_s)
-    (all_parameters - actual_params).size == all_parameters.size
+    parameter_count = (all_parameters - actual_params).size
+    parameter_count == all_parameters.size
   end
 
   def host_filter
