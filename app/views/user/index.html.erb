@@ -2,13 +2,15 @@
 
 <table class="table">
   <thead>
-    <th scope="col" data-sortable="true">Email</th>
-    <th scope="col" data-sortable="true">Firstname</th>
-    <th scope="col" data-sortable="true">Lastname</th>
+    <th>Email</th>
+    <th>Firstname</th>
+    <th>Lastname</th>
+    <th>Last login</th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
+        <td><%= link_to user.email, user_path(user) %></td>
         <td><%= user.email %></td>
         <td><%= user.email %></td>
         <td><%= user.email %></td>

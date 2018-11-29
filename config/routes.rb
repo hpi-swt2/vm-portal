@@ -5,10 +5,11 @@ Rails.application.routes.draw do
   root to: redirect('/users/sign_in')
 
   get '/host/:id' => 'vm#show_host', constraints: { id: /.*/ }
-  get 'users/:id/profile' => 'user#show'
-  get 'users/' => 'user#index'
 
   devise_for :users, path: 'users'
+  get 'users/:id/profile' => 'user#show', as: 'user'
+  get 'users/' => 'user#index'
+
   resources :vm
 
   root 'landing#index'
