@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module FeatureSpecHelper
-
   include Warden::Test::Helpers
 
   def self.included(base)
@@ -22,5 +21,4 @@ module FeatureSpecHelper
   def warden_scope(resource)
     resource.class.name.underscore.to_sym
   end
-
 end
