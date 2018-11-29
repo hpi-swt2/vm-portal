@@ -18,7 +18,7 @@ class ServerController < ApplicationController
   def new; end
 
   def show
-    @host = VmApi.new.get_host(params[:id])
+    @host = VmApi.instance.get_host(params[:id])
   end
 
   private

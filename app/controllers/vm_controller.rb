@@ -17,18 +17,18 @@ class VmController < ApplicationController
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    VmApi.new.delete_vm(params[:id])
+    VmApi.instance.delete_vm(params[:id])
   end
 
   def create
-    VmApi.new.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
+    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
     redirect_to action: :index
   end
 
   def new; end
 
   def show
-    @vm = VmApi.new.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm(params[:id])
   end
 
   # This controller doesn't use strong parameters
