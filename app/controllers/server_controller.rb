@@ -6,8 +6,8 @@ class ServerController < ApplicationController
 
   def index
     @hosts = filter VmApi.instance.all_hosts
-    @parameters = determine_params
     @is_connected = VmApi.instance.connected?
+    @parameters = determine_params
     if @is_connected
       puts 'discarding'
       flash.discard

@@ -157,7 +157,6 @@ class VmApi
   end
 
   def connect
-    @is_connected = true
     @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
     @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
     @vm_folder = @dc.vmFolder
@@ -165,6 +164,7 @@ class VmApi
     @clusters = extract_clusters(@cluster_folder).flatten
     @vms = @vm_folder.children
     @resource_pool = @clusters.first.resourcePool
+    @is_connected = true
   rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
     folder = {}
     folder['children'] = []
