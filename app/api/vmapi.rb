@@ -2,11 +2,13 @@
 
 require 'rbvmomi'
 require 'hash_dot'
+require 'singleton'
 # This class manages a connection to the VSphere backend
 # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
 # For documentation of API objects have a look at this:
 # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html
 class VmApi
+  include Singleton
   API_SERVER_IP = '192.168.30.3'
   API_SERVER_USER = 'administrator@swt.local'
   API_SERVER_PASSWORD = 'Vcsaswt"2018'

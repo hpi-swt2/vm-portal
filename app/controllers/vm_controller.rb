@@ -5,9 +5,8 @@ class VmController < ApplicationController
   attr_reader :vms
 
   def index
-    api = VmApi.new
-    @vms = filter api.all_vms
-    @is_connected = api.connected?
+    @vms = filter VmApi.instance.all_vms
+    @is_connected = VmApi.instance.connected?
     @parameters = determine_params
     puts @is_connected
     if @is_connected
@@ -17,7 +16,6 @@ class VmController < ApplicationController
       puts 'flashing'
       flash[:danger] = 'You seem to have lost connection to the HPI network :('
     end
-
   end
 
   def destroy
