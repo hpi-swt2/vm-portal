@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
 RSpec.describe 'server/show.html.erb', type: :view do
   let(:host) do
     summary = double
@@ -17,10 +16,10 @@ RSpec.describe 'server/show.html.erb', type: :view do
     allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
 
     { name: 'aHost',
-      vm_names: [ 'vm' ],
-      model: 'a cool model', 
+      vm_names: ['vm'],
+      model: 'a cool model',
       vendor: 'the dark side',
-      bootTime: 'Thursday', 
+      bootTime: 'Thursday',
       connectionState: 'connected',
       summary: summary }
   end

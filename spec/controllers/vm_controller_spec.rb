@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
 RSpec.describe VmController, type: :controller do
   describe 'GET #index' do
     before do
