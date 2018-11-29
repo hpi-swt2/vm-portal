@@ -6,8 +6,8 @@ class VmController < ApplicationController
   before_action :set_globals, only: [:index]
 
   def index
-    @vms = filter_vms VmApi.new.all_vms
-    @hosts = filter_hosts VmApi.new.all_hosts
+    fetch_vms
+    fetch_hosts
     @parameters = determine_params
   rescue StandardError
     flash.now[:error] = "You're not connected to the HPI network"
@@ -38,6 +38,14 @@ class VmController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
+  def fetch_vms
+    @vms = filter_vms VmApi.new.all_vms
+  end
+
+  def fetch_hosts
+    @hosts = filter_hosts VmApi.new.all_hosts
+  end
 
   def set_globals
     @vms = @hosts = @parameters = []
