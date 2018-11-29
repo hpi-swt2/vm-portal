@@ -4,10 +4,10 @@
 Rails.application.routes.draw do
   root to: redirect('/users/sign_in')
 
-  get '/host/:id' => 'vm#show_host', constraints: { id: /.*/ }
+  get '/server/:id' => 'server#show', constraints: { id: /.*/ }
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
-  resources :vm
+  resources :vm, :server
 
   root 'landing#index'
 end
