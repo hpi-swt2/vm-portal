@@ -5,10 +5,20 @@ class VmController < ApplicationController
   attr_reader :vms, :hosts
 
   def index
-    @vms = filter_vms VmApi.new.all_vms
-    @hosts = filter_hosts VmApi.new.all_hosts
+    api = VmApi.new
+    @vms = filter_vms api.all_vms
+    @hosts = filter_hosts api.all_hosts
+    @is_connected = api.connected?
     @parameters = determine_params
-    flash[:danger] = 'You seem to have lost connection to the HPI network :(' if @vms == [] && @hosts == []
+    puts @is_connected
+    if @is_connected
+      puts 'discarding'
+      flash.discard
+    else
+      puts 'flashing'
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
+
   end
 
   def destroy

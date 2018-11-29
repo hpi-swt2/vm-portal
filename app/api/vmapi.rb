@@ -89,6 +89,12 @@ class VmApi
     end
   end
 
+  @is_connected = false
+
+  def connected?
+    @is_connected
+  end
+
   private
 
   def find_vm(name)
@@ -149,6 +155,7 @@ class VmApi
   end
 
   def connect
+    @is_connected = true
     @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
     @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
     @vm_folder = @dc.vmFolder
@@ -164,6 +171,7 @@ class VmApi
     @clusters = []
     @vms = []
     @resource_pool = []
+    @is_connected = false
   end
 
   def extract_clusters(element)
