@@ -8,12 +8,9 @@ class VmController < ApplicationController
     @vms = filter VmApi.instance.all_vms
     @is_connected = VmApi.instance.connected?
     @parameters = determine_params
-    puts @is_connected
     if @is_connected
-      puts 'discarding'
       flash.discard
     else
-      puts 'flashing'
       flash[:danger] = 'You seem to have lost connection to the HPI network :('
     end
   end

@@ -13,6 +13,11 @@ class VmApi
   API_SERVER_USER = 'administrator@swt.local'
   API_SERVER_PASSWORD = 'Vcsaswt"2018'
 
+  @is_connected = false
+  def connected?
+    @is_connected
+  end
+
   def create_vm(cpu, ram, capacity, name)
     connect
     vm_config = creation_config(cpu, ram, capacity, name)
@@ -89,12 +94,6 @@ class VmApi
     else
       vm.PowerOffVM_Task.wait_for_completion
     end
-  end
-
-  @is_connected = false
-
-  def connected?
-    @is_connected
   end
 
   private
