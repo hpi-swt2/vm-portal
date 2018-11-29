@@ -1,3 +1,9 @@
+<% flash.each do |key, value| %>
+  <div class="alert alert-danger">
+    <%= content_tag :div, value %>
+  </div>
+<% end %>
+
 <h1>
   Virtual Machines
 </h1>

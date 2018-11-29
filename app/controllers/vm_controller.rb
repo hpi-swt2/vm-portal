@@ -9,8 +9,8 @@ class VmController < ApplicationController
     @hosts = filter_hosts VmApi.new.all_hosts
     @parameters = determine_params
   rescue StandardError
-    flash[:error] = "You're not connected to the HPI network"
-    redirect_to root_path
+    @vms = @hosts = @parameters = []
+    flash.now[:error] = "You're not connected to the HPI network"
   end
 
   def destroy
