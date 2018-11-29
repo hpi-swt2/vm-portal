@@ -3,17 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe 'requests/edit', type: :view do
-  before(:each) do
+  before do
     @request = assign(:request, Request.create!(
-      name: 'MyVM',
-      cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 1000,
-      operating_system: 'MyOS',
-      software: 'MySoftware',
-      comment: 'Comment',
-      status: 'pending'
-    ))
+                                  name: 'MyVM',
+                                  cpu_cores: 2,
+                                  ram_mb: 1000,
+                                  storage_mb: 1000,
+                                  operating_system: 'MyOS',
+                                  software: 'MySoftware',
+                                  comment: 'Comment',
+                                  status: 'pending'
+                                ))
   end
 
   it 'renders the edit request form' do

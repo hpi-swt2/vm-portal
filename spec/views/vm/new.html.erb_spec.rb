@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'vm/new.html.erb', type: :view do
-  before :each do
+  before do
     render
   end
+
   it 'has input field for name' do
     expect(rendered).to have_selector 'form input[name="name"]'
   end
@@ -13,7 +14,6 @@ RSpec.describe 'vm/new.html.erb', type: :view do
   it 'has input field for cpu' do
     expect(rendered).to have_selector 'form input[name="cpu"]'
   end
-
 
   it 'has input field for ram' do
     expect(rendered).to have_selector 'form input[name="ram"]'

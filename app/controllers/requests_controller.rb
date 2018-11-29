@@ -11,8 +11,7 @@ class RequestsController < ApplicationController
 
   # GET /requests/1
   # GET /requests/1.json
-  def show
-  end
+  def show; end
 
   # GET /requests/new
   def new
@@ -20,8 +19,7 @@ class RequestsController < ApplicationController
   end
 
   # GET /requests/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /requests
   # POST /requests.json
@@ -65,13 +63,13 @@ class RequestsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_request
-      @request = Request.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_request
+    @request = Request.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def request_params
-      params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :software, :comment, :rejection_information, :status)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def request_params
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :software, :comment, :rejection_information, :status)
+  end
 end

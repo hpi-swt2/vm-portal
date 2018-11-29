@@ -3,22 +3,22 @@
 require 'rails_helper'
 
 describe 'Index page', type: :feature do
-  it 'should have a navbar' do
+  it 'has a navbar' do
     visit root_path
     expect(page).to have_css('nav')
   end
 
-  it 'should have content' do
+  it 'has content' do
     visit root_path
     expect(page).to have_css('#content')
   end
 
-  it 'should have a footer' do
+  it 'has a footer' do
     visit root_path
     expect(page).to have_css('#footer')
   end
 
-  it 'should have an icon' do
+  it 'has an icon' do
     visit root_path
     expect(page).to have_css('.fa')
   end

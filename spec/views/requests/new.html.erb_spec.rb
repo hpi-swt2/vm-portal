@@ -3,17 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe 'requests/new', type: :view do
-  before(:each) do
+  before do
     assign(:request, Request.new(
-      name: 'MyVM',
-      cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
-      operating_system: 'MyOS',
-      software: 'MySoftware',
-      comment: 'Comment',
-      status: 'pending'
-    ))
+                       name: 'MyVM',
+                       cpu_cores: 2,
+                       ram_mb: 1000,
+                       storage_mb: 2000,
+                       operating_system: 'MyOS',
+                       software: 'MySoftware',
+                       comment: 'Comment',
+                       status: 'pending'
+                     ))
   end
 
   it 'renders new request form' do
