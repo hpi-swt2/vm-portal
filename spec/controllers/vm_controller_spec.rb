@@ -8,7 +8,12 @@ RSpec.describe VmController, type: :controller do
       allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
                                                          { name: 'another VM', state: false, bootTime: 'now' }]
 
-      allow(VmApi).to receive(:new).and_return double_api
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:connected?).and_return true
+
+      double_flash = double
+      allow(double_flash).to receive(:discard)
+      allow_any_instance_of(VmController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -24,7 +29,7 @@ RSpec.describe VmController, type: :controller do
       controller = VmController.new
       controller.params = {}
       controller.index
-      expect(controller.vms.size).to be VmApi.new.all_vms.size
+      expect(controller.vms.size).to be VmApi.instance.all_vms.size
     end
 
     it 'returns online VMs if requested' do
@@ -48,7 +53,8 @@ RSpec.describe VmController, type: :controller do
     before do
       double_api = double
       expect(double_api).to receive(:delete_vm)
-      allow(VmApi).to receive(:new).and_return double_api
+      allow(double_api).to receive(:connected?).and_return true
+      allow(VmApi).to receive(:instance).and_return double_api
     end
 
     it 'returns http success' do
@@ -61,7 +67,8 @@ RSpec.describe VmController, type: :controller do
     before do
       double_api = double
       expect(double_api).to receive(:create_vm)
-      allow(VmApi).to receive(:new).and_return double_api
+      allow(double_api).to receive(:connected?).and_return true
+      allow(VmApi).to receive(:instance).and_return double_api
     end
 
     it 'returns http success' do
@@ -85,6 +92,7 @@ RSpec.describe VmController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_vm).and_return(nil)
+      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:new).and_return double_api
     end
 

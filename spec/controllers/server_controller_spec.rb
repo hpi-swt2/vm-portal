@@ -8,7 +8,12 @@ RSpec.describe ServerController, type: :controller do
       allow(double_api).to receive(:all_hosts).and_return [{ name: 'someHostMachine', connectionState: 'connected' },
                                                            { name: 'anotherHost', connectionState: 'not connected' }]
 
-      allow(VmApi).to receive(:new).and_return double_api
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:connected?).and_return true
+
+      double_flash = double
+      allow(double_flash).to receive(:discard)
+      allow_any_instance_of(ServerController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -24,7 +29,7 @@ RSpec.describe ServerController, type: :controller do
       controller = ServerController.new
       controller.params = {}
       controller.index
-      expect(controller.hosts.size).to be VmApi.new.all_hosts.size
+      expect(controller.hosts.size).to be VmApi.instance.all_hosts.size
     end
 
     it 'returns online hosts if requested' do
@@ -48,7 +53,8 @@ RSpec.describe ServerController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_host).and_return(nil)
-      allow(VmApi).to receive(:new).and_return double_api
+      allow(double_api).to receive(:connected?).and_return true
+      allow(VmApi).to receive(:instance).and_return double_api
     end
 
     it 'returns http success' do

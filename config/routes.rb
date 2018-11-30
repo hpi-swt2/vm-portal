@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   get '/server/:id' => 'server#show', constraints: { id: /.*/ }
 
-  devise_for :users, path: 'users'
+  devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vm, :server
 
   root 'landing#index'

@@ -4,7 +4,7 @@ require 'rails_helper'
 require './app/api/vmapi.rb'
 
 RSpec.describe VmApi do
-  let(:api) { described_class.new }
+  let(:api) { described_class.instance }
 
   describe '#connect' do
     let(:setup_methods) do
