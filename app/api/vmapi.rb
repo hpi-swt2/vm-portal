@@ -164,6 +164,11 @@ class VmApi
     @resource_pool = @clusters.first.resourcePool
     @is_connected = true
   rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
+    instanciate_empty_vm_info()
+  end
+
+  def instanciate_empty_vm_info
+    @is_connected = false
     folder = {}
     folder['children'] = {}
     folder['traverse'] = -> {}
@@ -172,7 +177,6 @@ class VmApi
     @clusters = []
     @vms = []
     @resource_pool = []
-    @is_connected = false
   end
 
   def extract_clusters(element)
