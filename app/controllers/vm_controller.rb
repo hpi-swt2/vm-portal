@@ -3,29 +3,36 @@
 require 'vmapi.rb'
 class VmController < ApplicationController
   attr_reader :vms
-  before_action :set_globals, only: [:index]
 
   def index
-    fetch_vms
+    @vms = filter VmApi.instance.all_vms
     @parameters = determine_params
-  rescue StandardError
-    flash.now[:error] = "You're not connected to the HPI network"
+    if VmApi.instance.connected?
+      flash.discard
+    else
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
   end
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    VmApi.new.delete_vm(params[:id])
+    VmApi.instance.delete_vm(params[:id]) if VmApi.instance.connected?
   end
 
   def create
-    VmApi.new.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
+    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name]) if VmApi.instance.connected?
     redirect_to action: :index
   end
 
   def new; end
 
   def show
-    @vm = VmApi.new.get_vm(params[:id])
+    if VmApi.instance.connected?
+      flash.discard
+      @vm = VmApi.instance.get_vm(params[:id])
+    else
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
   end
 
   # This controller doesn't use strong parameters
@@ -33,14 +40,6 @@ class VmController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
-
-  def fetch_vms
-    @vms = filter VmApi.new.all_vms
-  end
-
-  def set_globals
-    @vms = @parameters = []
-  end
 
   def filter(list)
     if no_params_set? then list

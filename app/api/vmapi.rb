@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
+require 'hash_dot'
+require 'singleton'
 # This class manages a connection to the VSphere backend
 # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
 # For documentation of API objects have a look at this:
 # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html
 class VmApi
+  include Singleton
   API_SERVER_IP = '192.168.30.3'
   API_SERVER_USER = 'administrator@swt.local'
   API_SERVER_PASSWORD = 'Vcsaswt"2018'
+
+  @is_connected = false
+  def connected?
+    @is_connected
+  end
 
   def create_vm(cpu, ram, capacity, name)
     connect
@@ -53,7 +61,7 @@ class VmApi
 
   def get_vm(name)
     connect
-    if (vm = find_vm(name))
+    if @is_connected && (vm = find_vm(name))
       { name: vm.name,
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
@@ -154,6 +162,21 @@ class VmApi
     @clusters = extract_clusters(@cluster_folder).flatten
     @vms = @vm_folder.children
     @resource_pool = @clusters.first.resourcePool
+    @is_connected = true
+  rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
+    instanciate_empty_vm_info
+  end
+
+  def instanciate_empty_vm_info
+    @is_connected = false
+    folder = {}
+    folder['children'] = {}
+    folder['traverse'] = -> {}
+    @vm_folder = folder.to_dot
+    @cluster_folder = []
+    @clusters = []
+    @vms = []
+    @resource_pool = []
   end
 
   def extract_clusters(element)

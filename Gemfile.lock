@@ -157,6 +157,7 @@ GEM
       pry (>= 0.9.12)
       shellany (~> 0.0)
       thor (>= 0.18.1)
+    hash_dot (2.4.1)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (1.1.1)
@@ -393,6 +394,7 @@ DEPENDENCIES
   faker!
   font-awesome-rails
   guard
+  hash_dot (~> 2.4.1)
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)

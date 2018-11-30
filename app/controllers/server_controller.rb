@@ -5,14 +5,24 @@ class ServerController < ApplicationController
   attr_reader :hosts
 
   def index
-    @hosts = filter VmApi.new.all_hosts
+    @hosts = filter VmApi.instance.all_hosts
     @parameters = determine_params
+    if VmApi.instance.connected?
+      flash.discard
+    else
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
   end
 
   def new; end
 
   def show
-    @host = VmApi.new.get_host(params[:id])
+    if VmApi.instance.connected?
+      flash.discard
+      @host = VmApi.instance.get_host(params[:id])
+    else
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
   end
 
   private
