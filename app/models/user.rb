@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  enum role: %i(user wimi admin)
+  enum role: %i[user wimi admin]
 
   has_one :user_profile
   accepts_nested_attributes_for :user_profile
