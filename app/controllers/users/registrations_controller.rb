@@ -5,16 +5,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-   def new
-     super do
-       resource.user_profile = UserProfile.new
-     end
-   end
+  def new
+    super do
+      resource.user_profile = UserProfile.new
+    end
+  end
 
   # POST /resource
-   def create
-     super
-   end
+  def create
+    super
+  end
 
   # GET /resource/edit
   # def edit
@@ -43,14 +43,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   # If you have extra params to permit, append them to the sanitizer.
-   def configure_sign_up_params
-     devise_parameter_sanitizer.permit(:sign_up, keys: [
-      user_profile_attributes: [
-        :first_name,
-        :last_name
-      ]
-     ])
-   end
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+                                        user_profile_attributes: %i[
+                                          first_name
+                                          last_name
+                                        ]
+                                      ])
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_account_update_params

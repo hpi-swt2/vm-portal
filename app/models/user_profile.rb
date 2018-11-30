@@ -1,5 +1,6 @@
-class UserProfile < ActiveRecord::Base
+# frozen_string_literal: true
 
+class UserProfile < ActiveRecord::Base
   # Associations
   belongs_to :user
 
