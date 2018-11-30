@@ -36,6 +36,7 @@
     <th scope="col" data-sortable="true">Status</th>
     <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">VMs</th>
+    <th scope="col">timeslot reservation</th>
   </tr>
   </thead>
   <tbody>
@@ -57,6 +58,9 @@
                end %>
         </ul>
       </td>
+      <td><%= button_to "Reserve",
+                        "",
+                        method: :get, class: "btn btn-info" %></td>
     </tr>
   <% end %>
   </tbody>

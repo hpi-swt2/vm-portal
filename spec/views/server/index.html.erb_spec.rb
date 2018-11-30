@@ -54,4 +54,8 @@ RSpec.describe 'server/index.html.erb', type: :view do
   it 'can filter resources' do
     expect(rendered).to have_button('Filter')
   end
+
+  it 'has reserve button' do
+    expect(rendered).to have_button('Reserve')
+  end
 end
