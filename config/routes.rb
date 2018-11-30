@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vms, :servers
-  resources :users, :only =>[:show, :index]
+  resources :users, only: %i[show, index]
 
   root 'landing#index'
 end
