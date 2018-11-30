@@ -36,7 +36,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: 2000,
       operating_system: 'MyOS',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -49,7 +48,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -122,7 +120,6 @@ RSpec.describe RequestsController, type: :controller do
           ram_mb: 1000,
           storage_mb: 2000,
           operating_system: 'MyOS',
-          software: 'MySoftware',
           comment: 'Comment',
           status: 'pending'
         }
