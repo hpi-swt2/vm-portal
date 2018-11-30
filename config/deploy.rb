@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
@@ -15,7 +17,7 @@ require 'mina/slack'
 set :application_name, 'VM-Management Portal'
 
 # Optional settings:
-set :user, 'hrmtadm'          # Username in the server to SSH to.
+set :user, 'hrmtadm' # Username in the server to SSH to.
 set :identity_file, '/home/hrmtadm/.ssh/id_rsa'
 #   set :port, '30000'           # SSH port number.
 #   set :forward_agent, true     # SSH forward_agent.
@@ -29,13 +31,12 @@ set :identity_file, '/home/hrmtadm/.ssh/id_rsa'
 set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/sockets', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb', 'config/master.key')
 set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
-#set :linked_files, %w{config/master.key}
+# set :linked_files, %w{config/master.key}
 
 # Settings for Slack Integration
 # Documentation: https://github.com/krichly/mina-slack
 set :slack_hook, 'https://hooks.slack.com/services/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' # Slack hook URL
 # slack stage defined in stage files (config/deploy/*.rb)
-
 
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -52,7 +53,7 @@ task :setup do
   invoke :'puma:start'
 end
 
-desc "Deploys the current version to the server."
+desc 'Deploys the current version to the server.'
 task :deploy do
   # uncomment this line to make sure you pushed your local branch to the remote origin
   # invoke :'git:ensure_pushed'
@@ -62,10 +63,10 @@ task :deploy do
     comment "Deploying #{fetch(:repository)} (#{fetch(:branch)}) to #{fetch(:domain)}"
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    #invoke :'rvm:load_env_vars'
+    # invoke :'rvm:load_env_vars'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
-    command %{#{fetch(:rails)} db:seed}
+    command %(#{fetch(:rails)} db:seed)
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
@@ -80,8 +81,8 @@ task :deploy do
   # run(:local){ say 'done' }
 end
 
-desc "Restarts the puma server"
-task :restart => :remote_environment do
- invoke :'puma:stop'
- invoke :'puma:start'
+desc 'Restarts the puma server'
+task restart: :remote_environment do
+  invoke :'puma:stop'
+  invoke :'puma:start'
 end

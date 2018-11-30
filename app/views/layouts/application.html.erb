@@ -9,8 +9,17 @@
   </head>
 
   <body>
-    <div class="container">
-      <%= yield %>
+    <div id="content">
+      <%= render "navbar" %>
+      <div class="container" style="margin-top: 50px">
+        <div class="col-lg-12">
+          <%= yield %>
+        </div>
+        <%= yield :modals %>
+      </div>
+    </div>
+    <div id="footer">
+      <%= render "footer" %>
     </div>
   </body>
 </html>

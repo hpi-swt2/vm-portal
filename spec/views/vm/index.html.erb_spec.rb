@@ -5,14 +5,19 @@ require 'rails_helper'
 RSpec.describe 'vm/index.html.erb', type: :view do
   let(:vm) do
     {
-        name: 'My insanely cool vm',
-        state: true,
-        boot_time: 'Yesterday'
+      name: 'My insanely cool vm',
+      state: true,
+      boot_time: 'Yesterday'
     }
   end
 
-  before :each do
+  let(:param) do
+    %w[up_vms down_vms]
+  end
+
+  before do
     assign(:vms, [vm])
+    assign(:parameters, [param])
     render
   end
 
@@ -22,5 +27,13 @@ RSpec.describe 'vm/index.html.erb', type: :view do
 
   it 'renders the boot time' do
     expect(rendered).to include vm[:boot_time]
+  end
+
+  it 'links to resource detail pages' do
+    expect(rendered).to have_button('Details', count: 1)
+  end
+
+  it 'can filter resources' do
+    expect(rendered).to have_button('Filter')
   end
 end

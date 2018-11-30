@@ -2,8 +2,14 @@
 
 require 'vmapi.rb'
 class VmController < ApplicationController
+  attr_reader :vms
+  before_action :set_globals, only: [:index]
+
   def index
-    @vms = VmApi.new.all_vms
+    fetch_vms
+    @parameters = determine_params
+  rescue StandardError
+    flash.now[:error] = "You're not connected to the HPI network"
   end
 
   def destroy
@@ -18,7 +24,51 @@ class VmController < ApplicationController
 
   def new; end
 
+  def show
+    @vm = VmApi.new.get_vm(params[:id])
+  end
+
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
   # Because no Active Record model is being wrapped
+
+  private
+
+  def fetch_vms
+    @vms = filter VmApi.new.all_vms
+  end
+
+  def set_globals
+    @vms = @parameters = []
+  end
+
+  def filter(list)
+    if no_params_set? then list
+    else
+      result = []
+      vm_filter.keys.each do |key|
+        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
+      end
+      result
+    end
+  end
+
+  def determine_params
+    all_parameters = vm_filter.keys.map(&:to_s)
+    actual_params = params.keys.map(&:to_s)
+    if no_params_set?
+    then all_parameters
+    else all_parameters - (all_parameters - actual_params)
+    end
+  end
+
+  def no_params_set?
+    all_parameters = vm_filter.keys.map(&:to_s)
+    actual_params = params.keys.map(&:to_s)
+    (all_parameters - actual_params).size == all_parameters.size
+  end
+
+  def vm_filter
+    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+  end
 end
