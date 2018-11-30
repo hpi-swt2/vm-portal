@@ -50,4 +50,8 @@ RSpec.describe 'server/show.html.erb', type: :view do
       expect(rendered).to include vm
     end
   end
+
+  it 'has reserve button' do
+    expect(rendered).to have_button('Reserve')
+  end
 end

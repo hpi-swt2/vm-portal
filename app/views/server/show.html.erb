@@ -94,6 +94,11 @@
     <% end unless @host.nil?%>
     </td>
     </tr>
+    <tr>
+      <td><%= button_to "Reserve",
+                        "",
+                        method: :get, class: "btn btn-info" %></td>
+    </tr>
 
   </tbody>
 </table>
