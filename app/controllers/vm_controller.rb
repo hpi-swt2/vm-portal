@@ -3,10 +3,13 @@
 require 'vmapi.rb'
 class VmController < ApplicationController
   attr_reader :vms
+  before_action :set_globals, only: [:index]
 
   def index
-    @vms = filter VmApi.new.all_vms
+    fetch_vms
     @parameters = determine_params
+  rescue StandardError
+    flash.now[:error] = "You're not connected to the HPI network"
   end
 
   def destroy
@@ -30,6 +33,14 @@ class VmController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
+  def fetch_vms
+    @vms = filter VmApi.new.all_vms
+  end
+
+  def set_globals
+    @vms = @parameters = []
+  end
 
   def filter(list)
     if no_params_set? then list
