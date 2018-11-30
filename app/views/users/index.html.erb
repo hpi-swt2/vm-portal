@@ -13,7 +13,7 @@
         <td><%= link_to user.email, user_path(user) %></td>
         <td><%= user.user_profile.first_name %></td>
         <td><%= user.user_profile.last_name %></td>
-<!--        <td><%#= user.last_sign_in_at %></td>-->
+        <td><%= user.current_sign_in_at %></td>
       </tr>
     <% end %>
   </tbody>
