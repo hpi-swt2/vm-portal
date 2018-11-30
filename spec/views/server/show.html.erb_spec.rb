@@ -1,6 +1,7 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-RSpec.describe 'vm/show_host.html.erb', type: :view do
+require 'rails_helper'
+RSpec.describe 'server/show.html.erb', type: :view do
   let(:host) do
     summary = double
     allow(summary).to receive_message_chain(:runtime, :powerState)
@@ -13,13 +14,13 @@ RSpec.describe 'vm/show_host.html.erb', type: :view do
     allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(0)
     allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
     allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
-    
-    { name: 'aHost', 
-      vm_names: ['vm'], 
-      model: "a cool model", 
-      vendor: "the dark side", 
-      bootTime: "Thursday", 
-      connectionState: "connected", 
+
+    { name: 'aHost',
+      vm_names: ['vm'],
+      model: 'a cool model',
+      vendor: 'the dark side',
+      bootTime: 'Thursday',
+      connectionState: 'connected',
       summary: summary }
   end
 
@@ -49,6 +50,4 @@ RSpec.describe 'vm/show_host.html.erb', type: :view do
       expect(rendered).to include vm
     end
   end
-
 end
-
