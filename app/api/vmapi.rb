@@ -61,7 +61,7 @@ class VmApi
 
   def get_vm(name)
     connect
-    if (vm = find_vm(name))
+    if @is_connected && (vm = find_vm(name))
       { name: vm.name,
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
@@ -166,7 +166,8 @@ class VmApi
     @is_connected = true
   rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
     folder = {}
-    folder['children'] = []
+    folder['children'] = {}
+    folder['traverse'] = -> {}
     @vm_folder = folder.to_dot
     @cluster_folder = []
     @clusters = []

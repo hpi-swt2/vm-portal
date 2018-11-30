@@ -53,6 +53,7 @@ RSpec.describe ServerController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_host).and_return(nil)
+      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 

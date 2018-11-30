@@ -53,6 +53,7 @@ RSpec.describe VmController, type: :controller do
     before :each do
       double_api = double
       expect(double_api).to receive(:delete_vm)
+      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
@@ -66,6 +67,7 @@ RSpec.describe VmController, type: :controller do
     before :each do
       double_api = double
       expect(double_api).to receive(:create_vm)
+      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
@@ -90,6 +92,7 @@ RSpec.describe VmController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_vm).and_return(nil)
+      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:new).and_return double_api
     end
 

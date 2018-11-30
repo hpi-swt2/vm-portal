@@ -6,9 +6,8 @@ class VmController < ApplicationController
 
   def index
     @vms = filter VmApi.instance.all_vms
-    @is_connected = VmApi.instance.connected?
     @parameters = determine_params
-    if @is_connected
+    if VmApi.instance.connected?
       flash.discard
     else
       flash[:danger] = 'You seem to have lost connection to the HPI network :('
@@ -17,18 +16,23 @@ class VmController < ApplicationController
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    VmApi.instance.delete_vm(params[:id])
+    VmApi.instance.delete_vm(params[:id]) if VmApi.instance.connected?
   end
 
   def create
-    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
+    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name]) if VmApi.instance.connected?
     redirect_to action: :index
   end
 
   def new; end
 
   def show
-    @vm = VmApi.instance.get_vm(params[:id])
+    if VmApi.instance.connected?
+      flash.discard
+      @vm = VmApi.instance.get_vm(params[:id])
+    else
+      flash[:danger] = 'You seem to have lost connection to the HPI network :('
+    end
   end
 
   # This controller doesn't use strong parameters
