@@ -12,6 +12,20 @@
 
 ActiveRecord::Schema.define(version: 2018_11_28_151612) do
 
+  create_table "requests", force: :cascade do |t|
+    t.string "name"
+    t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "operating_system"
+    t.string "software"
+    t.text "comment"
+    t.text "rejection_information"
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "slack_auth_requests", force: :cascade do |t|
     t.string "state"
     t.integer "user_id"

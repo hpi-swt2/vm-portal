@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Configuration for mina dev deployment.
 # Loaded from config/deploy.rb
 
