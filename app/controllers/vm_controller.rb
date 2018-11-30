@@ -2,12 +2,11 @@
 
 require 'vmapi.rb'
 class VmController < ApplicationController
-  attr_reader :vms, :hosts
+  attr_reader :vms
   before_action :set_globals, only: [:index]
 
   def index
     fetch_vms
-    fetch_hosts
     @parameters = determine_params
   rescue StandardError
     flash.now[:error] = "You're not connected to the HPI network"
@@ -29,10 +28,6 @@ class VmController < ApplicationController
     @vm = VmApi.new.get_vm(params[:id])
   end
 
-  def show_host
-    @host = VmApi.new.get_host(params[:id])
-  end
-
   # This controller doesn't use strong parameters
   # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
   # Because no Active Record model is being wrapped
@@ -43,35 +38,23 @@ class VmController < ApplicationController
     @vms = filter_vms VmApi.new.all_vms
   end
 
-  def fetch_hosts
-    @hosts = filter_hosts VmApi.new.all_hosts
-  end
-
   def set_globals
-    @vms = @hosts = @parameters = []
+    @vms = @parameters = []
   end
 
-  def filter_vms(vms)
-    filter(vms, :vm_filter)
-  end
-
-  def filter_hosts(hosts)
-    filter(hosts, :host_filter)
-  end
-
-  def filter(list, filter)
+  def filter(list)
     if no_params_set? then list
     else
       result = []
-      send(filter).keys.each do |key|
-        result += list.select { |object| send(filter)[key].call(object) } if params[key].present?
+      vm_filter.keys.each do |key|
+        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
       end
       result
     end
   end
 
   def determine_params
-    all_parameters = (vm_filter.keys + host_filter.keys).map!(&:to_s)
+    all_parameters = vm_filter.keys.map(&:to_s)
     actual_params = params.keys.map(&:to_s)
     if no_params_set?
     then all_parameters
@@ -80,16 +63,12 @@ class VmController < ApplicationController
   end
 
   def no_params_set?
-    all_parameters = (vm_filter.keys + host_filter.keys).map!(&:to_s)
+    all_parameters = vm_filter.keys.map(&:to_s)
     actual_params = params.keys.map(&:to_s)
     (all_parameters - actual_params).size == all_parameters.size
   end
 
   def vm_filter
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
-  end
-
-  def host_filter
-    { up_hosts: proc { |host| host[:connectionState] == 'connected' }, down_hosts: proc { |host| host[:connectionState] != 'connected' } }
   end
 end
