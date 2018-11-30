@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'requests/show', type: :feature do
+  # Authenticate an user
+  before do
+    user = FactoryBot.create :user
+    sign_in user
+  end
+
   context 'when request status is pending' do
     let(:request) { FactoryBot.create :request }
 

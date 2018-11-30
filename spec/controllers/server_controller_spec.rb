@@ -2,6 +2,12 @@
 
 require 'rails_helper'
 RSpec.describe ServerController, type: :controller do
+  # Authenticate an user
+  before do
+    user = FactoryBot.create :user
+    sign_in user
+  end
+
   describe 'GET #index' do
     before do
       double_api = double
