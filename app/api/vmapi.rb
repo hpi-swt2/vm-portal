@@ -164,7 +164,7 @@ class VmApi
     @resource_pool = @clusters.first.resourcePool
     @is_connected = true
   rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
-    instanciate_empty_vm_info()
+    instanciate_empty_vm_info
   end
 
   def instanciate_empty_vm_info
