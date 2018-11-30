@@ -7,10 +7,16 @@
 
 <p>
   <strong>Firstname:</strong>
-  <%= @user.email %>
+  <%= @user.user_profile.first_name %>
 </p>
 
 <p>
   <strong>Lastname:</strong>
-  <%= @user.email %>
+  <%= @user.user_profile.last_name %>
+</p>
+
+
+<p>
+  <strong>SSH-Key:</strong>
+  <%#= @user.user_profile.ssh_key%>
 </p>

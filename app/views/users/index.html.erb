@@ -5,15 +5,15 @@
     <th>Email</th>
     <th>Firstname</th>
     <th>Lastname</th>
-    <th>Last login</th>
+    <th>Last sign in</th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.email, user_path(user) %></td>
-        <td><%= user.email %></td>
-        <td><%= user.email %></td>
-        <td><%= user.email %></td>
+        <td><%= user.user_profile.first_name %></td>
+        <td><%= user.user_profile.last_name %></td>
+<!--        <td><%#= user.last_sign_in_at %></td>-->
       </tr>
     <% end %>
   </tbody>
