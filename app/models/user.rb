@@ -5,7 +5,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :trackable
+         :omniauthable, omniauth_providers: %i[hpi]
+   :trackable
   enum role: %i[user wimi admin]
 
   has_many :users_assigned_to_requests

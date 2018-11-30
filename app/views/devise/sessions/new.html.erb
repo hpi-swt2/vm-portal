@@ -39,7 +39,7 @@
           <% end -%>
           <div class="form-group actions">
             <%= f.submit "Log in", class: 'btn btn-block btn-primary float-right' %>
-            <button class='btn btn-block btn-secondary float-right' id="oauth">Sign in using OAuth</button>
+            <%= link_to 'Sign in with OpenID Connect',  omniauth_authorize_path(:user, :hpi) %>
           </div>
 
         <% end -%>

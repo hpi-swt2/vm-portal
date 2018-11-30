@@ -52,7 +52,11 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
-# Mina for deployment
+gem 'omniauth'
+gem 'omniauth_openid_connect'
+gem 'rack-oauth2'
+
+# Mina for deployment 
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
 gem 'mina', require: false
