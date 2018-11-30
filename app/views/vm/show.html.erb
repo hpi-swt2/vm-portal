@@ -1,40 +1,52 @@
 <h1>
-  Details for Virtual Machine "<%= @vm[:name]%>"
+  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil?%>"
 </h1>
+
+<div class="container">
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>"><%= value %></div>
+  <% end %>
+</div>
 
 <table class="table">
     <tbody>
     <tr>
     <td>Boot time:</td>
-    <td><%= @vm[:boot_time]%></td>
+    <td><%= @vm[:boot_time] unless @vm.nil?%></td>
     </tr>
 
     <tr>
     <td>State:</td>
-    <td><%= @vm[:summary].runtime.powerState%></td>
+    <td><%= @vm[:summary].runtime.powerState unless @vm.nil?%></td>
   </tr>
 
     <tr>
     <td>Heartbeat status:</td>
-    <td><%= @vm[:guestHeartbeatStatus]%> </td>
+    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil?%> </td>
     </tr>
 
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "server", action: "show", id: @vm[:host] %>
+    <%= link_to @vm[:host], controller: "server", action: "show", id: @vm[:host] unless @vm.nil?%>
     </td>
 
-    <% 
-    committed = @vm[:summary].storage.committed
-    uncommitted = @vm[:summary].storage.uncommitted
-    committed_mb = committed / (1024 ** 2)
-    uncommitted_mb = uncommitted / (1024 ** 2)
-    total_mb = committed_mb + uncommitted_mb
-    total = committed + uncommitted
-    space_usage_percentage = 0
-      if total != 0
-        space_usage_percentage = (committed / total.to_f * 100).round()
+    <%
+      if @vm.nil?
+        space_usage_percentage = ''
+        committed_mb = ''
+        total_mb = ''
+      else
+        committed = @vm[:summary].storage.committed
+        uncommitted = @vm[:summary].storage.uncommitted
+        committed_mb = committed / (1024 ** 2)
+        uncommitted_mb = uncommitted / (1024 ** 2)
+        total_mb = committed_mb + uncommitted_mb
+        total = committed + uncommitted
+        space_usage_percentage = 0
+        if total != 0
+          space_usage_percentage = (committed / total.to_f * 100).round()
+        end
       end
     %>
     <tr>
@@ -44,30 +56,36 @@
     
   <tr>
     <td>OS:</td>
-    <td><%= @vm[:summary].config.guestId %> (<%= @vm[:summary].config.guestFullName %>)</td>
+    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil?%>)</td>
   </tr>
 
   </tr>
     <tr>
     <td>IP address:</td>
-    <td><%= @vm[:summary].guest.ipAddress %></td>
+    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil?%></td>
   </tr>
   <%
-   cpu_usage = @vm[:summary].quickStats.overallCpuUsage
-   cpu_allocation = @vm[:summary].config.cpuReservation
-   memory_usage = @vm[:summary].quickStats.guestMemoryUsage
-   memory_allocation = @vm[:summary].config.memoryReservation
-   cpu_usage_percentage = 0
-   memory_usage_percentage = 0
+    if @vm.nil?
+      cpu_usage_percentage = ''
+      memory_usage_percentage = ''
+      memory_usage = ''
+      memory_allocation = ''
+    else
+      cpu_usage = @vm[:summary].quickStats.overallCpuUsage
+      cpu_allocation = @vm[:summary].config.cpuReservation
+      memory_usage = @vm[:summary].quickStats.guestMemoryUsage
+      memory_allocation = @vm[:summary].config.memoryReservation
+      cpu_usage_percentage = 0
+      memory_usage_percentage = 0
 
-   if cpu_allocation != 0
-     cpu_usage_percentage = (cpu_usage / cpu_allocation.to_f * 100).round()
-   end
+      if cpu_allocation != 0
+        cpu_usage_percentage = (cpu_usage / cpu_allocation.to_f * 100).round()
+      end
 
-   if memory_allocation != 0
-     memory_usage_percentage = (memory_usage / memory_allocation.to_f * 100).round()
-   end
-     
+      if memory_allocation != 0
+        memory_usage_percentage = (memory_usage / memory_allocation.to_f * 100).round()
+      end
+    end
   %>
   <tr>
     <td>CPU usage:</td>
@@ -76,7 +94,7 @@
 
     <tr>
     <td>Memory usage:</td>
-    <td><%=  memory_usage_percentage %> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
+    <td><%=  memory_usage_percentage%> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
   </tr>
     
   </tbody>
