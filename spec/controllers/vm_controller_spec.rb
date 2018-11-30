@@ -50,7 +50,7 @@ RSpec.describe VmController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before :each do
+    before do
       double_api = double
       expect(double_api).to receive(:delete_vm)
       allow(double_api).to receive(:connected?).and_return true
@@ -64,7 +64,7 @@ RSpec.describe VmController, type: :controller do
   end
 
   describe 'POST #create' do
-    before :each do
+    before do
       double_api = double
       expect(double_api).to receive(:create_vm)
       allow(double_api).to receive(:connected?).and_return true

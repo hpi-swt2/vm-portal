@@ -4,7 +4,7 @@ require 'rails_helper'
 require './app/api/vmapi.rb'
 
 RSpec.describe VmApi do
-  let(:api) { VmApi.instance }
+  let(:api) { described_class.instance }
 
   describe '#connect' do
     let(:setup_methods) do
@@ -31,6 +31,7 @@ RSpec.describe VmApi do
       expect(mock).to receive_message_chain(:CreateVM_Task, :wait_for_completion)
       mock
     end
+
     it 'asks API to create a vm' do
       expect(api).to receive(:connect)
       api.instance_variable_set :@vm_folder, vm_folder_mock
@@ -39,17 +40,18 @@ RSpec.describe VmApi do
   end
 
   describe 'all_vms' do
+    subject { api.all_vms }
+
     let(:vm_folder_mock) do
       mock = double
       expect(mock).to receive(:children).and_return([])
       mock
     end
-    before :each do
+
+    before do
       allow(api).to receive(:connect)
       api.instance_variable_set :@vm_folder, vm_folder_mock
     end
-
-    subject { api.all_vms }
 
     it 'asks @vm_folder for all vms' do
       api.all_vms
@@ -112,6 +114,7 @@ RSpec.describe VmApi do
   describe '#get_vm' do
     vm_name = 'VM'
     subject { api.get_vm(vm_name) }
+
     let(:vm_mock) do
       mock = double
       summary = double
@@ -171,7 +174,7 @@ RSpec.describe VmApi do
       mock
     end
 
-    before :each do
+    before do
       allow(api).to receive(:connect)
       api.instance_variable_set :@vm_folder, vm_folder_mock
     end
@@ -204,7 +207,7 @@ RSpec.describe VmApi do
       mock
     end
 
-    before :each do
+    before do
       allow(api).to receive(:connect)
       api.instance_variable_set :@vm_folder, vm_folder_mock
     end

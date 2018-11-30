@@ -67,7 +67,6 @@ class VmApi
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
         summary: vm.summary }
-    else nil
     end
   end
 
