@@ -35,7 +35,7 @@ class VmController < ApplicationController
   private
 
   def fetch_vms
-    @vms = filter_vms VmApi.new.all_vms
+    @vms = filter VmApi.new.all_vms
   end
 
   def set_globals
