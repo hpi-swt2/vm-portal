@@ -28,4 +28,9 @@ RSpec.describe User, type: :model do
     expect(user.wimi?).to be_falsey
     expect(user.admin?).to be_truthy
   end
+
+  it 'should default to user' do
+    user = FactoryBot.create :user
+    expect(user).to be_truthy
+  end
 end
