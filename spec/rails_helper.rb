@@ -70,4 +70,7 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   config.include FeatureSpecHelper, type: :feature
+
+  config.include Devise::TestHelpers::ControllerHelpers, type: :view
+  config.include Devise::TestHelpers::ControllerHelpers, type: :controller
 end
