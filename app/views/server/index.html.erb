@@ -36,13 +36,14 @@
     <th scope="col" data-sortable="true">Status</th>
     <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">VMs</th>
-    <th scope="col">Details</th>
   </tr>
   </thead>
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
-      <td><%= host[:name] %></td>
+      <td><%= link_to host[:name], 
+                      {controller: :server, action: 'show', id: host[:name]},
+                      method: :get, class: "btn btn-link" %></td>
       <td><%= host[:model] %></td>
       <td><%= host[:vendor] %></td>
       <td><%= host[:connectionState] %></td>
@@ -56,9 +57,6 @@
                end %>
         </ul>
       </td>
-      <td><%= button_to "Details",
-                        {controller: :server, action: 'show', id: host[:name]},
-                        method: :get, class: "btn btn-info" %></td>
     </tr>
   <% end %>
   </tbody>
