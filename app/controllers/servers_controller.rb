@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-class ServerController < ApplicationController
+class ServersController < ApplicationController
   attr_reader :hosts
 
   def index

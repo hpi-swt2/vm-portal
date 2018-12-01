@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-RSpec.describe ServerController, type: :controller do
+RSpec.describe ServersController, type: :controller do
   describe 'GET #index' do
     before do
       double_api = double
@@ -13,7 +13,7 @@ RSpec.describe ServerController, type: :controller do
 
       double_flash = double
       allow(double_flash).to receive(:discard)
-      allow_any_instance_of(ServerController).to receive(:flash).and_return(double_flash)
+      allow_any_instance_of(ServersController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -22,18 +22,18 @@ RSpec.describe ServerController, type: :controller do
     end
 
     it 'renders index page' do
-      expect(get(:index)).to render_template('server/index')
+      expect(get(:index)).to render_template('servers/index')
     end
 
     it 'returns all hosts per default' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = {}
       controller.index
       expect(controller.hosts.size).to be VmApi.instance.all_hosts.size
     end
 
     it 'returns online hosts if requested' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = { up_hosts: 'true' }
       controller.index
       expect(controller.hosts).to satisfy('include online hosts') { |hosts| hosts.any? { |host| host[:connectionState] == 'connected' } }
@@ -41,7 +41,7 @@ RSpec.describe ServerController, type: :controller do
     end
 
     it 'returns offline hosts if requested' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = { down_hosts: 'true' }
       controller.index
       expect(controller.hosts).to satisfy('include offline hosts') { |hosts| hosts.any? { |host| host[:connectionState] != 'connected' } }
@@ -63,7 +63,7 @@ RSpec.describe ServerController, type: :controller do
     end
 
     it 'renders show page' do
-      expect(get(:show, params: { id: 1 })).to render_template('server/show')
+      expect(get(:show, params: { id: 1 })).to render_template('servers/show')
     end
   end
 end

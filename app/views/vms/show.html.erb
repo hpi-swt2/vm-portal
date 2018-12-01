@@ -28,7 +28,7 @@
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "server", action: "show", id: @vm[:host] unless @vm.nil?%>
+    <%= link_to @vm[:host], controller: "servers", action: "show", id: @vm[:host] unless @vm.nil?%>
     </td>
 
     <%
