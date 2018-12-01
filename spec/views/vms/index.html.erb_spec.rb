@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'vm/index.html.erb', type: :view do
+RSpec.describe 'vms/index.html.erb', type: :view do
   let(:vm) do
     {
       name: 'My insanely cool vm',

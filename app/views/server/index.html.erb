@@ -9,13 +9,13 @@
   <% end %>
 </div>
 
-<%= form_tag({controller: "vm", action: "index"}, method: "get", class: "nifty_form") do %>
+<%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
     <tr>
       <td>
         <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
-        <%= label_tag(:up_hosts, "connected") %>  
+        <%= label_tag(:up_hosts, "connected") %>
       </td>
       <td>
         <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
@@ -42,7 +42,7 @@
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
-      <td><%= link_to host[:name], 
+      <td><%= link_to host[:name],
                       {controller: :server, action: 'show', id: host[:name]},
                       method: :get, class: "btn btn-link" %></td>
       <td><%= host[:model] %></td>

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'vm/new.html.erb', type: :view do
+RSpec.describe 'vms/new.html.erb', type: :view do
   before do
     render
   end
