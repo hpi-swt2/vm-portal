@@ -74,13 +74,13 @@ class RequestsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_request
-      @request = Request.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_request
+    @request = Request.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def request_params
-      params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :software, :comment, :rejection_information, :status)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def request_params
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :software, :comment, :rejection_information, :status)
+  end
 end
