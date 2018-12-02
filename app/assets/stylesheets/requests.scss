@@ -1,3 +1,26 @@
 // Place all the styles related to the Requests controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.link-coloring:link {
+  color: navy;
+  text-decoration: underline;
+  text-decoration-color: navy;
+}
+.link-coloring:visited {
+  color: navy;
+  text-decoration: underline;
+  text-decoration-color: navy;
+}
+.link-coloring:hover {
+  color: whitesmoke;
+  background-color: black;
+  text-decoration: underline;
+  text-decoration-color: whitesmoke;
+}
+.link-coloring:active {
+  color: whitesmoke;
+  background-color: black;
+  text-decoration: underline;
+  text-decoration-color: whitesmoke;
+}

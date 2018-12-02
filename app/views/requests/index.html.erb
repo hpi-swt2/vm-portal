@@ -20,7 +20,7 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td style="color:navy"><u><%= link_to "#{request.name}", request, {:style=>'color:navy'}%></u></td>
+        <td><%= link_to "#{request.name}", request, class:'link-coloring' %></td>
         <td><%= request.cpu_cores %></td>
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
