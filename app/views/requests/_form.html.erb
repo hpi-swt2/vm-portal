@@ -17,28 +17,23 @@
   </div>
 
   <div class="field">
-    <%= form.label :cpu_cores %>
+    <%= form.label :cpu_cores, "CPU cores" %>
     <%= form.number_field :cpu_cores, min: 0 %>
   </div>
 
   <div class="field">
-    <%= form.label :ram_mb %>
-    <%= form.number_field :ram_mb, min: 0, step: 1000 %>
+    <%= form.label :ram_mb, "RAM in MB" %>
+    <%= form.number_field :ram_mb, min: 0 %>
   </div>
 
   <div class="field">
-    <%= form.label :storage_mb %>
-    <%= form.number_field :storage_mb, min: 0, step: 1000 %>
+    <%= form.label :storage_mb, "Storage in MB" %>
+    <%= form.number_field :storage_mb, min: 0 %>
   </div>
 
   <div class="field">
-    <%= form.label :operating_system %>
+    <%= form.label :operating_system, "Operating System" %>
     <%= form.select :operating_system, ['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)'] %>
-  </div>
-
-  <div class="field">
-    <%= form.label :software %>
-    <%= form.text_field :software %>
   </div>
 
   <div class="field">

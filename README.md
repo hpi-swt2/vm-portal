@@ -7,7 +7,16 @@ Branch | Travis CI  | Coverage | CodeClimate | Codefactor | Codebeat
 master | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/vm-portal) | [![Coverage Status](https://coveralls.io/repos/github/hpi-swt2/vm-portal/badge.svg?branch=master)](https://coveralls.io/github/hpi-swt2/vm-portal?branch=master) | --- | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/master)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/master) | [![codebeat badge](https://codebeat.co/badges/ff3d0842-e199-4f44-8bb1-c9dde7a7d53f)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-master)
 dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=dev)](https://travis-ci.com/hpi-swt2/vm-portal/branches) | [![Coverage Status](https://coveralls.io/repos/github/hpi-swt2/vm-portal/badge.svg?branch=dev)](https://coveralls.io/github/hpi-swt2/vm-portal?branch=dev) | [![Maintainability](https://api.codeclimate.com/v1/badges/bc93de388c2d75383166/maintainability)](https://codeclimate.com/github/hpi-swt2/vm-portal/maintainability) | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/dev)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/dev) | [![codebeat badge](https://codebeat.co/badges/97624360-62ce-4dbe-b935-857ab163b495)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-dev)
 
-## Application Setup
+## Deployment
+
+The application requires access to internal resources, which are not directly available from the general internet.
+Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
+* master: http://hart.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547334-011e36636240414faf7c51e1.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+* dev: http://hart-dev.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547337-b65c7b3660b7a0ddeee7c5c5.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
+
+## Development Setup
 
 **Note:** Please be aware that the application is designed to manage internal university resources. These are only available from the internal network. Therefore, currently a [VPN connection](https://vpn.hpi.de/) to the university network is required for those parts of the application that interact with internal resources.
 
@@ -39,15 +48,6 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 
 * `vagrant halt` Shuts down the VM
 * `vagrant global-status` Shows status of all Vagrant VMs
-
-## Deployment
-
-The application requires access to internal ressources, which are not directly available from the general internet.
-Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
-* master: http://hart.epic-hpi.de/
-* dev: http://hart-dev.epic-hpi.de
-
-Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
 
 ## Developer Guide
 

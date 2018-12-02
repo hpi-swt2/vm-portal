@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-class VmController < ApplicationController
+class VmsController < ApplicationController
   attr_reader :vms
 
   def index

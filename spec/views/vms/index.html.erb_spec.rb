@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'vm/index.html.erb', type: :view do
+RSpec.describe 'vms/index.html.erb', type: :view do
   let(:vm) do
     {
       name: 'My insanely cool vm',
@@ -30,7 +30,7 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   end
 
   it 'links to resource detail pages' do
-    expect(rendered).to have_button('Details', count: 1)
+    expect(rendered).to have_link(vm[:name], count: 1)
   end
 
   it 'can filter resources' do

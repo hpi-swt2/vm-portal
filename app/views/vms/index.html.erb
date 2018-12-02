@@ -15,13 +15,13 @@
   <% end %>
 </div>
 
-<%= form_tag({controller: "vm", action: "index"}, method: "get", class: "nifty_form") do %>
+<%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
     <tr>
       <td>
         <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
-        <%= label_tag(:up_vms, "connected") %>  
+        <%= label_tag(:up_vms, "connected") %>
       </td>
       <td>
         <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
@@ -39,20 +39,18 @@
   <tr>
     <th scope="col" data-sortable="true">VM Name</th>
     <th scope="col" data-sortable="true">Running Since</th>
-    <th scope="col">Details</th>
     <th scope="col">Delete</th>
   </tr>
   </thead>
   <tbody>
   <% @vms.each do |vm| %>
     <tr>
-      <td><%= vm[:name] %></td>
+      <td><%= link_to vm[:name],
+                      {controller: :vms, action: 'show', id: vm[:name]},
+                      method: :get, class: "btn btn-link"  %></td>
       <td><%= vm[:boot_time] %></td>
-      <td><%= button_to "Details",
-                        {controller: :vm, action: 'show', id: vm[:name]},
-                        method: :get, class: "btn btn-info" %></td>
       <td><%= button_to "Delete",
-                        {controller: :vm, action: 'destroy', id: vm[:name]},
+                        {controller: :vms, action: 'destroy', id: vm[:name]},
                         method: :delete, class: "btn btn-danger" %></td>
     <tr>
   <% end %>
