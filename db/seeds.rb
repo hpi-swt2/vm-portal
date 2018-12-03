@@ -9,3 +9,5 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 user = User.create(email: 'max@mustermann.de', password: '123456')
 UserProfile.create(first_name: 'Max', last_name: 'Mustermann', user: user)
+
+OperatingSystem.create([{ name: 'CentOS 7' }, { name: 'SLES 11 SP3' }, { name: 'Ubuntu 18.04' }])
