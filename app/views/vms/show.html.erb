@@ -99,3 +99,7 @@
     
   </tbody>
 </table>
+
+<%= button_to "Delete",
+  {controller: :vms, action: 'destroy', id: @vm[:name]},
+  method: :delete, class: "btn btn-danger" %>

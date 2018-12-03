@@ -3,12 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe 'vms/index.html.erb', type: :view do
-  let(:vm) do
-    {
+  let(:mock_vms) do
+    [{
       name: 'My insanely cool vm',
       state: true,
       boot_time: 'Yesterday'
-    }
+    },
+    {
+      name: 'Another VM',
+      state: false,
+      boot_time: 'Friday'
+    }]
   end
 
   let(:param) do
@@ -16,21 +21,26 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   before do
-    assign(:vms, [vm])
-    assign(:parameters, [param])
+    assign(:vms, mock_vms)
+    assign(:parameters, param)
     render
   end
 
-  it 'renders the vms name' do
-    expect(rendered).to include vm[:name]
+  it 'renders the vm names' do
+    mock_vms.each { |vm|
+      expect(rendered).to include vm[:name]
+    }
   end
 
-  it 'renders the boot time' do
-    expect(rendered).to include vm[:boot_time]
+  it 'renders the boot times' do
+    expect(rendered).to include mock_vms[0][:boot_time]
+    expect(rendered).not_to include mock_vms[1][:boot_time]
   end
 
-  it 'links to resource detail pages' do
-    expect(rendered).to have_link(vm[:name], count: 1)
+  it 'links to vm detail pages' do
+    mock_vms.each { |vm|
+      expect(rendered).to have_link(vm[:name])
+    }
   end
 
   it 'can filter resources' do
@@ -43,6 +53,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   it 'links to requests overview page' do
     expect(rendered).to have_button('Requests')
+  end
+
+  it 'shows correct power on / off button' do
+    expect(rendered).to have_button('Start')
+    expect(rendered).to have_button('Shutdown')
   end
 
 end
