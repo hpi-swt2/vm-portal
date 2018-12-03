@@ -60,13 +60,18 @@
   <% end %>
   </tbody>
 </table>
-
-<%= button_to "Requests",
-  {controller: :requests, action: 'index'},
-  method: :get, class: "btn btn-info" %>
-<%= button_to "New",
-  {controller: :vms, action: 'new'},
-  method: :get, class: "btn btn-info" %>
+<table class="table">
+    <tbody>
+      <tr>
+        <td><%= button_to "Requests",
+          {controller: :requests, action: 'index'},
+          method: :get, class: "btn btn-info" %></td>
+        <td><%= button_to "New",
+          {controller: :vms, action: 'new'},
+          method: :get, class: "btn btn-info" %></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- Minified script sources for sortable tables -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
