@@ -14,7 +14,6 @@
     <% @operating_systems.each do |operating_system| %>
       <tr>
         <td><%= operating_system.name %></td>
-        <td><%= link_to 'Show', operating_system %></td>
         <td><%= link_to 'Edit', edit_operating_system_path(operating_system) %></td>
         <td><%= link_to 'Destroy', operating_system, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
