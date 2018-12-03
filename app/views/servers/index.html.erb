@@ -9,7 +9,7 @@
   <% end %>
 </div>
 
-<%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
+<%= form_tag({controller: "servers", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
     <tr>
@@ -43,7 +43,7 @@
   <% @hosts.each do |host| %>
     <tr>
       <td><%= link_to host[:name],
-                      {controller: :server, action: 'show', id: host[:name]},
+                      {controller: :servers, action: 'show', id: host[:name]},
                       method: :get, class: "btn btn-link" %></td>
       <td><%= host[:model] %></td>
       <td><%= host[:vendor] %></td>
