@@ -17,7 +17,6 @@ RSpec.describe 'requests/new', type: :view do
 
   it 'renders new request form' do
     render
-    expect(rendered).to match(/Windows/)
 
     assert_select 'form[action=?][method=?]', requests_path, 'post' do
       assert_select 'input[name=?]', 'request[name]'
