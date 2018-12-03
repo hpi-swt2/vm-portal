@@ -12,10 +12,6 @@ RSpec.describe OperatingSystemsController, type: :routing do
       expect(get: '/vms/requests/operating_systems/new').to route_to('operating_systems#new')
     end
 
-    it 'routes to #show' do
-      expect(get: '/vms/requests/operating_systems/1').to route_to('operating_systems#show', id: '1')
-    end
-
     it 'routes to #edit' do
       expect(get: '/vms/requests/operating_systems/1/edit').to route_to('operating_systems#edit', id: '1')
     end
