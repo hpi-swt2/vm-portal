@@ -49,4 +49,8 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   it 'shows vm IP address' do
     expect(rendered).to include vm[:summary].guest.ipAddress
   end
+
+  it 'has a button to delete VM' do
+    expect(rendered).to have_button('Delete')
+  end
 end

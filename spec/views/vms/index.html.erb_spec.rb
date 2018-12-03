@@ -36,4 +36,13 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   it 'can filter resources' do
     expect(rendered).to have_button('Filter')
   end
+
+  it 'links to new vm page' do
+    expect(rendered).to have_button('New')
+  end
+
+  it 'links to requests overview page' do
+    expect(rendered).to have_button('Requests')
+  end
+
 end
