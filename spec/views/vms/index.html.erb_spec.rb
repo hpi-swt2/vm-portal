@@ -8,8 +8,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
       name: 'My insanely cool vm',
       state: true,
       boot_time: 'Yesterday'
-    },
-    {
+    }, {
       name: 'Another VM',
       state: false,
       boot_time: 'Friday'
@@ -27,9 +26,9 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   it 'renders the vm names' do
-    mock_vms.each { |vm|
+    mock_vms.each do |vm|
       expect(rendered).to include vm[:name]
-    }
+    end
   end
 
   it 'renders the boot times' do
@@ -38,9 +37,9 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   it 'links to vm detail pages' do
-    mock_vms.each { |vm|
+    mock_vms.each do |vm|
       expect(rendered).to have_link(vm[:name])
-    }
+    end
   end
 
   it 'can filter resources' do
@@ -59,5 +58,4 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     expect(rendered).to have_button('Start')
     expect(rendered).to have_button('Shutdown')
   end
-
 end

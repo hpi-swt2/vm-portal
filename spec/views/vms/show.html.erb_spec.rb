@@ -75,7 +75,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to have_button('Power Off')
   end
 
-  it 'has power on button' do 
+  it 'has power on button' do
     assign(:vm, vm_off)
     render
     expect(rendered).to have_button('Power On')
