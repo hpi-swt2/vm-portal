@@ -39,9 +39,11 @@
         <a class="nav-link disabled" href="#">Disabled</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <%= link_to(notifications_path, class: "nav-link") do %>
+      <span class="fa-stack fa notification-bell">
+        <i class="fa fa-bell fa-stack-1x"></i>
+        <i class="fa fa-circle fa-inverse fa-stack-1x"></i>
+      </span>
+    <% end %> 
   </div>
 </nav>

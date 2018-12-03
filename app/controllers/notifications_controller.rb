@@ -51,6 +51,14 @@ class NotificationsController < ApplicationController
     end
   end
 
+  def has_any
+    has_unread_notifications = Notification.where(user: current_user, read: false).any?
+    respond_to do |format|
+      msg = { has_unread_notifications: has_unread_notifications }
+      format.json { render :json => msg }
+    end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

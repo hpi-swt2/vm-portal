@@ -4,9 +4,8 @@
 Rails.application.routes.draw do
   resources :requests, path: '/vms/requests'
   resources :notifications, only: %i[index new create destroy] do
-    member do
-      get :mark_as_read
-    end
+    get :mark_as_read, on: :member
+    get :has_any, on: :collection 
   end
 
   root to: redirect('/users/sign_in')
