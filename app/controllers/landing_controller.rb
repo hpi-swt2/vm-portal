@@ -5,7 +5,8 @@ class LandingController < ApplicationController
     if current_user.nil?
       redirect_to '/users/sign_in'
     else
-      redirect_to '/dashboard'
+      redirect_to :dashboard
+
     end
   end
 end
