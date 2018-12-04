@@ -49,7 +49,7 @@
 
 <% if @request.pending? %>
   <div class="actions">
-      <%= button_to 'Accept', request_accept_button_path(request: @request), method: :patch %>
+      <%= button_to 'Accept', accept_request_path(request: @request), method: :patch %>
   </div>
 
   <%= form_with(model: @request, local: true) do |form| %>

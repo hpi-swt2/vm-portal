@@ -65,10 +65,9 @@ class RequestsController < ApplicationController
     end
   end
 
-  def request_accept_button
+  def accept!
     @request = Request.find(params[:request])
-    @request.status = 'accepted'
-    @request.save
+    @request.accepted!
     redirect_to new_vm_path(request: @request)
   end
 
