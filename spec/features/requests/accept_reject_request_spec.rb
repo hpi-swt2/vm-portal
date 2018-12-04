@@ -50,7 +50,7 @@ RSpec.describe 'requests/show', type: :feature do
 
       click_button('Accept')
       request.reload
-      expect(request.status).to eq("accepted")
+      expect(request.status).to eq('accepted')
     end
 
     it 'routes to the new_vm_path' do
