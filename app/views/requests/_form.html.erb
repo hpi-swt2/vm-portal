@@ -31,6 +31,15 @@
     <%= form.number_field :storage_mb, min: 0 %>
   </div>
 
+  <%= form.select 'user+ids',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :name,
+                                                       @request.user_ids),
+                    {},
+                    multiple: true,
+                    size: 10 %>
+
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
     <%= form.select :operating_system, ['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)'] %>
