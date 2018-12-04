@@ -45,6 +45,14 @@ RSpec.describe 'requests/show', type: :feature do
   context 'when request is accepted' do
     let(:request) { FactoryBot.create :request }
 
+    it 'has an accepted status' do
+      visit request_path(request)
+
+      click_button('Accept')
+      request.reload
+      expect(request.status).to eq("accepted")
+    end
+
     it 'routes to the new_vm_path' do
       visit request_path(request)
 
@@ -62,7 +70,7 @@ RSpec.describe 'requests/show', type: :feature do
       find('input[name="capacity"][placeholder*="2000"]')
     end
 
-    it 'has an accepted status' do
+    it 'the request information page has an accepted status' do
       visit request_path(request)
 
       click_button('Accept')
