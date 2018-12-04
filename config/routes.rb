@@ -10,6 +10,4 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vms, :servers
-
-  root 'landing#index'
 end
