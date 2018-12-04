@@ -14,7 +14,14 @@ Therefore, the application is deployed on university servers. Both the 'dev' and
 * master: http://hart.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547334-011e36636240414faf7c51e1.svg)](https://stats.uptimerobot.com/j8DADFQnv)
 * dev: http://hart-dev.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547337-b65c7b3660b7a0ddeee7c5c5.svg)](https://stats.uptimerobot.com/j8DADFQnv)
 
-Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
+An overview of the status of all involved systems is available here: https://stats.uptimerobot.com/j8DADFQnv
+
+### Deployment Details
+Automatic deployments are handled by a dedicated application:
+* http://hart-deploy.epic-hpi.de/deployed [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547341-373d600b6052559e47f208f6.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+The application shows an overview of the latest deployment attempts and handles deployment (via [mina](https://github.com/mina-deploy/mina)) to the university internal systems when it receives a POST request.
+These requests are send by Travis CI after a successful build, see the [.travis.yml](https://github.com/hpi-swt2/vm-portal/blob/dev/.travis.yml#L23).
 
 ## Development Setup
 
