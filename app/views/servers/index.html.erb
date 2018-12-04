@@ -1,0 +1,72 @@
+<h1>
+  Servers
+</h1>
+<small class="text-muted">This is the overview page for all currently existing servers</small>
+
+<div class="container">
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>"><%= value %></div>
+  <% end %>
+</div>
+
+<%= form_tag({controller: "servers", action: "index"}, method: "get", class: "nifty_form") do %>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>
+        <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
+        <%= label_tag(:up_hosts, "connected") %>
+      </td>
+      <td>
+        <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
+        <%= label_tag(:down_hosts, "not connected") %>
+      </td>
+      <td>
+        <%= submit_tag"Filter", class: "btn btn-info" %>
+      </td>
+    </tr></tbody></table>
+<% end %>
+
+<table data-toggle="table" class="table">
+  <thead>
+  <tr>
+    <th scope="col" data-sortable="true">Hostname</th>
+    <th scope="col" data-sortable="true">Model</th>
+    <th scope="col" data-sortable="true">Vendor</th>
+    <th scope="col" data-sortable="true">Status</th>
+    <th scope="col" data-sortable="true">Running Since</th>
+    <th scope="col">VMs</th>
+    <th scope="col">Timeslot Reservation</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @hosts.each do |host| %>
+    <tr>
+      <td><%= link_to host[:name],
+                      {controller: :servers, action: 'show', id: host[:name]},
+                      method: :get, class: "btn btn-link" %></td>
+      <td><%= host[:model] %></td>
+      <td><%= host[:vendor] %></td>
+      <td><%= host[:connectionState] %></td>
+      <td><%= host[:bootTime] %></td>
+      <td>
+        <ul>
+          <% if not host[:vm_names].nil?
+               host[:vm_names].each do |vm_name| %>
+              <li> <%= vm_name %></li>
+            <% end
+               end %>
+        </ul>
+      </td>
+      <td><%= button_to "Reserve",
+                        "",
+                        method: :get, class: "btn btn-info" %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

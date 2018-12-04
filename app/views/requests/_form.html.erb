@@ -1,0 +1,47 @@
+<%= form_with(model: request, local: true) do |form| %>
+  <% if request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(request.errors.count, "error") %> prohibited this request from being saved:</h2>
+
+      <ul>
+      <% request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cpu_cores, "CPU cores" %>
+    <%= form.number_field :cpu_cores, min: 0 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ram_mb, "RAM in MB" %>
+    <%= form.number_field :ram_mb, min: 0 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :storage_mb, "Storage in MB" %>
+    <%= form.number_field :storage_mb, min: 0 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :operating_system, "Operating System" %>
+    <%= form.select :operating_system, ['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)'] %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, cols: "40", rows: "4" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,66 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @request.name %>
+</p>
+
+<p>
+  <strong>Cpu cores:</strong>
+  <%= @request.cpu_cores %>
+</p>
+
+<p>
+  <strong>MB RAM:</strong>
+  <%= @request.ram_mb %>
+</p>
+
+<p>
+  <strong>MB Storage:</strong>
+  <%= @request.storage_mb %>
+</p>
+
+<p>
+  <strong>Operating system:</strong>
+  <%= @request.operating_system %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @request.comment %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @request.status %>
+</p>
+
+<% if @request.rejected? %>
+  <p>
+    <strong>Rejection Information:</strong>
+    <%= @request.rejection_information %>
+  </p>
+<% end %>
+
+<% if @request.pending? %>
+  <%= form_with(model: @request, local: true) do |form| %>
+    <div class="actions">
+      <%= form.hidden_field :status, value: 'accepted' %>
+      <%= form.submit 'Accept' %>
+    </div>
+  <% end %>
+
+  <%= form_with(model: @request, local: true) do |form| %>
+    <div class="field">
+      <%= form.label :rejection_information %>
+      <%= form.text_field :rejection_information %>
+    </div>
+
+    <div class="actions">
+      <%= form.hidden_field :status, value: 'rejected' %>
+      <%= form.submit 'Reject' %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', requests_path %>

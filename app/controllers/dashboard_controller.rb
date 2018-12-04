@@ -6,7 +6,7 @@ class DashboardController < ApplicationController
 
   def index
     redirect_to '/users/sign_in' if current_user.nil?
-    @vms = VmApi.new.all_vms
-    @hosts = VmApi.new.all_hosts
+    @vms = VmApi.instance.all_vms
+    @hosts = VmApi.instance.all_hosts
   end
 end

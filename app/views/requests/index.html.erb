@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Cpu-Cores</th>
+      <th>MB RAM</th>
+      <th>MB Storage</th>
+      <th>Operating system</th>
+      <th>Comment</th>
+      <th>Status </th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @requests.each do |request| %>
+      <tr>
+        <td><%= link_to "#{request.name}", request %></td>
+        <td><%= request.cpu_cores %></td>
+        <td><%= request.ram_mb %></td>
+        <td><%= request.storage_mb %></td>
+        <td><%= request.operating_system %></td>
+        <td><%= request.comment %></td>
+        <td><%= request.status %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Request', new_request_path %>

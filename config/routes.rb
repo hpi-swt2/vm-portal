@@ -4,8 +4,12 @@
 Rails.application.routes.draw do
   root to: 'landing#index'
   get '/dashboard' => 'dashboard#index', as: :dashboard
-  get '/host/:id' => 'vm#show_host', constraints: { id: /.*/ }
+  resources :requests, path: '/vms/requests'
 
-  devise_for :users, path: 'users'
-  resources :vm
+  get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
+
+  devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
+  resources :vms, :servers
+
+  root 'landing#index'
 end

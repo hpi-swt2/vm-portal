@@ -2,14 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'vm/index.html.erb', type: :view do
-  let(:vm) do
-    {
-      name: 'My insanely cool vm',
-      state: true,
-      boot_time: 'Yesterday'
-    }
-  end
+RSpec.describe 'servers/index.html.erb', type: :view do
   let(:host) do
     {  name: 'someHostMachine',
        model: 'cool machine',
@@ -19,22 +12,13 @@ RSpec.describe 'vm/index.html.erb', type: :view do
        vm_names: ['a name', 'another name'] }
   end
   let(:param) do
-    %w[up_vms down_vms up_hosts down_hosts]
+    %w[up_hosts down_hosts]
   end
 
   before do
-    assign(:vms, [vm])
     assign(:hosts, [host])
     assign(:parameters, [param])
     render
-  end
-
-  it 'renders the vms name' do
-    expect(rendered).to include vm[:name]
-  end
-
-  it 'renders the boot time' do
-    expect(rendered).to include vm[:boot_time]
   end
 
   it 'renders the host machine name' do
@@ -64,10 +48,14 @@ RSpec.describe 'vm/index.html.erb', type: :view do
   end
 
   it 'links to resource detail pages' do
-    expect(rendered).to have_button('Details', count: 2)
+    expect(rendered).to have_link(host[:name], count: 1)
   end
 
   it 'can filter resources' do
     expect(rendered).to have_button('Filter')
+  end
+
+  it 'has reserve button' do
+    expect(rendered).to have_button('Reserve')
   end
 end
