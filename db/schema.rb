@@ -12,7 +12,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_181_119_090_111) do
+
+ActiveRecord::Schema.define(version: 20_181_130_150_921) do
+
   create_table 'user_profiles', force: :cascade do |t|
     t.integer 'user_id'
     t.string 'first_name'
@@ -30,6 +32,7 @@ ActiveRecord::Schema.define(version: 20_181_119_090_111) do
     t.datetime 'remember_created_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.integer 'role'
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
@@ -40,6 +43,7 @@ ActiveRecord::Schema.define(version: 20_181_119_090_111) do
     t.integer 'ram_mb'
     t.integer 'storage_mb'
     t.string 'operating_system'
+    t.string 'software'
     t.text 'comment'
     t.text 'rejection_information'
     t.integer 'status', default: 0
