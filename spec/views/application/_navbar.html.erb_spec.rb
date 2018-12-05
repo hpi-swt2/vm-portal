@@ -13,4 +13,8 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   it 'links to vm list' do
     expect(rendered).to have_link('VMs', href: '../vms')
   end
+
+  it 'links to users list' do
+    expect(rendered).to have_link('Users', href: users_path)
+  end
 end
