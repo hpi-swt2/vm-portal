@@ -8,6 +8,6 @@ FactoryBot.define do
     email { Faker::Internet.safe_email }
     password { Faker::Internet.password(min_length = 10, max_length = 20, mix_case = true, special_chars = true) }
     password_confirmation { password }
-    association :user_profile, factory: :profile
+    association :user_profile, factory: :user_profile
   end
 end
