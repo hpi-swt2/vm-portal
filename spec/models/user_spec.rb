@@ -33,4 +33,63 @@ RSpec.describe User, type: :model do
     user = FactoryBot.create :user
     expect(user).to be_truthy
   end
+
+  describe 'creating a user with openid connect' do
+    let(:auth) { double }
+    let(:info) { double }
+    let(:user) { User.from_omniauth(auth) }
+    let(:mail) { Faker::Internet.safe_email }
+
+    before do
+      allow(auth).to receive(:info).and_return(info)
+      allow(auth).to receive(:provider).and_return('testprovider')
+      allow(auth).to receive(:uid).and_return(1)
+
+      allow(info).to receive(:first_name).and_return('First')
+      allow(info).to receive(:last_name).and_return('Last')
+      allow(info).to receive(:email).and_return(mail)
+    end
+
+    context 'when the user does not exist' do
+      it 'should create a new user' do
+        expect{user}.to change(User, :count).by(1)
+      end
+
+      it 'should persist the new user' do
+        expect(user.persisted?).to be_truthy
+      end
+
+      it 'should create a user profile' do
+        expect{user}.to change(UserProfile, :count).by(1)
+      end
+
+      it 'should set the users first name' do
+        expect(user.user_profile.first_name).to eq('First')
+      end
+
+      it 'should set the users last name' do
+        expect(user.user_profile.last_name).to eq('Last')
+      end
+
+      it 'should set the users email' do
+        expect(user.email).to eq(mail)
+      end
+    end
+
+    context 'when the user alreay exists' do
+      let!(:existing_user) { FactoryBot.create :user, uid: 1, provider: 'testprovider', email: 'oldemail@mail.com' }
+
+      it 'does not create a new user' do
+        expect{user}.to change(User, :count).by(0)
+      end
+
+      it 'does not create a new user profile' do
+        expect{user}.to change(UserProfile, :count).by(0)
+      end
+
+      it 'returns the existing user' do
+        expect(user.id).to eq(existing_user.id)
+      end
+    end
+  end
 end
