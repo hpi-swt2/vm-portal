@@ -33,18 +33,22 @@ class SlackController < ApplicationController
     answer && !answer['error'] && answer['incoming_webhook'] && answer['incoming_webhook']['url']
   end
 
+  def slack_answered(answer)
+    if check_slack_answer(answer)
+      current_user.slack_hooks.create url: answer['incoming_webhook']['url']
+    else
+      @error_message = 'Slack answered the following error: ' + answer['error'] + '\n'
+      @error_message += 'Please inform your system administrator if this error occurs multiple times'
+    end
+  end
+
   def authenticate_slack_request
     request = request_for_state(parsed_params[:state])
     if !request
       @error_message = 'Invalid request, please try authenticating slack again'
     else
       answer = authenticate_request parsed_params[:code]
-      if check_slack_answer(answer)
-        current_user.slack_hooks.create url: answer['incoming_webhook']['url']
-      else
-        @error_message = 'Slack answered the following error: ' + answer['error'] + '\n'
-        @error_message += 'Please inform your system administrator if this error occurs multiple times'
-      end
+      slack_answered(answer)
     end
   end
 

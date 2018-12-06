@@ -106,14 +106,6 @@ RSpec.describe RequestsController, type: :controller do
         post :create, params: { request: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Request.last)
       end
-
-      it 'notifies all users on slack' do
-        User.all.each do |each|
-          allow(each).to receive(:notify_slack)
-        end
-        post :create, params: { request: valid_attributes }, session: valid_session
-        expect(User.all).to all have_received(:notify_slack)
-      end
     end
 
     context 'with invalid params' do
