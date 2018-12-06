@@ -1,2 +1,8 @@
-<h1>Slack#update</h1>
-<p>Find me in app/views/slack/update.html.erb</p>
+<% if @error_message %>
+  <h1>Error!</h1>
+  <p><%= @error_message %></p>
+  <a class="btn btn-primary" href="<%= new_slack_path %>">Try again!</a>
+<% else %>
+  <h1>Success!</h1>
+  <p>You successfully authenticated a slack channel</p>
+<% end %>

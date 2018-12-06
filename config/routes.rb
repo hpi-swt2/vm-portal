@@ -8,7 +8,9 @@ Rails.application.routes.draw do
 
   get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
 
-  resources :slack, only: %i[new update]
+  get 'slack/new' => 'slack#new', as: :new_slack
+  get 'slack/auth' => 'slack#update', as: :update_slack
+
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vms, :servers
 
