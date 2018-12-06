@@ -12,12 +12,10 @@ RSpec.describe 'operating_system selection for request', type: :feature do
     find_field('Operating System')
   end
 
-  context 'when no operating systems have been created' do
-    it 'has none and other as options' do
-      visit new_request_path
-      select('other(write in Comment)', from: 'Operating System')
-      select('none', from: 'Operating System')
-    end
+  it 'has none and other as options' do
+    visit new_request_path
+    select('other(write in Comment)', from: 'Operating System')
+    select('none', from: 'Operating System')
   end
 
   context 'when operating systems have been created' do
