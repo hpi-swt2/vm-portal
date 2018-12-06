@@ -123,6 +123,7 @@ RSpec.describe VmApi do
       allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
       allow(mock).to receive_message_chain(:summary, :runtime, :host, :name).and_return('aHost')
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('Thursday')
+      allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       allow(mock).to receive(:guestHeartbeatStatus).and_return('running')
       mock
     end
