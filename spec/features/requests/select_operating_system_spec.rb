@@ -30,7 +30,7 @@ RSpec.describe 'operating_system selection for request', type: :feature do
       expect(find_field('Operating System').value).to eq(@operating_system.name)
     end
 
-    it 'changes request operting_system value' do
+    it 'changes request operating_system value' do
       request = FactoryBot.create(:request)
       visit edit_request_path(request)
       select(@operating_system.name, from: 'Operating System')
