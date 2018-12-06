@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-RSpec.describe VmController, type: :controller do
+RSpec.describe VmsController, type: :controller do
   describe 'GET #index' do
     before do
       double_api = double
@@ -13,7 +13,7 @@ RSpec.describe VmController, type: :controller do
 
       double_flash = double
       allow(double_flash).to receive(:discard)
-      allow_any_instance_of(VmController).to receive(:flash).and_return(double_flash)
+      allow_any_instance_of(VmsController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -22,18 +22,18 @@ RSpec.describe VmController, type: :controller do
     end
 
     it 'renders index page' do
-      expect(get(:index)).to render_template('vm/index')
+      expect(get(:index)).to render_template('vms/index')
     end
 
     it 'returns all VMs per default' do
-      controller = VmController.new
+      controller = VmsController.new
       controller.params = {}
       controller.index
       expect(controller.vms.size).to be VmApi.instance.all_vms.size
     end
 
     it 'returns online VMs if requested' do
-      controller = VmController.new
+      controller = VmsController.new
       controller.params = { up_vms: 'true' }
       controller.index
       expect(controller.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
@@ -41,7 +41,7 @@ RSpec.describe VmController, type: :controller do
     end
 
     it 'returns offline VMs if requested' do
-      controller = VmController.new
+      controller = VmsController.new
       controller.params = { down_vms: 'true' }
       controller.index
       expect(controller.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
@@ -73,7 +73,7 @@ RSpec.describe VmController, type: :controller do
 
     it 'returns http success' do
       post :create, params: { name: 'My insanely cool vm', ram: '1024', capacity: '10000', cpu: 2 }
-      expect(response).to redirect_to(vm_index_path)
+      expect(response).to redirect_to(vms_path)
     end
   end
 
@@ -84,7 +84,7 @@ RSpec.describe VmController, type: :controller do
     end
 
     it 'renders new page' do
-      expect(get(:new)).to render_template('vm/new')
+      expect(get(:new)).to render_template('vms/new')
     end
   end
 
@@ -102,7 +102,7 @@ RSpec.describe VmController, type: :controller do
     end
 
     it 'renders show page' do
-      expect(get(:show, params: { id: 1 })).to render_template('vm/show')
+      expect(get(:show, params: { id: 1 })).to render_template('vms/show')
     end
   end
 end

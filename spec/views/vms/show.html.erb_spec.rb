@@ -4,7 +4,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'vm/show.html.erb', type: :view do
+RSpec.describe 'vms/show.html.erb', type: :view do
   let(:vm) do
     summary = double
     allow(summary).to receive_message_chain(:storage, :committed).and_return(0)

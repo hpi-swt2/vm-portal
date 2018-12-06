@@ -26,11 +26,6 @@
 </p>
 
 <p>
-  <strong>Software:</strong>
-  <%= @request.software %>
-</p>
-
-<p>
   <strong>Comment:</strong>
   <%= @request.comment %>
 </p>
@@ -68,5 +63,4 @@
   <% end %>
 <% end %>
 
-<%= link_to 'Edit', edit_request_path(@request) %> |
 <%= link_to 'Back', requests_path %>

@@ -6,9 +6,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  
+  has_one :user_profile
+  accepts_nested_attributes_for :user_profile
+  
   has_many :slack_auth_requests, dependent: :destroy
   has_many :slack_hooks, dependent: :destroy
-
   def notify_slack(message)
     slack_hooks.each do |hook|
       hook.post_message message

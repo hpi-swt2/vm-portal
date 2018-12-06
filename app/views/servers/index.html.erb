@@ -9,13 +9,13 @@
   <% end %>
 </div>
 
-<%= form_tag({controller: "vm", action: "index"}, method: "get", class: "nifty_form") do %>
+<%= form_tag({controller: "servers", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
     <tr>
       <td>
         <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
-        <%= label_tag(:up_hosts, "connected") %>  
+        <%= label_tag(:up_hosts, "connected") %>
       </td>
       <td>
         <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
@@ -36,13 +36,15 @@
     <th scope="col" data-sortable="true">Status</th>
     <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">VMs</th>
-    <th scope="col">Details</th>
+    <th scope="col">Timeslot Reservation</th>
   </tr>
   </thead>
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
-      <td><%= host[:name] %></td>
+      <td><%= link_to host[:name],
+                      {controller: :servers, action: 'show', id: host[:name]},
+                      method: :get, class: "btn btn-link" %></td>
       <td><%= host[:model] %></td>
       <td><%= host[:vendor] %></td>
       <td><%= host[:connectionState] %></td>
@@ -56,8 +58,8 @@
                end %>
         </ul>
       </td>
-      <td><%= button_to "Details",
-                        {controller: :server, action: 'show', id: host[:name]},
+      <td><%= button_to "Reserve",
+                        "",
                         method: :get, class: "btn btn-info" %></td>
     </tr>
   <% end %>
