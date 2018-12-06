@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
     vms_path
   end
 
-  rescue_from Net::OpenTimeout, Errno::ENETUNREACH, with: :error_render_method
+  rescue_from Net::OpenTimeout, Errno::ENETUNREACH, Errno::EHOSTUNREACH, with: :error_render_method
 
   def error_render_method
     render(template: 'errors/timeout', status: 408) && return
