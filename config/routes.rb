@@ -2,7 +2,7 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  root to: redirect('/users/sign_in')
+  root to: 'landing#index'
   get '/dashboard' => 'dashboard#index', as: :dashboard
   resources :requests, path: '/vms/requests'
 
@@ -10,5 +10,4 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vms, :servers
-  get '/index' => 'landing#index', as: :landing
 end

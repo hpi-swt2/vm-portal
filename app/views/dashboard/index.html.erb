@@ -23,10 +23,10 @@
               <td><%= vm[:name] %></td>
               <td><%= vm[:boot_time] %></td>
               <td><%= button_to "Details",
-                                {controller: :vm, action: 'show', id: vm[:name]},
+                                {controller: :vms, action: 'show', id: vm[:name]},
                                 method: :get, class: "btn btn-info" %></td>
               <td><%= button_to "Delete",
-                                {controller: :vm, action: 'destroy', id: vm[:name]},
+                                {controller: :vms, action: 'destroy', id: vm[:name]},
                                 method: :delete, class: "btn btn-danger" %></td>
             <tr>
           <% end %>
@@ -45,20 +45,15 @@
 
         <table data-toggle="table" class="table">
           <thead>
-          <tr>
-            <th scope="col" data-sortable="true">Hostname</th>
-            <th scope="col" data-sortable="true">Vendor</th>
-            <th scope="col" data-sortable="true">Status</th>
-            <th scope="col">VMs</th>
-            <th scope="col">Details</th>
-          </tr>
           </thead>
           <tbody>
           <% @hosts.each do |host| %>
             <tr>
-              <td><%= host[:name] %></td>
-              <td><%= host[:vendor] %></td>
+              <td><%= link_to host[:name],
+                              {controller: :servers, action: 'show', id: host[:name]},
+                              method: :get, class: "btn btn-link" %></td>
               <td><%= host[:connectionState] %></td>
+              <td><%= host[:bootTime] %></td>
               <td>
                 <ul>
                   <% if not host[:vm_names].nil?
@@ -68,9 +63,6 @@
                        end %>
                 </ul>
               </td>
-              <td><%= button_to "Details",
-                                {controller: :vm, action: 'show_host', id: host[:name]},
-                                method: :get, class: "btn btn-info" %></td>
             </tr>
           <% end %>
           </tbody>
