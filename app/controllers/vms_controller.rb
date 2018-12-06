@@ -11,7 +11,7 @@ class VmsController < ApplicationController
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    VmApi.instance.delete_vm(params[:id])
+    # VmApi.instance.delete_vm(params[:id])
   end
 
   def create

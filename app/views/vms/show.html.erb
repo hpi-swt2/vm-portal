@@ -93,3 +93,36 @@
     
   </tbody>
 </table>
+
+
+<table class="table">
+    <tbody>
+      <tr>
+        <% if @vm[:state] %>
+          <td><%= button_to 'Suspend',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-warning' %></td>
+          <td><%= button_to 'Shutdown Guest OS',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-danger' %></td>
+          <td><%= button_to 'Restart Guest OS',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-primary' %></td>
+          <td><%= button_to 'Reset',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-primary' %></td>
+          <td><%= button_to 'Power Off',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-danger' %></td>
+        <% else %>
+          <td><%= button_to 'Power On',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-success' %></td>
+        <% end %>
+
+          <td><%= button_to 'Delete',
+            {controller: :vms, action: 'destroy', id: @vm[:name]},
+            method: :delete, class: "btn btn-danger" %></td>
+    </tr>
+  </tbody>
+</table>
