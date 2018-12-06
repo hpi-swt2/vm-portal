@@ -9,7 +9,6 @@ RSpec.describe ServersController, type: :controller do
                                                            { name: 'anotherHost', connectionState: 'not connected' }]
 
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:connected?).and_return true
 
       double_flash = double
       allow(double_flash).to receive(:discard)
@@ -53,7 +52,6 @@ RSpec.describe ServersController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_host).and_return(nil)
-      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
