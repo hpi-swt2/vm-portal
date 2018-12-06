@@ -56,11 +56,13 @@ class VmApi
 
   def get_vm(name)
     connect
-    {name: vm.name,
-     boot_time: vm.runtime.bootTime,
-     host: vm.summary.runtime.host.name,
-     guestHeartbeatStatus: vm.guestHeartbeatStatus,
-     summary: vm.summary}
+    if (vm = find_vm(name))
+      { name: vm.name,
+        boot_time: vm.runtime.bootTime,
+        host: vm.summary.runtime.host.name,
+        guestHeartbeatStatus: vm.guestHeartbeatStatus,
+        summary: vm.summary }
+    end
   end
 
   def get_host(name)
