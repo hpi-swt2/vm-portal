@@ -6,7 +6,7 @@ describe SlackController do
   it 'renders an error if you are not logged in' do
     visit update_slack_path
 
-    expect(page).to have_text (/sign in/i)
+    expect(page).to have_text 'sign in'
   end
 
   def mock_sign_in
@@ -23,14 +23,14 @@ describe SlackController do
     mock_sign_in
     visit update_slack_path
 
-    expect(page).to have_content (/error/i)
+    expect(page).to have_content 'Error'
   end
 
   it 'renders an error if the authentication code is missing' do
     auth_request = mock_sign_in.slack_auth_requests.create state: 'This is a state'
     visit update_slack_path(state: auth_request.state)
 
-    expect(page).to have_content (/error/i)
+    expect(page).to have_content 'Error'
   end
 
   it 'renders an error if slack returns an error' do
@@ -53,7 +53,7 @@ describe SlackController do
 
     visit update_slack_path(state: auth_request.state, code: 'We must provide a code')
 
-    expect(page).to have_content (/success/i)
+    expect(page).to have_content 'success'
   end
 
   it 'can successfully create a new slack hook' do
