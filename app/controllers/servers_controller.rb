@@ -7,22 +7,12 @@ class ServersController < ApplicationController
   def index
     @hosts = filter VmApi.instance.all_hosts
     @parameters = determine_params
-    if VmApi.instance.connected?
-      flash.discard
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
   end
 
   def new; end
 
   def show
-    if VmApi.instance.connected?
-      flash.discard
-      @host = VmApi.instance.get_host(params[:id])
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
+    @host = VmApi.instance.get_host(params[:id])
   end
 
   private

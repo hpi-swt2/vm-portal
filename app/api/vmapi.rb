@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
-require 'hash_dot'
 require 'singleton'
 # This class manages a connection to the VSphere backend
 # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
@@ -12,11 +11,6 @@ class VmApi
   API_SERVER_IP = '192.168.30.3'
   API_SERVER_USER = 'administrator@swt.local'
   API_SERVER_PASSWORD = 'Vcsaswt"2018'
-
-  @is_connected = false
-  def connected?
-    @is_connected
-  end
 
   def create_vm(cpu, ram, capacity, name)
     connect
@@ -61,7 +55,7 @@ class VmApi
 
   def get_vm(name)
     connect
-    if @is_connected && (vm = find_vm(name))
+    if (vm = find_vm(name))
       { name: vm.name,
         state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
@@ -99,7 +93,7 @@ class VmApi
   private
 
   def find_vm(name)
-    @vm_folder.traverse(name, RbVmomi:: VIM::VirtualMachine)
+    @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)
   end
 
   def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength
@@ -163,21 +157,6 @@ class VmApi
     @clusters = extract_clusters(@cluster_folder).flatten
     @vms = @vm_folder.children
     @resource_pool = @clusters.first.resourcePool
-    @is_connected = true
-  rescue Net::OpenTimeout, Errno::ENETUNREACH, TimeOutError
-    instanciate_empty_vm_info
-  end
-
-  def instanciate_empty_vm_info
-    @is_connected = false
-    folder = {}
-    folder['children'] = {}
-    folder['traverse'] = -> {}
-    @vm_folder = folder.to_dot
-    @cluster_folder = []
-    @clusters = []
-    @vms = []
-    @resource_pool = []
   end
 
   def extract_clusters(element)

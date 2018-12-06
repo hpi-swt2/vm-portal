@@ -9,11 +9,6 @@ RSpec.describe ServersController, type: :controller do
                                                            { name: 'anotherHost', connectionState: 'not connected' }]
 
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:connected?).and_return true
-
-      double_flash = double
-      allow(double_flash).to receive(:discard)
-      allow_any_instance_of(ServersController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -53,13 +48,12 @@ RSpec.describe ServersController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_host).and_return(nil)
-      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
-    it 'returns http success' do
+    it 'returns http success or timeout' do
       get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:success).or have_http_status(408)
     end
 
     it 'renders show page' do
