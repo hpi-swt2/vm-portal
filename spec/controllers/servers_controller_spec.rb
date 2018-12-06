@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-RSpec.describe ServerController, type: :controller do
+RSpec.describe ServersController, type: :controller do
   # Authenticate an user
   before do
     sign_in FactoryBot.create :user
@@ -14,11 +14,6 @@ RSpec.describe ServerController, type: :controller do
                                                            { name: 'anotherHost', connectionState: 'not connected' }]
 
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:connected?).and_return true
-
-      double_flash = double
-      allow(double_flash).to receive(:discard)
-      allow_any_instance_of(ServerController).to receive(:flash).and_return(double_flash)
     end
 
     it 'returns http success' do
@@ -27,18 +22,18 @@ RSpec.describe ServerController, type: :controller do
     end
 
     it 'renders index page' do
-      expect(get(:index)).to render_template('server/index')
+      expect(get(:index)).to render_template('servers/index')
     end
 
     it 'returns all hosts per default' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = {}
       controller.index
       expect(controller.hosts.size).to be VmApi.instance.all_hosts.size
     end
 
     it 'returns online hosts if requested' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = { up_hosts: 'true' }
       controller.index
       expect(controller.hosts).to satisfy('include online hosts') { |hosts| hosts.any? { |host| host[:connectionState] == 'connected' } }
@@ -46,7 +41,7 @@ RSpec.describe ServerController, type: :controller do
     end
 
     it 'returns offline hosts if requested' do
-      controller = ServerController.new
+      controller = ServersController.new
       controller.params = { down_hosts: 'true' }
       controller.index
       expect(controller.hosts).to satisfy('include offline hosts') { |hosts| hosts.any? { |host| host[:connectionState] != 'connected' } }
@@ -58,17 +53,16 @@ RSpec.describe ServerController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:get_host).and_return(nil)
-      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
-    it 'returns http success' do
+    it 'returns http success or timeout' do
       get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:success).or have_http_status(408)
     end
 
     it 'renders show page' do
-      expect(get(:show, params: { id: 1 })).to render_template('server/show')
+      expect(get(:show, params: { id: 1 })).to render_template('servers/show')
     end
   end
 end

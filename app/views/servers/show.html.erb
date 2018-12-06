@@ -2,12 +2,6 @@
   Details for Host "<%= @host[:name] unless @host.nil?%>"
 </h1>
 
-<div class="container">
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-</div>
-
 <table class="table">
     <tbody>
     <tr>
@@ -79,7 +73,7 @@
     <td>CPU usage:</td>
     <td><%= cpu_usage_percentage %> %</td>
     </tr>
-   
+
     <tr>
     <td>Memory Usage:</td>
     <td><%= memory_usage_percentage %> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
@@ -89,17 +83,16 @@
     <td>VMs:</td>
     <td>
     <% @host[:vm_names].each do |vm| %>
-        <%= link_to vm, controller: "vm", action: "show", id: vm %>
+        <%= link_to vm, controller: "vms", action: "show", id: vm %>
         <br />
     <% end unless @host.nil?%>
     </td>
     </tr>
     <tr>
-      <td><%= button_to "Reserve",
+      <td><%= button_to "Reserve Timeslot",
                         "",
                         method: :get, class: "btn btn-info" %></td>
     </tr>
 
   </tbody>
 </table>
-

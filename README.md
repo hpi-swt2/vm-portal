@@ -7,7 +7,29 @@ Branch | Travis CI  | Coverage | CodeClimate | Codefactor | Codebeat
 master | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/vm-portal) | [![Coverage Status](https://coveralls.io/repos/github/hpi-swt2/vm-portal/badge.svg?branch=master)](https://coveralls.io/github/hpi-swt2/vm-portal?branch=master) | --- | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/master)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/master) | [![codebeat badge](https://codebeat.co/badges/ff3d0842-e199-4f44-8bb1-c9dde7a7d53f)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-master)
 dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=dev)](https://travis-ci.com/hpi-swt2/vm-portal/branches) | [![Coverage Status](https://coveralls.io/repos/github/hpi-swt2/vm-portal/badge.svg?branch=dev)](https://coveralls.io/github/hpi-swt2/vm-portal?branch=dev) | [![Maintainability](https://api.codeclimate.com/v1/badges/bc93de388c2d75383166/maintainability)](https://codeclimate.com/github/hpi-swt2/vm-portal/maintainability) | [![CodeFactor](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/badge/dev)](https://www.codefactor.io/repository/github/hpi-swt2/vm-portal/overview/dev) | [![codebeat badge](https://codebeat.co/badges/97624360-62ce-4dbe-b935-857ab163b495)](https://codebeat.co/projects/github-com-hpi-swt2-vm-portal-dev)
 
-## Application Setup
+## Deployment
+
+The application requires access to internal resources, which are not directly available from the general internet.
+Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
+* master: http://hart.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547334-011e36636240414faf7c51e1.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+* dev: http://hart-dev.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547337-b65c7b3660b7a0ddeee7c5c5.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+An overview of the status of all involved systems is available here: https://stats.uptimerobot.com/j8DADFQnv
+
+### Deployment Error Collection
+Errors that occur in the deployed systems are reported to a central [Errbit](https://github.com/errbit/errbit) error collection application. It can be found here:
+* https://errbit-vm-portal.herokuapp.com/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781561200-ca855387a43778c5060db064.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+You can login using your GitHub credentials.
+
+### Deployment Details
+Automatic deployments are handled by a dedicated application:
+* http://hart-deploy.epic-hpi.de/deployed [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547341-373d600b6052559e47f208f6.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+The application shows an overview of the latest deployment attempts and handles deployment (via [mina](https://github.com/mina-deploy/mina)) to the university internal systems when it receives a POST request.
+These requests are send by Travis CI after a successful build, see the [.travis.yml](https://github.com/hpi-swt2/vm-portal/blob/dev/.travis.yml#L23).
+
+## Development Setup
 
 **Note:** Please be aware that the application is designed to manage internal university resources. These are only available from the internal network. Therefore, currently a [VPN connection](https://vpn.hpi.de/) to the university network is required for those parts of the application that interact with internal resources.
 
@@ -39,15 +61,6 @@ Please keep in mind that this method may lead to a loss in performance, due to t
 
 * `vagrant halt` Shuts down the VM
 * `vagrant global-status` Shows status of all Vagrant VMs
-
-## Deployment
-
-The application requires access to internal ressources, which are not directly available from the general internet.
-Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
-* master: http://hart.epic-hpi.de/
-* dev: http://hart-dev.epic-hpi.de
-
-Every 5 minutes, the latest commits from these branches are deployed using [mina](https://github.com/mina-deploy/mina).
 
 ## Developer Guide
 
