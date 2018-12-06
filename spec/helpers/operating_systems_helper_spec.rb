@@ -13,5 +13,15 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe OperatingSystemsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context 'when a request is created' do
+    it 'has a \'none\' selection of operating_systems as the first element' do
+      options = operating_system_options
+      expect(options.first).to eq('none')
+    end
+
+    it 'has a \'other(write in Comment)\' selection of operating_systems as the last element' do
+      options = operating_system_options
+      expect(options.last).to eq('other(write in Comment)')
+    end
+  end
 end
