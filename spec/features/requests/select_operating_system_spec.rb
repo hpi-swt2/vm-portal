@@ -3,7 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'requests/new', type: :feature do
-  context 'when a request will created' do
+  before do
+    sign_in FactoryBot.create :user
+  end
+
+  context 'when a request is created' do
     it 'has a selection of operating_systems' do
       visit new_request_path
       find_field('Operating System')

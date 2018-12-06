@@ -46,6 +46,10 @@ RSpec.describe OperatingSystemsController, type: :controller do
   # OperatingSystemsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before do
+    sign_in FactoryBot.create :user
+  end
+
   describe 'GET #index' do
     it 'returns a success response' do
       OperatingSystem.create! valid_attributes

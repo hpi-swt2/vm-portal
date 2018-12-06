@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-RSpec.describe 'server/show.html.erb', type: :view do
+RSpec.describe 'servers/show.html.erb', type: :view do
   let(:host) do
     summary = double
     allow(summary).to receive_message_chain(:runtime, :powerState)
@@ -52,6 +52,6 @@ RSpec.describe 'server/show.html.erb', type: :view do
   end
 
   it 'has reserve button' do
-    expect(rendered).to have_button('Reserve')
+    expect(rendered).to have_button('Reserve Timeslot')
   end
 end
