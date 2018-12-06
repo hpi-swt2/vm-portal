@@ -4,14 +4,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'Login successful')
     else
-      redire
-      render 'Error'
+      redirect_to root_path
     end
   end
 
   def failure
-    redirect_to vm_index_path
+    redirect_to root_path
   end
 end
