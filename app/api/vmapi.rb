@@ -63,6 +63,7 @@ class VmApi
     connect
     if @is_connected && (vm = find_vm(name))
       { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
