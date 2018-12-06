@@ -296,10 +296,12 @@ Devise.setup do |config|
           port: 443,
           scheme: 'https',
           host: 'oidc.hpi.de',
-          identifier: ENV['OPENID_IDENTIFIER'],
-          secret: ENV['OPENID_SECRET'],
-          redirect_uri: 'http://localhost:3000/users/auth/hpi/callback',
+          identifier: ENV['client_id'],
+          secret: ENV['client_secret'],
+          redirect_uri: ENV['redirect_uri'],
           authorization_endpoint: '/auth'
       },
+      client_auth_method: :other,
+      discovery: true
   }
 end

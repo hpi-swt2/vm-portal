@@ -54,7 +54,6 @@ gem 'rbvmomi'
 
 gem 'omniauth'
 gem 'omniauth_openid_connect'
-gem 'rack-oauth2'
 
 # Mina for deployment 
 # Have a look in the tutorial:

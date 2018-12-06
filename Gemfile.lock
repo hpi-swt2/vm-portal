@@ -70,10 +70,10 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    aes_key_wrap (1.0.1)
     airbrake (5.8.1)
       airbrake-ruby (~> 1.8)
     airbrake-ruby (1.8.0)
-    aes_key_wrap (1.0.1)
     archive-zip (0.11.0)
       io-like (~> 0.3.0)
     arel (9.0.0)
@@ -457,7 +457,6 @@ DEPENDENCIES
   pg
   puma (~> 3.11)
   pundit
-  rack-oauth2
   rails (~> 5.2.1)
   rails-controller-testing
   rbvmomi
