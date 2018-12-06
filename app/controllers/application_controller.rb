@@ -8,6 +8,6 @@ class ApplicationController < ActionController::Base
   rescue_from Net::OpenTimeout, Errno::ENETUNREACH, with: :error_render_method
 
   def error_render_method
-    render template: 'errors/timeout', status: 408 and return
+    render(template: 'errors/timeout', status: 408) && return
   end
 end

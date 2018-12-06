@@ -19,8 +19,7 @@ class VmsController < ApplicationController
     redirect_to action: :index
   end
 
-  def new;
-  end
+  def new; end
 
   def show
     @vm = VmApi.instance.get_vm(params[:id])
@@ -33,12 +32,12 @@ class VmsController < ApplicationController
   private
 
   def filter(list)
-    if no_params_set? then
+    if no_params_set?
       list
     else
       result = []
       vm_filter.keys.each do |key|
-        result += list.select {|object| vm_filter[key].call(object)} if params[key].present?
+        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
       end
       result
     end
@@ -48,7 +47,6 @@ class VmsController < ApplicationController
     all_parameters = vm_filter.keys.map(&:to_s)
     actual_params = params.keys.map(&:to_s)
     if no_params_set?
-    then
       all_parameters
     else
       all_parameters - (all_parameters - actual_params)
@@ -62,6 +60,6 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    {up_vms: proc {|vm| vm[:state]}, down_vms: proc {|vm| !vm[:state]}}
+    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
   end
 end
