@@ -7,8 +7,7 @@ Rails.application.routes.draw do
 
   get '/server/:id' => 'server#show', constraints: { id: /.*/ }
 
-  get 'slack/update'
-  get '/slack/new' => 'slack#new'
+  resources :slack, only: %i[new update]
 
   devise_for :users, path: 'users'
   resources :vm, :server
