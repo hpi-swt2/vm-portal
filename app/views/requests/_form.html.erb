@@ -31,11 +31,10 @@
     <%= form.number_field :storage_mb, min: 0 %>
   </div>
 
-  <%= form.select 'user+ids',
+  <%= form.select 'user_ids',
                     options_from_collection_for_select(User.all,
                                                        :id,
-                                                       :name,
-                                                       @request.user_ids),
+                                                       :email),
                     {},
                     multiple: true,
                     size: 10 %>

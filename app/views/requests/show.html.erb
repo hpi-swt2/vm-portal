@@ -26,6 +26,18 @@
 </p>
 
 <p>
+  <strong>Users:</strong>
+
+  <ul>
+    <% @request.users.each do |user| %>
+  <p>
+  <li><%= user.email %></li>
+  </p>
+<% end %>
+</ul>
+</p>
+
+<p>
   <strong>Comment:</strong>
   <%= @request.comment %>
 </p>
