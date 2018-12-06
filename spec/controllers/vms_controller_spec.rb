@@ -9,7 +9,6 @@ RSpec.describe VmsController, type: :controller do
                                                          { name: 'another VM', state: false, bootTime: 'now' }]
 
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:connected?).and_return true
     end
 
     it 'returns http success' do
@@ -49,7 +48,6 @@ RSpec.describe VmsController, type: :controller do
     before do
       double_api = double
       expect(double_api).to receive(:delete_vm)
-      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
@@ -64,7 +62,6 @@ RSpec.describe VmsController, type: :controller do
     before do
       double_api = double
       expect(double_api).to receive(:create_vm)
-      allow(double_api).to receive(:connected?).and_return true
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
