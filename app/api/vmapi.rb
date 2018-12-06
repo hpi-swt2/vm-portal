@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
-require 'hash_dot'
 require 'singleton'
 # This class manages a connection to the VSphere backend
 # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
