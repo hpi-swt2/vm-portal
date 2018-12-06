@@ -7,32 +7,23 @@ class VmsController < ApplicationController
   def index
     @vms = filter VmApi.instance.all_vms
     @parameters = determine_params
-    if VmApi.instance.connected?
-      flash.discard
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
   end
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    VmApi.instance.delete_vm(params[:id]) if VmApi.instance.connected?
+    VmApi.instance.delete_vm(params[:id])
   end
 
   def create
-    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name]) if VmApi.instance.connected?
+    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
     redirect_to action: :index
   end
 
-  def new; end
+  def new;
+  end
 
   def show
-    if VmApi.instance.connected?
-      flash.discard
-      @vm = VmApi.instance.get_vm(params[:id])
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
+    @vm = VmApi.instance.get_vm(params[:id])
   end
 
   # This controller doesn't use strong parameters
@@ -42,11 +33,12 @@ class VmsController < ApplicationController
   private
 
   def filter(list)
-    if no_params_set? then list
+    if no_params_set? then
+      list
     else
       result = []
       vm_filter.keys.each do |key|
-        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
+        result += list.select {|object| vm_filter[key].call(object)} if params[key].present?
       end
       result
     end
@@ -56,8 +48,10 @@ class VmsController < ApplicationController
     all_parameters = vm_filter.keys.map(&:to_s)
     actual_params = params.keys.map(&:to_s)
     if no_params_set?
-    then all_parameters
-    else all_parameters - (all_parameters - actual_params)
+    then
+      all_parameters
+    else
+      all_parameters - (all_parameters - actual_params)
     end
   end
 
@@ -68,6 +62,6 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+    {up_vms: proc {|vm| vm[:state]}, down_vms: proc {|vm| !vm[:state]}}
   end
 end
