@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe LandingController, type: :controller do
   describe 'GET #index"' do
-
     context 'when logged in' do
       before do
         user = FactoryBot.create :user

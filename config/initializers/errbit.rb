@@ -7,5 +7,5 @@ Airbrake.configure do |config|
 
   # for Rails apps
   config.environment = Rails.env
-  config.ignore_environments = %w(development test)
+  config.ignore_environments = %w[development test]
 end
