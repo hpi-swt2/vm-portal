@@ -2,6 +2,11 @@
 
 require 'rails_helper'
 RSpec.describe VmsController, type: :controller do
+  # Authenticate an user
+  before do
+    sign_in FactoryBot.create :user
+  end
+
   describe 'GET #index' do
     before do
       double_api = double
