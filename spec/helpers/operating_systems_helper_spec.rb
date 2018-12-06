@@ -13,15 +13,21 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe OperatingSystemsHelper, type: :helper do
-  context 'when a request is created' do
+  describe 'operating_system_options' do
     it 'has a \'none\' selection of operating_systems as the first element' do
       options = operating_system_options
-      expect(options.first).to eq('none')
+      expect(options).to include('none')
     end
 
     it 'has a \'other(write in Comment)\' selection of operating_systems as the last element' do
       options = operating_system_options
-      expect(options.last).to eq('other(write in Comment)')
+      expect(options).to include('other(write in Comment)')
+    end
+
+    it 'has names of created operating systems as elements' do
+      operating_system = FactoryBot.create(:operating_system)
+      options = operating_system_options
+      expect(options).to include(operating_system.name)
     end
   end
 end

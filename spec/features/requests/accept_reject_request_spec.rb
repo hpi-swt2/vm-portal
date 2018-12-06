@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'requests/show', type: :feature do
+RSpec.describe 'accepting and rejecting requests', type: :feature do
   # Authenticate an user
   before do
     sign_in FactoryBot.create :user
@@ -11,25 +11,23 @@ RSpec.describe 'requests/show', type: :feature do
   context 'when request status is pending' do
     let(:request) { FactoryBot.create :request }
 
-    it 'has accept button' do
+    before do
       visit request_path(request)
+    end
 
+    it 'has accept button' do
       click_button('Accept')
       request.reload
       expect(request.status).to eq('accepted')
     end
 
     it 'has reject button' do
-      visit request_path(request)
-
       click_button('Reject')
       request.reload
       expect(request.status).to eq('rejected')
     end
 
     it 'has rejection_information input field' do
-      visit request_path(request)
-
       page.fill_in 'request[rejection_information]', with: 'Info'
       click_button('Reject')
       request.reload
