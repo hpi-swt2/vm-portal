@@ -4,8 +4,7 @@ require 'rails_helper'
 RSpec.describe VmController, type: :controller do
   # Authenticate an user
   before do
-    user = FactoryBot.create :user
-    sign_in user
+    sign_in FactoryBot.create :user
   end
 
   describe 'GET #index' do
