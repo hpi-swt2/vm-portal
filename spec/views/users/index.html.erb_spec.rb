@@ -16,8 +16,8 @@ RSpec.describe 'users/index.html.erb', type: :view do
   end
 
   it 'shows all users first name' do
-    expect(rendered).to include users[0].user_profile.name
-    expect(rendered).to include users[1].user_profile.name
+    expect(rendered).to include users[0].name
+    expect(rendered).to include users[1].name
   end
 
   it 'shows a list of all users emails' do
