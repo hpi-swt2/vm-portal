@@ -25,10 +25,13 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
+    (@request.users_assigned_to_requests.select{ |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }).each do |userRequest|
+      userRequest.sudo = true
+    end
 
     respond_to do |format|
       if @request.save
-        format.html { redirect_to @request, notice: 'Request was successfully created.' }
+        format.html { redirect_to @request, notice: "Request was successfully created." }
         format.json { render :show, status: :created, location: @request }
       else
         format.html { render :new }
@@ -70,6 +73,6 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment, :rejection_information, :status, :user_ids => [])
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment, :rejection_information, :status, :user_ids => [], :sudo_user_ids => [])
   end
 end

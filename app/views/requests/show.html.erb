@@ -38,6 +38,21 @@
 </p>
 
 <p>
+  <strong>Users with sudo rights:</strong>
+
+  <ul>
+    <% @request.users_assigned_to_requests.each do |userAtRequest| %>
+    <% if userAtRequest.sudo %>
+    <p>
+    <li><%= userAtRequest.user.email %></li>
+    </p>
+    <% end %>
+
+<% end %>
+</ul>
+</p>
+
+<p>
   <strong>Comment:</strong>
   <%= @request.comment %>
 </p>
