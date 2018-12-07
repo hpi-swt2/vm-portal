@@ -43,3 +43,17 @@ describe 'Index page', type: :feature do
     end
   end
 end
+
+describe 'Nav header', type: :feature do
+  before do
+    user = create(:user)
+    login_as(user, scope: :user)
+    @notification = FactoryBot.create(:notification, user: user)
+  end
+  it 'has a link to notifications' do
+    visit requests_path
+
+    click_link 'header-notification-bell'
+    expect(page).to have_text(@notification.message)
+  end
+end
