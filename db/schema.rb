@@ -12,8 +12,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20_181_130_150_921) do
+  create_table 'requests', force: :cascade do |t|
+    t.string 'name'
+    t.integer 'cpu_cores'
+    t.integer 'ram_mb'
+    t.integer 'storage_mb'
+    t.string 'operating_system'
+    t.text 'comment'
+    t.text 'rejection_information'
+    t.integer 'status', default: 0
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+  end
 
   create_table 'user_profiles', force: :cascade do |t|
     t.integer 'user_id'
@@ -35,19 +46,5 @@ ActiveRecord::Schema.define(version: 20_181_130_150_921) do
     t.integer 'role'
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
-  end
-
-  create_table 'requests', force: :cascade do |t|
-    t.string 'name'
-    t.integer 'cpu_cores'
-    t.integer 'ram_mb'
-    t.integer 'storage_mb'
-    t.string 'operating_system'
-    t.string 'software'
-    t.text 'comment'
-    t.text 'rejection_information'
-    t.integer 'status', default: 0
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
   end
 end
