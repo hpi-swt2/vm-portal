@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRequestTemplates < ActiveRecord::Migration[5.2]
   def change
     create_table :request_templates do |t|
