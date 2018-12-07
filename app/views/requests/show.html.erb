@@ -1,39 +1,43 @@
-<p id="notice"><%= notice %></p>
+<h1>Request Information</h1>
 
-<p>
-  <strong>Name:</strong>
-  <%= @request.name %>
-</p>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <th>Name:</td>
+      <td><%= @request.name %></td>
+    </tr>
 
-<p>
-  <strong>Cpu cores:</strong>
-  <%= @request.cpu_cores %>
-</p>
+    <tr>
+      <td><strong>Cpu cores:</strong></td>
+      <td><%= @request.cpu_cores %></td>
+    </tr>
 
-<p>
-  <strong>MB RAM:</strong>
-  <%= @request.ram_mb %>
-</p>
+    <tr>
+      <td><strong>MB RAM:</strong></td>
+      <td><%= @request.ram_mb %></td>
+    </tr>
 
-<p>
-  <strong>MB Storage:</strong>
-  <%= @request.storage_mb %>
-</p>
+    <tr>
+      <td><strong>MB Storage:</strong></td>
+      <td><%= @request.storage_mb %></td>
+    </tr>
 
-<p>
-  <strong>Operating system:</strong>
-  <%= @request.operating_system %>
-</p>
+    <tr>
+      <td><strong>Operating system:</strong></td>
+      <td><%= @request.operating_system %></td>
+    </tr>
 
-<p>
-  <strong>Comment:</strong>
-  <%= @request.comment %>
-</p>
+    <tr>
+      <td><strong>Comment:</strong></td>
+      <td class="col-md-4"><%= @request.comment %></td>
+    </tr>
 
-<p>
-  <strong>Status:</strong>
-  <%= @request.status %>
-</p>
+    <tr>
+      <td><strong>Status:</strong></td>
+      <td><%= @request.status %></td>
+    </tr>
+  </tbody>
+</table>
 
 <% if @request.rejected? %>
   <p>
@@ -46,19 +50,19 @@
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="actions">
       <%= form.hidden_field :status, value: 'accepted' %>
-      <%= form.submit 'Accept' %>
+      <%= form.submit 'Accept', class: "btn btn-success" %>
     </div>
   <% end %>
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
       <%= form.label :rejection_information %>
-      <%= form.text_field :rejection_information %>
+      <%= form.text_field :rejection_information, class: 'form-control' %>
     </div>
 
     <div class="actions">
       <%= form.hidden_field :status, value: 'rejected' %>
-      <%= form.submit 'Reject' %>
+      <%= form.submit 'Reject', class: "btn btn-danger" %>
     </div>
   <% end %>
 <% end %>

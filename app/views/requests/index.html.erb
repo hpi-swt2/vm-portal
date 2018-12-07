@@ -2,7 +2,7 @@
 
 <h1>Requests</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
@@ -10,9 +10,8 @@
       <th>MB RAM</th>
       <th>MB Storage</th>
       <th>Operating system</th>
-      <th>Comment</th>
+      <th class="w-25">Comment</th>
       <th>Status </th>
-      <th colspan="3"></th>
     </tr>
   </thead>
 
@@ -33,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Request', new_request_path %>
+<%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
