@@ -86,12 +86,35 @@ class VmApi
   def change_power_state(name, state)
     connect
     vm = find_vm name
-    puts vm.summary.methods
     if state
       vm.PowerOffVM_Task.wait_for_completion
     else
       vm.PowerOnVM_Task.wait_for_completion
     end
+  end
+
+  def suspend_vm(name)
+    connect
+    vm = find_vm name
+    vm.SuspendVM_Task.wait_for_completion
+  end
+
+  def reset_vm(name)
+    connect
+    vm = find_vm name
+    vm.ResetVM_Task.wait_for_completion
+  end
+
+  def shutdown_guestOS(name)
+    connect
+    vm = find_vm name
+    vm.ShutdownGuest.wait_for_completion
+  end
+
+  def reboot_guestOS(name)
+    connect
+    vm = find_vm name
+    vm.RebootGuest.wait_for_completion
   end
 
   private
