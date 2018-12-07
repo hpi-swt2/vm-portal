@@ -31,4 +31,4 @@
 
 en:
   authorization:
-    unauthorized: ""
+    unauthorized: "You do not have the necessary rights to perform this action."
