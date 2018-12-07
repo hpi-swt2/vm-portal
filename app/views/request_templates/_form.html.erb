@@ -1,7 +1,7 @@
 <%= form_with(model: request_template, local: true) do |form| %>
   <% if request_template.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(request_template.errors.count, "error") %> prohibited this request_template from being saved:</h2>
+      <h2><%= pluralize(request_template.errors.count, "error") %> prohibited this request template from being saved:</h2>
 
       <ul>
       <% request_template.errors.full_messages.each do |message| %>

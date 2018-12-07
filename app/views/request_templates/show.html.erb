@@ -1,24 +1,33 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Cpu count:</strong>
-  <%= @request_template.cpu_count %>
-</p>
+<table class="table table-striped">
+  <tbody>
+  <tr>
+    <th>Name:</td>
+    <td><%= @request_template.name %></td>
+  </tr>
 
-<p>
-  <strong>Ram mb:</strong>
-  <%= @request_template.ram_mb %>
-</p>
+  <tr>
+    <td><strong>Cpu cores:</strong></td>
+    <td><%= @request_template.cpu_cores %></td>
+  </tr>
 
-<p>
-  <strong>Storage mb:</strong>
-  <%= @request_template.storage_mb %>
-</p>
+  <tr>
+    <td><strong>MB RAM:</strong></td>
+    <td><%= @request_template.ram_mb %></td>
+  </tr>
 
-<p>
-  <strong>Operating system:</strong>
-  <%= @request_template.operating_system %>
-</p>
+  <tr>
+    <td><strong>MB Storage:</strong></td>
+    <td><%= @request_template.storage_mb %></td>
+  </tr>
+
+  <tr>
+    <td><strong>Operating system:</strong></td>
+    <td><%= @request_template.operating_system %></td>
+  </tr>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_request_template_path(@request_template) %> |
 <%= link_to 'Back', request_templates_path %>
