@@ -15,7 +15,6 @@ class User < ApplicationRecord
 
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
-  has_one :user_profile
   validates :first_name, presence: true
   validates :last_name, presence: true
 
@@ -26,6 +25,10 @@ class User < ApplicationRecord
     slack_hooks.each do |hook|
       hook.post_message message
     end
+  end
+
+  def sshkey?
+    sshkey && sshkey.length > 0
   end
 
   def name

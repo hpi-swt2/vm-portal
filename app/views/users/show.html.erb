@@ -10,9 +10,21 @@
       <td>Name</td>
       <td><%= @user.name%></td>
     </tr>
-    <tr>
-      <td>SSH-Key</td>
-      <td>TBD</td>
-    </tr>
   </tbody>
-</table>
+</table><br>
+
+<%= form_for @user do |f| %>
+  <div class="form-group">
+    <%= f.label :sshkey %>
+    <%= f.text_area :sshkey, class: 'form-control', rows: '8', disabled: true%>
+  </div>
+
+  <button>
+    <% if @user.sshkey? %>
+      <%= t('actions.edit') %>
+    <% else %>
+      <%= t('actions.add') %>
+    <% end %>
+  </button>
+<% end %>
+
