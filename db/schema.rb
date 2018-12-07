@@ -85,41 +85,4 @@ ActiveRecord::Schema.define(version: 20_181_209_184_959) do
     t.index ['request_id'], name: 'index_users_assigned_to_requests_on_request_id'
     t.index ['user_id'], name: 'index_users_assigned_to_requests_on_user_id'
   end
-
-  create_table "requests", force: :cascade do |t|
-    t.string "name"
-    t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
-    t.string "operating_system"
-    t.text "comment"
-    t.text "rejection_information"
-    t.integer "status", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "user_profiles", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_user_profiles_on_user_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "role"
-    t.string "provider"
-    t.string "uid"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
 end

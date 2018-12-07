@@ -76,7 +76,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'when the user alreay exists' do
+    context 'when the user already exists' do
       let!(:existing_user) { FactoryBot.create :user, uid: 1, provider: 'testprovider', email: 'oldemail@mail.com' }
 
       it 'does not create a new user' do
@@ -90,6 +90,19 @@ RSpec.describe User, type: :model do
       it 'returns the existing user' do
         expect(user.id).to eq(existing_user.id)
       end
+    end
+  end
+
+  context 'setting the user id' do
+    let(:user) { FactoryBot.create :user }
+
+    it 'is set to 4000 when the first user is created' do
+      expect(user.user_id).to eq(4000)
+    end
+
+    it 'increments the user id when more users are created' do
+      FactoryBot.create :user
+      expect(user.user_id).to eq(4001)
     end
   end
 end

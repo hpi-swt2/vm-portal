@@ -48,4 +48,7 @@ Rails.application.configure do
 
   # Use Omni auth test mode to stub authentication requests
   OmniAuth.config.test_mode = true
+
+  # The first user id
+  config.start_user_id = 4000
 end
