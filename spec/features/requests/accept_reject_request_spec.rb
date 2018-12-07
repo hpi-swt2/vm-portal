@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'requests/show', type: :feature do
   # Authenticate an user
   before do
-    sign_in FactoryBot.create :user
+    sign_in FactoryBot.create :user, role: :wimi
   end
 
   context 'when request status is pending' do

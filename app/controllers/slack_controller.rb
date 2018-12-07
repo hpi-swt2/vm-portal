@@ -61,7 +61,7 @@ class SlackController < ApplicationController
   end
 
   def redirect_uri
-    'https://587122bc.ngrok.io/slack/auth'
+    request.base_url + '/slack/auth'
   end
 
   def client_id

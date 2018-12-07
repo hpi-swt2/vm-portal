@@ -2,6 +2,7 @@
 
 class RequestsController < ApplicationController
   before_action :set_request, only: %i[show edit update destroy]
+  before_action :authenticate_wimi
 
   # GET /requests
   # GET /requests.json
@@ -11,9 +12,7 @@ class RequestsController < ApplicationController
 
   # GET /requests/1
   # GET /requests/1.json
-  def show
-    set_request
-  end
+  def show; end
 
   # GET /requests/new
   def new
@@ -21,9 +20,7 @@ class RequestsController < ApplicationController
   end
 
   # GET /requests/1/edit
-  def edit
-    set_request
-  end
+  def edit; end
 
   def notify_users(message)
     User.all.each do |each|
