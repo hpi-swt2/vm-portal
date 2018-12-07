@@ -117,12 +117,12 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       let(:new_attributes) do
         {
-          name: 'MyVM',
-          cpu_cores: 2,
-          ram_mb: 1000,
-          storage_mb: 2000,
-          operating_system: 'MyOS',
-          comment: 'Comment',
+          name: 'MyNewVM',
+          cpu_cores: 3,
+          ram_mb: 2000,
+          storage_mb: 3000,
+          operating_system: 'MyNewOS',
+          comment: 'newComment',
           status: 'pending'
         }
       end
@@ -131,7 +131,7 @@ RSpec.describe RequestsController, type: :controller do
         request = Request.create! valid_attributes
         put :update, params: { id: request.to_param, request: new_attributes }
         request.reload
-        skip('Add assertions for updated state')
+        expect(request.name).to eq('MyNewVM')
       end
 
       it 'redirects to the request' do
