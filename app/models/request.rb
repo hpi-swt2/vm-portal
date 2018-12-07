@@ -16,4 +16,8 @@ class Request < ApplicationRecord
     description += comment.empty? ? '' : "\n- Comment: #{comment}"
     description
   end
+
+  def accept!
+    self.status = 'accepted'
+  end
 end

@@ -19,7 +19,9 @@ class VmsController < ApplicationController
     redirect_to action: :index
   end
 
-  def new; end
+  def new
+    @request = !params[:request].nil? ? Request.find(params[:request]) : default_request
+  end
 
   def show
     @vm = VmApi.instance.get_vm(params[:id])
@@ -61,5 +63,9 @@ class VmsController < ApplicationController
 
   def vm_filter
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+  end
+
+  def default_request
+    { name: 'VM', cpu_cores: 1, ram_mb: 1000, storage_mb: 1000 }
   end
 end
