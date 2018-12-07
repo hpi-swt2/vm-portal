@@ -25,6 +25,22 @@ ActiveRecord::Schema.define(version: 2018_11_30_150921) do
     t.datetime 'updated_at', null: false
   end
 
+  create_table 'slack_auth_requests', force: :cascade do |t|
+    t.string 'state'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_slack_auth_requests_on_user_id'
+  end
+
+  create_table 'slack_hooks', force: :cascade do |t|
+    t.string 'url'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_slack_hooks_on_user_id'
+  end
+
   create_table 'user_profiles', force: :cascade do |t|
     t.integer 'user_id'
     t.string 'first_name'
