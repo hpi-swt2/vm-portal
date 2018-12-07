@@ -69,7 +69,6 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       if @request.update(request_params)
-        notify_request_update(@request)
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }
         format.json { render :show, status: :ok, location: @request }
       else
@@ -92,8 +91,12 @@ class RequestsController < ApplicationController
   def request_accept_button
     @request = Request.find(params[:request])
     @request.accept!
-    @request.save
-    redirect_to new_vm_path(request: @request)
+    if @request.save
+      notify_request_update(@request)
+      redirect_to new_vm_path(request: @request)
+    else
+      redirect_to request_path(@request)
+    end
   end
 
   private
