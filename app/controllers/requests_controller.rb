@@ -22,6 +22,18 @@ class RequestsController < ApplicationController
   # GET /requests/1/edit
   def edit; end
 
+  def notify_users(message)
+    User.all.each do |each|
+      each.notify_slack(message)
+    end
+  end
+
+  def successfully_saved(format, request)
+    notify_users("New VM request:\n" + request.description_text)
+    format.html { redirect_to @request, notice: 'Request was successfully created.' }
+    format.json { render :show, status: :created, location: request }
+  end
+
   # POST /requests
   # POST /requests.json
   def create
@@ -29,12 +41,23 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        format.html { redirect_to @request, notice: 'Request was successfully created.' }
-        format.json { render :show, status: :created, location: @request }
+        successfully_saved(format, @request)
       else
         format.html { render :new }
         format.json { render json: @request.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def notify_request_update(request)
+    return if request.pending?
+
+    if request.accepted?
+      notify_users("Request:\n#{@request.description_text}\nhas been *accepted*!")
+    elsif request.rejected?
+      message = "Request:\n#{@request.description_text}\nhas been *rejected*!"
+      message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
+      notify_users(message)
     end
   end
 
@@ -43,6 +66,7 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       if @request.update(request_params)
+        notify_request_update(@request)
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }
         format.json { render :show, status: :ok, location: @request }
       else
