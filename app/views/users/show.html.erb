@@ -13,18 +13,20 @@
   </tbody>
 </table><br>
 
-<%= form_for @user do |f| %>
-  <div class="form-group">
-    <%= f.label :sshkey %>
-    <%= f.text_area :sshkey, class: 'form-control', rows: '8', disabled: true%>
-  </div>
+<% if @user == current_user %>
+  <%= form_for @user do |f| %>
+    <div class="form-group">
+      <%= f.label :ssh_key %>
+      <%= f.text_area :ssh_key, class: 'form-control', rows: '8', disabled: true %>
+    </div>
 
-  <button>
-    <% if @user.sshkey? %>
-      <%= t('actions.edit') %>
-    <% else %>
-      <%= t('actions.add') %>
-    <% end %>
-  </button>
+    <button class="btn btn-primary float-right">
+      <% if @user.ssh_key? %>
+        <%= t('actions.edit') %>
+      <% else %>
+        <%= t('actions.add') %>
+      <% end %>
+    </button>
+  <% end %>
 <% end %>
 

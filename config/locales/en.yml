@@ -33,7 +33,7 @@ en:
   activerecord:
     attributes:
       user:
-        sshkey: "SSH-Key"
+        ssh_key: "SSH-Key"
   actions:
     add: "Add"
     edit: "Edit"
