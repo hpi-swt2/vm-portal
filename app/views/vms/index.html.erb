@@ -45,9 +45,9 @@
       <td><%= vm[:boot_time] if vm[:state] %></td>
       <td>
         <% if vm[:state] %>
-          <%= button_to "Shutdown", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-danger" %>
+          <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
         <% else %>
-          <%= button_to "Start", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-success" %>
+          <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
         <% end %>
       </td>
     <tr>

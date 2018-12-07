@@ -83,10 +83,11 @@ class VmApi
   def change_power_state(name, state)
     connect
     vm = find_vm name
+    puts vm.summary.methods
     if state
-      vm.PowerOnVM_Task.wait_for_completion
-    else
       vm.PowerOffVM_Task.wait_for_completion
+    else
+      vm.PowerOnVM_Task.wait_for_completion
     end
   end
 
