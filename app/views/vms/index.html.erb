@@ -9,12 +9,6 @@
 </h1>
 <small class="text-muted">This is the overview page for all currently existing VMs</small>
 
-<div class="container">
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-</div>
-
 <%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
@@ -39,7 +33,7 @@
   <tr>
     <th scope="col" data-sortable="true">VM Name</th>
     <th scope="col" data-sortable="true">Running Since</th>
-    <th scope="col">Delete</th>
+    <th scope="col">Power Options</th>
   </tr>
   </thead>
   <tbody>
@@ -48,12 +42,28 @@
       <td><%= link_to vm[:name],
                       {controller: :vms, action: 'show', id: vm[:name]},
                       method: :get, class: "btn btn-link"  %></td>
-      <td><%= vm[:boot_time] %></td>
-      <td><%= button_to "Delete",
-                        {controller: :vms, action: 'destroy', id: vm[:name]},
-                        method: :delete, class: "btn btn-danger" %></td>
+      <td><%= vm[:boot_time] if vm[:state] %></td>
+      <td>
+        <% if vm[:state] %>
+          <%= button_to "Shutdown", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-danger" %>
+        <% else %>
+          <%= button_to "Start", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-success" %>
+        <% end %>
+      </td>
     <tr>
   <% end %>
+  </tbody>
+</table>
+<table class="table">
+    <tbody>
+      <tr>
+        <td><%= button_to "Requests",
+          {controller: :requests, action: 'index'},
+          method: :get, class: "btn btn-info" %></td>
+        <td><%= button_to "New",
+          {controller: :vms, action: 'new'},
+          method: :get, class: "btn btn-info" %></td>
+    </tr>
   </tbody>
 </table>
 

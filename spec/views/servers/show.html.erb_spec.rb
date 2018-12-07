@@ -52,6 +52,6 @@ RSpec.describe 'servers/show.html.erb', type: :view do
   end
 
   it 'has reserve button' do
-    expect(rendered).to have_button('Reserve')
+    expect(rendered).to have_button('Reserve Timeslot')
   end
 end

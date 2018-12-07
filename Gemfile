@@ -74,6 +74,11 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # https://coveralls.io/github/hpi-swt2/vm-portal
 gem 'coveralls', require: false
 
+# Report errors in production to central Errbit system
+# https://github.com/errbit/errbit
+# https://github.com/airbrake/airbrake
+gem 'airbrake', '~> 5.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -119,6 +124,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-
-# Allows dot-access of hashes
-gem 'hash_dot', '~> 2.4.1'

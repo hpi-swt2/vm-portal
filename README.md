@@ -16,6 +16,12 @@ Therefore, the application is deployed on university servers. Both the 'dev' and
 
 An overview of the status of all involved systems is available here: https://stats.uptimerobot.com/j8DADFQnv
 
+### Deployment Error Collection
+Errors that occur in the deployed systems are reported to a central [Errbit](https://github.com/errbit/errbit) error collection application. It can be found here:
+* https://errbit-vm-portal.herokuapp.com/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781561200-ca855387a43778c5060db064.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+
+You can login using your GitHub credentials.
+
 ### Deployment Details
 Automatic deployments are handled by a dedicated application:
 * http://hart-deploy.epic-hpi.de/deployed [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547341-373d600b6052559e47f208f6.svg)](https://stats.uptimerobot.com/j8DADFQnv)

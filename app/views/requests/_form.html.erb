@@ -11,24 +11,24 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :cpu_cores, "CPU cores" %>
-    <%= form.number_field :cpu_cores, min: 0 %>
+    <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :ram_mb, "RAM in MB" %>
-    <%= form.number_field :ram_mb, min: 0 %>
+    <%= form.number_field :ram_mb, min: 0, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :storage_mb, "Storage in MB" %>
-    <%= form.number_field :storage_mb, min: 0 %>
+    <%= form.number_field :storage_mb, min: 0, class: 'form-control' %>
   </div>
 
   <p>Assigned Users:</p>
@@ -51,15 +51,18 @@
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, ['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)'] %>
+    <%= form.select :operating_system,
+                    options_for_select(['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)']),
+                    {},
+                    class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :comment %>
-    <%= form.text_area :comment, cols: "40", rows: "4" %>
+    <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
