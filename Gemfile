@@ -18,6 +18,8 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'mini_racer', platforms: :ruby
+# See https://github.com/bokmann/font-awesome-rails for details
+gem 'font-awesome-rails'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -50,19 +52,19 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
-# Mina for deployment 
+# Mina for deployment
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
 gem 'mina', require: false
-gem 'mina-puma', require: false,  github: 'untitledkingdom/mina-puma'
+gem 'mina-puma', require: false, github: 'untitledkingdom/mina-puma'
 # Adds support for multiple stages, https://github.com/endoze/mina-multistage
 gem 'mina-multistage', require: false
 # Tail production logs, https://github.com/windy/mina-logs
 # $ mina logs # tail -f log/production.log
 gem 'mina-logs', require: false
 # Announce Mina deploys to Slack channels, https://github.com/krichly/mina-slack
-gem 'mina-slack', require: false, github: 'krichly/mina-slack'
 gem 'execjs', require: false
+gem 'mina-slack', require: false, github: 'krichly/mina-slack'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -93,6 +95,8 @@ group :development do
   # Much nicer error pages https://github.com/BetterErrors/better_errors
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Continous execution of unit tests
+  gem 'guard'
 end
 
 group :test do
@@ -110,7 +114,7 @@ group :test do
 end
 
 group :production do
-  gem 'pg'      # production database runs on postgres
+  gem 'pg' # production database runs on postgres
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -18,3 +18,6 @@ before_script:
 # https://docs.travis-ci.com/user/job-lifecycle#customizing-the-build-phase
 script:
  - bundle exec rspec spec/
+after_success:
+ # https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
+ - curl --data "commit=$TRAVIS_COMMIT" --data "branch=$TRAVIS_BRANCH" --data "eventtype=$TRAVIS_EVENT_TYPE" http://hart-deploy.epic-hpi.de/
