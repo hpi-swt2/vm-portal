@@ -65,16 +65,16 @@ Rails.application.configure do
   config.start_user_id = 4000
 
   # Use test mode so not every developer has to register his own openid client
-  # OmniAuth.config.test_mode = true
-  #
-  # OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
-  #     {
-  #         provider: 'hpi',
-  #         uid: '123545',
-  #         info: {
-  #             first_name: 'Max',
-  #             last_name: 'Mustermann',
-  #             email: 'max.mustermann@student.hpi.de'
-  #         }
-  #     })
+  OmniAuth.config.test_mode = true
+
+  OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
+      {
+          provider: 'hpi',
+          uid: '123545',
+          info: {
+              first_name: 'Max',
+              last_name: 'Mustermann',
+              email: 'max.mustermann@student.hpi.de'
+          }
+      })
 end
