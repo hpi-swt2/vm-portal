@@ -17,10 +17,15 @@
   <%= form_for @user do |f| %>
     <div class="form-group">
       <%= f.label :ssh_key %>
-      <%= f.text_area :ssh_key, class: 'form-control', rows: '8', disabled: true %>
+      <%= f.text_area :ssh_key, class: 'form-control', rows: '8', disabled: true, id: 'sshKeyField' %>
     </div>
 
-    <button class="btn btn-primary float-right">
+    <button
+      type="button"
+      class="btn btn-primary float-right"
+      id="editSshKey"
+      onclick="enableSSHKeyField()"
+    >
       <% if @user.ssh_key? %>
         <%= t('actions.edit') %>
       <% else %>
