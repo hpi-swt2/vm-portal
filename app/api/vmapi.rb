@@ -21,7 +21,7 @@ class VmApi
   def all_vms
     connect
     @vm_folder.children.map do |vm|
-      { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
+      { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime,  vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled')}
     end
   end
 
@@ -56,12 +56,15 @@ class VmApi
   def get_vm(name)
     connect
     if (vm = find_vm(name))
+      puts vm.guest.toolStatus
       { name: vm.name,
         state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
-        summary: vm.summary }
+        summary: vm.summary,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled')
+      }
     end
   end
 

@@ -32,11 +32,9 @@ class VmsController < ApplicationController
     @vm = VmApi.instance.get_vm(params[:id])
 
     VmApi.instance.change_power_state(@vm[:name], @vm[:state])
-
-    @vms = filter VmApi.instance.all_vms
-    @parameters = determine_params
-
-    render(template: 'vms/index', status: 200)
+    
+    redirect_to root_path
+    # render(template: 'vms/index', status: 200)
 
   end
 
