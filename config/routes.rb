@@ -2,7 +2,7 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  patch 'vms/requests/accept!', to: 'requests#accept!', as: 'accept_request'
+  patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
   resources :requests
   resources :requests, path: '/vms/requests'
 
