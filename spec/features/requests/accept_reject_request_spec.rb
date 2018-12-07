@@ -69,10 +69,10 @@ RSpec.describe 'requests/show', type: :feature do
       visit request_path(request)
 
       click_button('Accept')
-      find('input[name="name"][placeholder*="MyVM"]')
-      find('input[name="cpu"][placeholder*="2"]')
-      find('input[name="ram"][placeholder*="1000"]')
-      find('input[name="capacity"][placeholder*="2000"]')
+      find('input[name="name"][value*="MyVM"]')
+      find('input[name="cpu"][value*="2"]')
+      find('input[name="ram"][value*="1000"]')
+      find('input[name="capacity"][value*="2000"]')
     end
 
     it 'the request information page has an accepted status' do

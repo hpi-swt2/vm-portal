@@ -2,19 +2,19 @@
 <%= form_tag('/vms') do %>
   <div class="form-group">
     <%= label_tag 'Name' %>
-    <%= text_field_tag 'name', nil, class: 'form-control', placeholder: @request[:name] %>
+    <%= text_field_tag 'name', nil, class: 'form-control', value: @request[:name] %>
   </div>
   <div class="form-group">
     <%= label_tag 'CPU' %>
-    <%= text_field_tag 'cpu', nil, class: 'form-control', placeholder: @request[:cpu_cores] %>
+    <%= text_field_tag 'cpu', nil, class: 'form-control', value: @request[:cpu_cores] %>
   </div>
   <div class="form-group">
     <%= label_tag 'RAM' %>
-    <%= text_field_tag 'ram', nil, class: 'form-control', placeholder: @request[:ram_mb] %>
+    <%= text_field_tag 'ram', nil, class: 'form-control', value: @request[:ram_mb] %>
   </div>
   <div class="form-group">
     <%= label_tag 'Capacity' %>
-    <%= text_field_tag 'capacity', nil, class: 'form-control', placeholder: @request[:storage_mb] %>
+    <%= text_field_tag 'capacity', nil, class: 'form-control', value: @request[:storage_mb] %>
   </div>
   <div ><%= submit_tag 'Create VM', class: "btn btn-primary" %></div>
 <% end %>
