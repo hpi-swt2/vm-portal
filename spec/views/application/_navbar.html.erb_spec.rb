@@ -3,6 +3,7 @@
 require 'rails_helper'
 RSpec.describe 'application/_navbar.html.erb', type: :view do
   let(:current_user) { FactoryBot.create :user }
+
   before do
     sign_in current_user
     allow(view).to receive(:current_user).and_return(current_user)
