@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
   resources :requests, path: '/vms/requests'
 
-  root to: redirect('/users/sign_in')
+  root to: redirect('/vms')
 
   get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
 
