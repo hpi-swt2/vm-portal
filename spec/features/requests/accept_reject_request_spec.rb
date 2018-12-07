@@ -15,19 +15,19 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
       visit request_path(request)
     end
 
-    it 'has accept button' do
+    it 'has a working accept button' do
       click_button('Accept')
       request.reload
       expect(request.status).to eq('accepted')
     end
 
-    it 'has reject button' do
+    it 'has a working reject button' do
       click_button('Reject')
       request.reload
       expect(request.status).to eq('rejected')
     end
 
-    it 'has rejection_information input field' do
+    it 'has a working rejection_information input field' do
       page.fill_in 'request[rejection_information]', with: 'Info'
       click_button('Reject')
       request.reload
@@ -38,7 +38,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
   context 'when request is rejected' do
     let(:rejected_request) { FactoryBot.create :rejected_request }
 
-    it 'Has rejection Information field' do
+    it 'has a working rejection information field' do
       visit request_path(rejected_request)
 
       expect(page).to have_text(rejected_request.rejection_information)

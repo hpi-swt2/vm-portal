@@ -19,7 +19,7 @@ RSpec.describe OperatingSystemsHelper, type: :helper do
       expect(options).to include('none')
     end
 
-    it 'has a \'other(write in Comment)\' selection of operating_systems as the last element' do
+    it 'has an \'other(write in Comment)\' selection of operating_systems as the last element' do
       options = operating_system_options
       expect(options).to include('other(write in Comment)')
     end
