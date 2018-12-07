@@ -1,22 +1,18 @@
-<h1>User profile</h1>
+<h1>User profile</h1><br>
 
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>First name:</strong>
-  <%= @user.user_profile.first_name %>
-</p>
-
-<p>
-  <strong>Last name:</strong>
-  <%= @user.user_profile.last_name %>
-</p>
-
-
-<p>
-  <strong>SSH-Key:</strong>
-  <%#= @user.user_profile.ssh_key%>
-</p>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Email</td>
+      <td><%= @user.email%></td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td><%= @user.user_profile.name%></td>
+    </tr>
+    <tr>
+      <td>SSH-Key</td>
+      <td>TBD</td>
+    </tr>
+  </tbody>
+</table>
