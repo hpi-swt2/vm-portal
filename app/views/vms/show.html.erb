@@ -99,28 +99,28 @@
     <tbody>
       <tr>
         <% if @vm[:state] %>
-          <td><%= button_to 'Suspend',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-warning' %></td>
+          <td><%= button_to 'Suspend VM',
+            {controller: :vms, action: 'suspend_vm', id: @vm[:name]},
+            method: :post, class: 'btn btn-warning' %></td>
           <td><%= button_to 'Shutdown Guest OS',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-danger' %></td>
+            {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]},
+            method: :post, class: 'btn btn-danger' %></td>
           <td><%= button_to 'Restart Guest OS',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-primary' %></td>
-          <td><%= button_to 'Reset',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-primary' %></td>
+            {controller: :vms, action: 'restart_guest_os', id: @vm[:name]},
+            method: :post, class: 'btn btn-primary' %></td>
+          <td><%= button_to 'Reset VM',
+            {controller: :vms, action: 'reset_vm', id: @vm[:name]},
+            method: :post, class: 'btn btn-primary' %></td>
           <td><%= button_to 'Power Off',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-danger' %></td>
+            {controller: :vms, action: 'change_power_state_on_show', id: @vm[:name]},
+            method: :post, class: 'btn btn-danger' %></td>
         <% else %>
           <td><%= button_to 'Power On',
-            {controller: :vms, action: 'show', id: @vm[:name]},
-            method: :get, class: 'btn btn-success' %></td>
+            {controller: :vms, action: 'change_power_state_on_show', id: @vm[:name]},
+            method: :post, class: 'btn btn-success' %></td>
         <% end %>
 
-          <td><%= button_to 'Delete',
+          <td><%= button_to 'Delete VM',
             {controller: :vms, action: 'destroy', id: @vm[:name]},
             method: :delete, class: "btn btn-danger" %></td>
     </tr>

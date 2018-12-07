@@ -46,9 +46,9 @@
       <td>
         <% if vm[:vmwaretools] %>
           <% if vm[:state] %>
-            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
+            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state_on_index', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
           <% else %>
-            <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
+            <%= button_to "Start", {controller: :vms, action: 'change_power_state_on_index', id: vm[:name]}, method: :post, class: "btn btn-success" %>
           <% end %>
         <% else %>
           <p class="text-muted">VMWare tools are not installed</p>

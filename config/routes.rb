@@ -9,7 +9,12 @@ Rails.application.routes.draw do
   root to: redirect('/vms')
 
   get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
-  post '/change_power_state' => 'vms#change_power_state'
+  post '/change_power_state_index' => 'vms#change_power_state_on_index'
+  post '/change_power_state_show' => 'vms#change_power_state_on_show'
+  post '/suspend_vm' => 'vms#suspend_vm'
+  post '/shutdown_guest_os' => 'vms#shutdown_guest_os'
+  post '/restart_guest_os' => 'vms#restart_guest_os'
+  post '/reset_vm' => 'vms#reset_vm'
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack

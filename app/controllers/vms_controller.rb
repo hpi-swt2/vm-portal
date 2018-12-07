@@ -27,15 +27,40 @@ class VmsController < ApplicationController
     @vm = VmApi.instance.get_vm(params[:id])
   end
 
-  def change_power_state
-
-    @vm = VmApi.instance.get_vm(params[:id])
-
-    VmApi.instance.change_power_state(@vm[:name], @vm[:state])
-    
+  def change_power_state_on_index
+    toggle_vm_power_state(params[:id])
     redirect_to root_path
-    # render(template: 'vms/index', status: 200)
+  end
 
+  def change_power_state_on_show
+    toggle_vm_power_state(params[:id])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def suspend_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    puts 'lkooool'
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def resume
+    @vm = VmApi.instance.get_vm(params[:id])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def shutdown_guest_os
+    @vm = VmApi.instance.get_vm(params[:id])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def restart_guest_os
+    @vm = VmApi.instance.get_vm(params[:id])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def reset_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    redirect_to action: :show, id: params[:id]
   end
 
   # This controller doesn't use strong parameters
@@ -50,7 +75,7 @@ class VmsController < ApplicationController
     else
       result = []
       vm_filter.keys.each do |key|
-        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
+        result += list.select {|object| vm_filter[key].call(object)} if params[key].present?
       end
       result
     end
@@ -73,7 +98,12 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+    {up_vms: proc {|vm| vm[:state]}, down_vms: proc {|vm| !vm[:state]}}
+  end
+
+  def toggle_vm_power_state(id)
+    @vm = VmApi.instance.get_vm(id)
+    VmApi.instance.change_power_state(@vm[:name], @vm[:state])
   end
 
   def default_request

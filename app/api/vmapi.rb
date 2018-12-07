@@ -56,7 +56,6 @@ class VmApi
   def get_vm(name)
     connect
     if (vm = find_vm(name))
-      puts vm.guest.toolStatus
       { name: vm.name,
         state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
