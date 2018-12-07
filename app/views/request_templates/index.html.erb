@@ -2,9 +2,10 @@
 
 <h1>Request Templates</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
+      <th>Template name</th>
       <th>Cpu count</th>
       <th>Ram mb</th>
       <th>Storage mb</th>
@@ -16,6 +17,7 @@
   <tbody>
     <% @request_templates.each do |request_template| %>
       <tr>
+        <td><%= request_template.name %></td>
         <td><%= request_template.cpu_count %></td>
         <td><%= request_template.ram_mb %></td>
         <td><%= request_template.storage_mb %></td>
@@ -30,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Request Template', new_request_template_path %>
+<%= link_to 'New Request Template', new_request_template_path, class: 'btn btn-primary' %>

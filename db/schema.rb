@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_07_093210) do
+ActiveRecord::Schema.define(version: 2018_12_07_094454) do
 
   create_table "request_templates", force: :cascade do |t|
     t.integer "cpu_count"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2018_12_07_093210) do
     t.string "operating_system"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
   end
 
   create_table "requests", force: :cascade do |t|
@@ -32,6 +33,22 @@ ActiveRecord::Schema.define(version: 2018_12_07_093210) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "slack_auth_requests", force: :cascade do |t|
+    t.string "state"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_slack_auth_requests_on_user_id"
+  end
+
+  create_table "slack_hooks", force: :cascade do |t|
+    t.string "url"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_slack_hooks_on_user_id"
   end
 
   create_table "user_profiles", force: :cascade do |t|
