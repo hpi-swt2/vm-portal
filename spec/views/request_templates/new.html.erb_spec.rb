@@ -27,7 +27,7 @@ RSpec.describe 'request_templates/new', type: :view do
 
       assert_select 'input[name=?]', 'request_template[storage_mb]'
 
-      assert_select 'input[name=?]', 'request_template[operating_system]'
+      assert_select 'select[name=?]', 'request_template[operating_system]'
     end
   end
 end
