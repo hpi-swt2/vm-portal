@@ -7,5 +7,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-user = User.create(email: 'max@mustermann.de', password: '123456')
+user = User.create(email: 'user@user.de', password: '123456', role: :user)
 UserProfile.create(first_name: 'Max', last_name: 'Mustermann', user: user)
+admin = User.create(email: 'admin@admin.de', password: '123456', role: :admin)
+UserProfile.create(first_name: 'Ad', last_name: 'Min', user: admin)
+wimi = User.create(email: 'wimi@wimi.de', password: '123456', role: :wimi)
+UserProfile.create(first_name: 'Wissenschaftlicher', last_name: 'Mitarbeiter', user: wimi)
