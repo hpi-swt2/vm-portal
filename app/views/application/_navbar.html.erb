@@ -10,10 +10,10 @@
         <a class="nav-link" href="#"><%= fa_icon('desktop', text: "Dashboard") %><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="../vms">VMs</a>
+        <%= link_to('VMs', vms_path, class: "nav-link") %>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="../servers">Servers</a>
+        <%= link_to('Servers', servers_path, class: "nav-link") %>
       </li>
       <li class="nav-item">
         <%= link_to('Users', users_path, class: "nav-link") %>
@@ -44,9 +44,11 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <%= link_to(fa_icon('user', text: current_user.user_profile.name), user_path(current_user), class: "nav-link") %>
-      </li>
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to(fa_icon('user', text: current_user.user_profile.name), user_path(current_user), class: "nav-link") %>
+        </li>
+      <% end %>
     </ul>
   </div>
 </nav>
