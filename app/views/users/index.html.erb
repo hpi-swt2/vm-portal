@@ -1,0 +1,18 @@
+<h1>Users</h1>
+
+<table class="table">
+  <thead>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Last sign in</th>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= link_to user.user_profile.name, user_path(user) %></td>
+        <td><%= user.email %></td>
+        <td><%= user.current_sign_in_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>`
