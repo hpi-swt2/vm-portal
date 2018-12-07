@@ -6,7 +6,7 @@ RSpec.describe 'users/index.html.erb', type: :view do
   let(:users) do
     [
       FactoryBot.create(:user),
-      FactoryBot.create(:user, email: 'Joe@joe.de')
+      FactoryBot.create(:user, email: Faker::Internet.safe_email('joe'))
     ]
   end
 
