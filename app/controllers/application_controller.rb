@@ -14,10 +14,10 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_wimi
-    redirect_to root_path, alert: 'You don\'t have the necessary rights to perform this operation' unless current_user && (current_user.admin? || current_user.wimi?)
+    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user && (current_user.admin? || current_user.wimi?)
   end
 
   def authenticate_admin
-    redirect_to root_path, alert: 'You don\'t have the necessary rights to perform this operation' unless current_user && current_user.admin?
+    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user && current_user.admin?
   end
 end
