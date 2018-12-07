@@ -2,14 +2,20 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  patch 'requests/accept!', to: 'requests#accept!', as: 'accept_request'
+  patch 'vms/requests/accept!', to: 'requests#accept!', as: 'accept_request'
   resources :requests
+  resources :requests, path: '/vms/requests'
+
   root to: redirect('/users/sign_in')
 
-  get '/server/:id' => 'server#show', constraints: { id: /.*/ }
+  get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
 
-  devise_for :users, path: 'users'
-  resources :vm, :server
+  get 'slack/new' => 'slack#new', as: :new_slack
+  get 'slack/auth' => 'slack#update', as: :update_slack
+
+  devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
+  resources :vms, :servers
+  resources :users, only: %i[show index]
 
   root 'landing#index'
 end

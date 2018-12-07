@@ -1,0 +1,98 @@
+<h1>
+  Details for Host "<%= @host[:name] unless @host.nil?%>"
+</h1>
+
+<table class="table">
+    <tbody>
+    <tr>
+    <td>Vendor:</td>
+    <td><%= @host[:vendor] unless @host.nil?%></td>
+    </tr>
+
+    <tr>
+    <td>Model:</td>
+    <td><%= @host[:model] unless @host.nil?%></td>
+  </tr>
+
+    <tr>
+    <td>Boot time:</td>
+    <td><%= @host[:bootTime] unless @host.nil? %> </td>
+    </tr>
+
+   <tr>
+    <td>Power state:</td>
+    <td><%= @host[:summary].runtime.powerState unless @host.nil? %> </td>
+    </tr>
+
+    <tr>
+    <td>Connection state:</td>
+    <td><%= @host[:connectionState] unless @host.nil?%> </td>
+    </tr>
+
+    <tr>
+    <td>OS:</td>
+    <td><%= @host[:summary].config.product.osType unless @host.nil?%> (<%= @host[:summary].config.product.fullName unless @host.nil?%>)</td>
+    </tr>
+
+    <tr>
+    <td>CPU model:</td>
+    <td><%= @host[:summary].hardware.cpuModel unless @host.nil? %> </td>
+    </tr>
+
+    <tr>
+    <td>CPU Cores, Threads:</td>
+    <td><%= @host[:summary].hardware.numCpuCores unless @host.nil? %>,  <%= @host[:summary].hardware.numCpuThreads unless @host.nil?%></td>
+    </tr>
+
+  <%
+    if @host.nil?
+      cpu_usage_percentage = ''
+      memory_usage = ''
+      memory_allocation = ''
+      memory_usage_percentage = ''
+    else
+      cpu_usage = @host[:summary].quickStats.overallCpuUsage
+      cpu_allocation = @host[:summary].hardware.numCpuCores * @host[:summary].hardware.cpuMhz
+      memory_allocation = @host[:summary].hardware.memorySize / (1024 ** 2)
+      memory_usage = @host[:summary].quickStats.overallMemoryUsage
+      memory_usage_percentage = 0
+      cpu_usage_percentage = 0
+
+
+      if cpu_allocation != 0
+        cpu_usage_percentage = (cpu_usage / cpu_allocation.to_f * 100).round()
+      end
+
+      if memory_allocation != 0
+        memory_usage_percentage = (memory_usage / memory_allocation.to_f * 100).round()
+      end
+    end
+   %>
+
+    <tr>
+    <td>CPU usage:</td>
+    <td><%= cpu_usage_percentage %> %</td>
+    </tr>
+
+    <tr>
+    <td>Memory Usage:</td>
+    <td><%= memory_usage_percentage %> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
+    </tr>
+
+    <tr>
+    <td>VMs:</td>
+    <td>
+    <% @host[:vm_names].each do |vm| %>
+        <%= link_to vm, controller: "vms", action: "show", id: vm %>
+        <br />
+    <% end unless @host.nil?%>
+    </td>
+    </tr>
+    <tr>
+      <td><%= button_to "Reserve Timeslot",
+                        "",
+                        method: :get, class: "btn btn-info" %></td>
+    </tr>
+
+  </tbody>
+</table>

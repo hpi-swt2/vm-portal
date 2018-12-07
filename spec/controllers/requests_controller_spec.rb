@@ -26,6 +26,11 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
+  # Authenticate an user
+  before do
+    sign_in FactoryBot.create :user
+  end
+
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
@@ -36,7 +41,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: 2000,
       operating_system: 'MyOS',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -49,7 +53,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -122,7 +125,6 @@ RSpec.describe RequestsController, type: :controller do
           ram_mb: 1000,
           storage_mb: 2000,
           operating_system: 'MyOS',
-          software: 'MySoftware',
           comment: 'Comment',
           status: 'pending'
         }
