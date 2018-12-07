@@ -13,3 +13,5 @@ admin = User.create(email: 'admin@admin.de', password: '123456', role: :admin)
 UserProfile.create(first_name: 'Ad', last_name: 'Min', user: admin)
 wimi = User.create(email: 'wimi@wimi.de', password: '123456', role: :wimi)
 UserProfile.create(first_name: 'Wissenschaftlicher', last_name: 'Mitarbeiter', user: wimi)
+OperatingSystem.create([{ name: 'CentOS 7' }, { name: 'SLES 11 SP3' }, { name: 'Ubuntu 18.04' }])
+

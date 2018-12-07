@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
+  include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_wimi
 
@@ -83,6 +84,17 @@ class RequestsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to requests_url, notice: 'Request was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def request_accept_button
+    @request = Request.find(params[:request])
+    @request.accept!
+    if @request.save
+      notify_request_update(@request)
+      redirect_to new_vm_path(request: @request)
+    else
+      redirect_to request_path(@request)
     end
   end
 
