@@ -2,7 +2,9 @@
 
 require 'rails_helper'
 RSpec.describe 'application/_navbar.html.erb', type: :view do
+  let(:current_user) { FactoryBot.create :user }
   before do
+    allow(view).to receive(:current_user).and_return(current_user)
     render
   end
 
@@ -16,5 +18,9 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
 
   it 'links to users list' do
     expect(rendered).to have_link('Users', href: users_path)
+  end
+
+  it 'links to the current user' do
+    expect(rendered).to have_link(current_user.user_profile.name, href: user_path(current_user))
   end
 end
