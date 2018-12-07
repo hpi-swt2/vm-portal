@@ -46,7 +46,7 @@
     <ul class="navbar-nav ml-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <%= link_to(fa_icon('user', text: current_user.user_profile.name), user_path(current_user), class: "nav-link") %>
+          <%= link_to(fa_icon('user', text: current_user.name), user_path(current_user), class: "nav-link") %>
         </li>
       <% end %>
     </ul>
