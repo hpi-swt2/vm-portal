@@ -13,8 +13,4 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   it 'links to vm list' do
     expect(rendered).to have_link('VMs', href: '../vm')
   end
-
-  it 'has logo' do
-    expect(rendered).to have_content('logo.svg')
-  end
 end
