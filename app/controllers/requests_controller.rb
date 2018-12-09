@@ -39,7 +39,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-    set_sudo_rights(@request)
+    save_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
@@ -101,7 +101,7 @@ class RequestsController < ApplicationController
 
   private
 
-  def set_sudo_rights(request)
+  def save_sudo_rights(request)
     sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
 
     sudo_users_for_request.each do |association|
@@ -116,6 +116,7 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment,
+                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end
