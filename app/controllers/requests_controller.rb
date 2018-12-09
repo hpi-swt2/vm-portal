@@ -38,8 +38,9 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-    (@request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }).each do |userRequest|
-      userRequest.sudo = true
+    sudo_users_for_request = @request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
+    sudo_users_for_request.each do |association|
+      association.sudo = true
     end
 
     respond_to do |format|
