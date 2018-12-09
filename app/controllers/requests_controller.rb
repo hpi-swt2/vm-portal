@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
+  include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_wimi
 

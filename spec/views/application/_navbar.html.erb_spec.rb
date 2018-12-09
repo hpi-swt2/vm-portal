@@ -23,6 +23,6 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   end
 
   it 'links to the current user' do
-    expect(rendered).to have_link(current_user.user_profile.name, href: user_path(current_user))
+    expect(rendered).to have_link(current_user.name, href: user_path(current_user))
   end
 end

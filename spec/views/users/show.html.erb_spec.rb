@@ -11,7 +11,7 @@ RSpec.describe 'users/show.html.erb', type: :view do
   end
 
   it 'shows the users first name' do
-    expect(rendered).to include user.user_profile.first_name
+    expect(rendered).to include user.first_name
   end
 
   it 'shows the users email' do
@@ -19,6 +19,6 @@ RSpec.describe 'users/show.html.erb', type: :view do
   end
 
   it 'shows the users last name' do
-    expect(rendered).to include user.user_profile.last_name
+    expect(rendered).to include user.last_name
   end
 end
