@@ -39,10 +39,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-
-    sudo_users_for_request(@request).each do |association|
-      association.sudo = true
-    end
+    set_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
@@ -104,9 +101,12 @@ class RequestsController < ApplicationController
 
   private
 
-  def sudo_users_for_request(request)
-    user_associations = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
-    return user_associations
+  def set_sudo_rights(request)
+    sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
+
+    sudo_users_for_request.each do |association|
+      association.sudo = true
+    end
   end
 
   # Use callbacks to share common setup or constraints between actions.
