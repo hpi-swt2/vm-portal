@@ -51,10 +51,7 @@
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system,
-                    options_for_select(['none', 'Windows', 'Ubuntu', 'Suse', 'other(write in Comment)']),
-                    {},
-                    class: 'form-control' %>
+    <%= form.select :operating_system, operating_system_options %>
   </div>
 
   <div class="field">
