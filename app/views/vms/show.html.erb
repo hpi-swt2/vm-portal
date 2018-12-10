@@ -1,28 +1,28 @@
 <h1>
-  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil?%>"
+  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil? %>"
 </h1>
 
 <table class="table">
     <tbody>
     <tr>
     <td>Boot time:</td>
-    <td><%= @vm[:boot_time] unless @vm.nil?%></td>
+    <td><%= @vm[:boot_time] unless @vm.nil? %></td>
     </tr>
 
     <tr>
     <td>State:</td>
-    <td><%= @vm[:summary].runtime.powerState unless @vm.nil?%></td>
+    <td><%= @vm[:summary].runtime.powerState unless @vm.nil? %></td>
   </tr>
 
     <tr>
     <td>Heartbeat status:</td>
-    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil?%> </td>
+    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil? %> </td>
     </tr>
 
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "servers", action: "show", id: @vm[:host] unless @vm.nil?%>
+    <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %>
     </td>
 
     <%
@@ -50,13 +50,13 @@
     
   <tr>
     <td>OS:</td>
-    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil?%>)</td>
+    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil? %>)</td>
   </tr>
 
   </tr>
     <tr>
     <td>IP address:</td>
-    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil?%></td>
+    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil? %></td>
   </tr>
   <%
     if @vm.nil?
