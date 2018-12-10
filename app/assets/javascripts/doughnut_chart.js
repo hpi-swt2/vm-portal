@@ -6,7 +6,8 @@ function getChartOptions(amount, title) {
           data: [amount, 100 - amount],
           backgroundColor: [
             'rgba(0, 255, 0, 0.3)',
-            'rgba(0, 0, 0, 0.05)'
+            'rgba(255, 255, 255, 0.5)',
+            //'rgba(0, 0, 0, 0.005)'
           ],
           borderColor: [
             'rgba(0, 255, 0, 0.5)',
@@ -28,7 +29,8 @@ function getChartOptions(amount, title) {
           fontSize: 24,
           text: title,
           position: 'bottom'
-        }
+        },
+        events: []
       }
     }
 }

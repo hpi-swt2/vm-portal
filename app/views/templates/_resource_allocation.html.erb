@@ -7,13 +7,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
 <script>
   window.onload = function() {
-    window.cpu = makeHalfDoughnutChart("CPU", <%= cpu_usage_percentage %>, "<%= @values[:cpu_cores] %> cores");
+    window.cpu = makeHalfDoughnutChart("CPU", <%= cpu_usage_percentage %>, "<%= @values[:cpu_cores] %> core <%= 's' if @values[:cpu_cores] != 1 %>");
     window.ram = makeHalfDoughnutChart("RAM", <%= ram_usage_percentage %>, "<%= @values[:ram_usage] %> / <%= @values[:ram_allocation] %> GB");
     window.hdd = makeHalfDoughnutChart("HDD", <%= hdd_usage_percentage %>, "<%= @values[:hdd_usage] %> / <%= @values[:hdd_allocation] %> GB")
   }
 </script>
 
-<table style="margin: auto" class="border">
+<table style="margin: auto" class="table-borderless">
     <tr>
         <td>
             <canvas id="RAM"></canvas>
