@@ -112,11 +112,11 @@
             {controller: :vms, action: 'reset_vm', id: @vm[:name]},
             method: :post, class: 'btn btn-primary' %></td>
           <td><%= button_to 'Power Off',
-            {controller: :vms, action: 'change_power_state_on_show', id: @vm[:name]},
+            {controller: :vms, action: 'change_power_state', id: @vm[:name]},
             method: :post, class: 'btn btn-danger' %></td>
         <% else %>
           <td><%= button_to 'Power On',
-            {controller: :vms, action: 'change_power_state_on_show', id: @vm[:name]},
+            {controller: :vms, action: 'change_power_state', id: @vm[:name]},
             method: :post, class: 'btn btn-success' %></td>
         <% end %>
 
