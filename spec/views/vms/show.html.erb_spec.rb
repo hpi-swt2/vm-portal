@@ -79,14 +79,16 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
   it 'shows CPU usage' do
     expect(rendered).to include(
-      (vm_on[:summary].quickStats.overallCpuUsage / vm_on[:summary].config.cpuReservation).round.to_s)
+      (vm_on[:summary].quickStats.overallCpuUsage / vm_on[:summary].config.cpuReservation).round.to_s
+    )
   end
 
   it 'shows HDD usage' do
     expect(rendered).to include((vm_on[:summary].storage.committed / 1024**3).to_s)
     expect(rendered).to include((vm_on[:summary].storage.uncommitted / 1024**3).to_s)
     expect(rendered).to include(
-      (vm_on[:summary].storage.committed / (vm_on[:summary].storage.committed + vm_on[:summary].storage.uncommitted).round).to_s)
+      (vm_on[:summary].storage.committed / (vm_on[:summary].storage.committed + vm_on[:summary].storage.uncommitted).round).to_s
+    )
   end
 
   it 'shows RAM usage' do
