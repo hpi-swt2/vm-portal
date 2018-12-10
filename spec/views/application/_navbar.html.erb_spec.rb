@@ -10,8 +10,8 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
     render
   end
 
-  it 'links to server list' do
-    expect(rendered).to have_link('Servers', href: servers_path)
+  it 'links to host list' do
+    expect(rendered).to have_link('Hosts', href: hosts_path)
   end
 
   it 'links to vm list' do
