@@ -1,7 +1,19 @@
+$info: #0C415F;
+$danger: #7e281f;
+$success: #d7e76f;
+
 @import "bootstrap";
 
 html, body {
   height: 100%;
+}
+
+a {
+  color: $info;
+}
+
+h1 {
+  color: $info;
 }
 
 body {
@@ -9,13 +21,24 @@ body {
   flex-direction: column;
 }
 
+bg-blue {
+  background-color: $info;
+}
+
 #content {
   flex: 1 0 auto;
+}
+
+#navbar {
+  background-color: $info;
 }
 
 #footer {
   flex-shrink: 0;
   padding: 10px 0;
-  background-color: #343a40;
-  color: #ffffff;
+  background-color: $info;
+
+  a {
+    color: white;
+  }
 }
