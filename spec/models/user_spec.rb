@@ -59,16 +59,12 @@ RSpec.describe User, type: :model do
         expect(user.persisted?).to be_truthy
       end
 
-      it 'should create a user profile' do
-        expect{user}.to change(UserProfile, :count).by(1)
-      end
-
       it 'should set the users first name' do
-        expect(user.user_profile.first_name).to eq('First')
+        expect(user.first_name).to eq('First')
       end
 
       it 'should set the users last name' do
-        expect(user.user_profile.last_name).to eq('Last')
+        expect(user.last_name).to eq('Last')
       end
 
       it 'should set the users email' do
@@ -81,10 +77,6 @@ RSpec.describe User, type: :model do
 
       it 'does not create a new user' do
         expect{user}.to change(User, :count).by(0)
-      end
-
-      it 'does not create a new user profile' do
-        expect{user}.to change(UserProfile, :count).by(0)
       end
 
       it 'returns the existing user' do

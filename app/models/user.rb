@@ -38,10 +38,8 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.role = :user
 
-      profile = UserProfile.find_or_create_by(user: user)
-      profile.first_name = auth.info.first_name
-      profile.last_name = auth.info.last_name
-      profile.save
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
     end
   end
 
