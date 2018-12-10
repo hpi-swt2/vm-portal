@@ -13,6 +13,16 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20_181_209_184_959) do
+  create_table 'notifications', force: :cascade do |t|
+    t.integer 'user_id'
+    t.string 'title'
+    t.string 'message'
+    t.boolean 'read'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_notifications_on_user_id'
+  end
+  
   create_table 'operating_systems', force: :cascade do |t|
     t.string 'name'
     t.datetime 'created_at', null: false
