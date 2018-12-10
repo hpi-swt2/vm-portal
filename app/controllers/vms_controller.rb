@@ -20,7 +20,7 @@ class VmsController < ApplicationController
   end
 
   def new
-    @request = !params[:request].nil? ? Request.find(params[:request]) : default_request
+    @request = !params[:request].nil? ? Request.find(params[:request]) : default_render
   end
 
   def show
