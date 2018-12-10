@@ -12,7 +12,6 @@ RSpec.describe DashboardController, type: :controller do
 
       it 'returns http success' do
         get :index
-        response.should redirect_to(:dashboard)
         expect(response).to have_http_status(:success)
       end
     end
