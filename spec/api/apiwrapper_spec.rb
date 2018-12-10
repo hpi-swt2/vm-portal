@@ -118,6 +118,7 @@ RSpec.describe VmApi do
     let(:vm_mock) do
       mock = double
       summary = double
+      guest = double
       expect(mock).to receive(:name).and_return(vm_name)
       allow(mock).to receive(:summary).and_return(summary)
       allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
@@ -125,6 +126,8 @@ RSpec.describe VmApi do
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('Thursday')
       allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       allow(mock).to receive(:guestHeartbeatStatus).and_return('running')
+      allow(mock).to receive(:guest).and_return(guest)
+      allow(guest).to receive(:toolsStatus).and_return('toolsOk')
       mock
     end
 
@@ -221,7 +224,7 @@ RSpec.describe VmApi do
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, true)
+        api.change_power_state(Faker::FunnyName.name, false)
       end
     end
 
@@ -233,7 +236,7 @@ RSpec.describe VmApi do
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, false)
+        api.change_power_state(Faker::FunnyName.name, true)
       end
     end
   end

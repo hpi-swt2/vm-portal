@@ -7,11 +7,13 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     [{
       name: 'My insanely cool vm',
       state: true,
-      boot_time: 'Yesterday'
+      boot_time: 'Yesterday',
+      vmwaretools: true
     }, {
       name: 'Another VM',
       state: false,
-      boot_time: 'Friday'
+      boot_time: 'Friday',
+      vmwaretools: true
     }]
   end
 
