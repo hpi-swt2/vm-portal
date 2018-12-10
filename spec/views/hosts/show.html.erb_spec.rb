@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-RSpec.describe 'servers/show.html.erb', type: :view do
+RSpec.describe 'hosts/show.html.erb', type: :view do
   let(:host) do
     summary = double
     allow(summary).to receive_message_chain(:runtime, :powerState)

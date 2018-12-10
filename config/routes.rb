@@ -8,13 +8,13 @@ Rails.application.routes.draw do
 
   root to: redirect('/vms')
 
-  get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
+  get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
 
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
-  resources :vms, :servers
+  resources :vms, :hosts
   resources :users, only: %i[show index]
 
   root 'landing#index'
