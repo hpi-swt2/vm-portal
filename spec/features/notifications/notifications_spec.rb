@@ -12,6 +12,7 @@ describe 'Index page', type: :feature do
       login_as(user, scope: :user)
       @notification = FactoryBot.create(:notification, user: user)
     end
+
     it 'has notifications with title' do
       visit notifications_path
 
@@ -30,6 +31,7 @@ describe 'Index page', type: :feature do
       expect(@notification.reload.read).to be(true)
     end
   end
+
   context 'without notifications' do
     before do
       user = create(:user)
@@ -50,6 +52,7 @@ describe 'Nav header', type: :feature do
     login_as(user, scope: :user)
     @notification = FactoryBot.create(:notification, user: user)
   end
+
   it 'has a link to notifications' do
     visit requests_path
 
