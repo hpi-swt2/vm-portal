@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   root to: redirect('/users/sign_in')
 
+  get '/dashboard' => 'dashboard#index', as: :dashboard
   get '/server/:id' => 'server#show', constraints: { id: /.*/ }
 
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'

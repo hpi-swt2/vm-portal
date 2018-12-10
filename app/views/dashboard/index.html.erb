@@ -1,0 +1,50 @@
+<div class="col-lg-12">
+  <div class="pb-2 mt-4 mb-2 border-bottom">
+    <h1>Dashboard</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="btn-group">
+          <h3><i class="fa fa-desktop fa-fw"></i> VMs</h3>
+        </div>
+      </div>
+      <div class="card-body">
+        <table data-toggle="table" class="table">
+          <thead>
+          <tr>
+          </tr>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <!-- Add server list instead of host list -->
+        <h3><i class="fa fa-users"></i> Hosts</h3>
+      </div>
+      <div class="card-body">
+        <table data-toggle="table" class="table">
+          <thead>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- end left column -->
+  <div class="col-4">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Notifications</h3>
+      </div>
+      <div class="card-body">
+        <%= render 'notifications/list' %>
+      </div>
+    </div>
+  </div>
+</div> 
