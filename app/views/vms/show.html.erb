@@ -2,6 +2,35 @@
   Details for Virtual Machine "<%= @vm[:name] unless @vm.nil? %>"
 </h1>
 
+<% 
+  committed = (@vm[:summary]&.storage&.committed / 1024 ** 3).round(2) || 0
+  uncommitted = (@vm[:summary]&.storage&.committed / 1024 ** 3).round(2) || 0
+  hdd_usage = committed
+  hdd_allocation = committed + uncommitted
+  cpu_usage = @vm[:summary].quickStats&.overallCpuUsage || 0
+  cpu_allocation = @vm[:summary].config&.cpuReservation || 0
+  ram_usage = (@vm[:summary].quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
+  ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
+  cpu_cores = @vm[:summary].config&.numCpu  || 0
+
+
+  @values = {cpu_allocation: cpu_allocation, 
+             cpu_usage: cpu_usage, 
+             ram_allocation: ram_allocation, 
+             ram_usage: ram_usage, 
+             hdd_usage: hdd_usage, 
+             hdd_allocation: hdd_allocation, 
+             cpu_cores: cpu_cores } %>
+
+<table class = "table text-center">
+  <tr>
+    <td>
+      <%= render 'templates/resource_allocation', values: @values %>
+    </td>
+  </tr>
+</table>
+
+
 <table class="table">
     <tbody>
     <tr>
@@ -25,29 +54,7 @@
     <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %>
     </td>
 
-    <%
-      if @vm.nil?
-        space_usage_percentage = ''
-        committed_mb = ''
-        total_mb = ''
-      else
-        committed = @vm[:summary].storage.committed
-        uncommitted = @vm[:summary].storage.uncommitted
-        committed_mb = committed / (1024 ** 2)
-        uncommitted_mb = uncommitted / (1024 ** 2)
-        total_mb = committed_mb + uncommitted_mb
-        total = committed + uncommitted
-        space_usage_percentage = 0
-        if total != 0
-          space_usage_percentage = (committed / total.to_f * 100).round()
-        end
-      end
-    %>
-    <tr>
-    <td>Space Usage:</td>
-    <td><%= space_usage_percentage %> % (<%= committed_mb %> / <%= total_mb %> MB) </td>
-    </tr>
-    
+   
   <tr>
     <td>OS:</td>
     <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil? %>)</td>
@@ -58,39 +65,6 @@
     <td>IP address:</td>
     <td><%= @vm[:summary].guest.ipAddress unless @vm.nil? %></td>
   </tr>
-  <%
-    if @vm.nil?
-      cpu_usage_percentage = ''
-      memory_usage_percentage = ''
-      memory_usage = ''
-      memory_allocation = ''
-    else
-      cpu_usage = @vm[:summary].quickStats.overallCpuUsage
-      cpu_allocation = @vm[:summary].config.cpuReservation
-      memory_usage = @vm[:summary].quickStats.guestMemoryUsage
-      memory_allocation = @vm[:summary].config.memoryReservation
-      cpu_usage_percentage = 0
-      memory_usage_percentage = 0
-
-      if cpu_allocation != 0
-        cpu_usage_percentage = (cpu_usage / cpu_allocation.to_f * 100).round()
-      end
-
-      if memory_allocation != 0
-        memory_usage_percentage = (memory_usage / memory_allocation.to_f * 100).round()
-      end
-    end
-  %>
-  <tr>
-    <td>CPU usage:</td>
-    <td><%= cpu_usage_percentage %> %</td>
-  </tr>
-
-    <tr>
-    <td>Memory usage:</td>
-    <td><%=  memory_usage_percentage%> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
-  </tr>
-    
   </tbody>
 </table>
 
