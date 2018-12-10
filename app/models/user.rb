@@ -50,11 +50,14 @@ class User < ApplicationRecord
   end
 
   def set_user_id
-    if User.maximum(:user_id)
-      self.user_id = (User.maximum(:user_id) + 1) || Rails.configuration.start_user_id
-    else
-      self.user_id = Rails.configuration.start_user_id
+    # Lock this method to prevent race conditions when two users are created at the same time
+    User.with_advisory_lock('user_id_lock') do
+      if User.maximum(:user_id)
+        self.user_id = (User.maximum(:user_id) + 1) || Rails.configuration.start_user_id
+      else
+        self.user_id = Rails.configuration.start_user_id
+      end
+      self.save
     end
-    self.save
   end
 end

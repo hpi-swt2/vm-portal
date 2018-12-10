@@ -52,8 +52,12 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
+# Provides different authentication strategies
 gem 'omniauth'
 gem 'omniauth_openid_connect'
+
+# Allow locks on database
+gem 'with_advisory_lock'
 
 # Mina for deployment 
 # Have a look in the tutorial:
