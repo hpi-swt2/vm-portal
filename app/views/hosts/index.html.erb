@@ -1,15 +1,9 @@
 <h1>
-  Servers
+  Hosts
 </h1>
-<small class="text-muted">This is the overview page for all currently existing servers</small>
+<small class="text-muted">This is the overview page for all currently existing hosts</small>
 
-<div class="container">
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-</div>
-
-<%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
+<%= form_tag({controller: "hosts", action: "index"}, method: "get", class: "nifty_form") do %>
 <table class="table">
   <tbody>
     <tr>
@@ -43,7 +37,7 @@
   <% @hosts.each do |host| %>
     <tr>
       <td><%= link_to host[:name],
-                      {controller: :server, action: 'show', id: host[:name]},
+                      {controller: :hosts, action: 'show', id: host[:name]},
                       method: :get, class: "btn btn-link" %></td>
       <td><%= host[:model] %></td>
       <td><%= host[:vendor] %></td>

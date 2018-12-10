@@ -29,7 +29,7 @@ RSpec.describe 'requests/edit', type: :view do
 
       assert_select 'select[name=?]', 'request[operating_system]'
 
-      assert_select 'input[name=?]', 'request[comment]'
+      assert_select 'textarea[name=?]', 'request[comment]'
     end
   end
 end

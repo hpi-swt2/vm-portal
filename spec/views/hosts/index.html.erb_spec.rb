@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'server/index.html.erb', type: :view do
+RSpec.describe 'hosts/index.html.erb', type: :view do
   let(:host) do
     {  name: 'someHostMachine',
        model: 'cool machine',

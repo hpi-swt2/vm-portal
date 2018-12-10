@@ -1,34 +1,28 @@
 <h1>
-  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil?%>"
+  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil? %>"
 </h1>
-
-<div class="container">
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-</div>
 
 <table class="table">
     <tbody>
     <tr>
     <td>Boot time:</td>
-    <td><%= @vm[:boot_time] unless @vm.nil?%></td>
+    <td><%= @vm[:boot_time] unless @vm.nil? %></td>
     </tr>
 
     <tr>
     <td>State:</td>
-    <td><%= @vm[:summary].runtime.powerState unless @vm.nil?%></td>
+    <td><%= @vm[:summary].runtime.powerState unless @vm.nil? %></td>
   </tr>
 
     <tr>
     <td>Heartbeat status:</td>
-    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil?%> </td>
+    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil? %> </td>
     </tr>
 
       <tr>
     <td>Host:</td>
     <td>
-    <%= link_to @vm[:host], controller: "server", action: "show", id: @vm[:host] unless @vm.nil?%>
+    <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %>
     </td>
 
     <%
@@ -56,13 +50,13 @@
     
   <tr>
     <td>OS:</td>
-    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil?%>)</td>
+    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil? %>)</td>
   </tr>
 
   </tr>
     <tr>
     <td>IP address:</td>
-    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil?%></td>
+    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil? %></td>
   </tr>
   <%
     if @vm.nil?
@@ -97,5 +91,38 @@
     <td><%=  memory_usage_percentage%> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
   </tr>
     
+  </tbody>
+</table>
+
+
+<table class="table">
+    <tbody>
+      <tr>
+        <% if @vm[:state] %>
+          <td><%= button_to 'Suspend',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-warning' %></td>
+          <td><%= button_to 'Shutdown Guest OS',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-danger' %></td>
+          <td><%= button_to 'Restart Guest OS',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-primary' %></td>
+          <td><%= button_to 'Reset',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-primary' %></td>
+          <td><%= button_to 'Power Off',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-danger' %></td>
+        <% else %>
+          <td><%= button_to 'Power On',
+            {controller: :vms, action: 'show', id: @vm[:name]},
+            method: :get, class: 'btn btn-success' %></td>
+        <% end %>
+
+          <td><%= button_to 'Delete',
+            {controller: :vms, action: 'destroy', id: @vm[:name]},
+            method: :delete, class: "btn btn-danger" %></td>
+    </tr>
   </tbody>
 </table>

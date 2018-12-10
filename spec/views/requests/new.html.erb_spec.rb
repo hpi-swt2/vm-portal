@@ -17,7 +17,6 @@ RSpec.describe 'requests/new', type: :view do
 
   it 'renders new request form' do
     render
-    expect(rendered).to match(/Windows/)
 
     assert_select 'form[action=?][method=?]', requests_path, 'post' do
       assert_select 'input[name=?]', 'request[name]'
@@ -30,7 +29,7 @@ RSpec.describe 'requests/new', type: :view do
 
       assert_select 'select[name=?]', 'request[operating_system]'
 
-      assert_select 'input[name=?]', 'request[comment]'
+      assert_select 'textarea[name=?]', 'request[comment]'
     end
   end
 end
