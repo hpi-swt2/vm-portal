@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20_181_209_184_959) do
     t.datetime 'updated_at', null: false
     t.index ['user_id'], name: 'index_notifications_on_user_id'
   end
-  
+
   create_table 'operating_systems', force: :cascade do |t|
     t.string 'name'
     t.datetime 'created_at', null: false
