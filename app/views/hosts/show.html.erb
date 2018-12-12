@@ -57,8 +57,7 @@ end %>
                'Model' => @host[:model],
                'Power State' => @host[:summary].runtime.powerState,
                'OS' => "#{@host[:summary].config&.product&.osType} (#{@host[:summary]&.config&.product&.fullName})",
-               'CPU Model' => @host[:summary]&.hardware&.cpuModel,
-                }         
+               'CPU Model' => @host[:summary]&.hardware&.cpuModel }         
   %>
 
 <table class ="table table-borderless text-center">
