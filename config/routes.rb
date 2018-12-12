@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
   get '/dashboard' => 'dashboard#index', as: :dashboard
   root to: 'landing#index'
-  #root to: redirect('/vms')
+  # root to: redirect('/vms')
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 

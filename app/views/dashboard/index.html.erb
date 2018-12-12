@@ -50,10 +50,9 @@
           <% @hosts.each do |host| %>
             <tr>
               <td><%= link_to host[:name],
-                              {controller: :servers, action: 'show', id: host[:name]},
+                              {controller: :hosts, action: 'show', id: host[:name]},
                               method: :get, class: "btn btn-link" %></td>
               <td><%= host[:connectionState] %></td>
-              <td><%= host[:bootTime] %></td>
               <td>
                 <ul>
                   <% if not host[:vm_names].nil?
