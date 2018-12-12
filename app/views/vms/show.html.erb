@@ -47,7 +47,7 @@ end %>
   committed = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
   uncommitted = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
   hdd_usage = committed
-  hdd_allocation = committed + uncommitted
+  hdd_allocation = (committed + uncommitted).round(2)
   cpu_usage = @vm[:summary].quickStats&.overallCpuUsage || 0
   cpu_allocation = @vm[:summary].config&.cpuReservation || 0
   ram_usage = (@vm[:summary].quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
@@ -81,10 +81,10 @@ end %>
     <td class="text-right">Project: Lorem Ipsum</td>
   </tr>
   <tr>
-    <td style="width: 47.5%" class="table-active">
+    <td style="width: 49%" class="table-active">
       <%= render 'templates/hardware_table', hardware: @hardware %>
     </td>
-    <td style="width: 5%"></td>
+    <td style="width: 2%"></td>
     <td class="table-active">
       <table class="table table-borderless">
         <tbody class="table-active">

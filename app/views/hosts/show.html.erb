@@ -58,7 +58,7 @@ end %>
                'Power State' => @host[:summary].runtime.powerState,
                'OS' => "#{@host[:summary].config&.product&.osType} (#{@host[:summary]&.config&.product&.fullName})",
                'CPU Model' => @host[:summary]&.hardware&.cpuModel,
-                }           
+                }         
   %>
 
 <table class ="table table-borderless text-center">
@@ -71,10 +71,10 @@ end %>
 
 <table class = "table table-borderless">
   <tr>
-    <td style="width: 47.5%" class="table-active">
+    <td style="width: 49%" class="table-active">
       <%= render 'templates/hardware_table', hardware: @hardware %>
     </td>
-    <td style="width: 5%"></td>
+    <td style="width: 2%"></td>
     <td class="table-active">
       <table class="table table-borderless">
         <tbody class="table-active">

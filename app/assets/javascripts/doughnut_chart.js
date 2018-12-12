@@ -1,15 +1,37 @@
+function getChartColor(amount) {
+  if(amount < 80) {
+    return 'green';
+  }
+  if(amount < 90) {
+    return 'yellow';
+  }
+  return 'red';
+}
+
 function getChartOptions(amount, title) {
-    return {
+  var color = getChartColor(amount);
+  var backgroundColors = {
+    green: 'rgba(0, 255, 0, 0.3)',
+    yellow: 'rgba(255, 255, 0, 0.3)',
+    red: 'rgba(255, 0, 0, 0.3)',
+  };
+  var borderColors = {
+    green: 'rgba(0, 255, 0, 0.5)',
+    yellow: 'rgba(255, 255, 0, 0.5)',
+    red: 'rgba(255, 0, 0, 0.5)',
+  };
+
+  return {
       type: 'doughnut',
       data: {
         datasets: [{
           data: [amount, 100 - amount],
           backgroundColor: [
-            'rgba(0, 255, 0, 0.3)',
+            backgroundColors[color],
             'rgba(255, 255, 255, 0.5)',
           ],
           borderColor: [
-            'rgba(0, 255, 0, 0.5)',
+            borderColors[color],
             'rgba(0, 0, 0, 0.2)'
           ],
           borderWidth: 1
