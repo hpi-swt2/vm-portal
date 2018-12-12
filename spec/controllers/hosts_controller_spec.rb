@@ -52,13 +52,13 @@ RSpec.describe HostsController, type: :controller do
   describe 'get #show' do
     before do
       double_api = double
-      allow(double_api).to receive(:get_host).and_return(nil)
+      allow(double_api).to receive(:get_host).and_return({})
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
-    it 'returns http success or timeout' do
+    it 'returns http success or timeout or not found' do
       get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success).or have_http_status(408)
+      expect(response).to have_http_status(:success).or have_http_status(408).or have_http_status(:not_found)
     end
 
     it 'renders show page' do

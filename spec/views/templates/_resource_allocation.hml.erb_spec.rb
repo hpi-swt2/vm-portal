@@ -43,8 +43,18 @@ RSpec.describe 'templates/_resource_allocation.html.erb', type: :view do
     expect(rendered).to include((proper_values[:ram_usage] / proper_values[:ram_allocation]).round.to_s)
   end
 
+  it 'shows CPU cores' do
+    expect(rendered).to include "#{proper_values[:cpu_cores]} cores"
+  end
+
   it 'allows values to be zero' do
     assign(:values, zero_values)
     render
+  end
+
+  it 'shows CPU cores in singular' do
+    assign(:values, zero_values)
+    render
+    expect(rendered).to include "#{zero_values[:cpu_cores]} core"
   end
 end

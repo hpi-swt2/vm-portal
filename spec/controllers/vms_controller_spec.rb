@@ -94,9 +94,9 @@ RSpec.describe VmsController, type: :controller do
       allow(VmApi).to receive(:new).and_return double_api
     end
 
-    it 'returns http success or timeout' do
+    it 'returns http success or timeout or not found' do
       get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success).or have_http_status(408)
+      expect(response).to have_http_status(:success).or have_http_status(408).or have_http_status(:not_found)
     end
   end
 end

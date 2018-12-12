@@ -52,7 +52,7 @@ end %>
   cpu_allocation = @vm[:summary].config&.cpuReservation || 0
   ram_usage = (@vm[:summary].quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
   ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
-  cpu_cores = @vm[:summary].config&.numCpu  || 0
+  cpu_cores = @vm[:summary].config&.numCpu  || 1
 
   @values = {cpu_allocation: cpu_allocation, 
              cpu_usage: cpu_usage, 
