@@ -13,6 +13,7 @@ class HostsController < ApplicationController
 
   def show
     @host = VmApi.instance.get_host(params[:id])
+    render(template: 'errors/not_found', status: :not_found) if @host.nil?
   end
 
   private
