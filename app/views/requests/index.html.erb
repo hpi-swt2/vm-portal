@@ -6,10 +6,12 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Cpu-Cores</th>
-      <th>MB RAM</th>
-      <th>MB Storage</th>
+      <th style="width: 80px">Cpu-Cores</th>
+      <th style="width: 80px">MB RAM</th>
+      <th style="width: 90px">MB Storage</th>
       <th>Operating system</th>
+      <th style="width: 80px">Port</th>
+      <th>Reachability Name</th>
       <th class="w-25">Comment</th>
       <th>Status </th>
     </tr>
@@ -23,6 +25,8 @@
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
         <td><%= request.operating_system %></td>
+        <td><%= request.port %></td>
+        <td><%= request.reachability_name %></td>
         <td><%= request.comment %></td>
         <td><%= request.status %></td>
       </tr>

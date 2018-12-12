@@ -40,6 +40,16 @@
   </div>
 
   <div class="field">
+    <%= form.label :port, "Port" %>
+    <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reachability_name, "Reachability Name" %>
+    <%= form.text_field :reachability_name, class: 'form-control' %>
+  </div>
+
+  <div class="field">
     <%= form.label :comment %>
     <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
   </div>

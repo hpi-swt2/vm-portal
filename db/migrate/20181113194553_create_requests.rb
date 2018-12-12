@@ -9,6 +9,8 @@ class CreateRequests < ActiveRecord::Migration[5.2]
       t.integer :storage_mb
       t.string :operating_system
       t.string :software
+      t.integer :port
+      t.string :reachability_name
       t.text :comment
       t.text :rejection_information
       t.integer :status, default: 0

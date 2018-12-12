@@ -7,6 +7,8 @@ FactoryBot.define do
     ram_mb { 1000 }
     storage_mb { 2000 }
     operating_system { 'MyOS' }
+    port { 4000 }
+    reachability_name { 'MyName' }
     comment { 'Comment' }
     status { 'pending' }
   end
