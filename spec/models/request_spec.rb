@@ -67,4 +67,9 @@ RSpec.describe Request, type: :model do
       expect(request).to be_valid
     end
   end
+
+  it 'changes status to accepted' do
+    request.accept!
+    expect(request.status).to eq('accepted')
+  end
 end

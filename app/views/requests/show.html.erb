@@ -1,38 +1,67 @@
-<p id="notice"><%= notice %></p>
+<h1>Request Information</h1>
+
+<table class="table table-fixed-columns table-striped">
+  <tbody>
+    <tr>
+      <th>Name:</td>
+      <td><%= @request.name %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Cpu cores:</strong></td>
+      <td><%= @request.cpu_cores %></td>
+    </tr>
+
+    <tr>
+      <td><strong>MB RAM:</strong></td>
+      <td><%= @request.ram_mb %></td>
+    </tr>
+
+    <tr>
+      <td><strong>MB Storage:</strong></td>
+      <td><%= @request.storage_mb %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Operating system:</strong></td>
+      <td><%= @request.operating_system %></td>
+    </tr>
+
+
+    <tr>
+      <td><strong>Comment:</strong></td>
+      <td class="col-md-4"><%= @request.comment %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Status:</strong></td>
+      <td><%= @request.status %></td>
+    </tr>
+  </tbody>
+</table>
 
 <p>
-  <strong>Name:</strong>
-  <%= @request.name %>
+  <strong>Users:</strong>
+  <ul>
+    <% @request.users.each do |user| %>
+  <p>
+    <li><%= user.email %></li>
+  </p>
+  <% end %>
+  </ul>
 </p>
 
 <p>
-  <strong>Cpu cores:</strong>
-  <%= @request.cpu_cores %>
-</p>
-
-<p>
-  <strong>MB RAM:</strong>
-  <%= @request.ram_mb %>
-</p>
-
-<p>
-  <strong>MB Storage:</strong>
-  <%= @request.storage_mb %>
-</p>
-
-<p>
-  <strong>Operating system:</strong>
-  <%= @request.operating_system %>
-</p>
-
-<p>
-  <strong>Comment:</strong>
-  <%= @request.comment %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @request.status %>
+  <strong>Users with sudo rights:</strong>
+  <ul>
+    <% @request.users_assigned_to_requests.each do |userAtRequest| %>
+      <% if userAtRequest.sudo %>
+      <p>
+        <li><%= userAtRequest.user.email %></li>
+      </p>
+      <% end %>
+  <% end %>
+  </ul>
 </p>
 
 <% if @request.rejected? %>
@@ -43,22 +72,19 @@
 <% end %>
 
 <% if @request.pending? %>
-  <%= form_with(model: @request, local: true) do |form| %>
-    <div class="actions">
-      <%= form.hidden_field :status, value: 'accepted' %>
-      <%= form.submit 'Accept' %>
-    </div>
-  <% end %>
+  <div class="actions">
+    <%= button_to 'Accept', request_accept_button_path(request: @request), method: :patch, class: "btn btn-success" %>
+  </div>
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
       <%= form.label :rejection_information %>
-      <%= form.text_field :rejection_information %>
+      <%= form.text_field :rejection_information, class: 'form-control' %>
     </div>
 
     <div class="actions">
       <%= form.hidden_field :status, value: 'rejected' %>
-      <%= form.submit 'Reject' %>
+      <%= form.submit 'Reject', class: "btn btn-danger" %>
     </div>
   <% end %>
 <% end %>

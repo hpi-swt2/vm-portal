@@ -12,7 +12,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_181_130_150_921) do
+ActiveRecord::Schema.define(version: 20_181_209_184_959) do
+  create_table 'notifications', force: :cascade do |t|
+    t.integer 'user_id'
+    t.string 'title'
+    t.string 'message'
+    t.boolean 'read'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_notifications_on_user_id'
+  end
+  
+  create_table 'operating_systems', force: :cascade do |t|
+    t.string 'name'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+  end
+
   create_table 'requests', force: :cascade do |t|
     t.string 'name'
     t.integer 'cpu_cores'
@@ -26,13 +42,20 @@ ActiveRecord::Schema.define(version: 20_181_130_150_921) do
     t.datetime 'updated_at', null: false
   end
 
-  create_table 'user_profiles', force: :cascade do |t|
+  create_table 'slack_auth_requests', force: :cascade do |t|
+    t.string 'state'
     t.integer 'user_id'
-    t.string 'first_name'
-    t.string 'last_name'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.index ['user_id'], name: 'index_user_profiles_on_user_id'
+    t.index ['user_id'], name: 'index_slack_auth_requests_on_user_id'
+  end
+
+  create_table 'slack_hooks', force: :cascade do |t|
+    t.string 'url'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_slack_hooks_on_user_id'
   end
 
   create_table 'users', force: :cascade do |t|
@@ -43,8 +66,25 @@ ActiveRecord::Schema.define(version: 20_181_130_150_921) do
     t.datetime 'remember_created_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.integer 'sign_in_count', default: 0, null: false
+    t.datetime 'current_sign_in_at'
+    t.datetime 'last_sign_in_at'
+    t.string 'current_sign_in_ip'
+    t.string 'last_sign_in_ip'
     t.integer 'role'
+    t.string 'first_name'
+    t.string 'last_name'
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
+  end
+
+  create_table 'users_assigned_to_requests', force: :cascade do |t|
+    t.boolean 'sudo'
+    t.integer 'request_id'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['request_id'], name: 'index_users_assigned_to_requests_on_request_id'
+    t.index ['user_id'], name: 'index_users_assigned_to_requests_on_user_id'
   end
 end

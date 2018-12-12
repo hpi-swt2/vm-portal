@@ -1,28 +1,19 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-class ServersController < ApplicationController
+class HostsController < ApplicationController
   attr_reader :hosts
 
   def index
     @hosts = filter VmApi.instance.all_hosts
     @parameters = determine_params
-    if VmApi.instance.connected?
-      flash.discard
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
   end
 
   def new; end
 
   def show
-    if VmApi.instance.connected?
-      flash.discard
-      @host = VmApi.instance.get_host(params[:id])
-    else
-      flash[:danger] = 'You seem to have lost connection to the HPI network :('
-    end
+    @host = VmApi.instance.get_host(params[:id])
+    render(template: 'errors/not_found', status: :not_found) if @host.nil?
   end
 
   private
