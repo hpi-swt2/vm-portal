@@ -104,13 +104,13 @@ class VmApi
     vm.ResetVM_Task.wait_for_completion
   end
 
-  def shutdown_guestOS(name)
+  def shutdown_guest_os(name)
     connect
     vm = find_vm name
     vm.ShutdownGuest.wait_for_completion
   end
 
-  def reboot_guestOS(name)
+  def reboot_guest_os(name)
     connect
     vm = find_vm name
     vm.RebootGuest.wait_for_completion

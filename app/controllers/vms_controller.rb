@@ -35,26 +35,31 @@ class VmsController < ApplicationController
 
   def suspend_vm
     @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.suspend_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def resume
     @vm = VmApi.instance.get_vm(params[:id])
+    # todo: implement api method for resume
     redirect_to action: :show, id: params[:id]
   end
 
   def shutdown_guest_os
     @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.shutdown_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
-  def restart_guest_os
+  def restart_guest_os # todo: rename to reboot
     @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.reboot_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def reset_vm
     @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.reset_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 

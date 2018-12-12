@@ -87,7 +87,7 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'get #show' do
+  describe 'GET #show' do
     before do
       double_api = double
       allow(double_api).to receive(:get_vm).and_return(nil)
@@ -99,4 +99,34 @@ RSpec.describe VmsController, type: :controller do
       expect(response).to have_http_status(:success).or have_http_status(408)
     end
   end
+
+  describe 'POST #change_power_state' do
+    pending "should "
+  end
+
+
+  describe 'POST #suspend_vm' do
+    pending "should "
+  end
+
+
+  describe 'POST #resume' do
+    pending "should "
+  end
+
+
+  describe 'POST #shutdown_guest_os' do
+    pending "should "
+  end
+
+
+  describe 'POST #restart_guest_os' do
+    pending "should "
+  end
+
+
+  describe 'POST #reset_vm' do
+    pending "should "
+  end
+
 end
