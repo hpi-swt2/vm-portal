@@ -52,10 +52,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to include 'online'
   end
 
-  it 'shows vm boot time' do
-    expect(rendered).to include vm_on[:boot_time].to_s
-  end
-
   it 'shows vm OS' do
     expect(rendered).to include vm_on[:summary].config.guestId
   end

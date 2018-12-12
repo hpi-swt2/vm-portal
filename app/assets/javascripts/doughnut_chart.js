@@ -7,7 +7,6 @@ function getChartOptions(amount, title) {
           backgroundColor: [
             'rgba(0, 255, 0, 0.3)',
             'rgba(255, 255, 255, 0.5)',
-            //'rgba(0, 0, 0, 0.005)'
           ],
           borderColor: [
             'rgba(0, 255, 0, 0.5)',
@@ -49,8 +48,8 @@ function makeHalfDoughnutChart(name, amount, description) {
     descriptionNode.classList.add("description");
     descriptionNode.innerText = description;
     canvas.parentNode.appendChild(descriptionNode);
-    return new Chart(canvas, getChartOptions(amount, name)) 
+    options = getChartOptions(amount, name);
+    return new Chart(canvas, options) 
 }
 
-// call function to satisfy CodeFactor
 makeHalfDoughnutChart(null, null, null)

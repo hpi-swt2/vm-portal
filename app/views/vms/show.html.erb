@@ -54,16 +54,19 @@ end %>
   ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
   cpu_cores = @vm[:summary].config&.numCpu  || 0
 
-
   @values = {cpu_allocation: cpu_allocation, 
              cpu_usage: cpu_usage, 
              ram_allocation: ram_allocation, 
              ram_usage: ram_usage, 
              hdd_usage: hdd_usage, 
              hdd_allocation: hdd_allocation, 
-             cpu_cores: cpu_cores } %>
+             cpu_cores: cpu_cores } 
 
-<table class = "table table-borderless text-center">
+  @hardware = {'IP Address' => @vm[:summary]&.guest&.ipAddress,
+               'Heartbeat Status' => @vm[:guestHeartbeatStatus] }           
+  %>
+
+<table class ="table table-borderless text-center">
   <tr>
     <td class="table-active">
       <%= render 'templates/resource_allocation', values: @values %>
@@ -74,44 +77,21 @@ end %>
 <table class = "table table-borderless">
   <tr class="lead">
     <td>Host: <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %></td>
+    <td></td>
     <td class="text-right">Project: Lorem Ipsum</td>
-    </tr>
-    </table>
-
-
-<table class="table">
-    <tbody>
-    <tr>
-    <td>Boot time:</td>
-    <td><%= @vm[:boot_time] unless @vm.nil? %></td>
-    </tr>
-
-    <tr>
-    <td>State:</td>
-    <td><%= @vm[:summary].runtime.powerState unless @vm.nil? %></td>
   </tr>
-
-    <tr>
-    <td>Heartbeat status:</td>
-    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil? %> </td>
-    </tr>
-
-      <tr>
-    <td>Host:</td>
-    <td>
-    <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %>
-    </td>
-
-   
   <tr>
-    <td>OS:</td>
-    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil? %>)</td>
-  </tr>
-
-  </tr>
-    <tr>
-    <td>IP address:</td>
-    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil? %></td>
-  </tr>
-  </tbody>
+    <td style="width: 47.5%" class="table-active">
+      <%= render 'templates/hardware_table', hardware: @hardware %>
+    </td>
+    <td style="width: 5%"></td>
+    <td class="table-active">
+      <table class="table table-borderless">
+        <tbody class="table-active">
+          <tr>
+            <th colspan="2"><h4 class="mb-0">Users</h4></th>
+          </tr>
+        </tbody>
+      </table>
+    </td>
 </table>
