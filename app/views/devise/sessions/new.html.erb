@@ -1,8 +1,4 @@
-<% flash.each do |key, value| %>
-  <div class="alert alert-danger">
-    <%= content_tag :div, value %>
-  </div>
-<% end %>
+<%= render('layouts/flash_message') %>
 
 <div class='row'>
   <div class='col-7'>
