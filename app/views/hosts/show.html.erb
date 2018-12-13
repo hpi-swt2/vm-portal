@@ -8,13 +8,13 @@ end %>
 
 <table class = "table table-borderless">
   <tr>
-    <td><h1 class="mb-0"><%=@host[:name] %></h1></td>
+    <td><h1 class="mb-0" colspan="2"><%= @host[:name] %></h1></td>
   </tr>
   <tr>
       <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil? %>
-      <% state =  @host[:connectionState] =='connected' %>
+      <% state =  @host[:connectionState] == 'connected' %>
   
-      <td class="lead align-middle" colspan="2">
+      <td class="lead align-middle">
         <div class="<%= state ? 'bg-success' : 'bg-danger' %> text-white float-left pb-1 px-4 mr-2">
           <%= state ? 'online' : 'offline' %>
         </div>
@@ -80,9 +80,14 @@ end %>
           <tr>
             <th colspan="2"><h4 class="mb-0">Virtual Machines</h4></th>
           </tr>
-          <% @host[:vm_names].each do |vm| %>
+          <% @host[:vms].each do |name, state| %>
           <tr>
-            <td><%= link_to vm, controller: "vms", action: "show", id: vm %></td>
+            <td>
+                <%= link_to name, controller: "vms", action: "show", id: name %>
+                <div class="<%= state ? 'badge-success' : 'badge-danger' %> text-white badge">
+                    <%= state ? 'online' : 'offline' %>
+                </div>
+            </td>
           </tr>
           <% end %>
         </tbody>

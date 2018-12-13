@@ -8,7 +8,7 @@ RSpec.describe VmApi do
 
   describe '#connect' do
     let(:setup_methods) do
-      %i[serviceInstance find_datacenter hostFolder vmFolder children first resourcePool all_hosts find_vm]
+      %i[serviceInstance find_datacenter hostFolder vmFolder children first resourcePool all_hosts find_vm vm]
     end
 
     let(:double_api) do
@@ -90,11 +90,13 @@ RSpec.describe VmApi do
     let(:vm_mock) do
       mock = double
       expect(mock).to receive(:name).and_return(vm)
+      allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       mock
     end
 
     let(:vm) do
-      ['name', 'another name']
+      {vm_names: ['name', 'another name'],
+       vm_states: [true, false]}
     end
 
     before do
