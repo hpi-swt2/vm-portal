@@ -20,7 +20,7 @@ RSpec.describe 'hosts/show.html.erb', type: :view do
     allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(0)
 
     { name: 'aHost',
-      vm_names: ['vm'],
+      vms: { 'vm' => true },
       model: 'a cool model',
       vendor: 'the dark side',
       bootTime: Time.current,
@@ -46,8 +46,8 @@ RSpec.describe 'hosts/show.html.erb', type: :view do
   end
 
   it 'shows vms' do
-    host[:vm_names].each do |vm|
-      expect(rendered).to include vm
+    host[:vms].keys.each do |name|
+      expect(rendered).to include name.to_s
     end
   end
 
