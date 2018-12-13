@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +12,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_07_115117) do
+ActiveRecord::Schema.define(version: 20_181_209_184_959) do
+  create_table 'notifications', force: :cascade do |t|
+    t.integer 'user_id'
+    t.string 'title'
+    t.string 'message'
+    t.boolean 'read'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_notifications_on_user_id'
+  end
+  
   create_table 'operating_systems', force: :cascade do |t|
     t.string 'name'
     t.datetime 'created_at', null: false
@@ -64,5 +76,15 @@ ActiveRecord::Schema.define(version: 2018_12_07_115117) do
     t.string 'last_name'
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
+  end
+
+  create_table 'users_assigned_to_requests', force: :cascade do |t|
+    t.boolean 'sudo'
+    t.integer 'request_id'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['request_id'], name: 'index_users_assigned_to_requests_on_request_id'
+    t.index ['user_id'], name: 'index_users_assigned_to_requests_on_user_id'
   end
 end
