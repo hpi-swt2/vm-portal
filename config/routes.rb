@@ -10,8 +10,9 @@ Rails.application.routes.draw do
       get :mark_as_read
     end
   end
-
-  root to: redirect('/vms')
+  get '/dashboard' => 'dashboard#index', as: :dashboard
+  root to: 'landing#index'
+  # root to: redirect('/vms')
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
@@ -21,6 +22,4 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
   resources :vms, :hosts
   resources :users, only: %i[show index]
-
-  root 'landing#index'
 end

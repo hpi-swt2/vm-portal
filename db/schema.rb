@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20_181_209_184_959) do
     t.datetime 'updated_at', null: false
     t.index ['user_id'], name: 'index_notifications_on_user_id'
   end
-  
+
   create_table 'operating_systems', force: :cascade do |t|
     t.string 'name'
     t.datetime 'created_at', null: false
@@ -66,12 +66,12 @@ ActiveRecord::Schema.define(version: 20_181_209_184_959) do
     t.datetime 'remember_created_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.integer 'role'
     t.integer 'sign_in_count', default: 0, null: false
     t.datetime 'current_sign_in_at'
     t.datetime 'last_sign_in_at'
     t.string 'current_sign_in_ip'
     t.string 'last_sign_in_ip'
-    t.integer 'role'
     t.string 'first_name'
     t.string 'last_name'
     t.index ['email'], name: 'index_users_on_email', unique: true
