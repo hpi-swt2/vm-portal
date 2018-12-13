@@ -1,0 +1,90 @@
+<%= render('layouts/flash_message') %>
+
+<div class="col-lg-12">
+  <div class="pb-2 mt-4 mb-2 border-bottom">
+    <h1>Dashboard</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="btn-group">
+          <h3><i class="fa fa-desktop fa-fw"></i> VMs</h3>
+        </div>
+      </div>
+      <div class="card-body">
+        <table data-toggle="table" class="table">
+          <thead>
+          <tr>
+
+          </tr>
+          <tbody>
+          <% @vms.each do |vm| %>
+            <tr>
+              <td><%= vm[:name] %></td>
+              <td><%= vm[:boot_time] %></td>
+              <td><%= button_to "Details",
+                                {controller: :vms, action: 'show', id: vm[:name]},
+                                method: :get, class: "btn btn-info" %></td>
+              <td><%= button_to "Delete",
+                                {controller: :vms, action: 'destroy', id: vm[:name]},
+                                method: :delete, class: "btn btn-danger" %></td>
+            <tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <!-- Add server list instead of host list -->
+        <h3><i class="fa fa-users"></i> Hosts</h3>
+      </div>
+      <div class="card-body">
+
+        <table data-toggle="table" class="table">
+          <thead>
+          </thead>
+          <tbody>
+          <% @hosts.each do |host| %>
+            <tr>
+              <td><%= link_to host[:name],
+                              {controller: :hosts, action: 'show', id: host[:name]},
+                              method: :get, class: "btn btn-link" %></td>
+              <td><%= host[:connectionState] %></td>
+              <td>
+                <ul>
+                  <% if not host[:vm_names].nil?
+                       host[:vm_names].each do |vm_name| %>
+                      <li> <%= vm_name %></li>
+                    <% end
+                       end %>
+                </ul>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- end left column -->
+
+  <div class="col-4">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Notifications</h3>
+      </div>
+      <div class="card-body">
+        <table data-toggle="table" class="table">
+          <td>cool notifications eventually</td>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
