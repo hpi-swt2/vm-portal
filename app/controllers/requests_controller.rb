@@ -9,6 +9,7 @@ class RequestsController < ApplicationController
   # GET /requests.json
   def index
     @requests = Request.all
+
   end
 
   # GET /requests/1
@@ -119,4 +120,25 @@ class RequestsController < ApplicationController
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment,
                                     :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
+
+  def create_puppet_script(request)
+    #puppet_string = 'class node-vm-%s-%s {\n\t$admins = [%s]\n\t$users = [%s]\n\n\trealize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])\n\trealize(Accounts::Virtual[$users])\n}'
+    puppet_string =
+'class node-vm-%s-%s {
+    $admins = [%s]
+    $users = [%s]
+
+    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+    realize(Accounts::Virtual[$users])
+}'
+
+    admins = User.where(id: request.sudo_user_ids).to_a
+    users = request.users.to_a
+    os = request.operating_system
+
+    admins.map! { |user| "\"#{user.name}\"" }
+    users.map! { |user| "\"#{user.name}\"" }
+    format(puppet_string, current_user.last_name, os, admins.join(', '), users.join(', '))
+  end
+  helper_method :create_puppet_script
 end
