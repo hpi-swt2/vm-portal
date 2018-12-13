@@ -37,8 +37,6 @@ class VmApi
     @hosts = Array.new([])
     @clusters.map do |cluster|
       cluster.host.map do |host|
-        vm_names = Array.new([])
-        vm_states = Array.new([])
         vms = {}
         host.vm.map do |vm|
           state = vm.runtime.powerState == 'poweredOn'

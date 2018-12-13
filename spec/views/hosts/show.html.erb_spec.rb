@@ -46,7 +46,7 @@ RSpec.describe 'hosts/show.html.erb', type: :view do
   end
 
   it 'shows vms' do
-    host[:vms].each do |name, state|
+    host[:vms].keys.each do |name|
       expect(rendered).to include name.to_s
     end
   end

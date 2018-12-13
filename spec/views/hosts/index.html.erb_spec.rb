@@ -9,7 +9,7 @@ RSpec.describe 'hosts/index.html.erb', type: :view do
        vendor: 'nice vendor',
        bootTime: 'some long while',
        connectionState: 'connected',
-       vms: {'a name' => true, 'another name' => false }}
+       vms: { 'a name' => true, 'another name' => false } }
   end
   let(:param) do
     %w[up_hosts down_hosts]

@@ -95,8 +95,8 @@ RSpec.describe VmApi do
     end
 
     let(:vm) do
-      {vm_names: ['name', 'another name'],
-       vm_states: [true, false]}
+      { 'name' => true, 
+        'another name' => false }
     end
 
     before do
