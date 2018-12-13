@@ -67,7 +67,8 @@ describe 'Sign In Page', type: :feature do
       it 'performs a successful login' do
         page.click_link 'Sign in with HPI OpenID Connect'
         expect(page).to have_text('Logout')
-        expect(page).to have_text 'Signed in successfully.'
+        #expect(page).to have_text 'Signed in successfully.'
+        expect(page).to have_text 'Successfully authenticated'
         expect(page).to have_css('.alert-success')
       end
     end
@@ -81,6 +82,8 @@ describe 'Sign In Page', type: :feature do
         page.click_link 'Sign in with HPI OpenID Connect'
         expect(page).to_not have_text('Logout')
         expect(page).to have_text('Login')
+        expect(page).to have_text('Could not authenticate')
+        expect(page).to have_css('.alert-danger')
       end
     end
   end
