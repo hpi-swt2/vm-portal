@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
+  include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_wimi
 
@@ -38,6 +39,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
+    save_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
@@ -86,7 +88,26 @@ class RequestsController < ApplicationController
     end
   end
 
+  def request_accept_button
+    @request = Request.find(params[:request])
+    @request.accept!
+    if @request.save
+      notify_request_update(@request)
+      redirect_to new_vm_path(request: @request)
+    else
+      redirect_to request_path(@request)
+    end
+  end
+
   private
+
+  def save_sudo_rights(request)
+    sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
+
+    sudo_users_for_request.each do |association|
+      association.sudo = true
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_request
@@ -95,6 +116,7 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :port, :reachability_name, :comment, :rejection_information, :status)
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, 
+                                    :port, :reachability_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end

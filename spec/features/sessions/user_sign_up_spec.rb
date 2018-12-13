@@ -8,13 +8,13 @@ describe 'devise/registrations/new.html.erb', type: :feature do
   end
 
   it 'has input fields for first name and list name' do
-    expect(page).to have_field 'user[user_profile_attributes][first_name]'
-    expect(page).to have_field 'user[user_profile_attributes][last_name]'
+    expect(page).to have_field 'user[first_name]'
+    expect(page).to have_field 'user[last_name]'
   end
 
   it 'creates a user with its profile data' do
-    page.fill_in 'user[user_profile_attributes][first_name]', with: 'Max'
-    page.fill_in 'user[user_profile_attributes][last_name]', with: 'Mustermann'
+    page.fill_in 'user[first_name]', with: 'Max'
+    page.fill_in 'user[last_name]', with: 'Mustermann'
 
     page.fill_in 'user[email]', with: 'max@mustermann.com'
     page.fill_in 'user[password]', with: '123456'
@@ -24,7 +24,7 @@ describe 'devise/registrations/new.html.erb', type: :feature do
 
     user = User.find_by email: 'max@mustermann.com'
 
-    expect(user.user_profile.first_name).to eq 'Max'
-    expect(user.user_profile.last_name).to eq 'Mustermann'
+    expect(user.first_name).to eq 'Max'
+    expect(user.last_name).to eq 'Mustermann'
   end
 end

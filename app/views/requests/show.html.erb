@@ -27,6 +27,7 @@
       <td><%= @request.operating_system %></td>
     </tr>
 
+
     <tr>
       <td><strong>Port:</strong></td>
       <td><%= @request.port %></td>
@@ -49,6 +50,30 @@
   </tbody>
 </table>
 
+<p>
+  <strong>Users:</strong>
+  <ul>
+    <% @request.users.each do |user| %>
+  <p>
+    <li><%= user.email %></li>
+  </p>
+  <% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Users with sudo rights:</strong>
+  <ul>
+    <% @request.users_assigned_to_requests.each do |userAtRequest| %>
+      <% if userAtRequest.sudo %>
+      <p>
+        <li><%= userAtRequest.user.email %></li>
+      </p>
+      <% end %>
+  <% end %>
+  </ul>
+</p>
+
 <% if @request.rejected? %>
   <p>
     <strong>Rejection Information:</strong>
@@ -57,12 +82,9 @@
 <% end %>
 
 <% if @request.pending? %>
-  <%= form_with(model: @request, local: true) do |form| %>
-    <div class="actions">
-      <%= form.hidden_field :status, value: 'accepted' %>
-      <%= form.submit 'Accept', class: "btn btn-success" %>
-    </div>
-  <% end %>
+  <div class="actions">
+    <%= button_to 'Accept', request_accept_button_path(request: @request), method: :patch, class: "btn btn-success" %>
+  </div>
 
   <%= form_with(model: @request, local: true) do |form| %>
     <div class="field">
