@@ -61,7 +61,7 @@ function makeHalfDoughnutChart(name, amount, description) {
     canvas.style.width = "150px";
     canvas.style.height = "150px";
     var amountNode = document.createElement("div");
-    amountNode.innerText = amount.toString() + '%';
+    amountNode.innerText = amount.toString() + ' %';
     amountNode.classList.add("graphLabel");
     amountNode.classList.add("amount");
     canvas.parentNode.appendChild(amountNode);
