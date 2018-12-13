@@ -7,6 +7,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :trackable
   enum role: %i[user wimi admin]
+
+  has_many :users_assigned_to_requests
+  has_many :requests, through: :users_assigned_to_requests
+  has_one :user_profile
+  accepts_nested_attributes_for :user_profile
   validates :first_name, presence: true
   validates :last_name, presence: true
 

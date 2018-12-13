@@ -88,15 +88,34 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'get #show' do
-    before do
-      double_api = double
-      allow(double_api).to receive(:get_vm).and_return(nil)
-      allow(VmApi).to receive(:new).and_return double_api
+    let(:double_api) do
+      double
     end
 
-    it 'returns http success or timeout' do
+    before do
+      allow(VmApi).to receive(:instance).and_return double_api
+    end
+
+    it 'returns http success or timeout or not found' do
+      allow(double_api).to receive(:get_vm).and_return({})
       get :show, params: { id: 1 }
       expect(response).to have_http_status(:success).or have_http_status(408)
+    end
+
+    it 'renders show page' do
+      allow(double_api).to receive(:get_vm).and_return({})
+      expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+    end
+
+    it 'returns http status not found when no vm found' do
+      allow(double_api).to receive(:get_vm).and_return(nil)
+      get :show, params: { id: 5 }
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'renders not found page when no vm found' do
+      allow(double_api).to receive(:get_vm).and_return(nil)
+      expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
     end
   end
 end
