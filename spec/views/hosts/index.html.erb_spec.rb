@@ -43,7 +43,7 @@ RSpec.describe 'hosts/index.html.erb', type: :view do
 
   it 'renders vm names' do
     host[:vms].keys.each do |name|
-      expect(rendered).to include namen
+      expect(rendered).to include name
     end
   end
 
