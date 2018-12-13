@@ -21,5 +21,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }, path: 'users'
   resources :vms, :hosts
-  resources :users, only: %i[show index]
+  resources :users, only: %i[show index update]
+
+  root 'landing#index'
 end

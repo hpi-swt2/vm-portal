@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'sshkey'
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -61,6 +63,12 @@ class User < ApplicationRecord
         self.user_id = Rails.configuration.start_user_id
       end
       self.save
+    end
+  end
+
+  def valid_ssh_key
+    if !SSHKey.valid_ssh_public_key? ssh_key
+      error.add(:ssh_key, 'invalid ssh key')
     end
   end
 end
