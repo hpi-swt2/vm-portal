@@ -67,27 +67,27 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.datetime 'updated_at', null: false
     t.integer 'sign_in_count', default: 0, null: false
     t.datetime 'current_sign_in_at'
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "provider"
-    t.string "uid"
-    t.integer "user_id"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.datetime 'last_sign_in_at'
+    t.string 'current_sign_in_ip'
+    t.string 'last_sign_in_ip'
+    t.integer 'role'
+    t.string 'first_name'
+    t.string 'last_name'
+    t.string 'provider'
+    t.string 'uid'
+    t.integer 'user_id'
+    t.index ['email'], name: 'index_users_on_email', unique: true
+    t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
 
-  create_table "users_assigned_to_requests", force: :cascade do |t|
-    t.boolean "sudo"
-    t.integer "request_id"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  create_table 'users_assigned_to_requests', force: :cascade do |t|
+    t.boolean 'sudo'
+    t.integer 'request_id'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['request_id'], name: 'index_users_assigned_to_requests_on_request_id'
+    t.index ['user_id'], name: 'index_users_assigned_to_requests_on_user_id'
   end
 
 end
