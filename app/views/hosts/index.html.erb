@@ -45,9 +45,9 @@
       <td><%= host[:bootTime] %></td>
       <td>
         <ul>
-          <% if not host[:vm_names].nil?
-               host[:vm_names].each do |vm_name| %>
-              <li> <%= vm_name %></li>
+          <% if not host[:vms].nil?
+               host[:vms].keys.each do |name| %>
+              <li> <%= name %></li>
             <% end
                end %>
         </ul>
