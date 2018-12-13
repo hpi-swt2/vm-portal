@@ -5,6 +5,7 @@ require 'rails_helper'
 describe 'Sign In Page', type: :feature do
   before do
     visit new_user_session_path
+    @user = FactoryBot.create :user
   end
 
   it 'has a username field' do
@@ -25,16 +26,23 @@ describe 'Sign In Page', type: :feature do
 
   it 'shows an error message if email is not found' do
     page.fill_in 'user[email]', with: 'login@email.com'
-    page.fill_in 'user[password]', with: 'secret_password'
+    page.fill_in 'user[password]', with: @user.password
     page.find('input[type=submit]').click
     expect(page).to have_text 'This user account does not exist.'
   end
 
   it 'shows an error message if password is incorrect' do
-    user = FactoryBot.create :user
-    page.fill_in 'user[email]', with: user.email
+    page.fill_in 'user[email]', with: @user.email
     page.fill_in 'user[password]', with: 'secret'
     page.find('input[type=submit]').click
     expect(page).to have_text 'Invalid password.'
+  end
+
+  it 'performs a successful login' do
+    page.fill_in 'user[email]', with: @user.email
+    page.fill_in 'user[password]', with: @user.password
+    page.find('input[type=submit]').click
+    expect(page).to have_text 'Signed in successfully.'
+    expect(page).to have_css('.alert-success')
   end
 end
