@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
     vms_path
   end
 
+  # Overwriting the sign_out redirect path method
+  def after_sign_out_path_for(_resource)
+    root_path
+  end
+
   rescue_from Net::OpenTimeout, Errno::ENETUNREACH, Errno::EHOSTUNREACH, with: :error_render_method
 
   def error_render_method

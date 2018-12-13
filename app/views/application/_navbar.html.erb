@@ -20,7 +20,7 @@
       </li>
       <% if user_signed_in? %>
         <li>
-          <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "nav-link text-danger") %>
+          <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "nav-link text-success") %>
         </li>
       <% else %>
         <li>

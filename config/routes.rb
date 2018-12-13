@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
   resources :requests, path: '/vms/requests'
 
-  root to: redirect('/vms')
+  # root to: redirect('/vms')
 
   get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
 
