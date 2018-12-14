@@ -13,7 +13,16 @@
     <% if current_user.admin? %>
     <tr>
       <td><%= User.human_attribute_name('role') %></td>
-      <td><%= @user.role %></td>
+      <td>
+        <%= form_for @user do |f| %>
+         <%= f.select :role,
+                      options_from_collection_for_select(User.roles,
+                                                         'first',
+                                                         'first'),
+                      class: 'form-control'
+         %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
     <% if @user == current_user %>
