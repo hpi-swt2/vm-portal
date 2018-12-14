@@ -33,7 +33,7 @@ class User < ApplicationRecord
   after_initialize :set_default_role, if: :new_record?
 
   def ssh_key?
-    ssh_key && ssh_key.length.positive?
+    ssh_key & ssh_key.length.positive?
   end
 
   def name

@@ -13,7 +13,6 @@ describe 'users/show.html.erb', type: :feature do
   end
 
   context 'when the user has a ssh key' do
-
     it 'shows the user ssh-key' do
       expect(page).to have_content(user.ssh_key)
     end

@@ -43,7 +43,6 @@ RSpec.describe 'users/show.html.erb', type: :view do
     end
   end
 
-
   context 'when the requested user is not the current user' do
     let(:other_user) { FactoryBot.create :user }
 
