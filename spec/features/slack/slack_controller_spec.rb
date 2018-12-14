@@ -19,6 +19,10 @@ describe SlackController do
     mock_sign_in.slack_auth_requests.create state: 'This is a state'
   end
 
+  def mock_auth_request
+    mock_sign_in.slack_auth_requests.create state: 'This is a state'
+  end
+
   it 'renders an error if the state is invald' do
     mock_sign_in
     visit update_slack_path
@@ -27,8 +31,17 @@ describe SlackController do
   end
 
   it 'renders an error if the authentication code is missing' do
-    auth_request = mock_sign_in.slack_auth_requests.create state: 'This is a state'
+    auth_request = mock_auth_request
     visit update_slack_path(state: auth_request.state)
+
+    expect(page).to have_content 'Error'
+  end
+
+  it 'renders an error if slack cannot be reached' do
+    auth_request = mock_auth_request
+    allow(Net::HTTP).to receive(:post_form).and_raise('Slack could not be reached!')
+
+    visit update_slack_path(state: auth_request.state, code: 'We must provide a code')
 
     expect(page).to have_content 'Error'
   end
