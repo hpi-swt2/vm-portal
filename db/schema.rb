@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.string "provider"
