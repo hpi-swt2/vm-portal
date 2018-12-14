@@ -9,10 +9,6 @@ class RequestTemplatesController < ApplicationController
     @request_templates = RequestTemplate.all
   end
 
-  # GET /request_templates/1
-  # GET /request_templates/1.json
-  def show; end
-
   # GET /request_templates/new
   def new
     @request_template = RequestTemplate.new
@@ -28,8 +24,8 @@ class RequestTemplatesController < ApplicationController
 
     respond_to do |format|
       if @request_template.save
-        format.html { redirect_to @request_template, notice: 'Request template was successfully created.' }
-        format.json { render :show, status: :created, location: @request_template }
+        format.html { redirect_to request_templates_path, notice: 'Request template was successfully created.' }
+        format.json { head :no_content }
       else
         format.html { render :new }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -42,8 +38,8 @@ class RequestTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @request_template.update(request_template_params)
-        format.html { redirect_to @request_template, notice: 'Request template was successfully updated.' }
-        format.json { render :show, status: :ok, location: @request_template }
+        format.html { redirect_to request_templates_path, notice: 'Request template was successfully updated.' }
+        format.json { head :no_content }
       else
         format.html { render :edit }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -56,7 +52,7 @@ class RequestTemplatesController < ApplicationController
   def destroy
     @request_template.destroy
     respond_to do |format|
-      format.html { redirect_to request_templates_url, notice: 'Request template was successfully destroyed.' }
+      format.html { redirect_to request_templates_path, notice: 'Request template was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

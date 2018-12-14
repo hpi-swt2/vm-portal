@@ -12,10 +12,6 @@ RSpec.describe RequestTemplatesController, type: :routing do
       expect(get: '/vms/request_templates/new').to route_to('request_templates#new')
     end
 
-    it 'routes to #show' do
-      expect(get: '/vms/request_templates/1').to route_to('request_templates#show', id: '1')
-    end
-
     it 'routes to #edit' do
       expect(get: '/vms/request_templates/1/edit').to route_to('request_templates#edit', id: '1')
     end
