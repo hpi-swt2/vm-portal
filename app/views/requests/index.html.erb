@@ -18,7 +18,7 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= link_to "#{request.name}", request %></td>
+        <td><%= link_to request.name, request %></td>
         <td><%= request.cpu_cores %></td>
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
