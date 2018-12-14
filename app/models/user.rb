@@ -34,8 +34,6 @@ class User < ApplicationRecord
 
   def ssh_key?
     ssh_key && ssh_key.length.positive?
-  def sshkey?
-    sshkey && sshkey.length > 0
   end
 
   def name
@@ -44,10 +42,6 @@ class User < ApplicationRecord
 
   def valid_ssh_key
     errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
-  end
-
-  def valid_ssh_key?
-    !ssh_key? || SSHKey.valid_ssh_public_key?(ssh_key)
   end
 
   def self.from_omniauth(auth)
@@ -79,9 +73,7 @@ class User < ApplicationRecord
     end
   end
 
-  def valid_ssh_key
-    if !SSHKey.valid_ssh_public_key? ssh_key
-      error.add(:ssh_key, 'invalid ssh key')
-    end
+  def valid_ssh_key?
+    !ssh_key? || SSHKey.valid_ssh_public_key?(ssh_key)
   end
 end
