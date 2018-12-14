@@ -1,19 +1,22 @@
 <nav class="navbar navbar-expand-lg navbar-fixed-top navbar-offset navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">HART</a>
+  <a class="navbar-brand" href="#"><%= image_tag("logo.svg", :alt => "VMSpace", :height => "40") %></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#"><%= fa_icon('desktop', text: "Dashboard") %><span class="sr-only">(current)</span></a>
-      </li>
+      <!--TODO: add ! before user check -->
+      <% if user_signed_in? %>
+        <li class="nav-item active">
+          <a class="nav-link" href=/dashboard><%= fa_icon('desktop', text: "Dashboard") %><span class="sr-only">(current)</span></a>
+        </li>
+      <% end %>
       <li class="nav-item">
         <%= link_to('VMs', vms_path, class: "nav-link") %>
       </li>
       <li class="nav-item">
-        <%= link_to('Servers', servers_path, class: "nav-link") %>
+        <%= link_to('Hosts', hosts_path, class: "nav-link") %>
       </li>
       <li class="nav-item">
         <%= link_to('Users', users_path, class: "nav-link") %>

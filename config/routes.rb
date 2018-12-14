@@ -6,17 +6,21 @@ Rails.application.routes.draw do
   patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
   resources :request_templates, path: '/vms/request_templates'
   resources :requests, path: '/vms/requests'
+  resources :notifications, only: %i[index new create destroy] do
+    member do
+      get :mark_as_read
+    end
+  end
+  get '/dashboard' => 'dashboard#index', as: :dashboard
+  root to: 'landing#index'
+  # root to: redirect('/vms')
 
-  root to: redirect('/vms')
-
-  get '/servers/:id' => 'servers#show', constraints: { id: /.*/ }
+  get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
 
-  devise_for :users, controllers: { registrations: 'users/registrations' }, path: 'users'
-  resources :vms, :servers
+  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }, path: 'users'
+  resources :vms, :hosts
   resources :users, only: %i[show index]
-
-  root 'landing#index'
 end
