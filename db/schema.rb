@@ -12,20 +12,20 @@
 
 ActiveRecord::Schema.define(version: 2018_12_09_184959) do
 
-  create_table "notifications", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "title"
-    t.string "message"
-    t.boolean "read"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_notifications_on_user_id"
+  create_table 'notifications', force: :cascade do |t|
+    t.integer 'user_id'
+    t.string 'title'
+    t.string 'message'
+    t.boolean 'read'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_notifications_on_user_id'
   end
 
-  create_table "operating_systems", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'operating_systems', force: :cascade do |t|
+    t.string 'name'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
   create_table "request_templates", force: :cascade do |t|
@@ -51,20 +51,20 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "slack_auth_requests", force: :cascade do |t|
-    t.string "state"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_slack_auth_requests_on_user_id"
+  create_table 'slack_auth_requests', force: :cascade do |t|
+    t.string 'state'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_slack_auth_requests_on_user_id'
   end
 
-  create_table "slack_hooks", force: :cascade do |t|
-    t.string "url"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_slack_hooks_on_user_id"
+  create_table 'slack_hooks', force: :cascade do |t|
+    t.string 'url'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_slack_hooks_on_user_id'
   end
 
   create_table "users", force: :cascade do |t|
@@ -91,14 +91,14 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "users_assigned_to_requests", force: :cascade do |t|
-    t.boolean "sudo"
-    t.integer "request_id"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  create_table 'users_assigned_to_requests', force: :cascade do |t|
+    t.boolean 'sudo'
+    t.integer 'request_id'
+    t.integer 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['request_id'], name: 'index_users_assigned_to_requests_on_request_id'
+    t.index ['user_id'], name: 'index_users_assigned_to_requests_on_user_id'
   end
 
 end
