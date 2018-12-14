@@ -15,7 +15,8 @@
         <td><%= User.human_attribute_name('ssh_key') %></td>
         <td>
           <% if @user.ssh_key? %>
-            <%= @user.ssh_key %>
+            <textarea type="text" class='form-control' rows='8' disabled><%= @user.ssh_key %>
+            </textarea>
           <% else %>
             <%= t('user.no_ssh_key') %>
           <% end %></td>
@@ -25,50 +26,9 @@
 </table><br>
 
 <% if @user == current_user %>
-  <%= link_to t('actions.edit'),
+  <%= link_to(fa_icon('edit', text: t('actions.edit')),
               edit_user_path(@user),
               class: 'btn btn-primary float-right',
-              id: 'editUserButton'
+              id: 'editUserButton')
   %>
-<% end %>
-
-<% if @user == current_user %>
-  <%= form_for @user do |f| %>
-    <div class="form-group">
-      <%= f.label :ssh_key %>
-      <%= f.text_area :ssh_key, class: 'form-control', disabled: true, rows: '8', id: 'sshKeyField' %>
-    </div>
-
-    <button
-      type="button"
-      class="btn btn-primary float-right"
-      id="editSshKey"
-    >
-      <% if @user.ssh_key? %>
-        <%= t('actions.edit') %>
-      <% else %>
-        <%= t('actions.add') %>
-      <% end %>
-    </button>
-
-    <div
-      id="saveButtons"
-      class="d-none"
-    >
-      <button
-        type="submit"
-        class="btn btn-primary float-right"
-        id="saveButton"
-      >
-        <%= t('actions.save') %>
-      </button>
-      <button
-        type="button"
-        class="btn btn-danger float-right mx-3"
-        id="cancelEditButton"
-      >
-        <%= t('actions.cancel') %>
-      </button>
-    </div>
-  <% end %>
 <% end %>
