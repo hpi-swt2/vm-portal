@@ -43,4 +43,15 @@ describe 'users/edit.html.erb', type: :feature do
     end
   end
 
+  context 'when the requested user is not the current user' do
+    let(:other_user) { FactoryBot.create :user }
+
+    before do
+      visit edit_user_path(other_user)
+    end
+
+    it 'redirects to the requested users page' do
+      expect(page).to have_current_path user_path(other_user)
+    end
+  end
 end
