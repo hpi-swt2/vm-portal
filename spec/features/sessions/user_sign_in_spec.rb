@@ -23,7 +23,7 @@ describe 'Sign In Page', type: :feature do
   it 'has an open id connect button' do
     expect(page).to have_link 'Sign in with HPI OpenID Connect'
   end
-  
+
   context 'with classic login' do
     it 'shows an error message if email is not found' do
       page.fill_in 'user[email]', with: 'login@email.com'
@@ -39,7 +39,6 @@ describe 'Sign In Page', type: :feature do
       expect(page).to have_text 'Invalid password.'
     end
 
-
     it 'performs a successful login' do
       page.fill_in 'user[email]', with: @user.email
       page.fill_in 'user[password]', with: @user.password
@@ -53,21 +52,19 @@ describe 'Sign In Page', type: :feature do
     context 'with valid credentials' do
       before do
         OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
-          {
               provider: 'hpi',
               uid: '123545',
               info: {
-                  first_name: 'Max',
-                  last_name: 'Mustermann',
-                  email: 'max.mustermann@student.hpi.de'
+                first_name: 'Max',
+                last_name: 'Mustermann',
+                email: 'max.mustermann@student.hpi.de'
               }
-          })
+        )
       end
 
       it 'performs a successful login' do
         page.click_link 'Sign in with HPI OpenID Connect'
         expect(page).to have_text('Logout')
-        #expect(page).to have_text 'Signed in successfully.'
         expect(page).to have_text 'Successfully authenticated'
         expect(page).to have_css('.alert-success')
       end
