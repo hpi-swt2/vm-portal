@@ -24,7 +24,7 @@ class RequestTemplatesController < ApplicationController
 
     respond_to do |format|
       if @request_template.save
-        respond(format, 'Request template was successfully created.')
+        respond format, 'Request template was successfully created.'
       else
         format.html { render :new }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -37,7 +37,7 @@ class RequestTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @request_template.update(request_template_params)
-        respond(format, 'Request template was successfully updated.')
+        respond format, 'Request template was successfully updated.'
       else
         format.html { render :edit }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -50,7 +50,7 @@ class RequestTemplatesController < ApplicationController
   def destroy
     @request_template.destroy
     respond_to do |format|
-      respond(format, 'Request template was successfully destroyed.')
+      respond format, 'Request template was successfully destroyed.'
     end
   end
 
