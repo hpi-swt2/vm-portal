@@ -27,7 +27,7 @@ class SlackController < ApplicationController
 
     begin
       answer = Net::HTTP.post_form(URI.parse('https://slack.com/api/oauth.access'), post_params)
-      return JSON.parse(answer.body)
+      return JSON.parse answer.body
     rescue StandardError
       return { 'error' => 'Could not reach slack' }
     end
@@ -38,11 +38,13 @@ class SlackController < ApplicationController
   end
 
   def slack_answered(answer)
-    if check_slack_answer(answer)
+    if check_slack_answer answer
       current_user.slack_hooks.create url: answer['incoming_webhook']['url']
-    else
+    elsif answer && answer['error']
       @error_message = 'Error while finishing the authentication: ' + answer['error'] + '\n'
       @error_message += 'Please inform your system administrator if this error occurs multiple times'
+    else
+      @error_message = 'An unknown error occured, please try again'
     end
   end
 
@@ -51,8 +53,7 @@ class SlackController < ApplicationController
     if !request || !parsed_params[:code]
       @error_message = 'Invalid request, please try authenticating slack again'
     else
-      answer = authenticate_request parsed_params[:code]
-      slack_answered(answer)
+      slack_answered authenticate_request parsed_params[:code]
     end
   end
 
