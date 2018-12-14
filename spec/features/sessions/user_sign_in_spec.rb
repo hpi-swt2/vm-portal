@@ -60,7 +60,7 @@ describe 'Sign In Page', type: :feature do
     context 'with valid credentials' do
       before do
         OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
-              provider: 'hpi',
+                provider: 'hpi',
               uid: '123545',
               info: {
                 first_name: 'Max',
