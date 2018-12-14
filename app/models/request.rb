@@ -25,4 +25,8 @@ class Request < ApplicationRecord
   def accept!
     self.status = 'accepted'
   end
+
+  def sudo_users
+    users_assigned_to_requests.select(&:sudo)
+  end
 end

@@ -39,7 +39,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-    save_sudo_rights(@request)
+    assign_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
@@ -101,11 +101,13 @@ class RequestsController < ApplicationController
 
   private
 
-  def save_sudo_rights(request)
-    sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
+  def assign_sudo_rights(request)
+    sudo_users_for_request = request.users_assigned_to_requests.select do |assignment|
+      request_params[:sudo_user_ids].include?(assignment.user_id.to_s)
+    end
 
-    sudo_users_for_request.each do |association|
-      association.sudo = true
+    sudo_users_for_request.each do |assignment|
+      assignment.sudo = true
     end
   end
 
