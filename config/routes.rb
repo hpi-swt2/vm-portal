@@ -20,6 +20,6 @@ Rails.application.routes.draw do
   get 'slack/auth' => 'slack#update', as: :update_slack
 
   devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }, path: 'users'
-  resources :vms, :hosts
+  resources :vms, :hosts, :servers
   resources :users, only: %i[show index]
 end
