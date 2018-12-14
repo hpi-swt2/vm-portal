@@ -15,26 +15,8 @@ describe 'users/show.html.erb', type: :feature do
   context 'when the user has a ssh key' do
 
     it 'shows the user ssh-key' do
-      expect(page).to have(user.ssh_key)
+      expect(page).to have_content(user.ssh_key)
     end
-
   end
 
-  # context 'when the user has no ssh key' do
-  #   before do
-  #     @user = FactoryBot.create :user, ssh_key: ''
-  #     visit user_path(@user)
-  #   end
-  #
-  #   context 'when clicking the add button' do
-  #     before do
-  #       p page
-  #       page.find_by_id('editSshKey').click
-  #     end
-  #
-  #     it 'works' do
-  #       false
-  #     end
-  #   end
-  # end
 end
