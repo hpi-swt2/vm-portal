@@ -76,7 +76,8 @@ class SlackController < ApplicationController
     if !request || !parsed_params[:code]
       @error_message = 'Invalid request, please try authenticating slack again'
     else
-      slack_answered authenticate_request parsed_params[:code]
+      answer = authenticate_request parsed_params[:code]
+      slack_answered answer
     end
   end
 
