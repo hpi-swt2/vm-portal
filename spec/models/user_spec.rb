@@ -11,21 +11,21 @@ RSpec.describe User, type: :model do
   it 'can be a user' do
     user = FactoryBot.create(:user, role: :user)
     expect(user).to be_user
-    expect(user).not_to be_wimi
+    expect(user).not_to be_employee
     expect(user).not_to be_admin
   end
 
-  it 'can be a wimi' do
-    user = FactoryBot.create(:user, role: :wimi)
+  it 'can be a employee' do
+    user = FactoryBot.create(:user, role: :employee)
     expect(user).not_to be_user
-    expect(user).to be_wimi
+    expect(user).to be_employee
     expect(user).not_to be_admin
   end
 
   it 'can be an admin' do
     user = FactoryBot.create(:user, role: :admin)
     expect(user).not_to be_user
-    expect(user).not_to be_wimi
+    expect(user).not_to be_employee
     expect(user).to be_admin
   end
 

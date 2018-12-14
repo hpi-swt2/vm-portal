@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'operating_system selection for request', type: :feature do
   before do
-    sign_in FactoryBot.create :user, role: :wimi
+    sign_in FactoryBot.create :user, role: :employee
   end
 
   it 'has a selection of operating_systems' do
