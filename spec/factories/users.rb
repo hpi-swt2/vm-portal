@@ -13,4 +13,8 @@ FactoryBot.define do
     last_name { 'Mustermann' }
     ssh_key { SSHKey.generate.ssh_public_key }
   end
+
+  factory :admin, parent: :user do
+    role { :admin }
+  end
 end

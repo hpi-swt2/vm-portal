@@ -4,8 +4,11 @@ require 'rails_helper'
 
 RSpec.describe 'users/show.html.erb', type: :view do
   let(:user) { FactoryBot.create :user }
+  let(:current_user) { FactoryBot.create :user }
+
 
   before do
+    allow(view).to receive(:current_user).and_return(current_user)
     assign(:user, user)
     render
   end
@@ -57,6 +60,20 @@ RSpec.describe 'users/show.html.erb', type: :view do
 
     it 'does not show the edit-button' do
       expect(rendered).not_to have_link(id: 'editUserButton', href: edit_user_path(user))
+    end
+  end
+
+  context 'when the current user is an admin' do
+    let(:current_user) { FactoryBot.create :admin }
+
+    it 'shows the users role' do
+      expect(rendered).to include user.role
+    end
+  end
+
+  context 'when the current user is not an admin' do
+    it 'shows the users role' do
+      expect(rendered).not_to include user.role
     end
   end
 end
