@@ -3,21 +3,40 @@
 <table class="table">
   <tbody>
     <tr>
-      <td>Email</td>
-      <td><%= @user.email%></td>
+      <td><%= User.human_attribute_name('email') %></td>
+      <td><%= @user.email %></td>
     </tr>
     <tr>
       <td>Name</td>
-      <td><%= @user.name%></td>
+      <td><%= @user.name %></td>
     </tr>
+    <% if @user == current_user %>
+      <tr>
+        <td><%= User.human_attribute_name('ssh_key') %></td>
+        <td>
+          <% if @user.ssh_key? %>
+            <%= @user.ssh_key %>
+          <% else %>
+            <%= t('user.no_ssh_key') %>
+          <% end %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table><br>
+
+<% if @user == current_user %>
+  <%= link_to t('actions.edit'),
+              edit_user_path(@user),
+              class: 'btn btn-primary float-right',
+              id: 'editUserButton'
+  %>
+<% end %>
 
 <% if @user == current_user %>
   <%= form_for @user do |f| %>
     <div class="form-group">
       <%= f.label :ssh_key %>
-      <%= f.text_area :ssh_key, class: 'form-control', rows: '8', disabled: true, id: 'sshKeyField' %>
+      <%= f.text_area :ssh_key, class: 'form-control', disabled: true, rows: '8', id: 'sshKeyField' %>
     </div>
 
     <button
@@ -53,4 +72,3 @@
     </div>
   <% end %>
 <% end %>
-
