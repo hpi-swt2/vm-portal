@@ -25,34 +25,44 @@ describe 'Sign In Page', type: :feature do
   end
 
   context 'with classic login' do
-    it 'shows an error message if email is not found' do
-      page.fill_in 'user[email]', with: 'login@email.com'
-      page.fill_in 'user[password]', with: @user.password
-      page.find('input[type=submit]').click
-      expect(page).to have_text 'This user account does not exist.'
+    context 'with invalid credentials' do
+      context 'email is not registered' do
+        it 'shows an error message' do
+          page.fill_in 'user[email]', with: 'login@email.com'
+          page.fill_in 'user[password]', with: @user.password
+          page.find('input[type=submit]').click
+          expect(page).to have_text 'This user account does not exist.'
+        end
+      end
+
+      context 'password is incorrect' do
+        it 'shows an error message' do
+          page.fill_in 'user[email]', with: @user.email
+          page.fill_in 'user[password]', with: 'secret'
+          page.find('input[type=submit]').click
+          expect(page).to have_text 'Invalid password.'
+        end
+      end
     end
 
-    it 'shows an error message if password is incorrect' do
-      page.fill_in 'user[email]', with: @user.email
-      page.fill_in 'user[password]', with: 'secret'
-      page.find('input[type=submit]').click
-      expect(page).to have_text 'Invalid password.'
-    end
+    context 'with valid credentials' do
+      context 'successful login' do
+        before do
+          page.fill_in 'user[email]', with: @user.email
+          page.fill_in 'user[password]', with: @user.password
+          page.find('input[type=submit]').click
+        end
 
-    it 'performs a successful login' do
-      page.fill_in 'user[email]', with: @user.email
-      page.fill_in 'user[password]', with: @user.password
-      page.find('input[type=submit]').click
-      expect(page).to have_text('Logout')
-      expect(page).not_to have_text('Login')
-    end
+        it 'Login button is now Logout' do
+          expect(page).to have_text('Logout')
+          expect(page).not_to have_text('Login')
+        end
 
-    it 'shows a success flash Message after a successful login' do
-      page.fill_in 'user[email]', with: @user.email
-      page.fill_in 'user[password]', with: @user.password
-      page.find('input[type=submit]').click
-      expect(page).to have_text 'Signed in successfully.'
-      expect(page).to have_css('.alert-success')
+        it 'shows a success flash Message ' do
+          expect(page).to have_text 'Signed in successfully.'
+          expect(page).to have_css('.alert-success')
+        end
+      end
     end
   end
 
@@ -70,15 +80,20 @@ describe 'Sign In Page', type: :feature do
         )
       end
 
-      it 'performs a successful login' do
-        page.click_link 'Sign in with HPI OpenID Connect'
-        expect(page).to have_text('Logout')
-      end
+      context 'Successful login' do
+        before do
+          page.click_link 'Sign in with HPI OpenID Connect'
+        end
 
-      it 'shows a Success Flash message after successful login' do
-        page.click_link 'Sign in with HPI OpenID Connect'
-        expect(page).to have_text 'Successfully authenticated'
-        expect(page).to have_css('.alert-success')
+        it 'Login button is now Logout' do
+          expect(page).to have_text('Logout')
+          expect(page).not_to have_text('Login')
+        end
+
+        it 'shows a Success Flash message after successful login' do
+          expect(page).to have_text 'Successfully authenticated'
+          expect(page).to have_css('.alert-success')
+        end
       end
     end
 
@@ -87,16 +102,20 @@ describe 'Sign In Page', type: :feature do
         OmniAuth.config.mock_auth[:hpi] = :invalid_credentials
       end
 
-      it 'does not perform a successful login' do
-        page.click_link 'Sign in with HPI OpenID Connect'
-        expect(page).to_not have_text('Logout')
-        expect(page).to have_text('Login')
-      end
+      context 'unsuccessful login' do
+        before do
+          page.click_link 'Sign in with HPI OpenID Connect'
+        end
 
-      it 'shows Danger Flash Message after not successful login' do
-        page.click_link 'Sign in with HPI OpenID Connect'
-        expect(page).to have_text('Could not authenticate')
-        expect(page).to have_css('.alert-danger')
+        it 'Login button still there and no Logout' do
+          expect(page).to_not have_text('Logout')
+          expect(page).to have_text('Login')
+        end
+
+        it 'shows Danger Flash Message' do
+          expect(page).to have_text('Could not authenticate')
+          expect(page).to have_css('.alert-danger')
+        end
       end
     end
   end
