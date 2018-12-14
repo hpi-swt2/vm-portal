@@ -38,3 +38,6 @@
 coverage
 
 .DS_Store
+
+# Ignore locks
+.lock*
