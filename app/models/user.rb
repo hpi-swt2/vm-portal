@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :requests, through: :users_assigned_to_requests
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validate :valid_ssh_key
 
   # slack integration
   has_many :slack_auth_requests, dependent: :destroy
@@ -29,12 +30,24 @@ class User < ApplicationRecord
     end
   end
 
+  after_initialize :set_default_role, if: :new_record?
+
+  def ssh_key?
+    ssh_key && ssh_key.length.positive?
   def sshkey?
     sshkey && sshkey.length > 0
   end
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def valid_ssh_key
+    errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
+  end
+
+  def valid_ssh_key?
+    !ssh_key? || SSHKey.valid_ssh_public_key?(ssh_key)
   end
 
   def self.from_omniauth(auth)

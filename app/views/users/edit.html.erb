@@ -1,3 +1,15 @@
+<% if @user.errors.any? %>
+  <div id="errors">
+    <% @user.errors.messages.values.each do |messages| %>
+      <% messages.each do |message| %>
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
 <h1>User profile</h1><br>
 
 <%= form_for @user do |f| %>
@@ -20,11 +32,12 @@
     </tbody>
   </table><br>
 
-  <%= link_to(fa_icon('check', text: t('actions.save')),
-              user_path(@user),
-              class: 'btn btn-primary float-right',
-              id: 'saveUserButton')
-  %>
+  <button type='submit',
+  class='btn btn-primary float-right',
+  id='saveUserButton'>
+    <i class="fa fa-check"></i>
+    <%= t('actions.save') %>
+  </button>
 
   <%= link_to(fa_icon('close', text: t('actions.cancel')),
               user_path(@user),
