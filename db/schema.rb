@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "request_templates", force: :cascade do |t|
+    t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "operating_system"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+  end
+
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"

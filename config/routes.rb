@@ -4,6 +4,7 @@
 Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
   patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
+  resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests'
   resources :notifications, only: %i[index new create destroy] do
     member do
