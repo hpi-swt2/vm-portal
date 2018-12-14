@@ -11,16 +11,22 @@ Rails.application.routes.draw do
       get :mark_as_read
     end
   end
+
   get '/dashboard' => 'dashboard#index', as: :dashboard
   root to: 'landing#index'
-  # root to: redirect('/vms')
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
 
-  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }, path: 'users'
+  devise_for :users,
+             path: 'users',
+             controllers: {
+               registrations: 'users/registrations',
+               omniauth_callbacks: 'users/omniauth_callbacks'
+             }
+
   resources :vms, :hosts
   resources :users, only: %i[show index]
 end
