@@ -24,8 +24,7 @@ class RequestTemplatesController < ApplicationController
 
     respond_to do |format|
       if @request_template.save
-        format.html { redirect_to request_templates_path, notice: 'Request template was successfully created.' }
-        format.json { head :no_content }
+        respond(format, 'Request template was successfully created.')
       else
         format.html { render :new }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -38,8 +37,7 @@ class RequestTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @request_template.update(request_template_params)
-        format.html { redirect_to request_templates_path, notice: 'Request template was successfully updated.' }
-        format.json { head :no_content }
+        respond(format, 'Request template was successfully updated.')
       else
         format.html { render :edit }
         format.json { render json: @request_template.errors, status: :unprocessable_entity }
@@ -52,12 +50,16 @@ class RequestTemplatesController < ApplicationController
   def destroy
     @request_template.destroy
     respond_to do |format|
-      format.html { redirect_to request_templates_path, notice: 'Request template was successfully destroyed.' }
-      format.json { head :no_content }
+      respond(format, 'Request template was successfully destroyed.')
     end
   end
 
   private
+
+  def respond(format, notice)
+    format.html { redirect_to request_templates_path, notice: notice }
+    format.json { head :no_content }
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_request_template
