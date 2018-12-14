@@ -17,5 +17,4 @@ describe 'users/show.html.erb', type: :feature do
       expect(page).to have_content(user.ssh_key)
     end
   end
-
 end
