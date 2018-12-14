@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field form-group">
-    <%= form.label :name %>
+    <%= form.label 'Template name' %>
     <%= form.text_field :name, class: 'form-control' %>
   </div>
 
@@ -33,7 +33,7 @@
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options %>
+    <%= form.select :operating_system, operating_system_options, {}, {class: 'form-control'}%>
   </div>
 
   <div class="actions">
