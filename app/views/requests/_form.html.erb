@@ -39,14 +39,17 @@
                                                        :email),
                     {},
                     { :multiple => true, :class => "selecttwo", :data => { :placeholder => 'choose wisely' } } %>
+  </div>
 
-  <p>Users with sudo rights:</p>
-  <%= form.select 'sudo_user_ids',
+  <div>
+    <p>Users with sudo rights:</p>
+    <%= form.select 'sudo_user_ids',
                     options_from_collection_for_select(User.all,
                                                      :id,
                                                      :email),
                     {},
                     { :multiple => true, :class => "selecttwo", :data => { :placeholder => 'choose more wisely' } } %>
+  </div>
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
