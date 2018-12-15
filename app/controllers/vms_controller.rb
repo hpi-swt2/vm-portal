@@ -25,6 +25,7 @@ class VmsController < ApplicationController
 
   def show
     @vm = VmApi.instance.get_vm(params[:id])
+    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
   # This controller doesn't use strong parameters

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faker'
+require 'sshkey'
 
 FactoryBot.define do
   factory :user do
@@ -10,5 +11,6 @@ FactoryBot.define do
     password_confirmation { password }
     first_name { 'Max' }
     last_name { 'Mustermann' }
+    ssh_key { SSHKey.generate.ssh_public_key }
   end
 end

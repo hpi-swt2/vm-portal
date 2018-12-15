@@ -17,6 +17,7 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require bootstrap
+//= require doughnut_chart
 //= require_tree .
 //= require select2
 
