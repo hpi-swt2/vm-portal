@@ -8,11 +8,12 @@ class User < ApplicationRecord
 
   after_create :set_user_id
   after_initialize :set_default_role, if: :new_record?
+  
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: %i[hpi]
-    :trackable
+         :trackable
   enum role: %i[user wimi admin]
 
   has_many :users_assigned_to_requests
