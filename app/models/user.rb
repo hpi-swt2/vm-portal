@@ -12,7 +12,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: %i[hpi]
+         :omniauthable, omniauth_providers: %i[hpi],
          :trackable
   enum role: %i[user wimi admin]
 
