@@ -28,5 +28,7 @@ Rails.application.routes.draw do
              }
 
   resources :vms, :hosts
-  resources :users, only: %i[show index]
+  resources :users, only: %i[show index edit update]
+
+  root 'landing#index'
 end
