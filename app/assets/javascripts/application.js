@@ -18,3 +18,8 @@
 //= require bootstrap-sprockets
 //= require bootstrap
 //= require_tree .
+//= require select2
+
+$(function($){
+	$('.selecttwo').select2();
+});
