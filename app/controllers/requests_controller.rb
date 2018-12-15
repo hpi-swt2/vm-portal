@@ -31,7 +31,11 @@ class RequestsController < ApplicationController
 
   def successfully_saved(format, request)
     notify_users("New VM request:\n" + request.description_text)
-    format.html { redirect_to @request, notice: 'Request was successfully created.' }
+    if current_user.role == 'admin'
+      format.html { redirect_to @request, notice: 'Request was successfully created.' }
+    else
+      format.html { redirect_to requests_url, notice: 'Request was successfully created.' }
+    end
     format.json { render :show, status: :created, location: request }
   end
 
