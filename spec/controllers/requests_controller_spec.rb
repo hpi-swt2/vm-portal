@@ -99,9 +99,9 @@ RSpec.describe RequestsController, type: :controller do
         end.to change(Request, :count).by(1)
       end
 
-      it 'redirects to the created request' do
+      it 'redirects to the request overview if user is not an admin' do
         post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(Request.last)
+        expect(response).to redirect_to(requests_url)
       end
     end
 
