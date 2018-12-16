@@ -4,8 +4,8 @@
 //= require select2
 
 div {
-  &.field, &.actions {
-    margin-bottom: 10px;
+  &.field {
+    margin-bottom: 20px;
   }
 }
 
@@ -22,14 +22,18 @@ label {
   word-wrap: break-word;
 }
 
-.test{
-  width: 30%;
-}
-
 h1{
   margin-bottom: 1em;
 }
 
-.selecttwo{
-	width: 300px;
-}
+/* Each item in dropdown list */
+.select2-results {  }
+
+/* Higlighted (hover) item in dropdown list */
+.select2-results__option--highlighted {  }
+
+/* Selected option in dropdown list */
+.select2-results__option[aria-selected=true] {  }
+
+/* Selected items on top */
+.select2-selection__choice { background-color: #3afff1 !important; }
