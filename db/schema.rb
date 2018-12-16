@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_09_184959) do
+ActiveRecord::Schema.define(version: 2018_12_16_113244) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -83,11 +83,11 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
