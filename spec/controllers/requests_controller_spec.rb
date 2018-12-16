@@ -101,7 +101,7 @@ RSpec.describe RequestsController, type: :controller do
 
       it 'redirects to the request overview if user is not an admin' do
         post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(requests_url)
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 
