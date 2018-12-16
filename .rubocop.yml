@@ -1,6 +1,10 @@
 inherit_from: .rubocop_todo.yml
 require: rubocop-rspec
 
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+
 Metrics/BlockLength:
   Exclude:
   - 'Rakefile'

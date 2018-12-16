@@ -1,9 +1,11 @@
 // Place all the styles related to the Requests controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+//= require select2
+
 div {
-  &.field, &.actions {
-    margin-bottom: 10px;
+  &.field {
+    margin-bottom: 20px;
   }
 }
 
@@ -15,15 +17,23 @@ label {
   padding-bottom: 5em;
 }
 
-.table{
+.table-fixed-columns{
   table-layout: fixed;
   word-wrap: break-word;
-}
-
-.test{
-  width: 30%;
 }
 
 h1{
   margin-bottom: 1em;
 }
+
+/* Each item in dropdown list */
+.select2-results {  }
+
+/* Higlighted (hover) item in dropdown list */
+.select2-results__option--highlighted {  }
+
+/* Selected option in dropdown list */
+.select2-results__option[aria-selected=true] {  }
+
+/* Selected items on top */
+.select2-selection__choice { background-color: #3afff1 !important; }
