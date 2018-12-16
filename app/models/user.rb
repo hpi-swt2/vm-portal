@@ -5,7 +5,6 @@ require 'sshkey'
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  :trackable
 
   after_create :set_user_id
   after_initialize :set_default_role, if: :new_record?
@@ -13,7 +12,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: %i[hpi]
-
+  :trackable
   enum role: %i[user wimi admin]
 
   has_many :users_assigned_to_requests
