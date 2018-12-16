@@ -108,7 +108,7 @@ describe 'Sign In Page', type: :feature do
         end
 
         it 'Login button still there and no Logout' do
-          expect(page).to_not have_text('Logout')
+          expect(page).not_to have_text('Logout')
           expect(page).to have_text('Login')
         end
 

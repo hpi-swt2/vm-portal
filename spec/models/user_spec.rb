@@ -51,23 +51,23 @@ RSpec.describe User, type: :model do
     end
 
     context 'when the user does not exist' do
-      it 'should create a new user' do
-        expect{user}.to change(User, :count).by(1)
+      it 'creates a new user' do
+        expect { user }.to change(User, :count).by(1)
       end
 
-      it 'should persist the new user' do
-        expect(user.persisted?).to be_truthy
+      it 'persists the new user' do
+        expect(user).to be_persisted
       end
 
-      it 'should set the users first name' do
+      it 'sets the users first name' do
         expect(user.first_name).to eq('First')
       end
 
-      it 'should set the users last name' do
+      it 'sets the users last name' do
         expect(user.last_name).to eq('Last')
       end
 
-      it 'should set the users email' do
+      it 'sets the users email' do
         expect(user.email).to eq(mail)
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe User, type: :model do
       let!(:existing_user) { FactoryBot.create :user, uid: 1, provider: 'testprovider', email: 'oldemail@mail.com' }
 
       it 'does not create a new user' do
-        expect{user}.to change(User, :count).by(0)
+        expect { user }.to change(User, :count).by(0)
       end
 
       it 'returns the existing user' do
