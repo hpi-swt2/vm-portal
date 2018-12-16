@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'requests/new', type: :view do
   before do
+    @user = FactoryBot.create(:user)
     assign(:request, Request.new(
                        name: 'MyVM',
                        cpu_cores: 2,
@@ -31,5 +32,8 @@ RSpec.describe 'requests/new', type: :view do
 
       assert_select 'textarea[name=?]', 'request[comment]'
     end
+
+    expect(rendered).to match(@user.email)
+
   end
 end

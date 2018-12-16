@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'requests/show', type: :view do
   before do
+    @user = FactoryBot.create(:user)
     @request = assign(:request, Request.create!(
                                   name: 'MyVM',
                                   cpu_cores: 2,
@@ -11,7 +12,9 @@ RSpec.describe 'requests/show', type: :view do
                                   storage_mb: 2000,
                                   operating_system: 'MyOS',
                                   comment: 'Comment',
-                                  status: 'pending'
+                                  status: 'pending',
+                                  user_ids: [@user.id],
+                                  sudo_user_ids: [@user.id]
                                 ))
   end
 
@@ -23,5 +26,6 @@ RSpec.describe 'requests/show', type: :view do
     expect(rendered).to match(/2000/)
     expect(rendered).to match(/Comment/)
     expect(rendered).to match(/pending/)
+    expect(rendered).to match(@user.email)
   end
 end

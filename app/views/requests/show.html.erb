@@ -54,12 +54,10 @@
 <p>
   <strong>Users with sudo rights:</strong>
   <ul>
-    <% @request.users_assigned_to_requests.each do |userAtRequest| %>
-      <% if userAtRequest.sudo %>
+    <% @request.sudo_users.each do |userAtRequest| %>
       <p>
         <li><%= userAtRequest.user.email %></li>
       </p>
-      <% end %>
   <% end %>
   </ul>
 </p>
