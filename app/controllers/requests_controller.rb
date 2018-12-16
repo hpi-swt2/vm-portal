@@ -34,7 +34,7 @@ class RequestsController < ApplicationController
     if current_user.role == 'admin'
       format.html { redirect_to @request, notice: 'Request was successfully created.' }
     else
-      format.html { redirect_to requests_url, notice: 'Request was successfully created.' }
+      format.html { redirect_to dashboard_url, notice: 'Request was successfully created.' }
     end
     format.json { render :show, status: :created, location: request }
   end
