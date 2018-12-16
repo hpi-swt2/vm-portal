@@ -12,12 +12,12 @@
   <% end %>
 
   <div class="field form-group">
-    <%= form.label :name %>
+    <%= form.label :name, "VM Name" %>
     <%= form.text_field :name, class: 'form-control' %>
   </div>
 
   <div class="field">
-    <%= form.label :cpu_cores, "CPU cores" %>
+    <%= form.label :cpu_cores, "CPU-Cores" %>
     <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
   </div>
 
@@ -54,6 +54,16 @@
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
     <%= form.select :operating_system, operating_system_options %>
+  </div>
+
+  <div class="field">
+    <%= form.label :port, "Port" %>
+    <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :application_name, "Application Name" %>
+    <%= form.text_field :application_name, class: 'form-control' %>
   </div>
 
   <div class="field">
