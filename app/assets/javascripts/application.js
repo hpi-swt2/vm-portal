@@ -19,4 +19,3 @@
 //= require bootstrap
 //= require doughnut_chart
 //= require_tree .
-

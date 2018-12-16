@@ -60,4 +60,21 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # The first user id
+  config.start_user_id = 4000
+
+  # Use test mode so not every developer has to register his own openid client
+  OmniAuth.config.test_mode = true
+
+  OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
+      {
+          provider: 'hpi',
+          uid: '123545',
+          info: {
+              first_name: 'Max',
+              last_name: 'Mustermann',
+              email: 'max.mustermann@student.hpi.de'
+          }
+      })
 end

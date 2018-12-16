@@ -1,0 +1,8 @@
+<div>
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= translate_flash_key(key) %>">
+      <a href="#" data-dismiss="alert" class="close">×</a>
+      <%= content_tag :div, value %>
+    </div>
+  <% end %>
+</div>
