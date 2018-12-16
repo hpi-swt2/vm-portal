@@ -11,7 +11,7 @@ RSpec.describe 'requests/show', type: :view do
                                   storage_mb: 2000,
                                   operating_system: 'MyOS',
                                   port: '4000',
-                                  reachability_name: 'MyName',
+                                  application_name: 'MyName',
                                   comment: 'Comment',
                                   status: 'pending'
                                 ))

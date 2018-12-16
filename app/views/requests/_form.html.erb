@@ -12,12 +12,12 @@
   <% end %>
 
   <div class="field form-group">
-    <%= form.label :name %>
+    <%= form.label :name, "VM Name" %>
     <%= form.text_field :name, class: 'form-control' %>
   </div>
 
   <div class="field">
-    <%= form.label :cpu_cores, "CPU cores" %>
+    <%= form.label :cpu_cores, "CPU-Cores" %>
     <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
   </div>
 
@@ -60,8 +60,8 @@
   </div>
 
   <div class="field">
-    <%= form.label :reachability_name, "Reachability Name" %>
-    <%= form.text_field :reachability_name, class: 'form-control' %>
+    <%= form.label :application_name, "Application Name" %>
+    <%= form.text_field :application_name, class: 'form-control' %>
   </div>
 
   <div class="field">
