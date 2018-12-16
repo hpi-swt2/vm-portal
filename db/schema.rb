@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 2018_12_16_113244) do
     t.integer "storage_mb"
     t.string "operating_system"
     t.integer "port"
-    t.string "application_name"
+    t.string "reachability_name"
     t.text "comment"
     t.text "rejection_information"
     t.integer "status", default: 0
