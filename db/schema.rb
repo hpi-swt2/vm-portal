@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_16_130550) do
+ActiveRecord::Schema.define(version: 2018_12_16_161526) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -44,13 +44,13 @@ ActiveRecord::Schema.define(version: 2018_12_16_130550) do
     t.integer "ram_mb"
     t.integer "storage_mb"
     t.string "operating_system"
-    t.string "application_name"
     t.text "comment"
     t.text "rejection_information"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "port"
+    t.string "application_name"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
