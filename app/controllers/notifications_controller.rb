@@ -23,7 +23,7 @@ class NotificationsController < ApplicationController
 
     respond_to do |format|
       if @notification.save
-        format.html { redirect_to notifications_path, notice: 'Notification was successfully created.' }
+        format.html { redirect_to notifications_path }
       else
         format.html { render :new }
       end
@@ -35,7 +35,7 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to notifications_url, notice: 'Notification was successfully destroyed.' }
+      format.html { redirect_to notifications_url }
       format.json { head :no_content }
     end
   end
