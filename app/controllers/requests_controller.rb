@@ -29,9 +29,17 @@ class RequestsController < ApplicationController
     end
   end
 
+  def redirect_according_to_role(format, role)
+    if role == 'admin'
+      format.html { redirect_to @request, notice: 'Request was successfully created.' }
+    else
+      format.html { redirect_to dashboard_url, notice: 'Request was successfully created.' }
+    end
+  end
+
   def successfully_saved(format, request)
     notify_users("New VM request:\n" + request.description_text)
-    format.html { redirect_to @request, notice: 'Request was successfully created.' }
+    redirect_according_to_role(format, current_user.role)
     format.json { render :show, status: :created, location: request }
   end
 
@@ -116,7 +124,7 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :comment,
-                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
+                                    :port, :application_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end

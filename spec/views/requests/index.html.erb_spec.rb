@@ -11,6 +11,8 @@ RSpec.describe 'requests/index', type: :view do
                ram_mb: 1000,
                storage_mb: 2000,
                operating_system: 'MyOS',
+               port: '4000',
+               application_name: 'MyName',
                comment: 'Comment',
                status: 'pending'
              ),
@@ -20,6 +22,8 @@ RSpec.describe 'requests/index', type: :view do
                ram_mb: 1000,
                storage_mb: 2000,
                operating_system: 'MyOS',
+               port: '4000',
+               application_name: 'MyName',
                comment: 'Comment',
                status: 'pending'
              )
@@ -33,6 +37,8 @@ RSpec.describe 'requests/index', type: :view do
     assert_select 'tr>td', text: 1000.to_s, count: 2
     assert_select 'tr>td', text: 2000.to_s, count: 2
     assert_select 'tr>td', text: 'MyOS'.to_s, count: 2
+    assert_select 'tr>td', text: 4000.to_s, count: 2
+    assert_select 'tr>td', text: 'MyName'.to_s, count: 2
     assert_select 'tr>td', text: 'Comment'.to_s, count: 2
     assert_select 'tr>td', text: 'pending'.to_s, count: 2
   end
