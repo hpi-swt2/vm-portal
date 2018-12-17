@@ -81,4 +81,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     render
     expect(rendered).to have_text('VMWare tools are not installed')
   end
+
+  it 'demands confirmation on shutdown' do
+    expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
+  end
 end
