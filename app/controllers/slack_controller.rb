@@ -61,7 +61,7 @@ class SlackController < ApplicationController
 
   def error_message_for(answer)
     if answer && answer['error']
-      error_message = 'Error while finishing the authentication: ' + answer['error'] + '\n'
+      error_message = 'Error while finishing the authentication: ' + answer['error'] + "\n"
       error_message + 'Please inform your system administrator if this error occurs multiple times'
     else
       'An unknown error occured, please try again'
