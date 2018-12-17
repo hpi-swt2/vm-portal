@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
