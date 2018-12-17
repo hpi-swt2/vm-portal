@@ -11,8 +11,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: %i[hpi]
-         :trackable
+         :trackable, :omniauthable, omniauth_providers: %i[hpi]
   enum role: %i[user employee admin]
 
   has_many :users_assigned_to_requests
