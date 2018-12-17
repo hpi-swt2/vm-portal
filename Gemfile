@@ -52,6 +52,13 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
+# Provides different authentication strategies
+gem 'omniauth'
+gem 'omniauth_openid_connect'
+
+# Allow locks on database
+gem 'with_advisory_lock'
+
 # Mina for deployment
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
@@ -73,6 +80,11 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # over time, and ensure that all your new code is fully covered
 # https://coveralls.io/github/hpi-swt2/vm-portal
 gem 'coveralls', require: false
+
+# Report errors in production to central Errbit system
+# https://github.com/errbit/errbit
+# https://github.com/airbrake/airbrake
+gem 'airbrake', '~> 5.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -120,5 +132,4 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-# Allows dot-access of hashes
-gem 'hash_dot', '~> 2.4.1'
+gem 'sshkey', '~> 1.9'

@@ -7,5 +7,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-user = User.create(email: 'max@mustermann.de', password: '123456')
-UserProfile.create(first_name: 'Max', last_name: 'Mustermann', user: user)
+#
+
+require 'sshkey'
+
+User.create(email: 'user@user.de', password: '123456', first_name: 'Max', last_name: 'Mustermann', role: :user)
+User.create(email: 'admin@admin.de', password: '123456', first_name: 'Ad', last_name: 'Min', role: :admin, ssh_key: SSHKey.generate.ssh_public_key)
+User.create(email: 'wimi@wimi.de', password: '123456', first_name: 'Wissenschaftlicher', last_name: 'Mitarbeiter', role: :wimi)
+OperatingSystem.create([{ name: 'CentOS 7' }, { name: 'SLES 11 SP3' }, { name: 'Ubuntu 18.04' }])

@@ -1,101 +1,97 @@
-<h1>
-  Details for Virtual Machine "<%= @vm[:name] unless @vm.nil?%>"
-</h1>
+<% def seconds_to_units(seconds)
+  '%d days, %d hours, %d minutes, %d seconds' %
+    [24,60,60].reverse.inject([seconds]) {|result, unitsize|
+      result[0,0] = result.shift.divmod(unitsize)
+      result
+    }
+end %>
 
-<div class="container">
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-</div>
-
-<table class="table">
-    <tbody>
-    <tr>
-    <td>Boot time:</td>
-    <td><%= @vm[:boot_time] unless @vm.nil?%></td>
-    </tr>
-
-    <tr>
-    <td>State:</td>
-    <td><%= @vm[:summary].runtime.powerState unless @vm.nil?%></td>
+<table class = "table table-borderless">
+  <tr>
+    <td><h1 class="mb-0"><%= @vm[:name] unless @vm.nil? %></h1></td>
+    <% os = @vm[:summary]&.config&.guestFullName %>
+    <td colspan="2" class="text-right align-bottom"><h2 class="mb-0"><%= "(#{os})" unless os.nil? || os.downcase.include?('other')%></h2></td>
   </tr>
-
-    <tr>
-    <td>Heartbeat status:</td>
-    <td><%= @vm[:guestHeartbeatStatus] unless @vm.nil?%> </td>
-    </tr>
-
-      <tr>
-    <td>Host:</td>
-    <td>
-    <%= link_to @vm[:host], controller: "server", action: "show", id: @vm[:host] unless @vm.nil?%>
+  <tr>
+      <% up_time = seconds_to_units(Time.current - @vm[:boot_time]) unless @vm[:boot_time].nil? %>
+  
+      <td class="lead align-middle" colspan="2">
+        <div class="<%= @vm[:state]? 'bg-success' : 'bg-danger' %> text-white float-left pb-1 px-4 mr-2">
+          <%= @vm[:state]? 'online' : 'offline' %>
+        </div>
+        <%= " for #{up_time}" if @vm[:state] %>
     </td>
-
-    <%
-      if @vm.nil?
-        space_usage_percentage = ''
-        committed_mb = ''
-        total_mb = ''
-      else
-        committed = @vm[:summary].storage.committed
-        uncommitted = @vm[:summary].storage.uncommitted
-        committed_mb = committed / (1024 ** 2)
-        uncommitted_mb = uncommitted / (1024 ** 2)
-        total_mb = committed_mb + uncommitted_mb
-        total = committed + uncommitted
-        space_usage_percentage = 0
-        if total != 0
-          space_usage_percentage = (committed / total.to_f * 100).round()
-        end
-      end
-    %>
-    <tr>
-    <td>Space Usage:</td>
-    <td><%= space_usage_percentage %> % (<%= committed_mb %> / <%= total_mb %> MB) </td>
-    </tr>
-    
-  <tr>
-    <td>OS:</td>
-    <td><%= @vm[:summary].config.guestId unless @vm.nil? %> (<%= @vm[:summary].config.guestFullName unless @vm.nil?%>)</td>
+    <td class="text-right" style="width: 20%">
+    <div class="dropdown border text-right">
+        <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+          Manage
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <% if @vm[:state] %>
+            <a class="dropdown-item" href="#">Suspend</a>
+            <a class="dropdown-item" href="#">Shutdown Guest OS</a>
+            <a class="dropdown-item" href="#">Restart Guest OS</a>
+            <a class="dropdown-item" href="#">Reset</a>
+            <a class="dropdown-item" href="#">Power Off</a>
+          <% else %>
+            <a class="dropdown-item" href="#">Power On</a>
+          <% end %>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Delete</a>
+        </div>
+        </div>
+    </td>
   </tr>
+</table>
+<% 
+  committed = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
+  uncommitted = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
+  hdd_usage = committed
+  hdd_allocation = (committed + uncommitted).round(2)
+  cpu_usage = @vm[:summary].quickStats&.overallCpuUsage || 0
+  cpu_allocation = @vm[:summary].config&.cpuReservation || 0
+  ram_usage = (@vm[:summary].quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
+  ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
+  cpu_cores = @vm[:summary].config&.numCpu  || 1
 
-  </tr>
-    <tr>
-    <td>IP address:</td>
-    <td><%= @vm[:summary].guest.ipAddress unless @vm.nil?%></td>
-  </tr>
-  <%
-    if @vm.nil?
-      cpu_usage_percentage = ''
-      memory_usage_percentage = ''
-      memory_usage = ''
-      memory_allocation = ''
-    else
-      cpu_usage = @vm[:summary].quickStats.overallCpuUsage
-      cpu_allocation = @vm[:summary].config.cpuReservation
-      memory_usage = @vm[:summary].quickStats.guestMemoryUsage
-      memory_allocation = @vm[:summary].config.memoryReservation
-      cpu_usage_percentage = 0
-      memory_usage_percentage = 0
+  @values = {cpu_allocation: cpu_allocation, 
+             cpu_usage: cpu_usage, 
+             ram_allocation: ram_allocation, 
+             ram_usage: ram_usage, 
+             hdd_usage: hdd_usage, 
+             hdd_allocation: hdd_allocation, 
+             cpu_cores: cpu_cores } 
 
-      if cpu_allocation != 0
-        cpu_usage_percentage = (cpu_usage / cpu_allocation.to_f * 100).round()
-      end
-
-      if memory_allocation != 0
-        memory_usage_percentage = (memory_usage / memory_allocation.to_f * 100).round()
-      end
-    end
+  @hardware = {'IP Address' => @vm[:summary]&.guest&.ipAddress,
+               'Heartbeat Status' => @vm[:guestHeartbeatStatus] }           
   %>
-  <tr>
-    <td>CPU usage:</td>
-    <td><%= cpu_usage_percentage %> %</td>
-  </tr>
 
-    <tr>
-    <td>Memory usage:</td>
-    <td><%=  memory_usage_percentage%> % (<%= memory_usage %> / <%= memory_allocation %> MB)</td>
+<table class ="table table-borderless text-center">
+  <tr>
+    <td class="table-active">
+      <%= render 'templates/resource_allocation', values: @values %>
+    </td>
   </tr>
-    
-  </tbody>
+</table>
+
+<table class = "table table-borderless">
+  <tr class="lead">
+    <td>Host: <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %></td>
+    <td></td>
+    <td class="text-right">Project: Lorem Ipsum</td>
+  </tr>
+  <tr>
+    <td style="width: 49%" class="table-active">
+      <%= render 'templates/hardware_table', hardware: @hardware %>
+    </td>
+    <td style="width: 2%"></td>
+    <td class="table-active">
+      <table class="table table-borderless">
+        <tbody class="table-active">
+          <tr>
+            <th colspan="2"><h4 class="mb-0">Users</h4></th>
+          </tr>
+        </tbody>
+      </table>
+    </td>
 </table>

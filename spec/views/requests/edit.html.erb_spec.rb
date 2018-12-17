@@ -10,6 +10,8 @@ RSpec.describe 'requests/edit', type: :view do
                                   ram_mb: 1000,
                                   storage_mb: 1000,
                                   operating_system: 'MyOS',
+                                  port: '4000',
+                                  application_name: 'MyName',
                                   comment: 'Comment',
                                   status: 'pending'
                                 ))
@@ -29,7 +31,11 @@ RSpec.describe 'requests/edit', type: :view do
 
       assert_select 'select[name=?]', 'request[operating_system]'
 
-      assert_select 'input[name=?]', 'request[comment]'
+      assert_select 'input[name=?]', 'request[port]'
+
+      assert_select 'input[name=?]', 'request[application_name]'
+
+      assert_select 'textarea[name=?]', 'request[comment]'
     end
   end
 end

@@ -30,4 +30,16 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        ssh_key: "SSH-Key"
+  actions:
+    add: "Add"
+    cancel: "Cancel"
+    edit: "Edit"
+    save: "Save"
+  authorization:
+    unauthorized: "You do not have the necessary rights to perform this action."
+  user:
+    no_ssh_key: "No SSH-Key"
