@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'spec_helper'
-include Warden::Test::Helpers
-Warden.test_mode!
 
 describe 'Index page', type: :feature do
   context 'with notifications' do

@@ -51,7 +51,7 @@ class NotificationsController < ApplicationController
     end
   end
 
-  def has_any
+  def any?
     has_unread_notifications = Notification.where(user: current_user, read: false).any?
     respond_to do |format|
       msg = { has_unread_notifications: has_unread_notifications }
