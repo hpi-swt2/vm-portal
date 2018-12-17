@@ -26,7 +26,7 @@
               <td><%= vm.boot_time %></td>
               <td><%= button_to "Details",
                                 {controller: :vms, action: 'show', id: vm.name},
-                                method: :get, class: "btn btn-info" %></td>
+                                method: :get, class: "btn btn-success" %></td>
               <td><%= button_to "Delete",
                                 {controller: :vms, action: 'destroy', id: vm.name},
                                 method: :delete, class: "btn btn-danger" %></td>
