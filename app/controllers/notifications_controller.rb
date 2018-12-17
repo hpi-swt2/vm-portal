@@ -23,7 +23,7 @@ class NotificationsController < ApplicationController
 
     respond_to do |format|
       if @notification.save
-        format.html { redirect_to notifications_path}
+        format.html { redirect_to notifications_path }
       else
         format.html { render :new }
       end
