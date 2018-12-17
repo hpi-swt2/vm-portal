@@ -35,7 +35,7 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to notifications_url, notice: 'Notification was successfully destroyed.' }
+      format.html { redirect_to notifications_url }
       format.json { head :no_content }
     end
   end
@@ -48,14 +48,6 @@ class NotificationsController < ApplicationController
       else
         format.html { redirect_to notifications_path, alert: 'Something went wrong.' }
       end
-    end
-  end
-
-  def any?
-    has_unread_notifications = Notification.where(user: current_user, read: false).any?
-    respond_to do |format|
-      msg = { has_unread_notifications: has_unread_notifications }
-      format.json { render json: msg }
     end
   end
 
