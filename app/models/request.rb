@@ -7,7 +7,7 @@ class Request < ApplicationRecord
   attr_accessor :sudo_user_ids
 
   enum status: %i[pending accepted rejected]
-  validates :name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, presence: true
+  validates :name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { greater_than: 0, less_than: 65 }
   validates :ram_mb, numericality: { greater_than: 0, less_than: 257_000 }
   validates :storage_mb, numericality: { greater_than: 0, less_than: 1_000_000 }
@@ -26,7 +26,7 @@ class Request < ApplicationRecord
     self.status = 'accepted'
   end
 
-  def sudo_users
+  def sudo_user_assignments
     users_assigned_to_requests.select(&:sudo)
   end
 end

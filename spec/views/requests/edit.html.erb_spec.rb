@@ -12,6 +12,7 @@ RSpec.describe 'requests/edit', type: :view do
                                   operating_system: 'MyOS',
                                   port: '4000',
                                   application_name: 'MyName',
+                                  description: 'Description',
                                   comment: 'Comment',
                                   status: 'pending'
                                 ))
@@ -34,6 +35,8 @@ RSpec.describe 'requests/edit', type: :view do
       assert_select 'input[name=?]', 'request[port]'
 
       assert_select 'input[name=?]', 'request[application_name]'
+
+      assert_select 'textarea[name=?]', 'request[description]'
 
       assert_select 'textarea[name=?]', 'request[comment]'
     end

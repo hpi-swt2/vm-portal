@@ -13,6 +13,7 @@ RSpec.describe 'requests/index', type: :view do
                operating_system: 'MyOS',
                port: '4000',
                application_name: 'MyName',
+               description: 'Description',
                comment: 'Comment',
                status: 'pending'
              ),
@@ -24,6 +25,7 @@ RSpec.describe 'requests/index', type: :view do
                operating_system: 'MyOS',
                port: '4000',
                application_name: 'MyName',
+               description: 'Description',
                comment: 'Comment',
                status: 'pending'
              )
@@ -39,6 +41,7 @@ RSpec.describe 'requests/index', type: :view do
     assert_select 'tr>td', text: 'MyOS'.to_s, count: 2
     assert_select 'tr>td', text: 4000.to_s, count: 2
     assert_select 'tr>td', text: 'MyName'.to_s, count: 2
+    assert_select 'tr>td', text: 'Description'.to_s, count: 2
     assert_select 'tr>td', text: 'Comment'.to_s, count: 2
     assert_select 'tr>td', text: 'pending'.to_s, count: 2
   end

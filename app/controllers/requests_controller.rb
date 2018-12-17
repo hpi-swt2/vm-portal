@@ -39,11 +39,14 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-    assign_sudo_rights(@request)
+    #assign_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
-        successfully_saved(format, @request)
+        request_params[:sudo_user_ids].each do |id|
+          @request.users_assigned_to_requests.create(sudo: true, user_id: id)
+        end
+          successfully_saved(format, @request)
       else
         format.html { render :new }
         format.json { render json: @request.errors, status: :unprocessable_entity }
@@ -119,6 +122,6 @@ class RequestsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, 
-                                    :port, :application_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :port, :application_name, :description, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end

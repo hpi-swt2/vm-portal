@@ -39,6 +39,11 @@
     </tr>
 
     <tr>
+      <td><strong>Description:</strong></td>
+      <td class="col-md-4"><%= @request.description %></td>
+    </tr>
+
+    <tr>
       <td><strong>Comment:</strong></td>
       <td class="col-md-4"><%= @request.comment %></td>
     </tr>
@@ -51,24 +56,26 @@
 </table>
 
 <p>
-  <strong>Users:</strong>
+  <strong>Users with sudo rights:</strong>
   <ul>
-    <% @request.users.each do |user| %>
-  <p>
-    <li><%= user.email %></li>
-  </p>
+    <% @request.sudo_user_assignments.each do |assignment| %>
+      <p>
+        <li><%= assignment.user.email %></li>
+      </p>
   <% end %>
   </ul>
 </p>
 
 <p>
-  <strong>Users with sudo rights:</strong>
+  <strong>Users:</strong>
   <ul>
-    <% @request.sudo_users.each do |userAtRequest| %>
-      <p>
-        <li><%= userAtRequest.user.email %></li>
-      </p>
-  <% end %>
+    <% @request.users.each do |user| %>
+      <% if !@request.users_assigned_to_requests.where(sudo: true, user_id: user.id).exists? %>
+        <p>
+          <li><%= user.email %></li>
+        </p>
+      <% end %>
+    <% end %>
   </ul>
 </p>
 

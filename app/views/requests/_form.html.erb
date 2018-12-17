@@ -32,23 +32,23 @@
   </div>
 
   <div class="field">
-    <p>Assigned Users:</p>
-    <%= form.select 'user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email),
-                    {},
-                    { :multiple => true, :class => "selecttwo", :data => { :placeholder => 'choose wisely' }, :style => 'width: 50%' } %>
-  </div>
-
-  <div class="field">
     <p>Users with sudo rights:</p>
     <%= form.select 'sudo_user_ids',
                     options_from_collection_for_select(User.all,
                                                      :id,
                                                      :email),
                     {},
-                    { :multiple => true, :class => "selecttwo", :data => { :placeholder => 'choose more wisely' }, :style => 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
+  </div>
+
+  <div class="field">
+    <p>Assigned Users:</p>
+    <%= form.select 'user_ids',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email),
+                    {},
+                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose more wisely' }, style: 'width: 50%' } %>
   </div>
 
   <div class="field">
@@ -64,6 +64,11 @@
   <div class="field">
     <%= form.label :application_name, "Application Name" %>
     <%= form.text_field :application_name, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control' %>
   </div>
 
   <div class="field">

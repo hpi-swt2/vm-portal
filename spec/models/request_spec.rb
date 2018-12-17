@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Request, type: :model do
   let(:request) { FactoryBot.build :request }
 
+
   context 'when request is invalid' do
     it 'is invalid with no name' do
       request.name = ''
@@ -60,6 +61,11 @@ RSpec.describe Request, type: :model do
       request.storage_mb = 1_000_000
       expect(request).to be_invalid
     end
+
+    it 'is invalid with no description' do
+      request.description = nil
+      expect(request).to be_invalid
+    end
   end
 
   context 'when request is valid' do
@@ -71,5 +77,11 @@ RSpec.describe Request, type: :model do
   it 'changes status to accepted' do
     request.accept!
     expect(request.status).to eq('accepted')
+  end
+
+  it 'returns it sudo users correctly' do
+    user = FactoryBot.create(:user, role: :wimi)
+    assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
+    expect(request.sudo_user_assignments.include?(assignment)).to be true
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_09_184959) do
+ActiveRecord::Schema.define(version: 2018_12_17_204029) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -44,11 +44,14 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.integer "ram_mb"
     t.integer "storage_mb"
     t.string "operating_system"
+    t.integer "port"
+    t.string "application_name"
     t.text "comment"
     t.text "rejection_information"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -83,10 +86,10 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.string "ssh_key"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -97,8 +100,6 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end
