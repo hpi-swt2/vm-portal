@@ -47,6 +47,14 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <%= link_to(notifications_path, id: "header-notification-bell", class: "nav-link") do %>
+          <span class="fa-stack fa notification-bell">
+            <i class="fa fa-bell fa-stack-1x"></i>
+            <i id="notification-alert" class="fa fa-circle fa-inverse fa-stack-1x"></i>
+          </span>
+        <% end %>
+      </li>
       <% if user_signed_in? %>
         <li class="nav-item">
           <%= link_to(fa_icon('user', text: current_user.name), user_path(current_user), class: "nav-link") %>
