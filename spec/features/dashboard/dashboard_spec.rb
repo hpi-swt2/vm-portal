@@ -36,4 +36,41 @@ describe 'Dashboard', type: :feature do
     expect(page).to(have_text('Hosts'))
     skip('user is not yet connected to his hosts')
   end
+
+  context 'with notifications' do
+    before do
+      user = FactoryBot.create(:user)
+      sign_in(user)
+      @notification = FactoryBot.create(:notification, user: user)
+    end
+
+    it 'has notifications with title' do
+      visit dashboard_path
+      expect(page).to have_text(@notification.title)
+    end
+
+    it 'has notifications with messages' do
+      visit dashboard_path
+      expect(page).to have_text(@notification.message)
+    end
+
+    it 'does not redirect after marking notification as read' do
+      visit dashboard_path
+      find(:css, '.check.icon-link').click
+      expect(current_path).to eql(dashboard_path)
+    end
+
+    it 'does not redirect after deleting notification' do
+      visit dashboard_path
+      find(:css, '.delete.icon-link').click
+      expect(current_path).to eql(dashboard_path)
+    end
+  end
+
+  context 'without notifications' do
+    it 'informs about no notifications' do
+      visit dashboard_path
+      expect(page).to have_text('You don\'t have any notifications at the moment.')
+    end
+  end
 end
