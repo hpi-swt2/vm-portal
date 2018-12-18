@@ -12,6 +12,6 @@ class DashboardController < ApplicationController
   end
 
   def number_of_notifications
-    return 3
+    3
   end
 end
