@@ -35,7 +35,7 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to notifications_url }
+      format.html { redirect_back fallback_location: notifications_url }
       format.json { head :no_content }
     end
   end
@@ -44,9 +44,9 @@ class NotificationsController < ApplicationController
     @notification.read = true
     respond_to do |format|
       if @notification.save
-        format.html { redirect_to notifications_path }
+        format.html { redirect_back fallback_location: notifications_path }
       else
-        format.html { redirect_to notifications_path, alert: 'Something went wrong.' }
+        format.html { redirect_back fallback_location: notifications_path, alert: 'Something went wrong.' }
       end
     end
   end
