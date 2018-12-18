@@ -39,8 +39,10 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: 2000,
       operating_system: 'MyOS',
+      description: 'Description',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      sudo_user_ids: []
     }
   end
 
@@ -51,8 +53,10 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
+      description: '',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      sudo_user_ids: []
     }
   end
 

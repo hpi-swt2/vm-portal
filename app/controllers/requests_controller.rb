@@ -51,8 +51,10 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        request_params[:sudo_user_ids].each do |id|
-          @request.users_assigned_to_requests.create(sudo: true, user_id: id)
+        unless request_params[:sudo_user_ids].nil?
+          request_params[:sudo_user_ids].each do |id|
+            @request.users_assigned_to_requests.create(sudo: true, user_id: id)
+          end
         end
           successfully_saved(format, @request)
       else
