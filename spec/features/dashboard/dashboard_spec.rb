@@ -41,29 +41,34 @@ describe 'Dashboard', type: :feature do
     before do
       user = FactoryBot.create(:user)
       sign_in(user)
-      @notification = FactoryBot.create(:notification, user: user)
+      @notifications = FactoryBot.create_list(:notification, 4, user: user)
     end
 
     it 'has notifications with title' do
       visit dashboard_path
-      expect(page).to have_text(@notification.title)
+      expect(page).to have_text(@notifications.first.title)
     end
 
     it 'has notifications with messages' do
       visit dashboard_path
-      expect(page).to have_text(@notification.message)
+      expect(page).to have_text(@notifications.first.message)
     end
 
     it 'does not redirect after marking notification as read' do
       visit dashboard_path
-      find(:css, '.check.icon-link').click
+      all(:css, '.check.icon-link').first.click
       expect(current_path).to eql(dashboard_path)
     end
 
     it 'does not redirect after deleting notification' do
       visit dashboard_path
-      find(:css, '.delete.icon-link').click
+      all(:css, '.delete.icon-link').first.click
       expect(current_path).to eql(dashboard_path)
+    end
+
+    it 'does not display more than 3 notifications' do
+      visit dashboard_path
+      expect(page).to have_selector('.check.icon-link', count: 3)
     end
   end
 
