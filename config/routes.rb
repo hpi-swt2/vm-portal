@@ -7,9 +7,8 @@ Rails.application.routes.draw do
   resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests'
   resources :notifications, only: %i[index new create destroy] do
-    member do
-      get :mark_as_read
-    end
+    get :mark_as_read, on: :member
+    get :has_any, on: :collection, to: 'notifications#any?'
   end
 
   get '/dashboard' => 'dashboard#index', as: :dashboard

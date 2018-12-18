@@ -8,10 +8,10 @@ module ControllerMacros
     end
   end
 
-  def login_wimi
+  def login_employee
     before do
       @request.env['devise.mapping'] = Devise.mappings[:user]
-      sign_in FactoryBot.create(:user, role: :wimi)
+      sign_in FactoryBot.create(:user, role: :employee)
     end
   end
 
