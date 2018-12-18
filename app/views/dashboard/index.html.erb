@@ -6,11 +6,13 @@
 <div class="row">
   <div class="col-8">
     <div class="card mb-4">
-      <div class="card-header">
-        <div class="btn-group">
-          <h3><i class="fa fa-desktop fa-fw"></i> VMs</h3>
+      <%= link_to vms_path, method: :get do %>
+        <div class="card-header">
+          <div class="btn-group">
+            <h3><i class="fa fa-desktop fa-fw"></i> VMs</h3>
+          </div>
         </div>
-      </div>
+      <% end %>
       <div class="card-body">
         <table data-toggle="table" class="table">
           <thead>
@@ -37,10 +39,14 @@
     </div>
 
     <div class="card">
-      <div class="card-header">
-        <!-- Add server list instead of host list -->
-        <h3><i class="fa fa-users"></i> Hosts</h3>
-      </div>
+      <%= link_to hosts_path, method: :get do %>
+        <div class="card-header">
+          <div class="btn-group">
+            <!-- Add server list instead of host list -->
+            <h3><i class="fa fa-users"></i> Hosts</h3>
+          </div>
+        </div>
+      <% end %>
       <div class="card-body">
 
         <table data-toggle="table" class="table">
@@ -73,13 +79,15 @@
 
   <div class="col-4">
     <div class="card mb-4">
-      <div class="card-header">
-        <h3>Notifications</h3>
-      </div>
+      <%= link_to notifications_path, method: :get do %>
+        <div class="card-header">
+          <div class="btn-group">
+            <h3><i class="fa fa-bell"></i> Notifications</h3>
+          </div>
+        </div>
+      <% end %>
       <div class="card-body">
-        <table data-toggle="table" class="table">
-          <%= render 'notifications/list' %>
-        </table>
+        <%= render 'notifications/list' %>
       </div>
     </div>
   </div>
