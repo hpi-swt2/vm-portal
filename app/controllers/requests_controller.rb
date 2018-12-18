@@ -3,7 +3,7 @@
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
-  before_action :authenticate_wimi
+  before_action :authenticate_employee
 
   # GET /requests
   # GET /requests.json
