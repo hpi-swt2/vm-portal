@@ -6,7 +6,7 @@
     }
 end %>
 
-<div class="container mb-3 pl-0 pr-0" style="width: 100%">
+<div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
   <h1 class="mb-0"><%= @host[:name] unless @host.nil? %></h1>
 </div>
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0" style="width: 100%;">
@@ -58,7 +58,7 @@ end %>
       <%= render 'templates/resource_allocation', values: @values %>
 </div>
 
-<div class="container mb-3 pb-3 pl-0 pr-0" style="width: 100%; clear: both; display: flex;">
+<div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
   <div class="column float-left mr-3 half-screen-box">
     <%= render 'templates/hardware_table', hardware: @hardware %>
   </div>
@@ -82,4 +82,3 @@ end %>
     </table>
   </div>
 </div>
-<div style="clear: both"></div>
