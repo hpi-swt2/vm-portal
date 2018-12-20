@@ -6,6 +6,12 @@ $success: #d7e76f;
 
 html, body {
   height: 100%;
+  min-width: 1000px;
+  width: 100%;
+}
+
+.page-container {
+  margin: 50px 0px 0px 50px;
 }
 
 .btn-link, a {
@@ -21,17 +27,11 @@ body {
   flex-direction: column;
 }
 
-bg-blue {
-  background-color: $info;
-}
-
 #content {
   flex: 1 0 auto;
 }
 
 #navbar {
-  background-color: $info;
-
   .user_profile {
     margin-top: 2px;
   }
@@ -39,10 +39,17 @@ bg-blue {
 
 #footer {
   flex-shrink: 0;
-  padding: 10px 0;
-  background-color: $info;
 
   a {
     color: white;
+  }
+
+  .footer-element {
+    padding-top: 20px;
+
+    &__left {
+      @extend .footer-element;
+      padding-left: 50px;
+    }
   }
 }
