@@ -6,6 +6,19 @@
     flex: 1;
 }
 
+.table-bar {
+  width: auto;
+  border: 0;
+  margin: 1.5em 0 1em 0;
+
+  td {
+    padding-right: 20px;
+  }
+}
+
+.filter_icon {
+  font-size: 2em;
+}
 .archived{
   background: #eee;
 }

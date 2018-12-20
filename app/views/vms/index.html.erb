@@ -4,23 +4,39 @@
 <small class="text-muted">This is the overview page for all currently existing VMs</small>
 
 <%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
-<table class="table">
+<table class="table-bar">
   <tbody>
     <tr>
       <td>
-        <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
-        <%= label_tag(:up_vms, "connected") %>
+        <%=link_to(fa_icon('plus'),
+        {controller: :vms, action: 'new'},
+        method: :get, class: 'btn btn-info') %>
       </td>
       <td>
-        <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
-        <%= label_tag(:down_vms, "not connected") %>
+        <div class="dropdown">
+          <button class="fa fa-filter btn btn-info" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div>
+              <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
+              Connected
+            </div>
+            <div>
+              <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
+              Not connected
+            </div>
+            <div class="dropdown-divider"></div>
+            <%= submit_tag "Filter", class: "btn btn-info small-btn" %>
+          </div>
+        </div>
       </td>
       <td>
-        <%= submit_tag"Filter", class: "btn btn-info" %>
+        <%= link_to "Requests",
+          {controller: :requests, action: 'index'},
+          method: :get, class: "btn btn-info" %>
       </td>
     </tr></tbody></table>
 <% end %>
-
 
 <table data-toggle="table" class="table">
   <thead>
