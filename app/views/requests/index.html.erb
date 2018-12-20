@@ -1,16 +1,34 @@
 <h1>Requests</h1>
 
+<table class="table-bar">
+  <tbody>
+    <tr>
+      <td>
+        <%=link_to(fa_icon('plus'),
+        {controller: :requests, action: 'new'},
+        method: :get, class: 'btn btn-info') %>
+      </td>
+      <td>
+        <%= link_to 'Templates', request_templates_path, class: 'btn btn-info' %>
+      </td>
+      <td>
+        <%= link_to 'Operating Systems', operating_systems_path, class: 'btn btn-info' %>      
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <table class="table table-fixed-columns">
   <thead>
     <tr>
       <th>VM Name</th>
-      <th style="width: 80px">Cpu-Cores</th>
-      <th style="width: 80px">MB RAM</th>
-      <th style="width: 90px">MB Storage</th>
+      <th>CPU-Cores</th>
+      <th>MB RAM</th>
+      <th>MB Storage</th>
       <th>Operating System</th>
-      <th style="width: 80px">Port</th>
+      <th>Port</th>
       <th>Application Name</th>
-      <th class="w-25">Comment</th>
+      <th>Comment</th>
       <th>Status </th>
     </tr>
   </thead>
@@ -31,9 +49,6 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
-<%= link_to 'Manage Templates', request_templates_path, class: 'btn btn-secondary' %>
-<%= link_to 'Manage Operating Systems', operating_systems_path, class: 'btn btn-secondary' %>
+<% if @requests.length == 0 %>
+<p class="empty-table-label">Currently no requests</p>
+<% end %>
