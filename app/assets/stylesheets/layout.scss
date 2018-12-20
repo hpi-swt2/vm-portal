@@ -88,3 +88,27 @@ body {
 .table-flex-width {
   width: auto;
 }
+
+.empty-table-label {
+  text-align: center;
+  padding-top: 1.2em;
+}
+
+.table-bar {
+  width: auto;
+  border: 0;
+  margin: 1.5em 0 1em 0;
+
+  td {
+    padding-right: 20px;
+  }
+}
+
+.create-form {
+  width: auto;
+  padding-bottom: 1.5em;
+
+  .form-group {
+    width: 500px;
+  }
+}
