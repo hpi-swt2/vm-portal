@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-class ServersController < ApplicationController
+class HostsController < ApplicationController
   attr_reader :hosts
 
   def index
@@ -13,6 +13,7 @@ class ServersController < ApplicationController
 
   def show
     @host = VmApi.instance.get_host(params[:id])
+    render(template: 'errors/not_found', status: :not_found) if @host.nil?
   end
 
   private

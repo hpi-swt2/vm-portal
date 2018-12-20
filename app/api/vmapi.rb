@@ -37,12 +37,13 @@ class VmApi
     @hosts = Array.new([])
     @clusters.map do |cluster|
       cluster.host.map do |host|
-        vm_names = Array.new([])
+        vms = {}
         host.vm.map do |vm|
-          vm_names << vm.name
+          state = vm.runtime.powerState == 'poweredOn'
+          vms[vm.name] = state
         end
         @hosts << { name: host.name,
-                    vm_names: vm_names,
+                    vms: vms,
                     model: host.hardware.systemInfo.model,
                     vendor: host.hardware.systemInfo.vendor,
                     bootTime: host.runtime.bootTime,

@@ -287,4 +287,20 @@ Devise.setup do |config|
   # ActiveSupport.on_load(:devise_failure_app) do
   #   include Turbolinks::Controller
   # end
+
+  config.omniauth :openid_connect,
+                  name: :hpi,
+                  scope: %i[openid profile email],
+                  response_type: :code,
+                  client_options: {
+                    port: 443,
+                    scheme: 'https',
+                    host: 'oidc.hpi.de',
+                    identifier: ENV['client_id'],
+                    secret: ENV['client_secret'],
+                    redirect_uri: ENV['redirect_uri'],
+                    authorization_endpoint: '/auth'
+                  },
+                  client_auth_method: :other,
+                  discovery: true
 end

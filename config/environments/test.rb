@@ -45,4 +45,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Use Omni auth test mode to stub authentication requests
+  OmniAuth.config.test_mode = true
+
+  # The first user id
+  config.start_user_id = 4000
 end

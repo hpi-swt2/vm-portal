@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Request Templates</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Template name</th>
+      <th>Cpu count</th>
+      <th>Ram mb</th>
+      <th>Storage mb</th>
+      <th>Operating system</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @request_templates.each do |request_template| %>
+      <tr>
+        <td><%= link_to request_template.name, edit_request_template_path(request_template) %></td>
+        <td><%= request_template.cpu_cores %></td>
+        <td><%= request_template.ram_mb %></td>
+        <td><%= request_template.storage_mb %></td>
+        <td><%= request_template.operating_system %></td>
+        <td><%= link_to 'Delete', request_template, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Request Template', new_request_template_path, class: 'btn btn-primary' %>
+<%= link_to 'Show requests', requests_path, class: 'btn btn-secondary' %>

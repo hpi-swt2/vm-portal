@@ -52,6 +52,13 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
+# Provides different authentication strategies
+gem 'omniauth'
+gem 'omniauth_openid_connect'
+
+# Allow locks on database
+gem 'with_advisory_lock'
+
 # Mina for deployment
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
@@ -124,3 +131,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+
+gem 'sshkey', '~> 1.9'

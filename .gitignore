@@ -34,7 +34,13 @@
 # Ignore idea development environment files
 /.idea
 
+# Ignore vscode development environment files
+/.vscode
+
 # Ignore coverage directory
 coverage
 
 .DS_Store
+
+# Ignore locks
+.lock*
