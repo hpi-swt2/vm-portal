@@ -40,8 +40,13 @@
   </div>
 
       <div class="field">
-        <%= form.label :ip_address, "IP Address" %>
-        <%= form.text_field :ip_address, class: 'form-control' %>
+        <%= form.label :ipv4_address, "IPv4 Address" %>
+        <%= form.text_field :ipv4_address, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :ipv6_address, "IPv6 Address" %>
+        <%= form.text_field :ipv6_address, class: 'form-control' %>
       </div>
 
       <div class="field">
@@ -65,7 +70,9 @@ var boxName = 0;
 function addInput()
 {
   var boxName="software" + countBox;
+  var ruby_text_field = '<' + '%' + '= form.text_field :' + boxName + ', class: \'form-control\' ' + '%' + '>'
   document.getElementById('response').innerHTML+='<div class="field"><input type="text" placeholder="Software ' + countBox + '" class="form-control" id="' + boxName + '" "  /></div>';
+  //document.getElementById('response').innerHTML+='<div class="field">' +  '<' + '%' + '= form.text_field :' + boxName + ', class: \'form-control\' ' + '%' + '>' + '</div>';
   countBox += 1;
 }
 </script>

@@ -24,17 +24,22 @@ class ServersController < ApplicationController
   # POST /servers
   # POST /servers.json
   def create
-    @server = Server.new(server_params)
-
-    respond_to do |format|
-      if @server.save
-        format.html { redirect_to @server, notice: 'Server was successfully created.' }
-        format.json { render :show, status: :created, location: @server }
-      else
-        format.html { render :new }
-        format.json { render json: @server.errors, status: :unprocessable_entity }
-      end
+    server_params.each do | key, value |
+      puts key
+      puts value
     end
+
+    # @server = Server.new(server_params)
+
+    # respond_to do |format|
+    #   if @server.save
+    #     format.html { redirect_to @server, notice: 'Server was successfully created.' }
+    #     format.json { render :show, status: :created, location: @server }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @server.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /servers/1
@@ -71,4 +76,5 @@ class ServersController < ApplicationController
     def server_params
       params.fetch(:server, {})
     end
+
 end
