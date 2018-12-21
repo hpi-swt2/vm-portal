@@ -20,9 +20,14 @@ class VmApi
 
   def all_vms
     connect
-    @vm_folder.children.map do |vm|
+    all_vms_in(@vm_folder).map do |vm|
       { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
     end
+  end
+
+  def all_archived_vms
+    connect
+    all_vms_in(all_vm_folders.detect { |folder| folder.name == 'Archived VMs' })
   end
 
   def all_clusters
@@ -92,6 +97,13 @@ class VmApi
   end
 
   private
+  def all_vm_folders
+    @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
+  end
+
+  def all_vms_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
+  end
 
   def find_vm(name)
     @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)
