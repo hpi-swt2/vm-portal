@@ -62,18 +62,4 @@ RSpec.describe 'users/show.html.erb', type: :view do
       expect(rendered).not_to have_link(id: 'editUserButton', href: edit_user_path(user))
     end
   end
-
-  context 'when the current user is an admin' do
-    let(:current_user) { FactoryBot.create :admin }
-
-    it 'shows the users role' do
-      expect(rendered).to include user.role
-    end
-  end
-
-  context 'when the current user is not an admin' do
-    it 'shows the users role' do
-      expect(rendered).not_to include user.role
-    end
-  end
 end

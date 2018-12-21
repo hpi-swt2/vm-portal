@@ -2,15 +2,28 @@
 
 <table class="table">
   <thead>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Last sign in</th>
+    <th><%= User.human_attribute_name('name') %></th>
+    <th><%= User.human_attribute_name('email') %></th>
+    <% if current_user.admin? %>
+      <th><%= User.human_attribute_name('role') %></th>
+    <% end %>
+    <th><%= User.human_attribute_name('last_sign_in_at') %></th>
+    <th></th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
+        <% if current_user.admin? %>
+          <td>
+            <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary <%= 'active' if user.user? %>">User</button>
+            <button type="button" class="btn btn-primary <%= 'active' if user.employee? %>">Employee</button>
+            <button type="button" class="btn btn-primary <%= 'active' if user.admin? %>">Admin</button>
+          </div>
+          </td>
+        <% end %>
         <td><%= user.current_sign_in_at %></td>
       </tr>
     <% end %>
