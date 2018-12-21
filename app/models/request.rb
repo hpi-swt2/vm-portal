@@ -29,7 +29,13 @@ class Request < ApplicationRecord
   def assign_sudo_users(sudo_user_ids)
     unless sudo_user_ids.nil?
       sudo_user_ids.each do |id|
-        users_assigned_to_requests.create(sudo: true, user_id: id)
+        if users_assigned_to_requests.exists?(user_id: id)
+          (users_assigned_to_requests.select { |assignment| assignment.user_id == id }).each do |assignment|
+            assignment.sudo = true
+          end
+        else
+          users_assigned_to_requests.create(sudo: true, user_id: id)
+        end
       end
     end
   end

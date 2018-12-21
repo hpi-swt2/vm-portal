@@ -78,6 +78,7 @@ RSpec.describe Request, type: :model do
 
   describe 'method tests' do
     let(:request) { FactoryBot.create :request }
+    let(:user) { FactoryBot.create :user }
 
     it 'changes status to accepted' do
       request.accept!
@@ -85,15 +86,20 @@ RSpec.describe Request, type: :model do
     end
 
     it 'returns its sudo users correctly' do
-      user = FactoryBot.create(:user, role: :employee)
       assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
       expect(request.sudo_user_assignments.include?(assignment)).to be true
     end
 
     it 'creates sudo user assignments correctly' do
-      user = FactoryBot.create(:user, role: :employee)
       request.assign_sudo_users([user.id])
       expect((request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id}).size).to eq(1)
+    end
+
+    it 'creates only a sudo user assignment' do
+      @request = FactoryBot.create(:request, user_ids: [user.id])
+      @request.assign_sudo_users([user.id])
+      expect(@request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
+      expect((@request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
     end
   end
 end

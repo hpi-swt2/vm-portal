@@ -116,7 +116,9 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
+    #defaults = { user_ids: [], sudo_user_ids: []}
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
-                                    :port, :application_name, :description, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :port, :application_name, :description, :comment,
+                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])#.reverse_merge(defaults)
   end
 end
