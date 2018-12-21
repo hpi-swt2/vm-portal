@@ -37,4 +37,8 @@ class Request < ApplicationRecord
   def sudo_user_assignments
     users_assigned_to_requests.select(&:sudo)
   end
+
+  def non_sudo_user_assignments
+    users_assigned_to_requests - sudo_user_assignments
+  end
 end
