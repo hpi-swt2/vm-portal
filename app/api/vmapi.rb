@@ -97,6 +97,7 @@ class VmApi
   end
 
   private
+
   def all_vm_folders
     @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
   end
