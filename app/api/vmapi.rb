@@ -32,7 +32,7 @@ class VmApi
 
   def ensure_folder(folder_name)
     connect
-    folder = @vm_folder.find folder_name, type: RbVmomi::VIM::Folder
+    folder = @vm_folder.find folder_name, RbVmomi::VIM::Folder
     folder || @vm_folder.CreateFolder(name: folder_name)
   end
 
@@ -102,11 +102,11 @@ class VmApi
     end
   end
 
-  private
-
   def all_vms_in(folder)
     folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
   end
+
+  private
 
   def find_vm(name)
     @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)

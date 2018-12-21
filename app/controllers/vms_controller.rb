@@ -8,7 +8,6 @@ class VmsController < ApplicationController
   include VmsHelper
 
   def index
-    puts VmApi.instance
     @vms = filter VmApi.instance.all_vm_infos
     @archived_vms = all_archived_vms
     @parameters = determine_params
