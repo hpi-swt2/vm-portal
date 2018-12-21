@@ -28,6 +28,7 @@
     <th scope="col" data-sortable="true">VM Name</th>
     <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">Power Options</th>
+    <th scope="col">Archive</th>
   </tr>
   </thead>
   <tbody>
@@ -44,13 +45,14 @@
           <%= button_to "Start", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-success" %>
         <% end %>
       </td>
+      <td><%= button_to "Archive", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-success" %></td>
     <tr>
   <% end %>
   </tbody>
 </table>
 
 <h2>Archived VMs</h2>
-<table data-toggle="table" class="table">
+<table data-toggle="table" class="table archived">
   <thead>
   <tr>
     <th scope="col" data-sortable="true">VM Name</th>
