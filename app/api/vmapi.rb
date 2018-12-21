@@ -20,14 +20,20 @@ class VmApi
 
   def all_vms
     connect
-    all_vms_in(@vm_folder).map do |vm|
+    all_vms_in(@vm_folder)
+  end
+
+  def all_vm_infos
+    connect
+    all_vms.map do |vm|
       { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
     end
   end
 
-  def all_archived_vms
+  def ensure_folder(folder_name)
     connect
-    all_vms_in(all_vm_folders.detect { |folder| folder.name == 'Archived VMs' })
+    folder = @vm_folder.find folder_name, type: RbVmomi::VIM::Folder
+    folder || @vm_folder.CreateFolder(name: folder_name)
   end
 
   def all_clusters
@@ -97,10 +103,6 @@ class VmApi
   end
 
   private
-
-  def all_vm_folders
-    @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
-  end
 
   def all_vms_in(folder)
     folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }

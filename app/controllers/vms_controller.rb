@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
+
 class VmsController < ApplicationController
   attr_reader :vms
 
+  include VmsHelper
+
   def index
-    @vms = filter VmApi.instance.all_vms
+    puts VmApi.instance
+    @vms = filter VmApi.instance.all_vm_infos
+    @archived_vms = all_archived_vms
     @parameters = determine_params
   end
 

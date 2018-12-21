@@ -9,11 +9,8 @@ RSpec.describe VmsController, type: :controller do
 
   describe 'GET #index' do
     before do
-      double_api = double
-      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
-                                                         { name: 'another VM', state: false, bootTime: 'now' }]
-
-      allow(VmApi).to receive(:instance).and_return double_api
+      allow(VmApi.instance).to receive(:all_vm_infos).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
+                                                              { name: 'another VM', state: false, bootTime: 'now' }]
     end
 
     it 'returns http success' do
@@ -29,7 +26,7 @@ RSpec.describe VmsController, type: :controller do
       controller = VmsController.new
       controller.params = {}
       controller.index
-      expect(controller.vms.size).to be VmApi.instance.all_vms.size
+      expect(controller.vms.size).to be VmApi.instance.all_vm_infos.size
     end
 
     it 'returns online VMs if requested' do
