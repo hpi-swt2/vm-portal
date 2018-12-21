@@ -18,10 +18,25 @@
         <% if current_user.admin? %>
           <td>
             <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary <%= 'active' if user.user? %>">User</button>
-            <button type="button" class="btn btn-primary <%= 'active' if user.employee? %>">Employee</button>
-            <button type="button" class="btn btn-primary <%= 'active' if user.admin? %>">Admin</button>
-          </div>
+              <%= button_to 'User',
+                            update_role_user_path(user, role: 'user'),
+                            method: :patch,
+                            id: "btn-user-#{user.id}",
+                            class: "btn btn-primary #{'active' if user.user?}"
+              %>
+              <%= button_to 'Employee',
+                            update_role_user_path(user, role: 'employee'),
+                            method: :patch,
+                            id: "btn-employee-#{user.id}",
+                            class: "btn btn-primary #{'active' if user.employee?}"
+              %>
+              <%= button_to 'Admin',
+                            update_role_user_path(user, role: 'admin'),
+                            method: :patch,
+                            id: "btn-admin-#{user.id}",
+                            class: "btn btn-primary #{'active' if user.admin?}"
+              %>
+            </div>
           </td>
         <% end %>
         <td><%= user.current_sign_in_at %></td>

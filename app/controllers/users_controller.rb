@@ -21,7 +21,14 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       redirect_to @user
     else
-      render 'edit'
+      render :edit
+    end
+  end
+
+  def update_role
+    @user = User.find(params[:id])
+    if @user.update(role: params[:role])
+      render :index
     end
   end
 
