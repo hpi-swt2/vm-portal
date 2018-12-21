@@ -79,8 +79,8 @@ RSpec.describe Request, type: :model do
     expect(request.status).to eq('accepted')
   end
 
-  it 'returns it sudo users correctly' do
-    user = FactoryBot.create(:user, role: :wimi)
+  it 'returns its sudo users correctly' do
+    user = FactoryBot.create(:user, role: :employee)
     assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
     expect(request.sudo_user_assignments.include?(assignment)).to be true
   end
