@@ -26,6 +26,14 @@ class Request < ApplicationRecord
     self.status = 'accepted'
   end
 
+  def assign_sudo_users(sudo_user_ids)
+    unless sudo_user_ids.nil?
+      sudo_user_ids.each do |id|
+        users_assigned_to_requests.create(sudo: true, user_id: id)
+      end
+    end
+  end
+
   def sudo_user_assignments
     users_assigned_to_requests.select(&:sudo)
   end

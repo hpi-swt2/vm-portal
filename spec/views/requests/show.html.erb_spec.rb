@@ -18,8 +18,8 @@ RSpec.describe 'requests/show', type: :view do
                                   comment: 'Comment',
                                   status: 'pending',
                                   user_ids: [@user.id],
-                                  sudo_user_ids: [@second_user.id]
                                 ))
+    @request.assign_sudo_users([@second_user.id])
   end
 
   it 'renders attributes in <p>' do
@@ -35,6 +35,6 @@ RSpec.describe 'requests/show', type: :view do
     expect(rendered).to match(/Comment/)
     expect(rendered).to match(/pending/)
     expect(rendered).to match(@user.email)
-    #expect(rendered).to match(@second_user.email)
+    expect(rendered).to match(@second_user.email)
   end
 end

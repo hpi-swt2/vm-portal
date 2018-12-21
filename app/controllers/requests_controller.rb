@@ -47,16 +47,11 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-    #assign_sudo_rights(@request)
 
     respond_to do |format|
       if @request.save
-        unless request_params[:sudo_user_ids].nil?
-          request_params[:sudo_user_ids].each do |id|
-            @request.users_assigned_to_requests.create(sudo: true, user_id: id)
-          end
-        end
-          successfully_saved(format, @request)
+        @request.assign_sudo_users(request_params[:sudo_user_ids])
+        successfully_saved(format, @request)
       else
         format.html { render :new }
         format.json { render json: @request.errors, status: :unprocessable_entity }
@@ -113,16 +108,6 @@ class RequestsController < ApplicationController
   end
 
   private
-
-  def assign_sudo_rights(request)
-    sudo_users_for_request = request.users_assigned_to_requests.select do |assignment|
-      request_params[:sudo_user_ids].include?(assignment.user_id.to_s)
-    end
-
-    sudo_users_for_request.each do |assignment|
-      assignment.sudo = true
-    end
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_request
