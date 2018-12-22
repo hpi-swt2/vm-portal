@@ -15,22 +15,28 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       visit users_path
     end
 
-    it 'shows that an users role is users' do
-      expect(page.find(id: "btn-user-#{user.id}")[:class]).to include 'active'
-      expect(page.find(id: "btn-employee-#{user.id}")[:class]).not_to include 'active'
-      expect(page.find(id: "btn-admin-#{user.id}")[:class]).not_to include 'active'
+    context 'looking at a normal user' do
+      it 'shows that the role is user' do
+        expect(page.find(id: "btn-user-#{user.id}")[:class]).to include 'active'
+        expect(page.find(id: "btn-employee-#{user.id}")[:class]).not_to include 'active'
+        expect(page.find(id: "btn-admin-#{user.id}")[:class]).not_to include 'active'
+      end
     end
 
-    it 'shows that an employees role is employee' do
-      expect(page.find(id: "btn-user-#{employee.id}")[:class]).not_to include 'active'
-      expect(page.find(id: "btn-employee-#{employee.id}")[:class]).to include 'active'
-      expect(page.find(id: "btn-admin-#{employee.id}")[:class]).not_to include 'active'
+    context 'looking at an employee' do
+      it 'shows that the role is employee' do
+        expect(page.find(id: "btn-user-#{employee.id}")[:class]).not_to include 'active'
+        expect(page.find(id: "btn-employee-#{employee.id}")[:class]).to include 'active'
+        expect(page.find(id: "btn-admin-#{employee.id}")[:class]).not_to include 'active'
+      end
     end
 
-    it 'shows that an admins role is admin' do
-      expect(page.find(id: "btn-user-#{admin.id}")[:class]).not_to include 'active'
-      expect(page.find(id: "btn-employee-#{admin.id}")[:class]).not_to include 'active'
-      expect(page.find(id: "btn-admin-#{admin.id}")[:class]).to include 'active'
+    context 'looking at a admin' do
+      it 'shows that the role is admin' do
+        expect(page.find(id: "btn-user-#{admin.id}")[:class]).not_to include 'active'
+        expect(page.find(id: "btn-employee-#{admin.id}")[:class]).not_to include 'active'
+        expect(page.find(id: "btn-admin-#{admin.id}")[:class]).to include 'active'
+      end
     end
   end
 end
