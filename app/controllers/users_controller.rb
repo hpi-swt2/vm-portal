@@ -27,9 +27,8 @@ class UsersController < ApplicationController
 
   def update_role
     @user = User.find(params[:id])
-    if @user.update(role: params[:role])
-      render :index
-    end
+    @user.update(role: params[:role])
+    redirect_to  users_path
   end
 
   private
