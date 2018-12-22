@@ -18,24 +18,14 @@
         <% if current_user.admin? %>
           <td>
             <div class="btn-group" role="group">
-              <%= button_to 'User',
-                            update_role_user_path(user, role: 'user'),
-                            method: :patch,
-                            id: "btn-user-#{user.id}",
-                            class: "btn btn-primary #{'active' if user.user?}"
-              %>
-              <%= button_to 'Employee',
-                            update_role_user_path(user, role: 'employee'),
-                            method: :patch,
-                            id: "btn-employee-#{user.id}",
-                            class: "btn btn-primary #{'active' if user.employee?}"
-              %>
-              <%= button_to 'Admin',
-                            update_role_user_path(user, role: 'admin'),
-                            method: :patch,
-                            id: "btn-admin-#{user.id}",
-                            class: "btn btn-primary #{'active' if user.admin?}"
-              %>
+              <% User.roles.map(&:first).each do |role| %>
+                  <%= link_to role.capitalize,
+                              update_role_user_path(user, role: role),
+                              method: :patch,
+                              id: "btn-#{role}-#{user.id}",
+                              class: "btn btn-primary #{'active' if user.role == role}"
+                  %>
+              <% end %>
             </div>
           </td>
         <% end %>
