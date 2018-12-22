@@ -19,15 +19,22 @@
           <td>
             <div class="btn-group" role="group">
               <% User.roles.map(&:first).each do |role| %>
+                <% if last_admin?(user) %>
+                  <button class="btn btn-secondary disabled <%= 'active' if user.role == role %>"
+                          id= "btn-<%= role %>-<%= user.id %>",
+                  >
+                    <%= role.capitalize %>
+                  </button>
+                <% else %>
                   <%= link_to role.capitalize,
                               update_role_user_path(user, role: role),
                               method: :patch,
                               id: "btn-#{role}-#{user.id}",
                               class: "btn btn-primary #{'active' if user.role == role}"
                   %>
+                <% end %>
               <% end %>
             </div>
-          </td>
         <% end %>
         <td><%= user.current_sign_in_at %></td>
       </tr>

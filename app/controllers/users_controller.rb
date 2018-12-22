@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  include UsersHelper
+
   before_action :authenticate_current_user, only: [:edit]
 
   def index

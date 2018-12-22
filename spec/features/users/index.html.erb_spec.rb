@@ -16,27 +16,171 @@ RSpec.describe 'users/index.html.erb', type: :feature do
     end
 
     context 'looking at a normal user' do
+      before do
+        @button_user = page.find(id: "btn-user-#{user.id}")
+        @button_employee = page.find(id: "btn-employee-#{user.id}")
+        @button_admin= page.find(id: "btn-admin-#{user.id}")
+      end
+
       it 'shows that the role is user' do
-        expect(page.find(id: "btn-user-#{user.id}")[:class]).to include 'active'
-        expect(page.find(id: "btn-employee-#{user.id}")[:class]).not_to include 'active'
-        expect(page.find(id: "btn-admin-#{user.id}")[:class]).not_to include 'active'
+        expect(@button_user[:class]).to include 'active'
+        expect(@button_employee[:class]).not_to include 'active'
+        expect(@button_admin[:class]).not_to include 'active'
+      end
+
+      context 'clicking the employee button' do
+        before do
+          @button_employee.click
+          user.reload
+          @button_employee = page.find(id: "btn-employee-#{user.id}")
+        end
+
+        it 'updates the users role to employee' do
+          expect(user.role).to eq 'employee'
+        end
+
+        it 'shows that users role is now employee' do
+          expect(@button_employee[:class]).to include 'active'
+        end
+      end
+
+      context 'clicking the admin button' do
+        before do
+          @button_admin.click
+          user.reload
+          @button_admin = page.find(id: "btn-admin-#{user.id}")
+        end
+
+        it 'updates the users role to admin' do
+          expect(user.role).to eq 'admin'
+        end
+
+        it 'shows that users role is now admin' do
+          expect(@button_admin[:class]).to include 'active'
+        end
       end
     end
 
     context 'looking at an employee' do
+      before do
+        @button_user = page.find(id: "btn-user-#{employee.id}")
+        @button_employee = page.find(id: "btn-employee-#{employee.id}")
+        @button_admin= page.find(id: "btn-admin-#{employee.id}")
+      end
+
       it 'shows that the role is employee' do
-        expect(page.find(id: "btn-user-#{employee.id}")[:class]).not_to include 'active'
-        expect(page.find(id: "btn-employee-#{employee.id}")[:class]).to include 'active'
-        expect(page.find(id: "btn-admin-#{employee.id}")[:class]).not_to include 'active'
+        expect(@button_user[:class]).not_to include 'active'
+        expect(@button_employee[:class]).to include 'active'
+        expect(@button_admin[:class]).not_to include 'active'
+      end
+
+      context 'clicking the user button' do
+        before do
+          @button_user.click
+          employee.reload
+          @button_user = page.find(id: "btn-user-#{employee.id}")
+        end
+
+        it 'updates the employees role to user' do
+          expect(employee.role).to eq 'user'
+        end
+
+        it 'shows that employees role is now role' do
+          expect(@button_user[:class]).to include 'active'
+        end
+      end
+
+      context 'clicking the admin button' do
+        before do
+          @button_admin.click
+          employee.reload
+          @button_admin = page.find(id: "btn-admin-#{employee.id}")
+        end
+
+        it 'updates the users role to admin' do
+          expect(employee.role).to eq 'admin'
+        end
+
+        it 'shows that users role is now admin' do
+          expect(@button_admin[:class]).to include 'active'
+        end
       end
     end
 
-    context 'looking at a admin' do
-      it 'shows that the role is admin' do
-        expect(page.find(id: "btn-user-#{admin.id}")[:class]).not_to include 'active'
-        expect(page.find(id: "btn-employee-#{admin.id}")[:class]).not_to include 'active'
-        expect(page.find(id: "btn-admin-#{admin.id}")[:class]).to include 'active'
+    context 'looking at an admin' do
+      before do
+        @button_user = page.find(id: "btn-user-#{admin.id}")
+        @button_employee = page.find(id: "btn-employee-#{admin.id}")
+        @button_admin= page.find(id: "btn-admin-#{admin.id}")
       end
+
+      it 'shows that the role is admin' do
+        expect(@button_user[:class]).not_to include 'active'
+        expect(@button_employee[:class]).not_to include 'active'
+        expect(@button_admin[:class]).to include 'active'
+      end
+
+      context 'when there is only one admin' do
+        before do
+          assert User.all.select(&:admin?).size == 1
+        end
+
+        it 'disables all buttons' do
+          expect(@button_user[:class]).to include 'disabled'
+          expect(@button_employee[:class]).to include 'disabled'
+          expect(@button_admin[:class]).to include 'disabled'
+        end
+
+        context 'clicking the user button' do
+          before do
+            @button_user.click
+            admin.reload
+            @button_admin = page.find(id: "btn-admin-#{admin.id}")
+          end
+
+          it 'does not update the admins role' do
+            expect(admin.role).to eq 'admin'
+          end
+
+          it 'shows that admins role is still admin' do
+            expect(@button_admin[:class]).to include 'active'
+          end
+        end
+
+        context 'clicking the employee button' do
+          before do
+            @button_employee.click
+            admin.reload
+            @button_admin = page.find(id: "btn-admin-#{admin.id}")
+          end
+
+          it 'does not update the admins role' do
+            expect(admin.role).to eq 'admin'
+          end
+
+          it 'shows that admins role is still admin' do
+            expect(@button_admin[:class]).to include 'active'
+          end
+        end
+      end
+
+      # context 'when there are multiple admins' do
+      #   context 'clicking the user button' do
+      #     before do
+      #       @button_user.click
+      #       admin.reload
+      #       @button_user = page.find(id: "btn-user-#{admin.id}")
+      #     end
+      #
+      #     it 'updates the employees role to user' do
+      #       expect(admin.role).to eq 'user'
+      #     end
+      #
+      #     it 'shows that employees role is now role' do
+      #       expect(@button_user[:class]).to include 'active'
+      #     end
+      #   end
+      # end
     end
   end
 end
