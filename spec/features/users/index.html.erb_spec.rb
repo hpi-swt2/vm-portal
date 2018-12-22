@@ -164,23 +164,51 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
       end
 
-      # context 'when there are multiple admins' do
-      #   context 'clicking the user button' do
-      #     before do
-      #       @button_user.click
-      #       admin.reload
-      #       @button_user = page.find(id: "btn-user-#{admin.id}")
-      #     end
-      #
-      #     it 'updates the employees role to user' do
-      #       expect(admin.role).to eq 'user'
-      #     end
-      #
-      #     it 'shows that employees role is now role' do
-      #       expect(@button_user[:class]).to include 'active'
-      #     end
-      #   end
-      # end
+      context 'when there are multiple admins' do
+        before do
+          FactoryBot.create :admin
+          visit users_path
+          @button_user = page.find(id: "btn-user-#{admin.id}")
+          @button_employee = page.find(id: "btn-employee-#{admin.id}")
+          @button_admin= page.find(id: "btn-admin-#{admin.id}")
+        end
+
+        it 'disables no button' do
+          expect(@button_user[:class]).not_to include 'disabled'
+          expect(@button_employee[:class]).not_to include 'disabled'
+          expect(@button_admin[:class]).not_to include 'disabled'
+        end
+
+        context 'clicking the user button' do
+          before do
+            @button_user.click
+            admin.reload
+          end
+
+          it 'does update the admins role to user' do
+            expect(admin.role).to eq 'user'
+          end
+
+          it 'hides the role columns' do
+            expect(page).not_to have_content 'Role'
+          end
+        end
+
+        context 'clicking the employee button' do
+          before do
+            @button_employee.click
+            admin.reload
+          end
+
+          it 'does update the admins role to employee' do
+            expect(admin.role).to eq 'employee'
+          end
+
+          it 'hides the role columns' do
+            expect(page).not_to have_content 'Role'
+          end
+        end
+      end
     end
   end
 end
