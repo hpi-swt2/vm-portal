@@ -6,7 +6,6 @@ RSpec.describe 'users/show.html.erb', type: :view do
   let(:user) { FactoryBot.create :user }
   let(:current_user) { FactoryBot.create :user }
 
-
   before do
     allow(view).to receive(:current_user).and_return(current_user)
     assign(:user, user)

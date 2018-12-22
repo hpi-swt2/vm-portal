@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   def update_role
     @user = User.find(params[:id])
     @user.update(role: params[:role])
-    redirect_to  users_path
+    redirect_to users_path
   end
 
   private

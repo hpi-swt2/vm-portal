@@ -19,7 +19,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       before do
         @button_user = page.find(id: "btn-user-#{user.id}")
         @button_employee = page.find(id: "btn-employee-#{user.id}")
-        @button_admin= page.find(id: "btn-admin-#{user.id}")
+        @button_admin = page.find(id: "btn-admin-#{user.id}")
       end
 
       it 'shows that the role is user' do
@@ -65,7 +65,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       before do
         @button_user = page.find(id: "btn-user-#{employee.id}")
         @button_employee = page.find(id: "btn-employee-#{employee.id}")
-        @button_admin= page.find(id: "btn-admin-#{employee.id}")
+        @button_admin = page.find(id: "btn-admin-#{employee.id}")
       end
 
       it 'shows that the role is employee' do
@@ -111,7 +111,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       before do
         @button_user = page.find(id: "btn-user-#{admin.id}")
         @button_employee = page.find(id: "btn-employee-#{admin.id}")
-        @button_admin= page.find(id: "btn-admin-#{admin.id}")
+        @button_admin = page.find(id: "btn-admin-#{admin.id}")
       end
 
       it 'shows that the role is admin' do
@@ -170,7 +170,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
           visit users_path
           @button_user = page.find(id: "btn-user-#{admin.id}")
           @button_employee = page.find(id: "btn-employee-#{admin.id}")
-          @button_admin= page.find(id: "btn-admin-#{admin.id}")
+          @button_admin = page.find(id: "btn-admin-#{admin.id}")
         end
 
         it 'disables no button' do
