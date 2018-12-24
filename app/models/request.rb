@@ -16,7 +16,7 @@ class Request < ApplicationRecord
     description = "- VM Name: #{name}\n"
     description += "- Responsible: TBD\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
-    description += get_url(host_name) + "\n"
+    description += url(host_name) + "\n"
     description
   end
 
@@ -26,7 +26,7 @@ class Request < ApplicationRecord
 
   private
 
-  def get_url(host_name)
+  def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
   end
 end
