@@ -8,48 +8,38 @@
     <ul class="navbar-nav mr-auto">
       <!--TODO: add ! before user check -->
       <% if user_signed_in? %>
-        <li class="nav-item active">
-          <a class="nav-link" href=/dashboard><%= fa_icon('desktop', text: "Dashboard") %><span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <%= link_to(fa_icon('desktop', text: "Dashboard"), dashboard_path, class: 'nav-link') %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to('VMs', vms_path, class: "nav-link") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to('Hosts', hosts_path, class: "nav-link") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to('Users', users_path, class: "nav-link") %>
         </li>
       <% end %>
-      <li class="nav-item">
-        <%= link_to('VMs', vms_path, class: "nav-link") %>
-      </li>
-      <li class="nav-item">
-        <%= link_to('Hosts', hosts_path, class: "nav-link") %>
-      </li>
-      <li class="nav-item">
-        <%= link_to('Users', users_path, class: "nav-link") %>
-      </li>
-      <% if user_signed_in? %>
-        <li>
-          <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "nav-link text-danger") %>
-        </li>
-      <% else %>
-        <li>
-          <%= link_to('Login', new_user_session_path, class: "nav-link")  %>
-        </li>
-      <% end %>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
     </ul>
 
     <ul class="navbar-nav ml-auto">
       <% if user_signed_in? %>
-        <li class="nav-item">
-          <%= link_to(fa_icon('user', text: current_user.name), user_path(current_user), class: "nav-link") %>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%= fa_icon('user', text: current_user.name) %>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <%= link_to('Profile', user_path(current_user), class: "dropdown-item") %>
+            <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "text-danger dropdown-item") %>
+          </div>
+        </li>
+      <% else %>
+        <li>
+          <%= link_to('Login', new_user_session_path, class: "nav-link") %>
         </li>
       <% end %>
     </ul>
