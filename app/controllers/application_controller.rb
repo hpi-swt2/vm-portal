@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   def after_sign_in_path_for(_resource)
-    vms_path
+    dashboard_path
   end
 
   rescue_from Net::OpenTimeout, Errno::ENETUNREACH, Errno::EHOSTUNREACH, with: :error_render_method
