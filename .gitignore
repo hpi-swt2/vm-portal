@@ -34,6 +34,9 @@
 # Ignore idea development environment files
 /.idea
 
+# Ignore vscode development environment files
+/.vscode
+
 # Ignore coverage directory
 coverage
 

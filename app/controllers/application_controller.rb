@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
+  protect_from_forgery prepend: true
 
   add_flash_types :success, :danger
 
@@ -20,8 +21,8 @@ class ApplicationController < ActionController::Base
     render(template: 'errors/timeout', status: 408) && return
   end
 
-  def authenticate_wimi
-    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user && (current_user.admin? || current_user.wimi?)
+  def authenticate_employee
+    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user && (current_user.admin? || current_user.employee?)
   end
 
   def authenticate_admin

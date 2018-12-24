@@ -27,7 +27,7 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   # Authenticate an user
-  login_wimi
+  login_employee
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to

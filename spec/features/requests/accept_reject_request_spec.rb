@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'accepting and rejecting requests', type: :feature do
   # Authenticate an user
   before do
-    sign_in FactoryBot.create :user, role: :wimi
+    sign_in FactoryBot.create :user, role: :employee
   end
 
   context 'when request status is pending' do
@@ -16,7 +16,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
     end
 
     it 'has a working accept button' do
-      click_button('Accept')
+      click_button('Accept & Continue')
       request.reload
       expect(request.status).to eq('accepted')
     end
@@ -51,7 +51,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
     it 'has an accepted status' do
       visit request_path(request)
 
-      click_button('Accept')
+      click_button('Accept & Continue')
       request.reload
       expect(request.status).to eq('accepted')
     end
@@ -59,14 +59,14 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
     it 'routes to the new_vm_path' do
       visit request_path(request)
 
-      click_button('Accept')
+      click_button('Accept & Continue')
       expect(current_path).to eq(new_vm_path)
     end
 
     it 'has automatically filled fields' do
       visit request_path(request)
 
-      click_button('Accept')
+      click_button('Accept & Continue')
       find('input[name="name"][value*="MyVM"]')
       find('input[name="cpu"][value*="2"]')
       find('input[name="ram"][value*="1000"]')
@@ -76,7 +76,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
     it 'the request information page has an accepted status' do
       visit request_path(request)
 
-      click_button('Accept')
+      click_button('Accept & Continue')
       visit request_path(request)
 
       expect(page).to have_text('accepted')
