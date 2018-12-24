@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-fixed-top navbar-offset navbar-dark bg-dark">
+<nav id="navbar" class="navbar navbar-expand-lg navbar-fixed-top navbar-offset navbar-dark text-white">
   <a class="navbar-brand" href="#"><%= image_tag("logo.svg", :alt => "VMSpace", :height => "40") %></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -27,6 +27,14 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <%= link_to(notifications_path, id: "header-notification-bell", class: "nav-link") do %>
+          <span class="fa-stack fa notification-bell">
+            <i class="fa fa-bell fa-stack-1x"></i>
+            <i id="notification-alert" class="fa fa-circle fa-inverse fa-stack-1x"></i>
+          </span>
+        <% end %>
+      </li>
       <% if user_signed_in? %>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -41,6 +41,8 @@ function getChartOptions(amount, title) {
         cutoutPercentage: 85,
         rotation: (3/4) * Math.PI,
         circumference: (3/2) * Math.PI,
+        maintainAspectRatio: false,
+        responsive: false,
         tooltips: {
           enabled: false
         },
@@ -58,8 +60,6 @@ function getChartOptions(amount, title) {
 
 function makeHalfDoughnutChart(name, amount, description) {
     var canvas = document.getElementById(name);
-    canvas.style.width = "150px";
-    canvas.style.height = "150px";
     var amountNode = document.createElement("div");
     amountNode.innerText = amount.toString() + ' %';
     amountNode.classList.add("graphLabel");
@@ -73,5 +73,3 @@ function makeHalfDoughnutChart(name, amount, description) {
     options = getChartOptions(amount, name);
     return new Chart(canvas, options) 
 }
-
-makeHalfDoughnutChart(null, null, null)

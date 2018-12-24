@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_09_184959) do
+ActiveRecord::Schema.define(version: 2018_12_16_161526) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "request_templates", force: :cascade do |t|
+    t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "operating_system"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+  end
+
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
@@ -39,6 +49,8 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "port"
+    t.string "application_name"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -73,6 +85,7 @@ ActiveRecord::Schema.define(version: 2018_12_09_184959) do
     t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
