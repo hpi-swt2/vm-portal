@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   include UsersHelper
 
   before_action :authenticate_current_user, only: [:edit]
+  before_action :authenticate_admin, only: [:update_role]
 
   def index
     @users = User.all

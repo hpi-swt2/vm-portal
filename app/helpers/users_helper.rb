@@ -3,7 +3,6 @@
 module UsersHelper
   def last_admin?(user)
     user.admin? &&
-      current_user?(user) &&
       only_one_admin?
   end
 

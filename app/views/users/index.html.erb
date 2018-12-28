@@ -19,7 +19,7 @@
           <td>
             <div class="btn-group" role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if last_admin?(user) %>
+                <% if last_admin?(user) && current_user?(user) %>
                   <button class="btn btn-secondary disabled <%= 'active' if user.role == role %>"
                           id= "btn-<%= role %>-<%= user.id %>",
                   >
