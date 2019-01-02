@@ -11,6 +11,29 @@
     </div>
   <% end %>
 
+  <fieldset class="form-group">
+    <div class="row bottom-buffer">
+      <legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>
+      <div class="col-sm-10">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="noneRadio" id="noneRadio">
+          <%= form.label :name, "None" %>
+        </div>
+        <% @request_templates.each do |request_template| %>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="templateRadio" id="templateRadio[request_template.id]" onclick="fillFields(request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system)">
+            <%= form.label :name, "#{request_template.name}: 
+                                      #{request_template.cpu_cores} CPU-Cores, 
+                                      #{request_template.ram_mb} MB RAM, 
+                                      #{request_template.storage_mb} MB Storage, 
+                                      #{request_template.operating_system}" 
+            %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
   <div class="field form-group">
     <%= form.label :name, "VM Name" %>
     <%= form.text_field :name, class: 'form-control' %>
@@ -18,7 +41,7 @@
 
   <div class="field">
     <%= form.label :cpu_cores, "CPU-Cores" %>
-    <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
+    <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
   </div>
 
   <div class="field">
@@ -73,3 +96,9 @@
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<script language="Javascript">
+function fillFields(cpu_cores, ram_mb, storage_mb, operating_system) {
+    cpus = document.getElementById('cpu');
+}
+</script>
