@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  include UsersHelper
+
   before_action :authenticate_current_user, only: [:edit]
+  before_action :authenticate_admin, only: [:update_role]
 
   def index
     @users = User.all
@@ -21,8 +24,14 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       redirect_to @user
     else
-      render 'edit'
+      render :edit
     end
+  end
+
+  def update_role
+    @user = User.find(params[:id])
+    @user.update(role: params[:role])
+    redirect_to users_path
   end
 
   private

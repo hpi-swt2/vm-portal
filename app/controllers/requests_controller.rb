@@ -39,7 +39,7 @@ class RequestsController < ApplicationController
   end
 
   def successfully_saved(format, request)
-    notify_users("New VM request:\n" + request.description_text)
+    notify_users("New VM request:\n" + request.description_text(host_url))
     redirect_according_to_role(format, current_user.role)
     format.json { render :show, status: :created, location: request }
   end
@@ -64,9 +64,9 @@ class RequestsController < ApplicationController
     return if request.pending?
 
     if request.accepted?
-      notify_users("Request:\n#{@request.description_text}\nhas been *accepted*!")
+      notify_users("Request:\n#{@request.description_text host_url}\nhas been *accepted*!")
     elsif request.rejected?
-      message = "Request:\n#{@request.description_text}\nhas been *rejected*!"
+      message = "Request:\n#{@request.description_text host_url}\nhas been *rejected*!"
       message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
       notify_users(message)
     end
@@ -109,6 +109,10 @@ class RequestsController < ApplicationController
   end
 
   private
+
+  def host_url
+    request.base_url
+  end
 
   def save_sudo_rights(request)
     sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
