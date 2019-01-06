@@ -10,8 +10,8 @@ RSpec.describe VmsController, type: :controller do
   describe 'GET #index' do
     before do
       double_api = double
-      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
-                                                         { name: 'another VM', state: false, bootTime: 'now' }]
+      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true },
+                                                         { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
 
       allow(VmApi).to receive(:instance).and_return double_api
     end
@@ -87,7 +87,7 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'get #show' do
+  describe 'GET #show' do
     let(:double_api) do
       double
     end
@@ -120,7 +120,19 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'POST #change_power_state' do
-    pending "should "
+    let(:double_api) do
+      double
+    end
+
+    before do
+      allow(VmApi).to receive(:instance).and_return double_api
+    end
+
+    it 'returns http success or timeout or not found' do
+      allow(double_api).to receive(:get_vm).and_return({})
+      get :show, params: { id: 1 }
+      expect(response).to have_http_status(:success).or have_http_status(408)
+    end
   end
 
 

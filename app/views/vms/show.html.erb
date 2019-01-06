@@ -27,10 +27,14 @@ end %>
           Manage
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <% if @vm[:state] %>
+          <% if @vm[:state] && @vm[:vmwaretools] %>
             <a class="dropdown-item" href="#">Suspend</a>
             <a class="dropdown-item" href="#">Shutdown Guest OS</a>
             <a class="dropdown-item" href="#">Restart Guest OS</a>
+            <a class="dropdown-item" href="#">Reset</a>
+            <a class="dropdown-item" href="#">Power Off</a>
+          <% elsif @vm[:state] && @vm[:vmwaretools] == false  %>
+            <a class="dropdown-item" href="#">Suspend</a>
             <a class="dropdown-item" href="#">Reset</a>
             <a class="dropdown-item" href="#">Power Off</a>
           <% else %>
