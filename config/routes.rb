@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   post '/vms/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
   post '/vms/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
   post '/vms/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
-  post '/vms/:id/restart_guest_os' => 'vms#restart_guest_os', constraints: { id: /.*/ }
+  post '/vms/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
   post '/vms/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack

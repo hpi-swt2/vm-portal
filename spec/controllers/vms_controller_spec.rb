@@ -147,8 +147,8 @@ RSpec.describe VmsController, type: :controller do
     pending 'should '
   end
 
-  describe 'POST #restart_guest_os' do
-    pending 'should '
+  describe 'POST #reboot_guest_os' do
+    pending "should "
   end
 
   describe 'POST #reset_vm' do

@@ -52,7 +52,7 @@ class VmsController < ApplicationController
     redirect_to action: :show, id: params[:id]
   end
 
-  def restart_guest_os # TODO: rename to reboot
+  def reboot_guest_os
     @vm = VmApi.instance.get_vm(params[:id])
     VmApi.instance.reboot_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]

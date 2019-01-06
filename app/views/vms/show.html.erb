@@ -100,7 +100,7 @@ end %>
                         {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]},
                         method: :post, class: 'btn btn-danger' %></td>
       <td><%= button_to 'Restart Guest OS',
-                        {controller: :vms, action: 'restart_guest_os', id: @vm[:name]},
+                        {controller: :vms, action: 'reboot_guest_os', id: @vm[:name]},
                         method: :post, class: 'btn btn-primary' %></td>
       <td><%= button_to 'Reset VM',
                         {controller: :vms, action: 'reset_vm', id: @vm[:name]},

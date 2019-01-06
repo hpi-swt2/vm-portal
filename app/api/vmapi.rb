@@ -71,8 +71,7 @@ class VmApi
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
         summary: vm.summary,
-        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled')
-      }
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled')}
     end
   end
 
