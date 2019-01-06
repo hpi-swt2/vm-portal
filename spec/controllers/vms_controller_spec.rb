@@ -10,8 +10,8 @@ RSpec.describe VmsController, type: :controller do
   describe 'GET #index' do
     before do
       double_api = double
-      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday' },
-                                                         { name: 'another VM', state: false, bootTime: 'now' }]
+      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true },
+                                                         { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
 
       allow(VmApi).to receive(:instance).and_return double_api
     end
@@ -87,7 +87,7 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'get #show' do
+  describe 'GET #show' do
     let(:double_api) do
       double
     end
@@ -116,6 +116,76 @@ RSpec.describe VmsController, type: :controller do
     it 'renders not found page when no vm found' do
       allow(double_api).to receive(:get_vm).and_return(nil)
       expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
+    end
+  end
+
+  describe 'POST #change_power_state' do
+    before do
+      double_api = double
+      expect(double_api).to receive(:change_power_state)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :change_power_state, params: { id: 0 }
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
+  describe 'POST #suspend_vm' do
+    before do
+      double_api = double
+      expect(double_api).to receive(:suspend_vm)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :suspend_vm, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
+  end
+
+  describe 'POST #shutdown_guest_os' do
+    before do
+      double_api = double
+      expect(double_api).to receive(:shutdown_guest_os)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :shutdown_guest_os, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
+  end
+
+  describe 'POST #reboot_guest_os' do
+    before do
+      double_api = double
+      expect(double_api).to receive(:reboot_guest_os)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :reboot_guest_os, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
+  end
+
+  describe 'POST #reset_vm' do
+    before do
+      double_api = double
+      expect(double_api).to receive(:reset_vm)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :reset_vm, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
     end
   end
 end
