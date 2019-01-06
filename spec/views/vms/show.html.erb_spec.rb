@@ -147,8 +147,8 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   it 'displays info when vmwaretools are not installed' do
     assign(:vm, vm_on_without_tools)
     render
-    #expect(rendered).not_to have_link 'Shutdown Guest OS'
-    #expect(rendered).not_to have_link 'Restart Guest OS'
+    # expect(rendered).not_to have_link 'Shutdown Guest OS'
+    # expect(rendered).not_to have_link 'Restart Guest OS'
     expect(rendered).to have_link 'Suspend'
     expect(rendered).to have_link 'Reset'
     expect(rendered).to have_link 'Power Off'

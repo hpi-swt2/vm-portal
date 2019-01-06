@@ -42,7 +42,7 @@ class VmsController < ApplicationController
 
   def resume
     @vm = VmApi.instance.get_vm(params[:id])
-    # todo: implement api method for resume
+    # TODO: implement api method for resume
     redirect_to action: :show, id: params[:id]
   end
 
@@ -52,7 +52,7 @@ class VmsController < ApplicationController
     redirect_to action: :show, id: params[:id]
   end
 
-  def restart_guest_os # todo: rename to reboot
+  def restart_guest_os # TODO: rename to reboot
     @vm = VmApi.instance.get_vm(params[:id])
     VmApi.instance.reboot_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
@@ -76,7 +76,7 @@ class VmsController < ApplicationController
     else
       result = []
       vm_filter.keys.each do |key|
-        result += list.select {|object| vm_filter[key].call(object)} if params[key].present?
+        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
       end
       result
     end
@@ -99,6 +99,6 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    {up_vms: proc {|vm| vm[:state]}, down_vms: proc {|vm| !vm[:state]}}
+    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
   end
 end

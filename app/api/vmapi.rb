@@ -24,7 +24,7 @@ class VmApi
       { name: vm.name,
         state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
-        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled')}
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
   end
 
