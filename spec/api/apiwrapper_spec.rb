@@ -242,4 +242,96 @@ RSpec.describe VmApi do
       end
     end
   end
+
+  describe '#suspend_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:SuspendVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'suspends VM' do
+      api.suspend_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#reset_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ResetVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'resest the VM' do
+      api.reset_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#shutdown_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ShutdownGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'shuts down the guest OS' do
+      api.shutdown_guest_os(Faker::FunnyName)
+    end
+  end
+
+  describe '#reboot_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:RebootGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'reboots the guest OS' do
+      api.reboot_guest_os(Faker::FunnyName)
+    end
+  end
 end
