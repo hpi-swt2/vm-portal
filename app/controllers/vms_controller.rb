@@ -40,12 +40,6 @@ class VmsController < ApplicationController
     redirect_to action: :show, id: params[:id]
   end
 
-  def resume
-    @vm = VmApi.instance.get_vm(params[:id])
-    # TODO: implement api method for resume
-    redirect_to action: :show, id: params[:id]
-  end
-
   def shutdown_guest_os
     @vm = VmApi.instance.get_vm(params[:id])
     VmApi.instance.shutdown_guest_os(@vm[:name])

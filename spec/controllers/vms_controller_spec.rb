@@ -120,38 +120,72 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'POST #change_power_state' do
-    let(:double_api) do
-      double
-    end
-
     before do
+      double_api = double
+      expect(double_api).to receive(:change_power_state)
       allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
     end
 
-    it 'returns http success or timeout or not found' do
-      allow(double_api).to receive(:get_vm).and_return({})
-      get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success).or have_http_status(408)
+    it 'returns http success' do
+      post :change_power_state, params: { id: 0 }
+      expect(response).to redirect_to(root_path)
     end
   end
 
   describe 'POST #suspend_vm' do
-    pending 'should '
-  end
+    before do
+      double_api = double
+      expect(double_api).to receive(:suspend_vm)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
 
-  describe 'POST #resume' do
-    pending 'should '
+    it 'returns http success' do
+      post :suspend_vm, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
   end
 
   describe 'POST #shutdown_guest_os' do
-    pending 'should '
+    before do
+      double_api = double
+      expect(double_api).to receive(:shutdown_guest_os)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :shutdown_guest_os, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
   end
 
   describe 'POST #reboot_guest_os' do
-    pending 'should '
+    before do
+      double_api = double
+      expect(double_api).to receive(:reboot_guest_os)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :reboot_guest_os, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
   end
 
   describe 'POST #reset_vm' do
-    pending 'should '
+    before do
+      double_api = double
+      expect(double_api).to receive(:reset_vm)
+      allow(VmApi).to receive(:instance).and_return double_api
+      allow(double_api).to receive(:get_vm).and_return({})
+    end
+
+    it 'returns http success' do
+      post :reset_vm, params: { id: 0 }
+      expect(response).to redirect_to(vm_path)
+    end
   end
 end

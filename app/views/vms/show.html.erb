@@ -23,21 +23,33 @@ end %>
         Manage
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <% if @vm[:state]  && @vm[:vmwaretools]%>
-          <a class="dropdown-item" href="#">Suspend</a>
-          <a class="dropdown-item" href="#">Shutdown Guest OS</a>
-          <a class="dropdown-item" href="#">Restart Guest OS</a>
-          <a class="dropdown-item" href="#">Reset</a>
-          <a class="dropdown-item" href="#">Power Off</a>
+        <% if @vm[:state]  && @vm[:vmwaretools] == true%>
+          <%= link_to 'Suspend VM',
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+          <%= link_to 'Shutdown Guest OS',
+                      {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Restart Guest OS',
+                      {controller: :vms, action: 'reboot_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Reset VM',
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Power Off',
+                      {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
         <% elsif @vm[:state] && @vm[:vmwaretools] == false%>
-          <a class="dropdown-item" href="#">Suspend</a>
-          <a class="dropdown-item" href="#">Reset</a>
-          <a class="dropdown-item" href="#">Power Off</a>
+          <%= link_to 'Suspend VM',
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+          <%= link_to 'Reset VM',
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Power Off',
+                      {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
         <% else %>
-          <a class="dropdown-item" href="#">Power On</a>
+          <%= link_to 'Power On',
+                        {controller: :vms, action: 'change_power_state', id: @vm[:name]},
+                        method: :post, class: 'dropdown-item' %>
         <% end %>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Delete</a>
+        <%= link_to 'Delete VM',
+                      {controller: :vms, action: 'destroy', id: @vm[:name]},
+                      method: :delete, class: 'dropdown-item' %>
       </div>
     </div>
   </div>
@@ -54,16 +66,16 @@ end %>
   ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
   cpu_cores = @vm[:summary].config&.numCpu  || 1
 
-  @values = {cpu_allocation: cpu_allocation, 
-             cpu_usage: cpu_usage, 
-             ram_allocation: ram_allocation, 
-             ram_usage: ram_usage, 
-             hdd_usage: hdd_usage, 
-             hdd_allocation: hdd_allocation, 
-             cpu_cores: cpu_cores } 
+  @values = {cpu_allocation: cpu_allocation,
+             cpu_usage: cpu_usage,
+             ram_allocation: ram_allocation,
+             ram_usage: ram_usage,
+             hdd_usage: hdd_usage,
+             hdd_allocation: hdd_allocation,
+             cpu_cores: cpu_cores }
 
   @hardware = {'IP Address' => @vm[:summary]&.guest&.ipAddress,
-               'Heartbeat Status' => @vm[:guestHeartbeatStatus] }           
+               'Heartbeat Status' => @vm[:guestHeartbeatStatus] }
   %>
 
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
@@ -88,45 +100,3 @@ end %>
     </table>
   </div>
 </div>
-
-<table class="table">
-  <tbody>
-  <tr>
-    <% if @vm[:state] && @vm[:vmwaretools] %>
-      <td><%= button_to 'Suspend VM',
-                        {controller: :vms, action: 'suspend_vm', id: @vm[:name]},
-                        method: :post, class: 'btn btn-warning' %></td>
-      <td><%= button_to 'Shutdown Guest OS',
-                        {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]},
-                        method: :post, class: 'btn btn-danger' %></td>
-      <td><%= button_to 'Restart Guest OS',
-                        {controller: :vms, action: 'reboot_guest_os', id: @vm[:name]},
-                        method: :post, class: 'btn btn-primary' %></td>
-      <td><%= button_to 'Reset VM',
-                        {controller: :vms, action: 'reset_vm', id: @vm[:name]},
-                        method: :post, class: 'btn btn-primary' %></td>
-      <td><%= button_to 'Power Off',
-                        {controller: :vms, action: 'change_power_state', id: @vm[:name]},
-                        method: :post, class: 'btn btn-danger' %></td>
-    <% elsif @vm[:state] && @vm[:vmwaretools] == false %>
-      <td><%= button_to 'Suspend VM',
-                        {controller: :vms, action: 'suspend_vm', id: @vm[:name]},
-                        method: :post, class: 'btn btn-warning' %></td>
-      <td><%= button_to 'Reset VM',
-                        {controller: :vms, action: 'reset_vm', id: @vm[:name]},
-                        method: :post, class: 'btn btn-primary' %></td>
-      <td><%= button_to 'Power Off',
-                        {controller: :vms, action: 'change_power_state', id: @vm[:name]},
-                        method: :post, class: 'btn btn-danger' %></td>
-    <% else %>
-      <td><%= button_to 'Power On',
-                        {controller: :vms, action: 'change_power_state', id: @vm[:name]},
-                        method: :post, class: 'btn btn-success' %></td>
-    <% end %>
-
-    <td><%= button_to 'Delete VM',
-                      {controller: :vms, action: 'destroy', id: @vm[:name]},
-                      method: :delete, class: "btn btn-danger" %></td>
-  </tr>
-  </tbody>
-</table>
