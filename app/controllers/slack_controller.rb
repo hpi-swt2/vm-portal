@@ -10,9 +10,14 @@ class SlackController < ApplicationController
     if current_user
       @controller = self
       @request = current_user.slack_auth_requests.create state: SecureRandom.uuid
+      redirect_to slack_auth_url(@request)
     else
       redirect_to new_user_session_path, notice: 'You are not logged in.'
     end
+  end
+
+  def slack_auth_url(request)
+    "https://slack.com/oauth/authorize?client_id=#{client_id}&scope=incoming-webhook&redirect_uri=#{redirect_uri}&state=#{request.state}"
   end
 
   def update
@@ -56,7 +61,7 @@ class SlackController < ApplicationController
 
   def error_message_for(answer)
     if answer && answer['error']
-      error_message = 'Error while finishing the authentication: ' + answer['error'] + '\n'
+      error_message = 'Error while finishing the authentication: ' + answer['error'] + "\n"
       error_message + 'Please inform your system administrator if this error occurs multiple times'
     else
       'An unknown error occured, please try again'

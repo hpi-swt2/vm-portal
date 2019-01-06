@@ -13,18 +13,14 @@
   }
 </script>
 
-<table style="margin: auto" class="table-borderless">
-    <tr>
-        <td>
-            <canvas id="RAM"></canvas>
-        </td>
-        <td class="space"></td>
-        <td>
-            <canvas id="CPU"></canvas>
-        </td>
-        <td class="space"></td>
-        <td>
-            <canvas id="HDD"></canvas>
-        </td>
-    </tr>
-</table>
+<div class="clearfix chart-container">
+  <div class="float-left chart-box mr-125">
+    <canvas id="RAM" style="width: 150px; height: 150px"></canvas>
+  </div>
+  <div class="float-left chart-box mr-125">
+    <canvas id="CPU" style="width: 150px; height: 150px"></canvas>
+  </div>
+  <div class="float-left chart-box">
+    <canvas id="HDD" style="width: 150px; height: 150px"></canvas>
+  </div> 
+</div>

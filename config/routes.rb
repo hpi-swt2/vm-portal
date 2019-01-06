@@ -32,7 +32,11 @@ Rails.application.routes.draw do
              }
 
   resources :vms, :hosts
-  resources :users, only: %i[show index edit update]
+  resources :users do
+    member do
+      patch :update_role
+    end
+  end
 
   root 'landing#index'
 end
