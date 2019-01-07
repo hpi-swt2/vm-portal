@@ -9,12 +9,9 @@ class RequestsController < ApplicationController
   # GET /requests
   # GET /requests.json
   def index
-    if current_user.admin?
-      @requests = Request.all
-    else
-      # TODO: This needs to be changed in a different PR to a filtered version
-      @requests = Request.all
-    end
+    # TODO: This needs to be changed in a different PR to a filtered version.
+    # Therefore distinguish between admin and employee
+    @requests = Request.all
   end
 
   # GET /requests/1
