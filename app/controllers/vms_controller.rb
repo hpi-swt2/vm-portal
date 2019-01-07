@@ -28,36 +28,46 @@ class VmsController < ApplicationController
   end
 
   def show
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
-  def change_power_state
+  def request_vm_archivation
     @vm = VmApi.instance.get_vm(params[:id])
+    if is_archived(@vm) || is_pending_archivation(@vm)
+      return
+    end
+
+    set_pending_archivation(@vm)
+    redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  def change_power_state
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.change_power_state(@vm[:name], @vm[:state])
     redirect_to root_path
   end
 
   def suspend_vm
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.suspend_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def shutdown_guest_os
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.shutdown_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def reboot_guest_os
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reboot_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def reset_vm
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reset_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end

@@ -115,7 +115,7 @@ RSpec.describe VmApi do
 
   describe '#get_vm' do
     vm_name = 'VM'
-    subject { api.get_vm(vm_name) }
+    subject { api.get_vm_info(vm_name) }
 
     let(:vm_mock) do
       mock = double

@@ -28,7 +28,6 @@
     <th scope="col" data-sortable="true">VM Name</th>
     <th scope="col" data-sortable="true">Running Since</th>
     <th scope="col">Power Options</th>
-    <th scope="col">Archive</th>
   </tr>
   </thead>
   <tbody>
@@ -49,7 +48,6 @@
           <p class="text-muted">VMWare tools are not installed</p>
         <% end %>
       </td>
-      <td><%= button_to "Archive", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-success" %></td>
     <tr>
   <% end %>
   </tbody>

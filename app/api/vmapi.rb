@@ -26,9 +26,9 @@ class VmApi
   def all_vm_infos
     connect
     all_vms.map do |vm|
-      { name: vm.name, 
-        state: (vm.runtime.powerState == 'poweredOn'), 
-        boot_time: vm.runtime.bootTime, 
+      { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
+        boot_time: vm.runtime.bootTime,
         vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
   end
@@ -69,6 +69,10 @@ class VmApi
   end
 
   def get_vm(name)
+    find_vm(name)
+  end
+
+  def get_vm_info(name)
     connect
     if (vm = find_vm(name))
       { name: vm.name,
@@ -136,16 +140,29 @@ class VmApi
 
   private
 
-  def all_vm_folders
-    @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
+  def all_folders_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
   end
 
-  def all_vms_in(folder)
-    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
+  def all_vm_folders
+    all_folders_in(@vm_folder)
   end
 
   def find_vm(name)
-    @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)
+    find_vm_in(@vm_folder, name)
+  end
+
+  def find_vm_in(folder, name)
+    if vm = folder.traverse(name, RbVmomi::VIM::VirtualMachine)
+      vm
+    else
+      all_folders_in(folder).each do |each|
+        if vm = find_vm_in(each, name)
+          return vm
+        end
+      end
+      return nil
+    end
   end
 
   def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength

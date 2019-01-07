@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post '/vms/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
   post '/vms/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
   post '/vms/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
+  post '/vms/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
