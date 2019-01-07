@@ -38,7 +38,12 @@ class VmsController < ApplicationController
       return
     end
 
+    VmApi.instance.change_power_state(@vm.name, false)
+    User.all.filter { |each| each.role == :admin }.each do |each|
+      each.notify_slack("VM #{@vm.name} has been requested to be archived!")
+    end
     set_pending_archivation(@vm)
+
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
@@ -84,6 +89,7 @@ class VmsController < ApplicationController
     else
       result = []
       vm_filter.keys.each do |key|
+
         result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
       end
       result
