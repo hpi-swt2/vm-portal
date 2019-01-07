@@ -60,7 +60,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
 
     it 'routes to the new_vm_path' do
       click_button('Accept & Continue')
-      expect(page).to have_current_path(new_vm_path)
+      expect(page).to have_current_path(new_vm_path(request: request))
     end
 
     it 'has automatically filled fields' do
