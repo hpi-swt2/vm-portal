@@ -117,6 +117,12 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to have_link 'Power Off'
   end
 
+  it 'demands confirmation on critical actions' do
+    
+    expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on[:name])}'][data-confirm='Are you sure?']")
+    expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on[:name])}'][data-confirm='Are you sure?']")
+  end
+
   it 'has no power on link when powered on' do
     expect(rendered).not_to have_link 'Power On'
   end
