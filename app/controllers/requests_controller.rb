@@ -60,11 +60,11 @@ class RequestsController < ApplicationController
     return if request.pending?
 
     if request.accepted?
-      notify_users('Request has been accepted', @request.description_text(host_url))
+      notify_users("Request:\n#{@request.description_text host_url}\nhas been *accepted*!")
     elsif request.rejected?
-      message = @request.description_text host_url
+      message = "Request:\n#{@request.description_text host_url}\nhas been *rejected*!"
       message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
-      notify_users('Request has been rejected', message)
+      notify_users(message)
     end
   end
 
