@@ -111,17 +111,17 @@
       <tr>
         <% if current_user.employee? %>
           <td>
-            <%= link_to "Requests",
-                          requests_path,
-                          class: "btn btn-info"
+            <%= button_to "Requests",
+                          {controller: :requests, action: 'index'},
+                          method: :get, class: "btn btn-info"
             %>
           </td>
         <% end %>
         <% if current_user.employee? %>
           <td>
-            <%= link_to "New",
-                          new_request_path,
-                          class: "btn btn-info"
+            <%= button_to "New",
+                          {controller: :vms, action: 'new'},
+                          method: :get, class: "btn btn-info"
             %>
           </td>
         <% end %>
