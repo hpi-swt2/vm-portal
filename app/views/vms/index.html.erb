@@ -106,6 +106,28 @@
 </table>
 
 
+<table class="table">
+    <tbody>
+      <tr>
+        <% if current_user.employee? %>
+          <td>
+            <%= button_to "Requests",
+                          {controller: :requests, action: 'index'},
+                          method: :get, class: "btn btn-info"
+            %>
+          </td>
+        <% end %>
+        <% if current_user.employee? %>
+          <td>
+            <%= button_to "New",
+                          {controller: :vms, action: 'new'},
+                          method: :get, class: "btn btn-info"
+            %>
+          </td>
+        <% end %>
+    </tr>
+  </tbody>
+</table>
 
 
 <!-- Minified script sources for sortable tables -->
