@@ -28,9 +28,9 @@ class RequestsController < ApplicationController
     @request_templates = RequestTemplate.all
   end
 
-  def notify_users(title, message)
+  def notify_users(message)
     User.all.each do |each|
-      each.notify(title, message)
+      each.notify_slack(message)
     end
   end
 
