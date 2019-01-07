@@ -99,15 +99,9 @@ RSpec.describe RequestsController, type: :controller do
         end.to change(Request, :count).by(1)
       end
 
-      it 'redirects to the dashboard if user is not an admin' do
+      it 'redirects to the request page index page' do
         post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(dashboard_url)
-      end
-
-      it 'redirects to the accept/reject request page if user is an admin' do
-        sign_in FactoryBot.create(:user, role: :admin)
-        post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(Request.last)
+        expect(response).to redirect_to(requests_path)
       end
     end
 
