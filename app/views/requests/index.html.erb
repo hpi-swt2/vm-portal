@@ -20,7 +20,7 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= link_to "#{request.name}", request %></td>
+        <td><%= request.name %></td>
         <td><%= request.cpu_cores %></td>
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
@@ -28,7 +28,12 @@
         <td><%= request.port %></td>
         <td><%= request.application_name %></td>
         <td><%= request.comment %></td>
-        <td><%= request.status %></td>
+        <td>
+          <%= link_to request.status,
+                      request_path(request),
+                      class: 'btn btn-primary'
+          %>
+        </td>
       </tr>
     <% end %>
   </tbody>

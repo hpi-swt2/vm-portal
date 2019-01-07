@@ -24,12 +24,42 @@ class VmsController < ApplicationController
   end
 
   def new
-    @request = !params[:request].nil? ? Request.find(params[:request]) : default_request
+    @request = !params[:request].nil? ? Request.find(params[:request]) : default_render
   end
 
   def show
     @vm = VmApi.instance.get_vm(params[:id])
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  end
+
+  def change_power_state
+    @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.change_power_state(@vm[:name], @vm[:state])
+    redirect_to root_path
+  end
+
+  def suspend_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.suspend_vm(@vm[:name])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def shutdown_guest_os
+    @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.shutdown_guest_os(@vm[:name])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def reboot_guest_os
+    @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.reboot_guest_os(@vm[:name])
+    redirect_to action: :show, id: params[:id]
+  end
+
+  def reset_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    VmApi.instance.reset_vm(@vm[:name])
+    redirect_to action: :show, id: params[:id]
   end
 
   # This controller doesn't use strong parameters
@@ -68,9 +98,5 @@ class VmsController < ApplicationController
 
   def vm_filter
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
-  end
-
-  def default_request
-    { name: 'VM', cpu_cores: 1, ram_mb: 1000, storage_mb: 1000 }
   end
 end

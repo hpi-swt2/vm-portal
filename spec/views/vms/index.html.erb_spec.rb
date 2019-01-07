@@ -7,11 +7,27 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     [{
       name: 'My insanely cool vm',
       state: true,
-      boot_time: 'Yesterday'
+      boot_time: 'Yesterday',
+      vmwaretools: true
     }, {
       name: 'Another VM',
       state: false,
-      boot_time: 'Friday'
+      boot_time: 'Friday',
+      vmwaretools: true
+    }]
+  end
+
+  let(:mock_vms_without_tools) do
+    [{
+      name: 'My insanely cool vm',
+      state: true,
+      boot_time: 'Yesterday',
+      vmwaretools: false
+    }, {
+      name: 'Another VM',
+      state: false,
+      boot_time: 'Friday',
+      vmwaretools: false
     }]
   end
 
@@ -58,5 +74,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   it 'shows correct power on / off button' do
     expect(rendered).to have_button('Start')
     expect(rendered).to have_button('Shutdown')
+  end
+
+  it 'shows no power buttons when vmwaretools are not installed' do
+    assign(:vms, mock_vms_without_tools)
+    assign(:parameters, param)
+    render
+    expect(rendered).to have_text('VMWare tools are not installed')
   end
 end

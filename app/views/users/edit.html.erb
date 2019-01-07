@@ -23,7 +23,7 @@
       <td>Name</td>
       <td><%= @user.name %></td>
     </tr>
-    <% if @user == current_user %>
+    <% if current_user?(@user) %>
       <tr>
         <td><%= User.human_attribute_name('ssh_key') %></td>
         <td><%= f.text_area :ssh_key, class: 'form-control', rows: '8', id: 'sshKeyField' %></td>
