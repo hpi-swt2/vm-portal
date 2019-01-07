@@ -10,6 +10,11 @@ RSpec.describe OperatingSystem, type: :model do
       operating_system.name = ''
       expect(operating_system).to be_invalid
     end
+
+    it'is invalid when the opertaing_system already exists' do
+      FactoryBot.create :operating_system
+      expect(operating_system).to be_invalid
+    end
   end
 
   context 'when operating_system is valid' do
