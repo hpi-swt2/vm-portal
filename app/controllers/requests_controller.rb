@@ -5,12 +5,11 @@ class RequestsController < ApplicationController
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_employee
   before_action :authenticate_admin, only: %i[request_accept_button]
+  before_action :authenticate_status_change, only: %i[request_accept_button]
 
   # GET /requests
   # GET /requests.json
   def index
-    # TODO: This needs to be changed in a different PR to a filtered version.
-    # Therefore distinguish between admin and employee
     @requests = Request.all
   end
 
@@ -122,6 +121,10 @@ class RequestsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_request
     @request = Request.find(params[:id])
+  end
+
+  def authenticate_status_change
+    # check if request.creator != current_user
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
