@@ -117,8 +117,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to have_link 'Power Off'
   end
 
-  it 'demands confirmation on critical actions' do
-    
+  it 'demands confirmation on critical actions when powered on' do
     expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on[:name])}'][data-confirm='Are you sure?']")
     expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on[:name])}'][data-confirm='Are you sure?']")
   end
@@ -143,7 +142,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).not_to have_link 'Reset'
     expect(rendered).not_to have_link 'Power Off'
   end
-
+  
   it 'shows status when online' do
     assign(:vm, vm_off)
     render
@@ -159,6 +158,14 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to have_link 'Reset'
     expect(rendered).to have_link 'Power Off'
   end
+ 
+  it 'demands confirmation on critical actions when vmwaretools are not installed' do
+    assign(:vm, vm_on_without_tools)
+    rendered = render
+    expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']")
+    expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']")
+  end
+
 
   it 'displays info when vmwaretools are installed' do
     assign(:vm, vm_on)
