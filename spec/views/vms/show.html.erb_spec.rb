@@ -163,9 +163,11 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     assign(:vm, vm_on_without_tools)
     rendered = render
     expect(rendered).to have_selector(
-      "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']")
+      "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']"
+    )
     expect(rendered).to have_selector(
-      "a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']")
+      "a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools[:name])}'][data-confirm='Are you sure?']"
+    )
   end
 
   it 'displays info when vmwaretools are installed' do
