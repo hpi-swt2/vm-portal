@@ -7,15 +7,15 @@ RSpec.describe 'requests/show', type: :view do
 
   let(:request) do
     Request.create!(
-        name: 'MyVM',
-        cpu_cores: 2,
-        ram_mb: 1000,
-        storage_mb: 2000,
-        operating_system: 'MyOS',
-        port: '4000',
-        application_name: 'MyName',
-        comment: 'Comment',
-        status: 'pending'
+      name: 'MyVM',
+      cpu_cores: 2,
+      ram_mb: 1000,
+      storage_mb: 2000,
+      operating_system: 'MyOS',
+      port: '4000',
+      application_name: 'MyName',
+      comment: 'Comment',
+      status: 'pending'
     )
   end
 
