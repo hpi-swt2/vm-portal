@@ -12,7 +12,7 @@
           <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
             <%= fa_icon('check', class: 'big-icon') %>
           <% end unless notification.read%>
-          <%= link_to notification, method: :delete, data: { confirm: 'Are you sure?' }, class: 'icon-link delete'  do %>
+          <%= link_to notification, method: :delete, class: 'icon-link delete'  do %>
             <%= fa_icon('trash', class: 'big-icon') %>
           <% end %>
         </div>
