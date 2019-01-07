@@ -25,20 +25,20 @@ end %>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         <% if @vm[:state]  && @vm[:vmwaretools] == true%>
           <%= link_to 'Suspend VM',
-                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item'%>
           <%= link_to 'Shutdown Guest OS',
                       {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
           <%= link_to 'Restart Guest OS',
                       {controller: :vms, action: 'reboot_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
           <%= link_to 'Reset VM',
-                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
           <%= link_to 'Power Off',
                       {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
         <% elsif @vm[:state] && @vm[:vmwaretools] == false%>
           <%= link_to 'Suspend VM',
-                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item'%>
           <%= link_to 'Reset VM',
-                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
           <%= link_to 'Power Off',
                       {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
         <% else %>

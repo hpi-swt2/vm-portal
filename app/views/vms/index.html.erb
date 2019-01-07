@@ -40,7 +40,7 @@
       <td>
         <% if vm[:vmwaretools] %>
           <% if vm[:state] %>
-            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
+            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
           <% else %>
             <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
           <% end %>
