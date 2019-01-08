@@ -137,23 +137,23 @@ class RequestsController < ApplicationController
   end
 
   def create_puppet_script(request)
-    #puppet_string = 'class node-vm-%s-%s {\n\t$admins = [%s]\n\t$users = [%s]\n\n\trealize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])\n\trealize(Accounts::Virtual[$users])\n}'
+
     puppet_string =
-'class node-vm-%s-%s {
+'class node_vm-%s {
     $admins = [%s]
     $users = [%s]
 
     realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
     realize(Accounts::Virtual[$users])
 }'
-
-    admins = User.where(id: request.sudo_user_ids).to_a
+    admins = request.users_assigned_to_requests.select(&:sudo).to_a
+    admins.map!(&:user)
     users = request.users.to_a
-    os = request.operating_system
 
-    admins.map! { |user| "\"#{user.name}\"" }
-    users.map! { |user| "\"#{user.name}\"" }
-    format(puppet_string, current_user.last_name, os, admins.join(', '), users.join(', '))
+    admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
+    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
+    path = 'tmp/node-'+request.name+'.pp'
+    File.open(path, 'w') { |f| f.write(format(puppet_string, request.name, admins.join(', '), users.join(', '))) } unless Pathname(path).exist?
   end
   helper_method :create_puppet_script
 end
