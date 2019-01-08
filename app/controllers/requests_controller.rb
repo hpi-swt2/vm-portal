@@ -4,10 +4,13 @@ class RequestsController < ApplicationController
   include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_employee
+  before_action :authenticate_admin, only: %i[request_accept_button]
 
   # GET /requests
   # GET /requests.json
   def index
+    # TODO: This needs to be changed in a different PR to a filtered version.
+    # Therefore distinguish between admin and employee
     @requests = Request.all
   end
 
