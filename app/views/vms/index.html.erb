@@ -1,0 +1,71 @@
+<h1>
+  Virtual Machines
+</h1>
+<small class="text-muted">This is the overview page for all currently existing VMs</small>
+
+<%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>
+        <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
+        <%= label_tag(:up_vms, "connected") %>
+      </td>
+      <td>
+        <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
+        <%= label_tag(:down_vms, "not connected") %>
+      </td>
+      <td>
+        <%= submit_tag"Filter", class: "btn btn-info" %>
+      </td>
+    </tr></tbody></table>
+<% end %>
+
+
+<table data-toggle="table" class="table">
+  <thead>
+  <tr>
+    <th scope="col" data-sortable="true">VM Name</th>
+    <th scope="col" data-sortable="true">Running Since</th>
+    <th scope="col">Power Options</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @vms.each do |vm| %>
+    <tr>
+      <td><%= link_to vm[:name],
+                      {controller: :vms, action: 'show', id: vm[:name]},
+                      method: :get, class: "btn btn-link"  %></td>
+      <td><%= vm[:boot_time] if vm[:state] %></td>
+      <td>
+        <% if vm[:vmwaretools] %>
+          <% if vm[:state] %>
+            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
+          <% else %>
+            <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
+          <% end %>
+        <% else %>
+          <p class="text-muted">VMWare tools are not installed</p>
+        <% end %>
+      </td>
+    <tr>
+  <% end %>
+  </tbody>
+</table>
+<table class="table">
+    <tbody>
+      <tr>
+        <td><%= button_to "Requests",
+          {controller: :requests, action: 'index'},
+          method: :get, class: "btn btn-info" %></td>
+        <td><%= button_to "New",
+          {controller: :vms, action: 'new'},
+          method: :get, class: "btn btn-info" %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

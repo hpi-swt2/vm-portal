@@ -1,0 +1,25 @@
+<% unless @notifications.empty? %>
+
+  <% @notifications.each do |notification| %>
+    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
+    <div class="<%= class_names %>" style="width:100%">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%= notification.title %>
+        </h5>
+        <%= simple_format(notification.message) %>
+        <div class="pull-right">
+          <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
+            <%= fa_icon('check', class: 'big-icon') %>
+          <% end unless notification.read%>
+          <%= link_to notification, method: :delete, data: { confirm: 'Are you sure?' }, class: 'icon-link delete'  do %>
+            <%= fa_icon('trash', class: 'big-icon') %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+<% else %>
+  <p>You don't have any notifications at the moment.</p>
+<% end %>

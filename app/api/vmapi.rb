@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
+require 'singleton'
 # This class manages a connection to the VSphere backend
 # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
 # For documentation of API objects have a look at this:
 # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html
 class VmApi
+  include Singleton
   API_SERVER_IP = '192.168.30.3'
   API_SERVER_USER = 'administrator@swt.local'
   API_SERVER_PASSWORD = 'Vcsaswt"2018'
@@ -18,9 +20,17 @@ class VmApi
 
   def all_vms
     connect
-    @vm_folder.children.map do |vm|
-      { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
+    all_vms_in(@vm_folder).map do |vm|
+      { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
+        boot_time: vm.runtime.bootTime,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
+  end
+
+  def all_archived_vms
+    connect
+    all_vms_in(all_vm_folders.detect { |folder| folder.name == 'Archived VMs' })
   end
 
   def all_clusters
@@ -35,12 +45,13 @@ class VmApi
     @hosts = Array.new([])
     @clusters.map do |cluster|
       cluster.host.map do |host|
-        vm_names = Array.new([])
+        vms = {}
         host.vm.map do |vm|
-          vm_names << vm.name
+          state = vm.runtime.powerState == 'poweredOn'
+          vms[vm.name] = state
         end
         @hosts << { name: host.name,
-                    vm_names: vm_names,
+                    vms: vms,
                     model: host.hardware.systemInfo.model,
                     vendor: host.hardware.systemInfo.vendor,
                     bootTime: host.runtime.bootTime,
@@ -55,10 +66,12 @@ class VmApi
     connect
     if (vm = find_vm(name))
       { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
-        summary: vm.summary }
+        summary: vm.summary,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
   end
 
@@ -81,16 +94,48 @@ class VmApi
     connect
     vm = find_vm name
     if state
-      vm.PowerOnVM_Task.wait_for_completion
-    else
       vm.PowerOffVM_Task.wait_for_completion
+    else
+      vm.PowerOnVM_Task.wait_for_completion
     end
+  end
+
+  def suspend_vm(name)
+    connect
+    vm = find_vm name
+    vm.SuspendVM_Task.wait_for_completion
+  end
+
+  def reset_vm(name)
+    connect
+    vm = find_vm name
+    vm.ResetVM_Task.wait_for_completion
+  end
+
+  def shutdown_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.ShutdownGuest.wait_for_completion
+  end
+
+  def reboot_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.RebootGuest.wait_for_completion
   end
 
   private
 
+  def all_vm_folders
+    @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
+  end
+
+  def all_vms_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
+  end
+
   def find_vm(name)
-    @vm_folder.traverse(name, RbVmomi:: VIM::VirtualMachine)
+    @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)
   end
 
   def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength

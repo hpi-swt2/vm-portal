@@ -1,0 +1,102 @@
+<% def seconds_to_units(seconds)
+  '%d days, %d hours, %d minutes, %d seconds' %
+    [24,60,60].reverse.inject([seconds]) {|result, unitsize|
+      result[0,0] = result.shift.divmod(unitsize)
+      result
+    }
+end %>
+
+<div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
+  <h1 class="mb-0 float-left"><%= @vm[:name] unless @vm.nil? %></h1>
+  <% os = @vm[:summary]&.config&.guestFullName %>
+  <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})" unless os.nil? || os.downcase.include?('other')%></h2></div>
+</div>
+<div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%">
+  <% up_time = seconds_to_units(Time.current - @vm[:boot_time]) unless @vm[:boot_time].nil? %>
+  <div class="<%= @vm[:state]? 'bg-success' : 'bg-danger' %> text-white float-left pb-1 px-4 mr-2">
+    <%= @vm[:state]? 'online' : 'offline' %>
+  </div>
+  <%= " for #{up_time}" if @vm[:state] %>
+  <div class="text-right float-right" style="width: 20%">
+    <div class="dropdown border text-right">
+      <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+        Manage
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <% if @vm[:state]  && @vm[:vmwaretools] == true%>
+          <%= link_to 'Suspend VM',
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+          <%= link_to 'Shutdown Guest OS',
+                      {controller: :vms, action: 'shutdown_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Restart Guest OS',
+                      {controller: :vms, action: 'reboot_guest_os', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Reset VM',
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Power Off',
+                      {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+        <% elsif @vm[:state] && @vm[:vmwaretools] == false%>
+          <%= link_to 'Suspend VM',
+                      {controller: :vms, action: 'suspend_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
+          <%= link_to 'Reset VM',
+                      {controller: :vms, action: 'reset_vm', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Power Off',
+                      {controller: :vms, action: 'change_power_state', id: @vm[:name]}, method: :post, class: 'dropdown-item' %>
+        <% else %>
+          <%= link_to 'Power On',
+                        {controller: :vms, action: 'change_power_state', id: @vm[:name]},
+                        method: :post, class: 'dropdown-item' %>
+        <% end %>
+        <div class="dropdown-divider"></div>
+        <%= link_to 'Delete VM',
+                      {controller: :vms, action: 'destroy', id: @vm[:name]},
+                      method: :delete, class: 'dropdown-item' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%
+  committed = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
+  uncommitted = (@vm[:summary]&.storage&.committed / 1024**3).round(2) || 0
+  hdd_usage = committed
+  hdd_allocation = (committed + uncommitted).round(2)
+  cpu_usage = @vm[:summary].quickStats&.overallCpuUsage || 0
+  cpu_allocation = @vm[:summary].config&.cpuReservation || 0
+  ram_usage = (@vm[:summary].quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
+  ram_allocation = (@vm[:summary].config&.memorySizeMB.to_f / 1024).round(2) || 0
+  cpu_cores = @vm[:summary].config&.numCpu  || 1
+
+  @values = {cpu_allocation: cpu_allocation,
+             cpu_usage: cpu_usage,
+             ram_allocation: ram_allocation,
+             ram_usage: ram_usage,
+             hdd_usage: hdd_usage,
+             hdd_allocation: hdd_allocation,
+             cpu_cores: cpu_cores }
+
+  @hardware = {'IP Address' => @vm[:summary]&.guest&.ipAddress,
+               'Heartbeat Status' => @vm[:guestHeartbeatStatus] }
+  %>
+
+<div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
+      <%= render 'templates/resource_allocation', values: @values %>
+</div>
+
+<div class="container mb-3 pl-0 pr-0 lead clearfix" style="width: 100%">
+  <div class="float-left">Host: <%= link_to @vm[:host], controller: "hosts", action: "show", id: @vm[:host] unless @vm.nil? %></div>
+  <div class="text-right">Project: Lorem Ipsum</div>
+</div>
+<div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
+  <div class="column float-left mr-3 half-screen-box">
+    <%= render 'templates/hardware_table', hardware: @hardware %>
+  </div>
+  <div class="column float-right half-screen-box">
+    <table class="table table-borderless" style="width: 100%">
+      <tbody class="table-active">
+        <tr>
+          <th colspan="2" ><h4 class="mb-0">Users</h4></th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

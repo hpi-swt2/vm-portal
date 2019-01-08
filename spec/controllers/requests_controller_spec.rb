@@ -26,6 +26,9 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
+  # Authenticate an user
+  login_employee
+
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
@@ -36,7 +39,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: 2000,
       operating_system: 'MyOS',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -49,7 +51,6 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
-      software: 'MySoftware',
       comment: 'Comment',
       status: 'pending'
     }
@@ -58,12 +59,11 @@ RSpec.describe RequestsController, type: :controller do
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # RequestsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
 
   describe 'GET #index' do
     it 'returns a success response' do
       Request.create! valid_attributes
-      get :index, params: {}, session: valid_session
+      get :index, params: {}
       expect(response).to be_successful
     end
   end
@@ -71,14 +71,14 @@ RSpec.describe RequestsController, type: :controller do
   describe 'GET #show' do
     it 'returns a success response' do
       request = Request.create! valid_attributes
-      get :show, params: { id: request.to_param }, session: valid_session
+      get :show, params: { id: request.to_param }
       expect(response).to be_successful
     end
   end
 
   describe 'GET #new' do
     it 'returns a success response' do
-      get :new, params: {}, session: valid_session
+      get :new, params: {}
       expect(response).to be_successful
     end
   end
@@ -86,7 +86,7 @@ RSpec.describe RequestsController, type: :controller do
   describe 'GET #edit' do
     it 'returns a success response' do
       request = Request.create! valid_attributes
-      get :edit, params: { id: request.to_param }, session: valid_session
+      get :edit, params: { id: request.to_param }
       expect(response).to be_successful
     end
   end
@@ -95,19 +95,25 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       it 'creates a new Request' do
         expect do
-          post :create, params: { request: valid_attributes }, session: valid_session
+          post :create, params: { request: valid_attributes }
         end.to change(Request, :count).by(1)
       end
 
-      it 'redirects to the created request' do
-        post :create, params: { request: valid_attributes }, session: valid_session
+      it 'redirects to the dashboard if user is not an admin' do
+        post :create, params: { request: valid_attributes }
+        expect(response).to redirect_to(dashboard_url)
+      end
+
+      it 'redirects to the accept/reject request page if user is an admin' do
+        sign_in FactoryBot.create(:user, role: :admin)
+        post :create, params: { request: valid_attributes }
         expect(response).to redirect_to(Request.last)
       end
     end
 
     context 'with invalid params' do
       it 'returns a success response (i.e. to display the "new" template)' do
-        post :create, params: { request: invalid_attributes }, session: valid_session
+        post :create, params: { request: invalid_attributes }
         expect(response).to be_successful
       end
     end
@@ -117,27 +123,26 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       let(:new_attributes) do
         {
-          name: 'MyVM',
-          cpu_cores: 2,
-          ram_mb: 1000,
-          storage_mb: 2000,
-          operating_system: 'MyOS',
-          software: 'MySoftware',
-          comment: 'Comment',
+          name: 'MyNewVM',
+          cpu_cores: 3,
+          ram_mb: 2000,
+          storage_mb: 3000,
+          operating_system: 'MyNewOS',
+          comment: 'newComment',
           status: 'pending'
         }
       end
 
       it 'updates the requested request' do
         request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: new_attributes }, session: valid_session
+        put :update, params: { id: request.to_param, request: new_attributes }
         request.reload
-        skip('Add assertions for updated state')
+        expect(request.name).to eq('MyNewVM')
       end
 
       it 'redirects to the request' do
         request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: valid_attributes }, session: valid_session
+        put :update, params: { id: request.to_param, request: valid_attributes }
         expect(response).to redirect_to(request)
       end
     end
@@ -145,7 +150,7 @@ RSpec.describe RequestsController, type: :controller do
     context 'with invalid params' do
       it 'returns a success response (i.e. to display the "edit" template)' do
         request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: invalid_attributes }, session: valid_session
+        put :update, params: { id: request.to_param, request: invalid_attributes }
         expect(response).to be_successful
       end
     end
@@ -155,13 +160,13 @@ RSpec.describe RequestsController, type: :controller do
     it 'destroys the requested request' do
       request = Request.create! valid_attributes
       expect do
-        delete :destroy, params: { id: request.to_param }, session: valid_session
+        delete :destroy, params: { id: request.to_param }
       end.to change(Request, :count).by(-1)
     end
 
     it 'redirects to the requests list' do
       request = Request.create! valid_attributes
-      delete :destroy, params: { id: request.to_param }, session: valid_session
+      delete :destroy, params: { id: request.to_param }
       expect(response).to redirect_to(requests_url)
     end
   end

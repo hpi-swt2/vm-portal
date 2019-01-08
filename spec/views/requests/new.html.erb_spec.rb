@@ -10,7 +10,8 @@ RSpec.describe 'requests/new', type: :view do
                        ram_mb: 1000,
                        storage_mb: 2000,
                        operating_system: 'MyOS',
-                       software: 'MySoftware',
+                       port: '4000',
+                       application_name: 'MyName',
                        comment: 'Comment',
                        status: 'pending'
                      ))
@@ -18,7 +19,6 @@ RSpec.describe 'requests/new', type: :view do
 
   it 'renders new request form' do
     render
-    expect(rendered).to match(/Windows/)
 
     assert_select 'form[action=?][method=?]', requests_path, 'post' do
       assert_select 'input[name=?]', 'request[name]'
@@ -31,9 +31,11 @@ RSpec.describe 'requests/new', type: :view do
 
       assert_select 'select[name=?]', 'request[operating_system]'
 
-      assert_select 'input[name=?]', 'request[software]'
+      assert_select 'input[name=?][min=?]', 'request[port]', '0'
 
-      assert_select 'input[name=?]', 'request[comment]'
+      assert_select 'input[name=?]', 'request[application_name]'
+
+      assert_select 'textarea[name=?]', 'request[comment]'
     end
   end
 end

@@ -4,11 +4,11 @@ require 'rails_helper'
 require './app/api/vmapi.rb'
 
 RSpec.describe VmApi do
-  let(:api) { described_class.new }
+  let(:api) { described_class.instance }
 
   describe '#connect' do
     let(:setup_methods) do
-      %i[serviceInstance find_datacenter hostFolder vmFolder children first resourcePool all_hosts find_vm]
+      %i[serviceInstance find_datacenter hostFolder vmFolder children first resourcePool all_hosts find_vm vm]
     end
 
     let(:double_api) do
@@ -90,11 +90,13 @@ RSpec.describe VmApi do
     let(:vm_mock) do
       mock = double
       expect(mock).to receive(:name).and_return(vm)
+      allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       mock
     end
 
     let(:vm) do
-      ['name', 'another name']
+      { 'name' => true,
+        'another name' => false }
     end
 
     before do
@@ -118,12 +120,16 @@ RSpec.describe VmApi do
     let(:vm_mock) do
       mock = double
       summary = double
+      guest = double
       expect(mock).to receive(:name).and_return(vm_name)
       allow(mock).to receive(:summary).and_return(summary)
       allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
       allow(mock).to receive_message_chain(:summary, :runtime, :host, :name).and_return('aHost')
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('Thursday')
+      allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       allow(mock).to receive(:guestHeartbeatStatus).and_return('running')
+      allow(mock).to receive(:guest).and_return(guest)
+      allow(guest).to receive(:toolsStatus).and_return('toolsOk')
       mock
     end
 
@@ -220,7 +226,7 @@ RSpec.describe VmApi do
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, true)
+        api.change_power_state(Faker::FunnyName.name, false)
       end
     end
 
@@ -232,8 +238,100 @@ RSpec.describe VmApi do
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, false)
+        api.change_power_state(Faker::FunnyName.name, true)
       end
+    end
+  end
+
+  describe '#suspend_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:SuspendVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'suspends VM' do
+      api.suspend_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#reset_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ResetVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'resest the VM' do
+      api.reset_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#shutdown_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ShutdownGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'shuts down the guest OS' do
+      api.shutdown_guest_os(Faker::FunnyName)
+    end
+  end
+
+  describe '#reboot_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:RebootGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'reboots the guest OS' do
+      api.reboot_guest_os(Faker::FunnyName)
     end
   end
 end
