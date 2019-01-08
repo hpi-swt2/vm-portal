@@ -147,8 +147,7 @@ class RequestsController < ApplicationController
 
     admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
     users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    path = 'tmp/node-'+request.name+'.pp'
-    File.open(path, 'w') { |f| f.write(format(puppet_string, request.name, admins.join(', '), users.join(', '))) } unless Pathname(path).exist?
+    format(puppet_string, request.name, admins.join(', '), users.join(', '))
   end
   helper_method :create_puppet_script
 end
