@@ -16,12 +16,12 @@
       <legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>
       <div class="col-sm-10">
         <ul>
-          <%= radio_button_tag "template", "none", false, :onclick => "fillFields(#{""}, #{""}, #{""}, #{"none"});" %>
+          <input type="radio" class="template" name="template" id="template" value="none"/>
           <%= "None" %>
         </ul>
         <% @request_templates.each_with_index do |request_template, index| %>
           <ul>
-            <%= radio_button_tag "template", "#{index}", false, :onclick => "fillFields(#{request_template.cpu_cores.to_json.html_safe}, #{request_template.ram_mb.to_json}, #{request_template.storage_mb}, #{request_template.operating_system});" %>
+             <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system] %>"/>
             <%= "#{request_template.name}: 
                                     #{request_template.cpu_cores} CPU-Cores, 
                                     #{request_template.ram_mb} MB RAM, 
@@ -98,7 +98,14 @@
 <% end %>
 
 <script>
-$('input:radio').click(function fillFields(cpu_cores, ram_mb, storage_mb, operating_system){
+  $('input:radio').click(function (){
+  string = this.value;
+  clean_string = string.replace(/[\[\]']+/g,'');
+  requirements = clean_string.split(/, /);
+  cpu_cores = requirements[0];
+  ram_mb = requirements[1];
+  storage_mb = requirements[2];
+  operating_system = requirements[3];
     if(this.value == 'none') {
       cpus = document.getElementById('cpu');
       cpus.value = "";
@@ -112,11 +119,11 @@ $('input:radio').click(function fillFields(cpu_cores, ram_mb, storage_mb, operat
       cpus = document.getElementById('cpu');
       cpus.value = cpu_cores;
       ram = document.getElementById('ram');
-      ram.value = "1000";//test value
+      ram.value = ram_mb;
       storage = document.getElementById('storage');
-      storage.value = 4000;//test value
+      storage.value = storage_mb;
       os = document.getElementById('os');
-      os.selected = "CentOS 7";//test value
+      os.selected = operating_system;
     }
   });
 </script>
