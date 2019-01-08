@@ -16,3 +16,13 @@
     text-decoration: none;
   }
 }
+
+.notification-bell {
+  color: white;
+  #notification-alert {
+    color: red;
+    margin-top: -0.4em;
+    margin-left: 0.6em;
+    display: none;
+  }
+}

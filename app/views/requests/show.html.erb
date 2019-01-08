@@ -3,12 +3,12 @@
 <table class="table table-fixed-columns table-striped">
   <tbody>
     <tr>
-      <th>Name:</td>
+      <th>VM Name:</td>
       <td><%= @request.name %></td>
     </tr>
 
     <tr>
-      <td><strong>Cpu cores:</strong></td>
+      <td><strong>Cpu-Cores:</strong></td>
       <td><%= @request.cpu_cores %></td>
     </tr>
 
@@ -23,10 +23,20 @@
     </tr>
 
     <tr>
-      <td><strong>Operating system:</strong></td>
+      <td><strong>Operating System:</strong></td>
       <td><%= @request.operating_system %></td>
     </tr>
 
+
+    <tr>
+      <td><strong>Port:</strong></td>
+      <td><%= @request.port %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Application Name:</strong></td>
+      <td><%= @request.application_name %></td>
+    </tr>
 
     <tr>
       <td><strong>Comment:</strong></td>
@@ -71,22 +81,28 @@
   </p>
 <% end %>
 
-<% if @request.pending? %>
-  <div class="actions">
-    <%= button_to 'Accept', request_accept_button_path(request: @request), method: :patch, class: "btn btn-success" %>
-  </div>
-
-  <%= form_with(model: @request, local: true) do |form| %>
-    <div class="field">
-      <%= form.label :rejection_information %>
-      <%= form.text_field :rejection_information, class: 'form-control' %>
-    </div>
-
+<% if @request.pending? && current_user.admin? %>
+  <div id="acceptAndReject">
     <div class="actions">
-      <%= form.hidden_field :status, value: 'rejected' %>
-      <%= form.submit 'Reject', class: "btn btn-danger" %>
+      <%= button_to 'Accept & Continue',
+                    request_accept_button_path(request: @request),
+                    method: :patch,
+                    class: "btn btn-success"
+      %>
     </div>
-  <% end %>
+
+    <%= form_with(model: @request, local: true) do |form| %>
+      <div class="field">
+        <%= form.label :rejection_information %>
+        <%= form.text_field :rejection_information, class: 'form-control' %>
+      </div>
+
+      <div class="actions">
+        <%= form.hidden_field :status, value: 'rejected' %>
+        <%= form.submit 'Reject', class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 
 <%= link_to 'Back', requests_path %>

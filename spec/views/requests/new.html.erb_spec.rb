@@ -10,6 +10,8 @@ RSpec.describe 'requests/new', type: :view do
                        ram_mb: 1000,
                        storage_mb: 2000,
                        operating_system: 'MyOS',
+                       port: '4000',
+                       application_name: 'MyName',
                        comment: 'Comment',
                        status: 'pending'
                      ))
@@ -28,6 +30,10 @@ RSpec.describe 'requests/new', type: :view do
       assert_select 'input[name=?][min=?]', 'request[storage_mb]', '0'
 
       assert_select 'select[name=?]', 'request[operating_system]'
+
+      assert_select 'input[name=?][min=?]', 'request[port]', '0'
+
+      assert_select 'input[name=?]', 'request[application_name]'
 
       assert_select 'textarea[name=?]', 'request[comment]'
     end

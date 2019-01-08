@@ -20,9 +20,17 @@ class VmApi
 
   def all_vms
     connect
-    @vm_folder.children.map do |vm|
-      { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
+    all_vms_in(@vm_folder).map do |vm|
+      { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
+        boot_time: vm.runtime.bootTime,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
+  end
+
+  def all_archived_vms
+    connect
+    all_vms_in(all_vm_folders.detect { |folder| folder.name == 'Archived VMs' })
   end
 
   def all_clusters
@@ -62,7 +70,8 @@ class VmApi
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
-        summary: vm.summary }
+        summary: vm.summary,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
   end
 
@@ -85,13 +94,45 @@ class VmApi
     connect
     vm = find_vm name
     if state
-      vm.PowerOnVM_Task.wait_for_completion
-    else
       vm.PowerOffVM_Task.wait_for_completion
+    else
+      vm.PowerOnVM_Task.wait_for_completion
     end
   end
 
+  def suspend_vm(name)
+    connect
+    vm = find_vm name
+    vm.SuspendVM_Task.wait_for_completion
+  end
+
+  def reset_vm(name)
+    connect
+    vm = find_vm name
+    vm.ResetVM_Task.wait_for_completion
+  end
+
+  def shutdown_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.ShutdownGuest.wait_for_completion
+  end
+
+  def reboot_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.RebootGuest.wait_for_completion
+  end
+
   private
+
+  def all_vm_folders
+    @vm_folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
+  end
+
+  def all_vms_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
+  end
 
   def find_vm(name)
     @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)

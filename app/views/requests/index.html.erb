@@ -5,11 +5,13 @@
 <table class="table table-fixed-columns">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Cpu-Cores</th>
-      <th>MB RAM</th>
-      <th>MB Storage</th>
-      <th>Operating system</th>
+      <th>VM Name</th>
+      <th style="width: 80px">Cpu-Cores</th>
+      <th style="width: 80px">MB RAM</th>
+      <th style="width: 90px">MB Storage</th>
+      <th>Operating System</th>
+      <th style="width: 80px">Port</th>
+      <th>Application Name</th>
       <th class="w-25">Comment</th>
       <th>Status </th>
       <th>Puppet Script</th>
@@ -19,13 +21,20 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= link_to "#{request.name}", request %></td>
+        <td><%= request.name %></td>
         <td><%= request.cpu_cores %></td>
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
         <td><%= request.operating_system %></td>
+        <td><%= request.port %></td>
+        <td><%= request.application_name %></td>
         <td><%= request.comment %></td>
-        <td><%= request.status %></td>
+        <td>
+        <%= link_to request.status,
+                    request_path(request),
+                    class: 'btn btn-primary'
+        %>
+        </td>
         <%if request.accepted? %>
           <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#puppet-script">
             show script
@@ -53,6 +62,7 @@
         <%else %>
           <td></td>
         <%end %>
+
       </tr>
     <% end %>
   </tbody>
@@ -61,3 +71,4 @@
 <br>
 
 <%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
+<%= link_to 'Manage templates', request_templates_path, class: 'btn btn-secondary' %>
