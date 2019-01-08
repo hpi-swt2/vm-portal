@@ -29,7 +29,7 @@ class User < ApplicationRecord
     end
   end
 
-  #notifications
+  # notifications
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
 
