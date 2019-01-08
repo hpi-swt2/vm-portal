@@ -27,9 +27,9 @@ class RequestsController < ApplicationController
   # GET /requests/1/edit
   def edit; end
 
-  def notify_users(message)
+  def notify_users(title, message)
     User.all.each do |each|
-      each.notify_slack(message)
+      each.notify(title, message)
     end
   end
 
@@ -42,7 +42,7 @@ class RequestsController < ApplicationController
   end
 
   def successfully_saved(format, request)
-    notify_users("New VM request:\n" + request.description_text)
+    notify_users('New VM request', request.description_text(host_url))
     redirect_according_to_role(format, current_user.role)
     format.json { render :show, status: :created, location: request }
   end
@@ -68,11 +68,11 @@ class RequestsController < ApplicationController
     return if request.pending?
 
     if request.accepted?
-      notify_users("Request:\n#{@request.description_text}\nhas been *accepted*!")
+      notify_users('Request has been accepted', @request.description_text(host_url))
     elsif request.rejected?
-      message = "Request:\n#{@request.description_text}\nhas been *rejected*!"
+      message = @request.description_text host_url
       message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
-      notify_users(message)
+      notify_users('Request has been rejected', message)
     end
   end
 

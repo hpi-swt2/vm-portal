@@ -13,7 +13,7 @@ class Request < ApplicationRecord
   validates :storage_mb, numericality: { greater_than: 0, less_than: 1_000_000 }
 
   def description_text(host_name)
-    description = "- VM Name: #{name}\n"
+    description  = "- VM Name: #{name}\n"
     description += "- Responsible: TBD\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
     description += url(host_name) + "\n"

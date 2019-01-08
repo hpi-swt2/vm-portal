@@ -29,6 +29,16 @@ class User < ApplicationRecord
     end
   end
 
+  # notifications
+  def notify(title, message)
+    notify_slack("*#{title}*\n#{message}")
+
+    notification = Notification.new title: title, message: message
+    notification.user_id = id
+    notification.read = false
+    notification.save # saving might fail, but there is no useful way to handle the error.
+  end
+
   after_initialize :set_default_role, if: :new_record?
 
   def ssh_key?
