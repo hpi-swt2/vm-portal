@@ -27,7 +27,18 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       boot_time: Time.current,
       host: 'aHost',
       guestHeartbeatStatus: 'green',
-      summary: summary }
+      summary: summary,
+      vmwaretools: true }
+  end
+
+  let(:vm_on_without_tools) do
+    { name: 'VM',
+      state: true,
+      boot_time: Time.current,
+      host: 'aHost',
+      guestHeartbeatStatus: 'green',
+      summary: summary,
+      vmwaretools: false }
   end
 
   let(:vm_off) do
@@ -36,7 +47,8 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       boot_time: Time.current,
       host: 'aHost',
       guestHeartbeatStatus: 'green',
-      summary: summary }
+      summary: summary,
+      vmwaretools: true }
   end
 
   before do
@@ -98,7 +110,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'has power off links when powered on' do
-    expect(rendered).to have_link 'Suspend'
+    expect(rendered).to have_link 'Suspend VM'
     expect(rendered).to have_link 'Shutdown Guest OS'
     expect(rendered).to have_link 'Restart Guest OS'
     expect(rendered).to have_link 'Reset'
@@ -119,7 +131,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     assign(:vm, vm_off)
     rendered = nil
     render
-    expect(rendered).not_to have_link 'Suspend'
+    expect(rendered).not_to have_link 'Suspend VM'
     expect(rendered).not_to have_link 'Shutdown Guest OS'
     expect(rendered).not_to have_link 'Restart Guest OS'
     expect(rendered).not_to have_link 'Reset'
@@ -130,5 +142,25 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     assign(:vm, vm_off)
     render
     expect(rendered).to include 'offline'
+  end
+
+  it 'displays info when vmwaretools are not installed' do
+    assign(:vm, vm_on_without_tools)
+    rendered = render
+    expect(rendered).not_to have_link 'Shutdown Guest OS'
+    expect(rendered).not_to have_link 'Restart Guest OS'
+    expect(rendered).to have_link 'Suspend VM'
+    expect(rendered).to have_link 'Reset'
+    expect(rendered).to have_link 'Power Off'
+  end
+
+  it 'displays info when vmwaretools are installed' do
+    assign(:vm, vm_on)
+    rendered = render
+    expect(rendered).to have_link 'Suspend VM'
+    expect(rendered).to have_link 'Shutdown Guest OS'
+    expect(rendered).to have_link 'Restart Guest OS'
+    expect(rendered).to have_link 'Reset'
+    expect(rendered).to have_link 'Power Off'
   end
 end
