@@ -67,12 +67,13 @@
 <script>
 var countBox = 1;
 var boxName = 0;
+
 function addInput()
 {
   var boxName="software" + countBox;
-  var ruby_text_field = '<' + '%' + '= form.text_field :' + boxName + ', class: \'form-control\' ' + '%' + '>'
-  document.getElementById('response').innerHTML+='<div class="field"><input type="text" placeholder="Software ' + countBox + '" class="form-control" id="' + boxName + '" "  /></div>';
-  //document.getElementById('response').innerHTML+='<div class="field">' +  '<' + '%' + '= form.text_field :' + boxName + ', class: \'form-control\' ' + '%' + '>' + '</div>';
+
+  document.getElementById('response').innerHTML+='<div class="field"><input type="text" placeholder="Software ' + countBox + '" class="form-control" name="' + boxName + '" id="' + boxName + '" /></div>';
+
   countBox += 1;
 }
 </script>

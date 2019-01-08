@@ -5,6 +5,7 @@ class ServersController < ApplicationController
   # GET /servers.json
   def index
     @servers = Server.all
+    puts @servers
   end
 
   # GET /servers/1
@@ -24,22 +25,38 @@ class ServersController < ApplicationController
   # POST /servers
   # POST /servers.json
   def create
-    server_params.each do | key, value |
-      puts key
-      puts value
+    # parse software fields from the post parameters into the server_params
+    software = Array.new
+
+    params.each do | key, value |
+
+      key_matcher = /software\d+/
+      if key_matcher.match?(key)
+        software << value
+      end
     end
 
-    # @server = Server.new(server_params)
+    # merge server_params [and software information
+    server_params[:installed_software] = software
 
-    # respond_to do |format|
-    #   if @server.save
-    #     format.html { redirect_to @server, notice: 'Server was successfully created.' }
-    #     format.json { render :show, status: :created, location: @server }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @server.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    #server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :mac_address, :fqdn, :ipv4_address, :ipv6_address, :installed_software)
+    server_params.permit!
+    puts server_params
+
+    # create new Server object
+    @server = Server.new(server_params)
+
+    puts @server.inspect
+
+    respond_to do |format|
+      if @server.save
+        format.html { redirect_to @server, notice: 'Server was successfully created.' }
+        format.json { render :show, status: :created, location: @server }
+      else
+        format.html { render :new }
+        format.json { render json: @server.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /servers/1
@@ -74,6 +91,9 @@ class ServersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def server_params
+      #params.require(:server).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address,
+      #                              :mac_address, :fqdn)
+
       params.fetch(:server, {})
     end
 

@@ -1,8 +1,8 @@
 class Server < ApplicationRecord
   
   validates :name, :cpu_cores, :ram_mb, :storage_mb, :mac_address, :fqdn, presence: true
-  validates :ip_addressv4, presence: { unless: :ip_addressv6? }
-  validates :ip_addressv6, presence: { unless: :ip_addressv4? }
+  validates :ipv4_address, presence: { unless: :ipv6_address? }
+  validates :ipv6_address, presence: { unless: :ipv4_address? }
   validates :installed_software, presence: false
 
   validates :cpu_cores, numericality: { greater_than: 0 }
