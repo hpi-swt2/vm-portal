@@ -136,7 +136,7 @@ class RequestsController < ApplicationController
                                     :port, :application_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 
-  def create_puppet_script(request)
+  def puppet_script(request)
 
     puppet_string =
 'class node_vm-%s {
@@ -154,5 +154,10 @@ class RequestsController < ApplicationController
     users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
     format(puppet_string, request.name, admins.join(', '), users.join(', '))
   end
-  helper_method :create_puppet_script
+  helper_method :puppet_script
+
+
+  def puppet_init_script
+  end
+  helper_method :puppet_init_script
 end
