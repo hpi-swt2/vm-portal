@@ -48,6 +48,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
+    @request_templates = RequestTemplate.all
     save_sudo_rights(@request)
 
     respond_to do |format|

@@ -21,7 +21,7 @@
         </ul>
         <% @request_templates.each_with_index do |request_template, index| %>
           <ul>
-            <%= radio_button_tag "template", "#{index}", false, :onclick => "fillFields(#{request_template.cpu_cores}, #{request_template.ram_mb}, #{request_template.storage_mb}, #{request_template.operating_system});" %>
+            <%= radio_button_tag "template", "#{index}", false, :onclick => "fillFields(#{request_template.cpu_cores.to_json.html_safe}, #{request_template.ram_mb.to_json}, #{request_template.storage_mb}, #{request_template.operating_system});" %>
             <%= "#{request_template.name}: 
                                     #{request_template.cpu_cores} CPU-Cores, 
                                     #{request_template.ram_mb} MB RAM, 
@@ -99,13 +99,24 @@
 
 <script>
 $('input:radio').click(function fillFields(cpu_cores, ram_mb, storage_mb, operating_system){
-    cpus = document.getElementById('cpu');
-    cpus.placeholder = cpu_cores;
-    ram = document.getElementById('ram');
-    ram.placeholder = ram_mb;
-    storage = document.getElementById('storage');
-    storage.placeholder = storage_mb;
-    os = document.getElementById('os');
-    os.selected = "#{operating_system}";
+    if(this.value == 'none') {
+      cpus = document.getElementById('cpu');
+      cpus.value = "";
+      ram = document.getElementById('ram');
+      ram.value = "";
+      storage = document.getElementById('storage');
+      storage.value = "";
+      os = document.getElementById('os');
+      os.selected = "none";
+    } else {
+      cpus = document.getElementById('cpu');
+      cpus.value = cpu_cores;
+      ram = document.getElementById('ram');
+      ram.value = "1000";//test value
+      storage = document.getElementById('storage');
+      storage.value = 4000;//test value
+      os = document.getElementById('os');
+      os.selected = "CentOS 7";//test value
+    }
   });
 </script>
