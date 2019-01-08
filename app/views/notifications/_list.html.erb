@@ -7,7 +7,7 @@
         <h5 class="card-title">
           <%= notification.title %>
         </h5>
-        <%= notification.message %>
+        <%= simple_format(notification.message) %>
         <div class="pull-right">
           <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
             <%= fa_icon('check', class: 'big-icon') %>
