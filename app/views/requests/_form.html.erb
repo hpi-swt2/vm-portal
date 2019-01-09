@@ -74,7 +74,7 @@
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, id: 'os' %>
+    <%= form.select :operating_system, operating_system_options, {}, id: 'os' %>
   </div>
 
   <div class="field">
@@ -99,31 +99,28 @@
 
 <script>
   $('input:radio').click(function (){
-  string = this.value;
-  clean_string = string.replace(/[\[\]']+/g,'');
-  requirements = clean_string.split(/, /);
-  cpu_cores = requirements[0];
-  ram_mb = requirements[1];
-  storage_mb = requirements[2];
-  operating_system = requirements[3];
+    cpus = document.getElementById('cpu');
+    ram = document.getElementById('ram');
+    storage = document.getElementById('storage');
+    os = document.getElementById('os');
     if(this.value == 'none') {
-      cpus = document.getElementById('cpu');
       cpus.value = "";
-      ram = document.getElementById('ram');
       ram.value = "";
-      storage = document.getElementById('storage');
       storage.value = "";
-      os = document.getElementById('os');
-      os.selected = "none";
+      os.value = "none";
     } else {
-      cpus = document.getElementById('cpu');
+      value = this.value;
+      clean_value = value.replace(/[\[\]']+/g,'');
+      requirements = clean_value.split(/, /);
+      cpu_cores = requirements[0];
+      ram_mb = requirements[1];
+      storage_mb = requirements[2];
+      operating_system = requirements[3];
+      operating_system_clean = operating_system.replace(/[\"\"]+/g,'');
       cpus.value = cpu_cores;
-      ram = document.getElementById('ram');
       ram.value = ram_mb;
-      storage = document.getElementById('storage');
       storage.value = storage_mb;
-      os = document.getElementById('os');
-      os.selected = operating_system;
+      os.value = operating_system_clean;
     }
   });
 </script>
