@@ -11,6 +11,7 @@ class VmsController < ApplicationController
     @vms = filter VmApi.instance.all_vm_infos
     @archived_vms = all_archived_vms
     @parameters = determine_params
+    @pending_archivation_vms = all_pending_archived_vms
   end
 
   def destroy
@@ -45,6 +46,15 @@ class VmsController < ApplicationController
     set_pending_archivation(@vm)
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  def archive_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    set_archived(@vm)
+
+    # inform users
+
+    redirect_to controller: :vms, action: 'index', id: @vm.name
   end
 
   def change_power_state
