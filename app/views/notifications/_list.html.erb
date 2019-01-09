@@ -7,7 +7,7 @@
         <h5 class="card-title">
           <%= notification.title %>
         </h5>
-        <%= simple_format(notification.message) %>
+        <%= simple_format(notification.message).gsub(/(?:https?|ftp|mailto):\/\/\S+/, '<a href="\0">\0</a>').html_safe %>
         <div class="pull-right">
           <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
             <%= fa_icon('check', class: 'big-icon') %>
