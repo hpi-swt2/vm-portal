@@ -38,6 +38,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   before do
     assign(:vms, mock_vms)
     assign(:parameters, param)
+    assign(:archived_vms, [])
+    assign(:pending_archivation_vms, [])
     render
   end
 
