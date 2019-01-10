@@ -25,6 +25,7 @@ class VmsController < ApplicationController
 
   def show
     @vm = VmApi.instance.get_vm(params[:id])
+    redirect_to vms_path unless !current_user.user? || (@vm[:request] && @vm[:request].users.include?(current_user))
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
