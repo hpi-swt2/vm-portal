@@ -10,7 +10,11 @@ class RequestsController < ApplicationController
   # GET /requests
   # GET /requests.json
   def index
-    @requests = Request.all
+    if current_user.admin?
+      @requests = Request.all
+    else
+      @requests = Request.select { |r| r.user == current_user }
+    end
   end
 
   # GET /requests/1
