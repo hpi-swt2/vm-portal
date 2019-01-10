@@ -128,7 +128,14 @@ class RequestsController < ApplicationController
   end
 
   def authenticate_status_change
-    # check if request.creator != current_user
+    @request = Request.find(params[:id])
+    if @request.user == current_user
+      set_flash_message!(
+          :danger,
+          :fail,
+          kind: 'Authorization',
+          reason: 'You can not change the status of your own requests')
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
