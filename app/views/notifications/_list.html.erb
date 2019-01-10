@@ -1,7 +1,7 @@
 <% unless @notifications.empty? %>
 
   <% @notifications.each do |notification| %>
-    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
+    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification bg-danger text-white" %>
     <div class="<%= class_names %>" style="width:100%">
       <div class="card-body">
         <h5 class="card-title">

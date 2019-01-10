@@ -6,19 +6,19 @@
     }
 end %>
 
-<div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
+<div class="container mb-3 pl-0 pr-0 clearfix" >
   <h1 class="mb-0"><%= @host[:name] unless @host.nil? %></h1>
 </div>
-<div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%;">
+<div class="container mb-3 pb-3 lead pl-0 pr-0 clearfix" >
   <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil?
      state =  @host[:connectionState] == 'connected' %>
-  <div class="<%= state ? 'bg-success' : 'bg-danger' %> text-white float-left pb-1 px-4 mr-2">
-    <%= state ? 'online' : 'offline' %>
+  <div class="<%= state ? 'bg-success text-black' : 'bg-danger text-white' -%> float-left pb-1 px-4 mr-2">
+    <%= state ? 'online' : 'offline' -%>
   </div>
-  <%= " for #{up_time}" if state %>
-  <div class="text-right float-right" style="width: 20%">
-    <div class="dropdown border text-right">
-      <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+  <%= " for #{up_time}" if state -%>
+  <div class="text-right float-right ">
+    <div class="dropdown border text-center w-auto">
+      <a class="dropdown-toggle text-muted ml-0 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
         Manage
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -39,19 +39,19 @@ end %>
   ram_usage = (@host[:summary].quickStats&.overallMemoryUsage.to_f / 1024).round(2) || 0
   ram_allocation = (@host[:summary]&.hardware&.memorySize.to_f / 1024**3).round(2) || 0
 
-  @values = {cpu_allocation: cpu_allocation, 
-             cpu_usage: cpu_usage, 
-             ram_allocation: ram_allocation, 
-             ram_usage: ram_usage, 
-             hdd_usage: hdd_usage, 
-             hdd_allocation: hdd_allocation, 
-             cpu_cores: cpu_cores } 
+  @values = {cpu_allocation: cpu_allocation,
+             cpu_usage: cpu_usage,
+             ram_allocation: ram_allocation,
+             ram_usage: ram_usage,
+             hdd_usage: hdd_usage,
+             hdd_allocation: hdd_allocation,
+             cpu_cores: cpu_cores }
 
   @hardware = {'Vendor' => @host[:vendor],
                'Model' => @host[:model],
                'Power State' => @host[:summary].runtime.powerState,
                'OS' => "#{@host[:summary].config&.product&.osType} (#{@host[:summary]&.config&.product&.fullName})",
-               'CPU Model' => @host[:summary]&.hardware&.cpuModel }         
+               'CPU Model' => @host[:summary]&.hardware&.cpuModel }
   %>
 
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
