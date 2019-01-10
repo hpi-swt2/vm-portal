@@ -77,51 +77,62 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'method tests' do
+    #before { request = FactoryBot.create :request }
+    #before { user = FactoryBot.create :user }
     let(:request) { FactoryBot.create :request }
     let(:user) { FactoryBot.create :user }
 
-    it 'changes status to accepted' do
-      request.accept!
-      expect(request.status).to eq('accepted')
-    end
-
-    it 'creates sudo user assignments correctly' do
-      request.assign_sudo_users([user.id])
-      expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id }).size).to eq(1)
-    end
-
-    context 'when sudo_user_assignments returns users correctly' do
-      non_sudo_user = FactoryBot.create(:user, role: :user)
-
-      it 'returns its sudo users correctly' do
-        sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
-        expect(request.sudo_user_assignments.include?(sudo_assignment)).to be true
-      end
-
-      it 'does not return its non sudo users correctly' do
-        assignment = request.users_assigned_to_requests.build(user_id: non_sudo_user.id, sudo: false)
-        expect(request.non_sudo_user_assignments.include?(assignment)).to be false
+    context 'when accepting a request' do
+      it 'changes status to accepted' do
+        request.accept!
+        expect(request.status).to eq('accepted')
       end
     end
 
-    context 'when non_sudo_assignments returns users correctly' do
-      non_sudo_user = FactoryBot.create(:user, role: :user)
+    context 'lol' do
+      it 'creates sudo user assignments correctly' do
+        request.assign_sudo_users([user.id])
+        expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id }).size).to eq(1)
+      end
+    end
 
-      it 'does not have sudo_users in non_sudo_users' do
-        sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
-        expect(request.non_sudo_user_assignments.include?(sudo_assignment)).to be false
+    context 'when having a non sudo user' do
+      assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: false)
+
+      it 'does not return a sudo user' do
+        expect(request.sudo_user_assignments.include?(assignment)).to be false
       end
 
-      it 'does have non_sudo_users in non_sudo_users' do
-        assignment = request.users_assigned_to_requests.build(user_id: non_sudo_user.id, sudo: false)
+      it 'does return a non sudo user' do
         expect(request.non_sudo_user_assignments.include?(assignment)).to be true
       end
     end
-    it 'creates only a sudo user assignment' do
-      @request = FactoryBot.create(:request, user_ids: [user.id])
-      @request.assign_sudo_users([user.id])
-      expect(@request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
-      expect((@request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
+
+    context 'when having a sudo user' do
+      sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
+
+      it 'does return a sudo user' do
+        expect(request.sudo_user_assignments.include?(sudo_assignment)).to be true
+      end
+
+      it 'does not return a non sudo user' do
+        expect(request.non_sudo_user_assignments.include?(sudo_assignment)).to be false
+      end
+
     end
+
+    context 'when having a user being assigned as user and sudo user' do
+      request = FactoryBot.create(:request, user_ids: [user.id])
+      request.assign_sudo_users([user.id])
+
+      it 'creates a sudo user assignment' do
+        expect((request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
+      end
+
+      it 'does not create a user assignment' do
+        expect(request.users_assigned_to_requests.select{ |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
+      end
+    end
+
   end
 end

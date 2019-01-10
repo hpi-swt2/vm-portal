@@ -29,10 +29,9 @@ class Request < ApplicationRecord
   def assign_sudo_users(sudo_user_ids)
     unless sudo_user_ids.nil?
       sudo_user_ids.each do |id|
-        if users_assigned_to_requests.exists?(user_id: id)
-          (users_assigned_to_requests.select { |assignment| assignment.user_id == id }).each do |assignment|
-            assignment.sudo = true
-          end
+        if users_assigned_to_requests.exists?(user_id: id.to_i)
+          assignment = users_assigned_to_requests.find { |assignment| assignment.user_id == id.to_i }
+          assignment.update_attribute(:sudo, true)
         else
           users_assigned_to_requests.create(sudo: true, user_id: id)
         end
