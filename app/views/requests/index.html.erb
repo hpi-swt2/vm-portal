@@ -44,7 +44,12 @@
         <td><%= request.port %></td>
         <td><%= request.application_name %></td>
         <td><%= request.comment %></td>
-        <td><%= request.status %></td>
+        <td>
+          <%= link_to request.status,
+                      request_path(request),
+                      class: 'btn btn-info'
+          %>
+        </td>
       </tr>
     <% end %>
   </tbody>
