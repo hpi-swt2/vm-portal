@@ -5,7 +5,7 @@ class VmsController < ApplicationController
   attr_reader :vms
 
   def index
-    @vms = filter VmApi.instance.all_vms
+    @vms = filter vms_for_user VmApi.instance.all_vms
     @parameters = determine_params
   end
 
@@ -63,6 +63,10 @@ class VmsController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
+  def vms_for_user(list)
+    list.select { |vm| !current_user.user? || (vm[:request] && vm[:request].users.include?(current_user)) }
+  end
 
   def filter(list)
     if no_params_set?

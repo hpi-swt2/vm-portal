@@ -24,7 +24,8 @@ class VmApi
       { name: vm.name,
         state: (vm.runtime.powerState == 'poweredOn'),
         boot_time: vm.runtime.bootTime,
-        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled'),
+        request: Request.find_by_name(vm.name) }
     end
   end
 
@@ -71,7 +72,9 @@ class VmApi
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
         summary: vm.summary,
-        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled'),
+        request: Request.find_by_name(vm.name)
+      }
     end
   end
 

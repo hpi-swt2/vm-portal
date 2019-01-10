@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'vmapi.rb'
 class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
@@ -22,6 +23,10 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
+  end
+
+  def vm
+    VmApi.instance.get_vm name if status == :accepted
   end
 
   private
