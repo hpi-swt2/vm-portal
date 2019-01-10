@@ -38,12 +38,6 @@ class RequestsController < ApplicationController
     end
   end
 
-  def successfully_saved(format, request)
-    notify_users("New VM request:\n" + request.description_text(host_url))
-    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-    format.json { render :show, status: :created, location: request }
-  end
-
   # POST /requests
   # POST /requests.json
   def create
@@ -97,14 +91,18 @@ class RequestsController < ApplicationController
     end
   end
 
-  def request_accept_button
-    @request = Request.find(params[:request])
-    @request.accept!
-    if @request.save
-      notify_request_update(@request)
-      redirect_to new_vm_path(request: @request)
-    else
-      redirect_to request_path(@request)
+  def request_change_state
+    @request = Request.find(params[:id])
+    respond_to do |format|
+      if @request.user == current_user
+        format.html { redirect_to @request, danger: 'You can not change the status of your own requests.' }
+        format.json { render :show, status: :unauthorized, location: @request }
+      elsif @request.update(request_params)
+        successfully_updated(format, @request)
+      else
+        format.html { render :edit }
+        format.json { render json: @request.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -127,15 +125,16 @@ class RequestsController < ApplicationController
     @request = Request.find(params[:id])
   end
 
-  def authenticate_status_change
-    @request = Request.find(params[:id])
-    if @request.user == current_user
-      set_flash_message!(
-          :danger,
-          :fail,
-          kind: 'Authorization',
-          reason: 'You can not change the status of your own requests')
-    end
+  def successfully_saved(format, request)
+    notify_users("New VM request:\n" + request.description_text(host_url))
+    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+    format.json { render :show, status: :created, location: request }
+  end
+
+  def successfully_updated(format, request)
+    notify_request_update(request)
+    format.html { redirect_to @request, notice: 'Request was successfully updated.' }
+    format.json { render :show, status: :ok, location: request }
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
