@@ -36,9 +36,7 @@ class VmsController < ApplicationController
 
   def request_vm_archivation
     @vm = VmApi.instance.get_vm(params[:id])
-    if is_archived(@vm) || is_pending_archivation(@vm)
-      return
-    end
+    return if is_archived(@vm) || is_pending_archivation(@vm)
 
     VmApi.instance.change_power_state(@vm.name, false)
     User.admin.each do |each|
@@ -51,7 +49,6 @@ class VmsController < ApplicationController
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     set_pending_archivation(@vm)
-
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
@@ -110,7 +107,6 @@ class VmsController < ApplicationController
     else
       result = []
       vm_filter.keys.each do |key|
-
         result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
       end
       result

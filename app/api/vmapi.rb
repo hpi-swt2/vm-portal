@@ -162,15 +162,15 @@ class VmApi
   end
 
   def find_vm_in(folder, name)
-    if vm = folder.traverse(name, RbVmomi::VIM::VirtualMachine)
+    if (vm = folder.traverse(name, RbVmomi::VIM::VirtualMachine))
       vm
     else
       all_folders_in(folder).each do |each|
-        if vm = find_vm_in(each, name)
+        if (vm = find_vm_in(each, name))
           return vm
         end
       end
-      return nil
+      nil
     end
   end
 
