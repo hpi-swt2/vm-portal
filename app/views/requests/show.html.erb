@@ -68,12 +68,10 @@
 <p>
   <strong>Users:</strong>
   <ul>
-    <% @request.users.each do |user| %>
-      <% if !@request.users_assigned_to_requests.where(sudo: true, user_id: user.id).exists? %>
+    <% @request.non_sudo_user_assignments.each do |assignment| %>
         <p>
-          <li><%= user.email %></li>
+          <li><%= assignment.user.email %></li>
         </p>
-      <% end %>
     <% end %>
   </ul>
 </p>

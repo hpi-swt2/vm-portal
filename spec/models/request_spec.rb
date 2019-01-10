@@ -85,16 +85,38 @@ RSpec.describe Request, type: :model do
       expect(request.status).to eq('accepted')
     end
 
-    it 'returns its sudo users correctly' do
-      assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
-      expect(request.sudo_user_assignments.include?(assignment)).to be true
-    end
-
     it 'creates sudo user assignments correctly' do
       request.assign_sudo_users([user.id])
-      expect((request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id}).size).to eq(1)
+      expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id }).size).to eq(1)
     end
 
+    context 'when sudo_user_assignments returns users correctly' do
+      non_sudo_user = FactoryBot.create(:user, role: :user)
+
+      it 'returns its sudo users correctly' do
+        sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
+        expect(request.sudo_user_assignments.include?(sudo_assignment)).to be true
+      end
+
+      it 'does not return its non sudo users correctly' do
+        assignment = request.users_assigned_to_requests.build(user_id: non_sudo_user.id, sudo: false)
+        expect(request.non_sudo_user_assignments.include?(assignment)).to be false
+      end
+    end
+
+    context 'when non_sudo_assignments returns users correctly' do
+      non_sudo_user = FactoryBot.create(:user, role: :user)
+
+      it 'does not have sudo_users in non_sudo_users' do
+        sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
+        expect(request.non_sudo_user_assignments.include?(sudo_assignment)).to be false
+      end
+
+      it 'does have non_sudo_users in non_sudo_users' do
+        assignment = request.users_assigned_to_requests.build(user_id: non_sudo_user.id, sudo: false)
+        expect(request.non_sudo_user_assignments.include?(assignment)).to be true
+      end
+    end
     it 'creates only a sudo user assignment' do
       @request = FactoryBot.create(:request, user_ids: [user.id])
       @request.assign_sudo_users([user.id])
