@@ -4,49 +4,86 @@ require 'rails_helper'
 RSpec.describe VmsController, type: :controller do
   # Authenticate an user
   before do
-    sign_in FactoryBot.create :user
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+    @user = FactoryBot.create :user
+    sign_in @user
   end
 
   describe 'GET #index' do
-    before do
-      double_api = double
-      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true },
-                                                         { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
+    context 'when the user is admin' do
+      before do
+        @user = FactoryBot.create :admin
+        sign_in @user
+        @request1 = FactoryBot.create :request, name: "My insanely cool vm"
+        @request1.accept!
+        @request1.users << @user
+        @request2 = FactoryBot.create :request, name: "another vm"
+        vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true, request: @request1 }
+        vm2 = { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true, request: @request2 }
+        double_api = double
+        allow(double_api).to receive(:all_vms).and_return [vm1, vm2]
+        allow(VmApi).to receive(:instance).and_return double_api
+      end
 
-      allow(VmApi).to receive(:instance).and_return double_api
+      it 'returns http success' do
+        get :index
+        response.should be_success
+      end
+
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
+
+      it 'returns all vms' do
+        get 'index'
+        expect(subject.vms.size).to be VmApi.instance.all_vms.size
+      end
+
+      it 'returns online VMs if requested' do
+        subject.params = { up_vms: 'true' }
+        subject.index
+        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
+      end
+
+      it 'returns offline VMs if requested' do
+        subject.params = { down_vms: 'true' }
+        subject.index
+        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
+        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+      end
     end
 
-    it 'returns http success' do
-      get :index
-      expect(response).to have_http_status(:success)
+    context 'when the user is user' do
+      before do
+        @request1 = FactoryBot.create :request, name: "My insanely cool vm"
+        @request1.accept!
+        @request1.users << @user
+        @request1.save
+        @request2 = FactoryBot.create :request, name: "another vm"
+        vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true, request: @request1 }
+        vm2 = { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true, request: @request2 }
+        double_api = double
+        allow(double_api).to receive(:all_vms).and_return [vm1, vm2]
+        allow(VmApi).to receive(:instance).and_return double_api
+      end
+
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
+
+      it 'returns vms for current user' do
+        subject.params = {}
+        subject.index
+        controller.vms.size.should be 1
+      end
     end
 
-    it 'renders index page' do
-      expect(get(:index)).to render_template('vms/index')
-    end
-
-    it 'returns all VMs per default' do
-      controller = VmsController.new
-      controller.params = {}
-      controller.index
-      expect(controller.vms.size).to be VmApi.instance.all_vms.size
-    end
-
-    it 'returns online VMs if requested' do
-      controller = VmsController.new
-      controller.params = { up_vms: 'true' }
-      controller.index
-      expect(controller.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
-      expect(controller.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
-    end
-
-    it 'returns offline VMs if requested' do
-      controller = VmsController.new
-      controller.params = { down_vms: 'true' }
-      controller.index
-      expect(controller.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
-      expect(controller.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
-    end
   end
 
   describe 'DELETE #destroy' do
@@ -57,6 +94,7 @@ RSpec.describe VmsController, type: :controller do
     end
 
     it 'returns http success' do
+      expect(subject.current_user).to_not eq(nil)
       delete :destroy, params: { id: 'my insanely cool vm' }
       expect(response).to have_http_status(:success)
       skip
@@ -97,23 +135,27 @@ RSpec.describe VmsController, type: :controller do
     end
 
     it 'returns http success or timeout or not found' do
+      sign_in FactoryBot.create :admin
       allow(double_api).to receive(:get_vm).and_return({})
       get :show, params: { id: 1 }
       expect(response).to have_http_status(:success).or have_http_status(408)
     end
 
     it 'renders show page' do
+      sign_in FactoryBot.create :admin
       allow(double_api).to receive(:get_vm).and_return({})
       expect(get(:show, params: { id: 1 })).to render_template('vms/show')
     end
 
     it 'returns http status not found when no vm found' do
+      sign_in FactoryBot.create :admin
       allow(double_api).to receive(:get_vm).and_return(nil)
       get :show, params: { id: 5 }
       expect(response).to have_http_status(:not_found)
     end
 
     it 'renders not found page when no vm found' do
+      sign_in FactoryBot.create :admin
       allow(double_api).to receive(:get_vm).and_return(nil)
       expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
     end

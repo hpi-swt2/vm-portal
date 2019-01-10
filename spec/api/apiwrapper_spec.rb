@@ -121,7 +121,7 @@ RSpec.describe VmApi do
       mock = double
       summary = double
       guest = double
-      expect(mock).to receive(:name).and_return(vm_name)
+      allow(mock).to receive(:name).and_return(vm_name)
       allow(mock).to receive(:summary).and_return(summary)
       allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
       allow(mock).to receive_message_chain(:summary, :runtime, :host, :name).and_return('aHost')
