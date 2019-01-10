@@ -6,6 +6,7 @@ class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
+  before_action :authenticate_admin, only: %i[archive_vm]
 
   def index
     @vms = filter VmApi.instance.all_vm_infos
@@ -40,10 +41,17 @@ class VmsController < ApplicationController
     end
 
     VmApi.instance.change_power_state(@vm.name, false)
-    User.all.filter { |each| each.role == :admin }.each do |each|
-      each.notify_slack("VM #{@vm.name} has been requested to be archived!")
+    User.admin.each do |each|
+      each.notify("VM #{@vm.name} has been requested to be archived",
+                  "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
+    end
+    VmApi.instance.vm_users(@vm).each do |each|
+      each.notify("Your VM #{@vm.name} has been requested to be archived",
+                  "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
+                  url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     set_pending_archivation(@vm)
+
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
@@ -53,13 +61,16 @@ class VmsController < ApplicationController
     set_archived(@vm)
 
     # inform users
+    VmApi.instance.vm_users(@vm).each do |each|
+      each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
+    end
 
     redirect_to controller: :vms, action: 'index', id: @vm.name
   end
 
   def change_power_state
     @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.change_power_state(@vm[:name], @vm[:state])
+    VmApi.instance.change_power_state(@vm[:name], !@vm[:state])
     redirect_to root_path
   end
 

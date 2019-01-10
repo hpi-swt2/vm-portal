@@ -23,6 +23,15 @@ class VmApi
     all_vms_in(@vm_folder)
   end
 
+  def vm_users(vm) # rubocop:disable Naming/UncommunicativeMethodParamName
+    request = Request.accepted.find { |each| vm.name == each.name }
+    if request
+      request.users
+    else
+      []
+    end
+  end
+
   def all_vm_infos
     connect
     all_vms.map do |vm|
@@ -104,9 +113,9 @@ class VmApi
     connect
     vm = find_vm name
     if state
-      vm.PowerOffVM_Task.wait_for_completion
+      vm.PowerOnVM_Task.wait_for_completion unless vm.runtime.powerState == 'poweredOn'
     else
-      vm.PowerOnVM_Task.wait_for_completion
+      vm.PowerOffVM_Task.wait_for_completion unless vm.runtime.powerState == 'poweredOff'
     end
   end
 

@@ -222,11 +222,12 @@ RSpec.describe VmApi do
       let(:vm_mock) do
         mock = double
         expect(mock).to receive_message_chain(:PowerOnVM_Task, :wait_for_completion)
+        allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOff')
         mock
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, false)
+        api.change_power_state(Faker::FunnyName.name, true)
       end
     end
 
@@ -234,11 +235,12 @@ RSpec.describe VmApi do
       let(:vm_mock) do
         mock = double
         expect(mock).to receive_message_chain(:PowerOffVM_Task, :wait_for_completion)
+        allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
         mock
       end
 
       it 'changes PowerState' do
-        api.change_power_state(Faker::FunnyName.name, true)
+        api.change_power_state(Faker::FunnyName.name, false)
       end
     end
   end
@@ -333,5 +335,35 @@ RSpec.describe VmApi do
     it 'reboots the guest OS' do
       api.reboot_guest_os(Faker::FunnyName)
     end
+  end
+
+  describe '#vm_users' do
+
+    let(:vm_name) { 'My fancy VM' }
+
+    let(:vm_mock) do
+      mock = double
+      allow(mock).to receive(:name).and_return(vm_name)
+      mock
+    end
+
+    it 'returns empty list if no matching request exists' do
+      expect(VmApi.instance.vm_users(vm_mock)).to be_empty()
+    end
+
+    let(:user) { FactoryBot.create(:user) }
+
+    it 'returns the users associated to the request' do
+      FactoryBot.create :accepted_request, name: vm_name, users: [user]
+
+      expect(VmApi.instance.vm_users(vm_mock)).to include(user)
+    end
+
+    it 'returns an empty list no the matching request is not accepted' do
+      FactoryBot.create :rejected_request, name: vm_name, users: [user]
+
+      expect(VmApi.instance.vm_users(vm_mock)).to be_empty
+    end
+
   end
 end
