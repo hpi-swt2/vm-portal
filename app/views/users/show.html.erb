@@ -1,18 +1,18 @@
 <h1>User profile</h1><br>
 
-<table class="table w-auto">
+<table class="table">
   <tbody>
     <tr>
-      <td class="font-weight-bold"><%= User.human_attribute_name('email') %></td>
+      <td><%= User.human_attribute_name('email') %></td>
       <td><%= @user.email %></td>
     </tr>
     <tr>
-      <td class="font-weight-bold"><%= User.human_attribute_name('name') %></td>
+      <td><%= User.human_attribute_name('name') %></td>
       <td><%= @user.name %></td>
     </tr>
     <% if @user == current_user %>
       <tr>
-        <td class="font-weight-bold"><%= User.human_attribute_name('ssh_key') %></td>
+        <td><%= User.human_attribute_name('ssh_key') %></td>
         <td>
           <% if @user.ssh_key? %>
             <textarea type="text" class='form-control' rows='8' disabled><%= @user.ssh_key %>
@@ -20,22 +20,6 @@
           <% else %>
             <%= t('user.no_ssh_key') %>
           <% end %></td>
-      </tr>
-      <tr>
-          <td>
-            <% if @user == current_user %>
-              <%= link_to(fa_icon('edit', text: t('actions.edit')),
-                          edit_user_path(@user),
-                          class: 'btn btn-primary',
-                          id: 'editUserButton')
-              -%>
-            <% end %>
-          </td>
-          <td>
-            <a href="<%= new_slack_path -%>">
-              <img alt="Add to Slack" height="40" width="autp" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-            </a>
-          </td>
       </tr>
     <% end %>
   </tbody>

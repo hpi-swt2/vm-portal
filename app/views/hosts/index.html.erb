@@ -53,8 +53,12 @@
       <td>
         <ul class="bulletless pl-1">
           <% if not host[:vms].nil?
-              host[:vms].keys.take(3).each do |name| %>
-                <li> <%= name %></li>
+              vms = host[:vms].keys.take(3)
+              vms.each do |vm| %>
+                <%= vm -%>
+                <% if not vm == vms.last %>
+                  ,
+                <% end %>
               <% end %>
           <% end %>
 

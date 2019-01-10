@@ -9,7 +9,7 @@ end %>
 <div class="container mb-3 pl-0 pr-0 clearfix" >
   <h1 class="mb-0"><%= @host[:name] unless @host.nil? %></h1>
 </div>
-<div class="container mb-3 lead pl-0 pr-0 clearfix" >
+<div class="container mb-3 pb-3 lead pl-0 pr-0 clearfix" >
   <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil?
      state =  @host[:connectionState] == 'connected' %>
   <div class="<%= state ? 'bg-success text-black' : 'bg-danger text-white' -%> float-left pb-1 px-4 mr-2">
