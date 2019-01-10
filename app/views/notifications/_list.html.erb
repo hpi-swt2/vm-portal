@@ -1,13 +1,13 @@
 <% unless @notifications.empty? %>
 
   <% @notifications.each do |notification| %>
-    <% classNames = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
-    <div class="<%= classNames %>" style="width:100%">
+    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
+    <div class="<%= class_names %>" style="width:100%">
       <div class="card-body">
         <h5 class="card-title">
           <%= notification.title %>
         </h5>
-        <%= notification.message %>
+        <%= simple_format(notification.message).gsub(/(?:https?|ftp|mailto):\/\/\S+/, '<a href="\0">\0</a>').html_safe %>
         <div class="pull-right">
           <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
             <%= fa_icon('check', class: 'big-icon') %>
