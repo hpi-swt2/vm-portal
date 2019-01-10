@@ -11,6 +11,16 @@ RSpec.describe Request, type: :model do
       expect(request).to be_invalid
     end
 
+    it 'is invalid with too long name' do
+      request.name = 'ThisNameIsWayTooLoooong'
+      expect(request).to be_invalid
+    end
+
+    it 'is invalid when it contains special signs besides -' do
+      request.name = 'IsThisValid?!'
+      expect(request).to be_invalid
+    end
+
     it 'is invalid with no cpu_cores specifiation' do
       request.cpu_cores = nil
       expect(request).to be_invalid
@@ -71,5 +81,13 @@ RSpec.describe Request, type: :model do
   it 'changes status to accepted' do
     request.accept!
     expect(request.status).to eq('accepted')
+  end
+
+  context 'when it has a name with whitespaces' do
+    it 'replaces them by -' do
+      request.name = 'VM Name'
+      request.replace_whitespaces
+      expect(request.name).to eq('VM-Name')
+    end
   end
 end

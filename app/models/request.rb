@@ -7,7 +7,11 @@ class Request < ApplicationRecord
   attr_accessor :sudo_user_ids
 
   enum status: %i[pending accepted rejected]
-  validates :name, :cpu_cores, :ram_mb, :storage_mb, :operating_system, presence: true
+  validates :name,
+            length: { maximum: 20, message: "%{count} characters is the maximum allowed" },
+            format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: "only letters and numbers allowed"},
+            uniqueness: true
+  validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, presence: true
   validates :cpu_cores, numericality: { greater_than: 0, less_than: 65 }
   validates :ram_mb, numericality: { greater_than: 0, less_than: 257_000 }
   validates :storage_mb, numericality: { greater_than: 0, less_than: 1_000_000 }
@@ -24,9 +28,14 @@ class Request < ApplicationRecord
     self.status = 'accepted'
   end
 
+  def replace_whitespaces
+    update_attribute(:name, name.parameterize(preserve_case: true))
+  end
+
   private
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
   end
+
 end

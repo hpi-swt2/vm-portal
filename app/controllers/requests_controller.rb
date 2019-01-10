@@ -50,6 +50,7 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
+    @request.replace_whitespaces
     save_sudo_rights(@request)
 
     respond_to do |format|
