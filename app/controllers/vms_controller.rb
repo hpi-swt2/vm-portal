@@ -36,7 +36,7 @@ class VmsController < ApplicationController
 
   def request_vm_archivation
     @vm = VmApi.instance.get_vm(params[:id])
-    return if is_archived(@vm) || is_pending_archivation(@vm)
+    return if archived?(@vm) || pending_archivation?(@vm)
 
     VmApi.instance.change_power_state(@vm.name, false)
     User.admin.each do |each|
