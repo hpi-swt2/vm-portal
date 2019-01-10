@@ -43,7 +43,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    @request = Request.new(request_params)
+    @request = Request.new(request_params.merge(user: current_user))
     save_sudo_rights(@request)
 
     respond_to do |format|
