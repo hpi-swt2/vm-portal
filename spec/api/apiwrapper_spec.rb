@@ -338,7 +338,6 @@ RSpec.describe VmApi do
   end
 
   describe '#vm_users' do
-
     let(:vm_name) { 'My fancy VM' }
 
     let(:vm_mock) do
@@ -347,23 +346,22 @@ RSpec.describe VmApi do
       mock
     end
 
-    it 'returns empty list if no matching request exists' do
-      expect(VmApi.instance.vm_users(vm_mock)).to be_empty()
-    end
-
     let(:user) { FactoryBot.create(:user) }
+
+    it 'returns empty list if no matching request exists' do
+      expect(described_class.instance.vm_users(vm_mock)).to be_empty
+    end
 
     it 'returns the users associated to the request' do
       FactoryBot.create :accepted_request, name: vm_name, users: [user]
 
-      expect(VmApi.instance.vm_users(vm_mock)).to include(user)
+      expect(described_class.instance.vm_users(vm_mock)).to include(user)
     end
 
     it 'returns an empty list no the matching request is not accepted' do
       FactoryBot.create :rejected_request, name: vm_name, users: [user]
 
-      expect(VmApi.instance.vm_users(vm_mock)).to be_empty
+      expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
-
   end
 end

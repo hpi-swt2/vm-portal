@@ -11,7 +11,7 @@ RSpec.describe VmsController, type: :controller do
     before do
       double_api = double
       allow(double_api).to receive(:all_vm_infos).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true },
-                                                         { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
+                                                              { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
 
       allow(double_api).to receive(:ensure_folder)
       allow(double_api).to receive(:all_vms_in).and_return []
