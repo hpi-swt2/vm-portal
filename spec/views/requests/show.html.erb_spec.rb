@@ -15,7 +15,8 @@ RSpec.describe 'requests/show', type: :view do
       port: '4000',
       application_name: 'MyName',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      user: FactoryBot.create(:user, role: :employee)
     )
   end
 

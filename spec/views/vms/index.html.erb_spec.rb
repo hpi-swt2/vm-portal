@@ -102,16 +102,4 @@ RSpec.describe 'vms/index.html.erb', type: :view do
       expect(rendered).to have_link('Requests')
     end
   end
-
-  context 'when the user is an admin' do
-    let(:current_user) { FactoryBot.create :admin }
-
-    it 'does not link to new vm page' do
-      expect(rendered).not_to have_link('New')
-    end
-
-    it 'does not link to requests overview page' do
-      expect(rendered).not_to have_link('Requests')
-    end
-  end
 end
