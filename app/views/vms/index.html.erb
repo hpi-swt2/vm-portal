@@ -104,27 +104,26 @@
   <% end %>
   </tbody>
 </table>
-<% if current_user.employee? || current_user.admin? %>
-  <table class="table">
-      <tbody>
-        <tr>
-          <td>
-            <%= link_to "Requests",
-                          requests_path,
-                          class: "btn btn-info"
-            %>
-          </td>
-          <td>
-            <%= link_to "New",
-                          new_request_path,
-                          class: "btn btn-info"
-            %>
-          </td>
-      </tr>
-    </tbody>
-  </table>
+<% if current_user.employee? or current_user.admin? %>
+<table class="table">
+    <tbody>
+      <tr>
+        <td>
+          <%= link_to "Requests",
+                        requests_path,
+                        class: "btn btn-info"
+          %>
+        </td>
+        <td>
+          <%= link_to "New",
+                        new_request_path,
+                        class: "btn btn-info"
+          %>
+        </td>
+    </tr>
+  </tbody>
+</table>
 <% end %>
-
 
 <!-- Minified script sources for sortable tables -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"

@@ -4,17 +4,16 @@ class RequestsController < ApplicationController
   include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_employee
-  before_action :authenticate_admin, only: %i[request_accept_button]
-  before_action :authenticate_status_change, only: %i[request_accept_button]
+  before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
   # GET /requests.json
   def index
-    if current_user.admin?
-      @requests = Request.all
-    else
-      @requests = Request.select { |r| r.user == current_user }
-    end
+    @requests = if current_user.admin?
+                  Request.all
+                else
+                  Request.select { |r| r.user == current_user }
+                end
   end
 
   # GET /requests/1
@@ -46,23 +45,13 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        successfully_saved(format, @request)
+        notify_users("New VM request:\n" + request.description_text(host_url))
+        format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+        format.json { render :show, status: :created, location: request }
       else
         format.html { render :new }
         format.json { render json: @request.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  def notify_request_update(request)
-    return if request.pending?
-
-    if request.accepted?
-      notify_users("Request:\n#{@request.description_text host_url}\nhas been *accepted*!")
-    elsif request.rejected?
-      message = "Request:\n#{@request.description_text host_url}\nhas been *rejected*!"
-      message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
-      notify_users(message)
     end
   end
 
@@ -93,16 +82,11 @@ class RequestsController < ApplicationController
 
   def request_change_state
     @request = Request.find(params[:id])
-    respond_to do |format|
-      if @request.user == current_user
-        format.html { redirect_to @request, danger: 'You can not change the status of your own requests.' }
-        format.json { render :show, status: :unauthorized, location: @request }
-      elsif @request.update(request_params)
-        successfully_updated(format, @request)
-      else
-        format.html { render :edit }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
-      end
+    if @request.update(request_params)
+      notify_request_update(@request)
+      redirect_to new_vm_path(request: @request), notice: I18n.t('request.successfully_updated')
+    else
+      redirect_to @request, alert: @request.errors
     end
   end
 
@@ -125,16 +109,22 @@ class RequestsController < ApplicationController
     @request = Request.find(params[:id])
   end
 
-  def successfully_saved(format, request)
-    notify_users("New VM request:\n" + request.description_text(host_url))
-    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-    format.json { render :show, status: :created, location: request }
+  def authenticate_state_change
+    authenticate_admin
+    @request = Request.find(params[:id])
+    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
   end
 
-  def successfully_updated(format, request)
-    notify_request_update(request)
-    format.html { redirect_to @request, notice: 'Request was successfully updated.' }
-    format.json { render :show, status: :ok, location: request }
+  def notify_request_update(request)
+    return if request.pending?
+
+    if request.accepted?
+      notify_users("Request:\n#{@request.description_text host_url}\nhas been *accepted*!")
+    elsif request.rejected?
+      message = "Request:\n#{@request.description_text host_url}\nhas been *rejected*!"
+      message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
+      notify_users(message)
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
