@@ -104,30 +104,26 @@
   <% end %>
   </tbody>
 </table>
-
-
-<table class="table">
-    <tbody>
-      <tr>
-        <% if current_user.employee? %>
+<% if current_user.employee? || current_user.admin? %>
+  <table class="table">
+      <tbody>
+        <tr>
           <td>
             <%= link_to "Requests",
                           requests_path,
                           class: "btn btn-info"
             %>
           </td>
-        <% end %>
-        <% if current_user.employee? %>
           <td>
             <%= link_to "New",
                           new_request_path,
                           class: "btn btn-info"
             %>
           </td>
-        <% end %>
-    </tr>
-  </tbody>
-</table>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
 
 
 <!-- Minified script sources for sortable tables -->
