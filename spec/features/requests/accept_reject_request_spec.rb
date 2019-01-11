@@ -3,15 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'accepting and rejecting requests', type: :feature do
-  let (:request) { FactoryBot.create :request}
+  let(:request) { FactoryBot.create :request}
+  let(:admin) { FactoryBot.create :admin }
 
   before do
-    sign_in FactoryBot.create :admin
+    sign_in admin
     visit request_path(request)
   end
 
   context 'when request status is pending' do
-    context 'and will be accepted' do
+    context 'clicking the accept button' do
       before do
         click_button('acceptButton')
       end
@@ -33,7 +34,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
       end
     end
 
-    context 'and will be rejected' do
+    context 'clicking the reject button' do
       it 'has a working reject button' do
         click_button('rejectButton')
         request.reload
@@ -53,6 +54,40 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
 
         it 'shows rejection information' do
           expect(page).to have_text('Info')
+        end
+      end
+    end
+
+    context 'and the request was created by the current user' do
+      let (:request) { FactoryBot.create :request, user: admin}
+
+      context 'clicking the accept button' do
+        before do
+          click_button('acceptButton')
+          request.reload
+        end
+
+        it 'does not change the requests state' do
+          expect(request.status).to eq 'pending'
+        end
+
+        it 'shows an error message' do
+          expect(page).to have_text(I18n.t('request.unauthorized_state_change'))
+        end
+      end
+
+      context 'clicking the reject button' do
+        before do
+          click_button('rejectButton')
+          request.reload
+        end
+
+        it 'does not change the requests state' do
+          expect(request.status).to eq 'pending'
+        end
+
+        it 'shows an error message' do
+          expect(page).to have_text(I18n.t('request.unauthorized_state_change'))
         end
       end
     end
