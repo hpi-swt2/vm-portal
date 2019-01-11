@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
+
 class VmsController < ApplicationController
   attr_reader :vms
 
+  include VmsHelper
+  before_action :authenticate_admin, only: %i[archive_vm]
+
   def index
-    @vms = filter VmApi.instance.all_vms
+    @vms = filter VmApi.instance.all_vm_infos
+    @archived_vms = all_archived_vms
     @parameters = determine_params
+    @pending_archivation_vms = all_pending_archived_vms
   end
 
   def destroy
@@ -24,36 +30,67 @@ class VmsController < ApplicationController
   end
 
   def show
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
-  def change_power_state
+  def request_vm_archivation
     @vm = VmApi.instance.get_vm(params[:id])
-    VmApi.instance.change_power_state(@vm[:name], @vm[:state])
+    return if archived?(@vm) || pending_archivation?(@vm)
+
+    VmApi.instance.change_power_state(@vm.name, false)
+    User.admin.each do |each|
+      each.notify("VM #{@vm.name} has been requested to be archived",
+                  "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
+    end
+    VmApi.instance.vm_users(@vm).each do |each|
+      each.notify("Your VM #{@vm.name} has been requested to be archived",
+                  "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
+                  url_for(controller: :vms, action: 'show', id: @vm.name))
+    end
+    set_pending_archivation(@vm)
+
+    redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  def archive_vm
+    @vm = VmApi.instance.get_vm(params[:id])
+    set_archived(@vm)
+
+    # inform users
+    VmApi.instance.vm_users(@vm).each do |each|
+      each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
+    end
+
+    redirect_to controller: :vms, action: 'index', id: @vm.name
+  end
+
+  def change_power_state
+    @vm = VmApi.instance.get_vm_info(params[:id])
+    VmApi.instance.change_power_state(@vm[:name], !@vm[:state])
     redirect_to root_path
   end
 
   def suspend_vm
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.suspend_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def shutdown_guest_os
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.shutdown_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def reboot_guest_os
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reboot_guest_os(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
 
   def reset_vm
-    @vm = VmApi.instance.get_vm(params[:id])
+    @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reset_vm(@vm[:name])
     redirect_to action: :show, id: params[:id]
   end
