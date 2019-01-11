@@ -39,7 +39,7 @@ class ServersController < ApplicationController
     # merge server_params [and software information
     server_params[:installed_software] = software
 
-    #server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :mac_address, :fqdn, :ipv4_address, :ipv6_address, :installed_software => [])
+    #server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software)
     server_params.permit!
 
     # create new Server object
@@ -54,8 +54,6 @@ class ServersController < ApplicationController
       ipv6_address: server_params[:ipv6_address],
       installed_software: server_params[:installed_software],
       )
-
-    puts @server.inspect
 
     respond_to do |format|
       if @server.save

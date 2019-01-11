@@ -2,19 +2,37 @@ require 'rails_helper'
 
 RSpec.describe ServersController, type: :controller do
 
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+  let(:valid_attributes) do {
+    name: 'SpecServer',
+    cpu_cores: 4,
+    ram_mb: 1024,
+    storage_mb: 4096,
+    mac_address: 'C0:FF:EE:C4:11:42',
+    fqdn: 'arrrr.speck.de',
+    ipv4_address: '8.8.8.8',
+    ipv6_address: '::1',
+    installed_software: ['SpeckTester'],
   }
+  end
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+  let(:invalid_attributes) do {
+    name: 'SpecServer',
+    cpu_cores: '',
+    ram_mb: 1024,
+    storage_mb: 4096,
+    mac_address: 'C0:FF:EE:C4:11:42',
+    fqdn: 'arrrr.speck.de',
+    ipv4_address: 'c8.a8.d8.b8',
+    ipv6_address: 42,
+    installed_software: 'SpeckTester',
   }
+  end
 
   let(:valid_session) { {} }
 
   # Authenticate an user
   before do
-    sign_in FactoryBot.create :user
+    sign_in FactoryBot.create :admin
   end
 
   describe "GET #index" do
