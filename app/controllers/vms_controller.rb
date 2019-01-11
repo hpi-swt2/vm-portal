@@ -2,7 +2,8 @@
 
 require 'vmapi.rb'
 
-class VmsController < ApplicationController # rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/ClassLength
+class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
@@ -138,3 +139,4 @@ class VmsController < ApplicationController # rubocop:disable Metrics/ClassLengt
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
   end
 end
+# rubocop:enable ClassLength
