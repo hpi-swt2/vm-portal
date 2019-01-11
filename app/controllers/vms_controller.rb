@@ -9,7 +9,11 @@ class VmsController < ApplicationController
   before_action :authenticate_admin, only: %i[archive_vm]
 
   def index
-    @vms = filter VmApi.instance.all_vm_infos
+    if current_user.user?
+      @vms = filter current_user.vms
+    else
+      @vms = filter VmApi.instance.all_vm_infos
+    end
     @archived_vms = all_archived_vms
     @parameters = determine_params
     @pending_archivation_vms = all_pending_archived_vms
@@ -31,7 +35,8 @@ class VmsController < ApplicationController
 
   def show
     @vm = VmApi.instance.get_vm_info(params[:id])
-    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    return redirect_to vms_path unless !current_user.user? || current_user.vms.include?(@vm)
   end
 
   def request_vm_archivation

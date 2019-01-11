@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sshkey'
+require 'vmapi.rb'
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -62,6 +63,10 @@ class User < ApplicationRecord
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
     end
+  end
+
+  def vms
+    VmApi.instance.user_vms(self)
   end
 
   private
