@@ -17,49 +17,23 @@ class VSphereApi
   def get_vm(name)
     connect
 
-    find_vm_in(@vm_folder, name)
+    @vm_folder.find_vm(name)
   end
 
   def all_vms
     connect
 
-    all_vms_in(@vm_folder)
+    @vm_folder.vms
   end
 
-  def all_vms_in(folder)
-    vms = folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }.map do |each|
-      VirtualMachine.new each
-    end
-
-    vms.append(all_folders_in(folder).flat_map { |each| all_vms_in(each) })
-    vms
-  end
-
-  def ensure_folder(folder_name)
+  def root_folder
     connect
-    folder = @vm_folder.find folder_name, RbVmomi::VIM::Folder
-    folder || @vm_folder.CreateFolder(name: folder_name)
+
+    @vm_folder
   end
 
   private
 
-
-  def all_folders_in(folder)
-    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
-  end
-
-  def find_vm_in(folder, name)
-    if (vm = folder.traverse(name, RbVmomi::VIM::VirtualMachine))
-      VirtualMachine.new vm
-    else
-      all_folders_in(folder).each do |each|
-        if (vm = find_vm_in(each, name))
-          return VirtualMachine.new vm
-        end
-      end
-      nil
-    end
-  end
 
   def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength
     {
@@ -117,10 +91,9 @@ class VSphereApi
   def connect
     @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
     @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
-    @vm_folder = @dc.vmFolder
+    @vm_folder = VSphere::Folder.new(@dc.vmFolder)
     @cluster_folder = @dc.hostFolder
     @clusters = extract_clusters(@cluster_folder).flatten
-    @vms = @vm_folder.children
     @resource_pool = @clusters.first.resourcePool
   end
 
