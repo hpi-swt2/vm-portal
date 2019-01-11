@@ -21,10 +21,13 @@ class RequestsController < ApplicationController
   # GET /requests/new
   def new
     @request = Request.new
+    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/1/edit
-  def edit; end
+  def edit
+    @request_templates = RequestTemplate.all
+  end
 
   def notify_users(title, message)
     User.all.each do |each|
