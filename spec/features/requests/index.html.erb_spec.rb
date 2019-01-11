@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 describe 'requests/index.html.erb', type: :feature do
-  let(:admin) { FactoryBot.create :admin }
+  let(:user) { FactoryBot.create :user }
   let(:employee) { FactoryBot.create :employee }
+  let(:admin) { FactoryBot.create :admin }
 
   let(:request_from_admin) { FactoryBot.create :request, user: admin, name: 'AdminVM'}
   let(:request_from_employee) { FactoryBot.create :request, user: employee, name: 'EmployeeVM'}
@@ -13,6 +14,17 @@ describe 'requests/index.html.erb', type: :feature do
   before do
     request_from_admin
     request_from_employee
+  end
+
+  context 'when the user is an user' do
+    before do
+      sign_in user
+      visit requests_path
+    end
+
+    it 'redirects to the root path' do
+      expect(page).to have_current_path(dashboard_path)
+    end
   end
 
   context 'when the user is an admin' do
