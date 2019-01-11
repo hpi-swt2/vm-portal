@@ -21,6 +21,9 @@ class User < ApplicationRecord
   validates :last_name, presence: true
   validate :valid_ssh_key
 
+  has_and_belongs_to_many :responsible_projects, class_name: 'Project', join_table: :responsible_users,
+                          foreign_key: :project_id, association_foreign_key: :user_id
+
   # slack integration
   has_many :slack_auth_requests, dependent: :destroy
   has_many :slack_hooks, dependent: :destroy

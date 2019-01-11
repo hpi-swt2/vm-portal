@@ -28,6 +28,11 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+  end
+
   create_table "request_templates", force: :cascade do |t|
     t.integer "cpu_cores"
     t.integer "ram_mb"
@@ -56,6 +61,13 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
+  create_table "responsible_users", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "project_id"
+    t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
+    t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
+  end
+
   create_table "slack_auth_requests", force: :cascade do |t|
     t.string "state"
     t.integer "user_id"
@@ -80,12 +92,12 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.integer "role"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
