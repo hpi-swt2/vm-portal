@@ -31,9 +31,9 @@ class RequestsController < ApplicationController
     @request_templates = RequestTemplate.all
   end
 
-  def notify_users(message)
+  def notify_users(message, title)
     User.all.each do |each|
-      each.notify_slack(message)
+      each.notify(title, message)
     end
   end
 
@@ -45,7 +45,7 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        notify_users("New VM request:\n" + request.description_text(host_url))
+        notify_users("New VM request:\n", request.description_text(host_url))
         format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
         format.json { render :show, status: :created, location: request }
       else
@@ -119,11 +119,11 @@ class RequestsController < ApplicationController
     return if request.pending?
 
     if request.accepted?
-      notify_users("Request:\n#{@request.description_text host_url}\nhas been *accepted*!")
+      notify_users('Request has been accepted', @request.description_text(host_url))
     elsif request.rejected?
-      message = "Request:\n#{@request.description_text host_url}\nhas been *rejected*!"
+      message = @request.description_text host_url
       message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
-      notify_users(message)
+      notify_users('Request has been rejected', message)
     end
   end
 
