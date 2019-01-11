@@ -2,7 +2,7 @@
 
 require 'vmapi.rb'
 
-class VmsController < ApplicationController
+class VmsController < ApplicationController # rubocop:disable Metrics/ClassLength
   attr_reader :vms
 
   include VmsHelper
