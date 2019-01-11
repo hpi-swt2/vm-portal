@@ -20,6 +20,7 @@ RSpec.describe 'requests/show', type: :view do
                                   comment: 'Comment',
                                   status: 'pending',
                                   user_ids: [@user.id]
+                                  user: FactoryBot.create(:employee)
                                 ))
     @request.assign_sudo_users([@second_user.id])
     allow(view).to receive(:current_user).and_return(current_user)

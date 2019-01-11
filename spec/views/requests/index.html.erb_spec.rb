@@ -15,7 +15,8 @@ RSpec.describe 'requests/index', type: :view do
         application_name: 'MyName',
         description: 'Description',
         comment: 'Comment',
-        status: 'pending'
+        status: 'pending',
+        user: FactoryBot.create(:employee)
       ),
       Request.create!(
         name: 'MyVM',
@@ -27,7 +28,8 @@ RSpec.describe 'requests/index', type: :view do
         application_name: 'MyName',
         description: 'Description',
         comment: 'Comment',
-        status: 'pending'
+        status: 'pending',
+        user: FactoryBot.create(:employee)
       )
     ]
   end
