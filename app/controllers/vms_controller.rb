@@ -8,6 +8,7 @@ class VmsController < ApplicationController
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
+  before_action :authorize_vm_access, only: %i[show]
 
   def index
     @vms = if current_user.user?
@@ -35,9 +36,7 @@ class VmsController < ApplicationController
   end
 
   def show
-    @vm = VmApi.instance.get_vm_info(params[:id])
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
-    return redirect_to vms_path unless !current_user.user? || current_user.vms.include?(@vm)
   end
 
   def request_vm_archivation
@@ -137,6 +136,12 @@ class VmsController < ApplicationController
 
   def vm_filter
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+  end
+
+  def authorize_vm_access
+    @vm = VmApi.instance.get_vm_info(params[:id])
+    return if !@vm
+    redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
   end
 end
 # rubocop:enable ClassLength
