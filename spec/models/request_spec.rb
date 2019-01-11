@@ -79,7 +79,7 @@ RSpec.describe Request, type: :model do
   describe 'method tests' do
     before(:each) do
       @request = FactoryBot.create :request
-      @user = FactoryBot.create :user
+      @user = FactoryBot.build :user
     end
 
     context 'when accepting a request' do
@@ -126,7 +126,7 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a user being assigned as user and sudo user' do
-      user = FactoryBot.create :user
+      user = FactoryBot.build :user
       request = FactoryBot.create(:request, user_ids: [user.id])
       request.assign_sudo_users([user.id])
 
