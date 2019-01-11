@@ -27,7 +27,7 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   end
 
   it 'links to the current user profile' do
-    expect(rendered).to have_link(current_user.name, href: user_path(current_user))
+    expect(rendered).to have_link('Profile', href: user_path(current_user))
   end
 
   it 'links to the Notification Page' do
