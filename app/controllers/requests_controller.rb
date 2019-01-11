@@ -79,7 +79,7 @@ class RequestsController < ApplicationController
   def request_change_state
     if @request.update(request_params)
       notify_request_update
-      redirect_to new_vm_path(request: @request), notice: I18n.t('request.successfully_updated')
+      redirect_to requests_path, notice: I18n.t('request.successfully_updated')
     else
       redirect_to @request, alert: @request.errors
     end

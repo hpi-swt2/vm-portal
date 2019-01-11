@@ -22,15 +22,8 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
         expect(request.status).to eq('accepted')
       end
 
-      it 'routes to the new_vm_path' do
-        expect(page).to have_current_path(new_vm_path(request: request))
-      end
-
-      it 'has automatically filled fields' do
-        find('input[name="name"][value*="MyVM"]')
-        find('input[name="cpu"][value*="2"]')
-        find('input[name="ram"][value*="1000"]')
-        find('input[name="capacity"][value*="2000"]')
+      it 'redirects to the requests_path' do
+        expect(page).to have_current_path(requests_path)
       end
     end
 
