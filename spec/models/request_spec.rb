@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Request, type: :model do
-
   describe 'validation tests' do
     let(:request) { FactoryBot.build :request }
 
@@ -77,7 +76,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'method tests' do
-    before(:each) do
+    before do
       @request = FactoryBot.create :request
       @user = FactoryBot.build :user
     end
@@ -97,7 +96,7 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a non sudo user' do
-      before(:each) do
+      before do
         @assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: false)
       end
 
@@ -111,7 +110,7 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a sudo user' do
-      before(:each) do
+      before do
         @sudo_assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: true)
       end
 
@@ -122,7 +121,6 @@ RSpec.describe Request, type: :model do
       it 'does not return a non sudo user' do
         expect(@request.non_sudo_user_assignments.include?(@sudo_assignment)).to be false
       end
-
     end
 
     context 'when having a user being assigned as user and sudo user' do
@@ -131,13 +129,12 @@ RSpec.describe Request, type: :model do
       request.assign_sudo_users([user.id])
 
       it 'creates a sudo user assignment' do
-        expect((request.sudo_user_assignments.select{ |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
+        expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
       end
 
       it 'does not create a user assignment' do
-        expect(request.users_assigned_to_requests.select{ |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
+        expect(request.users_assigned_to_requests.select { |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
       end
     end
-
   end
 end

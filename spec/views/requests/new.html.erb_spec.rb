@@ -68,6 +68,5 @@ RSpec.describe 'requests/new', type: :view do
     end
 
     expect(rendered).to match(@user.email)
-
   end
 end

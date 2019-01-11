@@ -25,14 +25,12 @@ class Request < ApplicationRecord
   end
 
   def assign_sudo_users(sudo_user_ids)
-    unless sudo_user_ids.nil?
-      sudo_user_ids.each do |id|
-        if users_assigned_to_requests.exists?(user_id: id.to_i)
-          assignment = users_assigned_to_requests.find { |assignment| assignment.user_id == id.to_i }
-          assignment.update_attribute(:sudo, true)
-        else
-          users_assigned_to_requests.create(sudo: true, user_id: id)
-        end
+    sudo_user_ids&.each do |id|
+      assignment = users_assigned_to_requests.find { |assignment| assignment.user_id == id.to_i }
+      if !assignment.nil?
+        assignment.update_attribute(:sudo, true)
+      else
+        users_assigned_to_requests.create(sudo: true, user_id: id)
       end
     end
   end
@@ -44,7 +42,7 @@ class Request < ApplicationRecord
   def non_sudo_user_assignments
     users_assigned_to_requests - sudo_user_assignments
   end
-  
+
   private
 
   def url(host_name)

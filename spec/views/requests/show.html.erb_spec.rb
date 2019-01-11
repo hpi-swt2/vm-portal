@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'requests/show', type: :view do
   let(:current_user) { FactoryBot.create :employee }
+
   before do
     @user = FactoryBot.create(:user)
     @second_user = FactoryBot.create(:user, email: 'test@test.de')
@@ -18,7 +19,7 @@ RSpec.describe 'requests/show', type: :view do
                                   description: 'Description',
                                   comment: 'Comment',
                                   status: 'pending',
-                                  user_ids: [@user.id],
+                                  user_ids: [@user.id]
                                 ))
     @request.assign_sudo_users([@second_user.id])
     allow(view).to receive(:current_user).and_return(current_user)
