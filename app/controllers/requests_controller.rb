@@ -25,7 +25,9 @@ class RequestsController < ApplicationController
   end
 
   # GET /requests/1/edit
-  def edit; end
+  def edit
+    @request_templates = RequestTemplate.all
+  end
 
   def notify_users(title, message)
     User.all.each do |each|
@@ -112,6 +114,10 @@ class RequestsController < ApplicationController
   end
 
   private
+
+  def host_url
+    request.base_url
+  end
 
   def save_sudo_rights(request)
     sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
