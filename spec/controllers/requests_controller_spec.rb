@@ -26,7 +26,7 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
-  let(:user) { FactoryBot.create :user, role: :employee }
+  let(:user) { FactoryBot.create :employee }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to

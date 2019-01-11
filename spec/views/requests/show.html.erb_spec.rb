@@ -16,7 +16,7 @@ RSpec.describe 'requests/show', type: :view do
       application_name: 'MyName',
       comment: 'Comment',
       status: 'pending',
-      user: FactoryBot.create(:user, role: :employee)
+      user: FactoryBot.create :employee
     )
   end
 
