@@ -86,7 +86,7 @@
     <%= form_with(model: @request, url:{action: 'request_change_state', id: @request}, local: true) do |form| %>
       <div class="actions">
         <%= form.hidden_field :status, value: 'accepted' %>
-        <%= form.submit 'Accept & Continue', class: "btn btn-success" %>
+        <%= form.submit 'Accept & Continue', id: 'acceptButton', class: "btn btn-success" %>
       </div>
     <% end %>
 
@@ -98,7 +98,7 @@
 
       <div class="actions">
         <%= form.hidden_field :status, value: 'rejected' %>
-        <%= form.submit 'Reject', class: "btn btn-danger" %>
+        <%= form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
       </div>
     <% end %>
   </div>

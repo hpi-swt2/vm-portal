@@ -2,7 +2,7 @@
 
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
-  prepend_before_action :set_request, only: %i[show edit update destroy request_state_change]
+  before_action :set_request, only: %i[show edit update destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
@@ -105,6 +105,7 @@ class RequestsController < ApplicationController
   end
 
   def authenticate_state_change
+    @request = Request.find(params[:id])
     authenticate_admin
     redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
   end
@@ -116,7 +117,7 @@ class RequestsController < ApplicationController
       notify_users('Request has been accepted', @request.description_text(host_url))
     elsif @request.rejected?
       message = @request.description_text host_url
-      message += request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
+      message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
       notify_users('Request has been rejected', message)
     end
   end

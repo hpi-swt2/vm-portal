@@ -11,6 +11,7 @@ FactoryBot.define do
     status { 'pending' }
     user { FactoryBot.create :admin }
   end
+
   factory :rejected_request, parent: :request do
     status { 'rejected' }
     rejection_information { 'Info' }
