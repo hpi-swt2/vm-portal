@@ -16,14 +16,14 @@ RSpec.describe 'requests/edit', type: :view do
                                   status: 'pending'
                                 ))
     assign(:request_templates, [
-                       RequestTemplate.new(
-                         name: 'MyTemplate',
-                         cpu_cores: 2,
-                         ram_mb: 1000,
-                         storage_mb: 2000,
-                         operating_system: 'CentOS 7'
-                       )
-                     ])
+                                  RequestTemplate.new(
+                                  name: 'MyTemplate',
+                                  cpu_cores: 2,
+                                  ram_mb: 1000,
+                                  storage_mb: 2000,
+                                  operating_system: 'CentOS 7'
+                                  )
+                               ])
   end
 
   it 'renders the edit request form' do
