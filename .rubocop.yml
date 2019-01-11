@@ -7,9 +7,13 @@ AllCops:
 
 Metrics/BlockLength:
   Exclude:
-  - 'Rakefile'
-  - '**/*.rake'
-  - 'spec/**/*.rb'
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'app/controllers/**/*.rb'
 
 Documentation:
   Enabled: false

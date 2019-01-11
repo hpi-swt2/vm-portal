@@ -68,18 +68,20 @@
   </tbody>
 </table>
 
-<table class="table">
-  <tbody>
-  <tr>
-    <td><%= button_to "Requests",
-                      {controller: :requests, action: 'index'},
-                      method: :get, class: "btn btn-info" %></td>
-    <td><%= button_to "New",
-                      {controller: :vms, action: 'new'},
-                      method: :get, class: "btn btn-info" %></td>
-  </tr>
-  </tbody>
-</table>
+<% if current_user.employee? or current_user.admin? %>
+  <table class="table">
+    <tbody>
+    <tr>
+      <td><%= button_to "Requests",
+                        {controller: :requests, action: 'index'},
+                        method: :get, class: "btn btn-info" %></td>
+      <td><%= button_to "New",
+                        {controller: :vms, action: 'new'},
+                        method: :get, class: "btn btn-info" %></td>
+    </tr>
+    </tbody>
+  </table>
+<% end %>
 
 <h2>Archived VMs</h2>
 <table data-toggle="table" class="table archived">
@@ -104,9 +106,6 @@
   <% end %>
   </tbody>
 </table>
-
-
-
 
 <!-- Minified script sources for sortable tables -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
