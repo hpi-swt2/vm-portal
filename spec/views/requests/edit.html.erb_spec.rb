@@ -21,7 +21,7 @@ RSpec.describe 'requests/edit', type: :view do
                                   ram_mb: 1000,
                                   storage_mb: 2000,
                                   operating_system: 'CentOS 7'
-                                 )])
+                                )])
   end
 
   it 'renders the edit request form' do
