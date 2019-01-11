@@ -42,7 +42,7 @@ RSpec.describe RequestsController, type: :controller do
       description: 'Description',
       comment: 'Comment',
       status: 'pending',
-      sudo_user_ids: []
+      sudo_user_ids: ['']
     }
   end
 
@@ -56,7 +56,7 @@ RSpec.describe RequestsController, type: :controller do
       description: '',
       comment: 'Comment',
       status: 'pending',
-      sudo_user_ids: []
+      sudo_user_ids: ['']
     }
   end
 

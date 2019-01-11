@@ -47,14 +47,9 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params)
-
     respond_to do |format|
       if @request.save
-
         @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
-        #render plain: @request.users_assigned_to_requests.inspect #+ request_params[:sudo_user_ids][1..-1].inspect + request_params[:sudo_user_ids].second.inspect #+ @request.users_assigned_to_requests.find{ |assignment| assignment.user_id.to_s == request_params[:sudo_user_ids].second.inspect }
-        #render plain: @request.users_assigned_to_requests.exists?(user_id: request_params[:sudo_user_ids][1]).inspect + "\n" + request_params[:sudo_user_ids].inspect + "\n" + @request.users_assigned_to_requests[1].inspect + "\n" + request_params[:user_ids].inspect + "\n" + @request.users_assigned_to_requests[1].user_id.class.inspect + "\n" + request_params[:sudo_user_ids][1].class.inspect
-        #find { |assignment| assignment.user_id.to_s == request_params[:sudo_user_ids].first }).
         successfully_saved(format, @request)
       else
         format.html { render :new }
@@ -120,9 +115,8 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    #defaults = { user_ids: [], sudo_user_ids: []}
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])#.reverse_merge(defaults)
+                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end
