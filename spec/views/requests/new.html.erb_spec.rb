@@ -15,15 +15,14 @@ RSpec.describe 'requests/new', type: :view do
                        comment: 'Comment',
                        status: 'pending'
                      ))
-    assign(:request_templates, [
-                       RequestTemplate.new(
-                         name: 'MyTemplate',
-                         cpu_cores: 2,
-                         ram_mb: 1000,
-                         storage_mb: 2000,
-                         operating_system: 'CentOS 7'
-                       )
-                     ])
+    assign(:request_templates, [RequestTemplate.new(
+                                 name: 'MyTemplate',
+                                 cpu_cores: 2,
+                                 ram_mb: 1000,
+                                 storage_mb: 2000,
+                                 operating_system: 'CentOS 7'
+                                )
+                               ])
     render
   end
 
