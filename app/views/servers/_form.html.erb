@@ -71,8 +71,18 @@ var boxName = 0;
 function addInput()
 {
   var boxName="software" + countBox;
+  var input = document.createElement("div");
+  input.setAttribute("class", "field");
 
-  document.getElementById('response').innerHTML+='<div class="field"><input type="text" placeholder="Software ' + countBox + '" class="form-control" name="' + boxName + '" id="' + boxName + '" /></div>';
+  var inputKind = document.createElement("INPUT");
+  inputKind.setAttribute("type", "text");
+  inputKind.setAttribute("placeholder", "Software " + countBox);
+  inputKind.setAttribute("class", "form-control");
+  inputKind.setAttribute("name", boxName);
+  inputKind.setAttribute("id", boxName);
+
+  input.appendChild(inputKind);
+  document.getElementById('response').appendChild(input);
 
   countBox += 1;
 }

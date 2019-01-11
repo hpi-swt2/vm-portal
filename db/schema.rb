@@ -28,16 +28,6 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "request_templates", force: :cascade do |t|
-    t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
-    t.string "operating_system"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-  end
-
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
@@ -49,8 +39,6 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "port"
-    t.string "application_name"
   end
 
   create_table "servers", force: :cascade do |t|
@@ -91,17 +79,16 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.string "first_name"
-    t.string "last_name"
+    t.integer "role"
     t.string "provider"
     t.string "uid"
-    t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
