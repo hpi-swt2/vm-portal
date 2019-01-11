@@ -14,7 +14,7 @@ RSpec.describe 'requests/new', type: :view do
                        application_name: 'MyName',
                        comment: 'Comment',
                        status: 'pending',
-                       user: FactoryBot.create :employee
+                       user: FactoryBot.create(:employee)
                      ))
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
