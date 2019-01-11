@@ -115,11 +115,12 @@ RSpec.describe VmApi do
 
   describe '#get_vm' do
     vm_name = 'VM'
-    subject { api.get_vm(vm_name) }
+    subject { api.get_vm_info(vm_name) }
 
     let(:vm_mock) do
       mock = double
       summary = double
+      guest = double
       expect(mock).to receive(:name).and_return(vm_name)
       allow(mock).to receive(:summary).and_return(summary)
       allow(summary).to receive_message_chain(:runtime, :host, :name).and_return('aHost')
@@ -127,6 +128,8 @@ RSpec.describe VmApi do
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('Thursday')
       allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       allow(mock).to receive(:guestHeartbeatStatus).and_return('running')
+      allow(mock).to receive(:guest).and_return(guest)
+      allow(guest).to receive(:toolsStatus).and_return('toolsOk')
       mock
     end
 
@@ -219,6 +222,7 @@ RSpec.describe VmApi do
       let(:vm_mock) do
         mock = double
         expect(mock).to receive_message_chain(:PowerOnVM_Task, :wait_for_completion)
+        allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOff')
         mock
       end
 
@@ -231,12 +235,133 @@ RSpec.describe VmApi do
       let(:vm_mock) do
         mock = double
         expect(mock).to receive_message_chain(:PowerOffVM_Task, :wait_for_completion)
+        allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
         mock
       end
 
       it 'changes PowerState' do
         api.change_power_state(Faker::FunnyName.name, false)
       end
+    end
+  end
+
+  describe '#suspend_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:SuspendVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'suspends VM' do
+      api.suspend_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#reset_vm' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ResetVM_Task, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'resest the VM' do
+      api.reset_vm(Faker::FunnyName)
+    end
+  end
+
+  describe '#shutdown_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:ShutdownGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'shuts down the guest OS' do
+      api.shutdown_guest_os(Faker::FunnyName)
+    end
+  end
+
+  describe '#reboot_guest_os' do
+    let(:vm_folder_mock) do
+      mock = double
+      expect(mock).to receive(:traverse).and_return(vm_mock)
+      mock
+    end
+
+    let(:vm_mock) do
+      mock = double
+      expect(mock).to receive_message_chain(:RebootGuest, :wait_for_completion)
+      mock
+    end
+
+    before do
+      allow(api).to receive(:connect)
+      api.instance_variable_set :@vm_folder, vm_folder_mock
+    end
+
+    it 'reboots the guest OS' do
+      api.reboot_guest_os(Faker::FunnyName)
+    end
+  end
+
+  describe '#vm_users' do
+    let(:vm_name) { 'My fancy VM' }
+
+    let(:vm_mock) do
+      mock = double
+      allow(mock).to receive(:name).and_return(vm_name)
+      mock
+    end
+
+    let(:user) { FactoryBot.create(:user) }
+
+    it 'returns empty list if no matching request exists' do
+      expect(described_class.instance.vm_users(vm_mock)).to be_empty
+    end
+
+    it 'returns the users associated to the request' do
+      FactoryBot.create :accepted_request, name: vm_name, users: [user]
+
+      expect(described_class.instance.vm_users(vm_mock)).to include(user)
+    end
+
+    it 'returns an empty list no the matching request is not accepted' do
+      FactoryBot.create :rejected_request, name: vm_name, users: [user]
+
+      expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
   end
 end

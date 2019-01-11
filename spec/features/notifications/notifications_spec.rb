@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'spec_helper'
-include Warden::Test::Helpers
-Warden.test_mode!
 
 describe 'Index page', type: :feature do
   context 'with notifications' do
@@ -43,5 +40,40 @@ describe 'Index page', type: :feature do
 
       expect(page).to have_text('You don\'t have any notifications at the moment.')
     end
+  end
+end
+
+describe 'Nav header', type: :feature do
+  before do
+    user = create(:user)
+    login_as(user, scope: :user)
+    @notification = FactoryBot.create(:notification, user: user)
+  end
+
+  it 'has a link to notifications' do
+    visit requests_path
+
+    click_link 'header-notification-bell'
+    expect(page).to have_text(@notification.message)
+  end
+end
+
+describe 'Notification sending', type: :feature do
+  let(:user) do
+    user = create(:user)
+    login_as(user, scope: :user)
+    user
+  end
+
+  it 'notifies slack' do
+    allow(user).to receive(:notify_slack)
+    user.notify('Notification title', 'The notification message')
+    expect(user).to have_received(:notify_slack)
+  end
+
+  it 'creates a notification object' do
+    notification_count = Notification.all.length
+    user.notify('Notification title', 'The notification message')
+    expect(Notification.all.length).to equal(notification_count + 1)
   end
 end

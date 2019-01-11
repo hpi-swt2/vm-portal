@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "request_templates", force: :cascade do |t|
+    t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "operating_system"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+  end
+
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
@@ -39,6 +49,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "port"
+    t.string "application_name"
   end
 
   create_table "servers", force: :cascade do |t|
@@ -87,6 +99,7 @@ ActiveRecord::Schema.define(version: 2019_01_11_102059) do
     t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"

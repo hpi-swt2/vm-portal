@@ -68,13 +68,12 @@ Rails.application.configure do
   OmniAuth.config.test_mode = true
 
   OmniAuth.config.mock_auth[:hpi] = OmniAuth::AuthHash.new(
-      {
-          provider: 'hpi',
-          uid: '123545',
-          info: {
-              first_name: 'Max',
-              last_name: 'Mustermann',
-              email: 'max.mustermann@student.hpi.de'
-          }
-      })
+    provider: 'hpi',
+    uid: '123545',
+    info: {
+      first_name: 'Max',
+      last_name: 'Mustermann',
+      email: 'max.mustermann@student.hpi.de'
+    }
+  )
 end

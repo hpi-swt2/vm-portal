@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Requests', type: :request do
   # Authenticate an user
   before do
-    user = FactoryBot.create :user, role: :wimi
+    user = FactoryBot.create :user, role: :employee
     sign_in user
   end
 

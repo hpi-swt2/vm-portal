@@ -20,9 +20,37 @@ class VmApi
 
   def all_vms
     connect
-    @vm_folder.children.map do |vm|
-      { name: vm.name, state: (vm.runtime.powerState == 'poweredOn'), boot_time: vm.runtime.bootTime }
+    all_vms_in(@vm_folder)
+  end
+
+  def vm_users(vm) # rubocop:disable Naming/UncommunicativeMethodParamName
+    request = Request.accepted.find { |each| vm.name == each.name }
+    if request
+      request.users
+    else
+      []
     end
+  end
+
+  def user_vms(user)
+    requests = user.requests.accepted
+    requests.inject([]) { |vms, request| vms << get_vm_info(request.name) }
+  end
+
+  def all_vm_infos
+    connect
+    all_vms.map do |vm|
+      { name: vm.name,
+        state: (vm.runtime.powerState == 'poweredOn'),
+        boot_time: vm.runtime.bootTime,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
+    end
+  end
+
+  def ensure_folder(folder_name)
+    connect
+    folder = @vm_folder.find folder_name, RbVmomi::VIM::Folder
+    folder || @vm_folder.CreateFolder(name: folder_name)
   end
 
   def all_clusters
@@ -55,6 +83,10 @@ class VmApi
   end
 
   def get_vm(name)
+    find_vm(name)
+  end
+
+  def get_vm_info(name)
     connect
     if (vm = find_vm(name))
       { name: vm.name,
@@ -62,7 +94,8 @@ class VmApi
         boot_time: vm.runtime.bootTime,
         host: vm.summary.runtime.host.name,
         guestHeartbeatStatus: vm.guestHeartbeatStatus,
-        summary: vm.summary }
+        summary: vm.summary,
+        vmwaretools: (vm.guest.toolsStatus != 'toolsNotInstalled') }
     end
   end
 
@@ -85,16 +118,65 @@ class VmApi
     connect
     vm = find_vm name
     if state
-      vm.PowerOnVM_Task.wait_for_completion
+      vm.PowerOnVM_Task.wait_for_completion unless vm.runtime.powerState == 'poweredOn'
     else
-      vm.PowerOffVM_Task.wait_for_completion
+      vm.PowerOffVM_Task.wait_for_completion unless vm.runtime.powerState == 'poweredOff'
     end
+  end
+
+  def all_vms_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }
+  end
+
+  def suspend_vm(name)
+    connect
+    vm = find_vm name
+    vm.SuspendVM_Task.wait_for_completion
+  end
+
+  def reset_vm(name)
+    connect
+    vm = find_vm name
+    vm.ResetVM_Task.wait_for_completion
+  end
+
+  def shutdown_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.ShutdownGuest.wait_for_completion
+  end
+
+  def reboot_guest_os(name)
+    connect
+    vm = find_vm name
+    vm.RebootGuest.wait_for_completion
   end
 
   private
 
+  def all_folders_in(folder)
+    folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }
+  end
+
+  def all_vm_folders
+    all_folders_in(@vm_folder)
+  end
+
   def find_vm(name)
-    @vm_folder.traverse(name, RbVmomi::VIM::VirtualMachine)
+    find_vm_in(@vm_folder, name)
+  end
+
+  def find_vm_in(folder, name)
+    if (vm = folder.traverse(name, RbVmomi::VIM::VirtualMachine))
+      vm
+    else
+      all_folders_in(folder).each do |each|
+        if (vm = find_vm_in(each, name))
+          return vm
+        end
+      end
+      nil
+    end
   end
 
   def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength
