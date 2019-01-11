@@ -140,8 +140,9 @@ class VmsController < ApplicationController
 
   def authorize_vm_access
     @vm = VmApi.instance.get_vm_info(params[:id])
-    return if !@vm
+    return unless @vm
+
     redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
   end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength
