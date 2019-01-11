@@ -20,7 +20,7 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= link_to request.name, request %></td>
+        <td><%= link_to request.name, request_path(request) %></td>
         <td><%= request.cpu_cores %></td>
         <td><%= request.ram_mb %></td>
         <td><%= request.storage_mb %></td>
@@ -37,4 +37,5 @@
 <br>
 
 <%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
-<%= link_to 'Manage templates', request_templates_path, class: 'btn btn-secondary' %>
+<%= link_to 'Manage Templates', request_templates_path, class: 'btn btn-secondary' %>
+<%= link_to 'Manage Operating Systems', operating_systems_path, class: 'btn btn-secondary' %>

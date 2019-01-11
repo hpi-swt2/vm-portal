@@ -15,4 +15,8 @@ FactoryBot.define do
     status { 'rejected' }
     rejection_information { 'Info' }
   end
+
+  factory :accepted_request, parent: :request do
+    status { 'accepted' }
+  end
 end

@@ -57,3 +57,23 @@ describe 'Nav header', type: :feature do
     expect(page).to have_text(@notification.message)
   end
 end
+
+describe 'Notification sending', type: :feature do
+  let(:user) do
+    user = create(:user)
+    login_as(user, scope: :user)
+    user
+  end
+
+  it 'notifies slack' do
+    allow(user).to receive(:notify_slack)
+    user.notify('Notification title', 'The notification message')
+    expect(user).to have_received(:notify_slack)
+  end
+
+  it 'creates a notification object' do
+    notification_count = Notification.all.length
+    user.notify('Notification title', 'The notification message')
+    expect(Notification.all.length).to equal(notification_count + 1)
+  end
+end

@@ -83,22 +83,28 @@
   </p>
 <% end %>
 
-<% if @request.pending? %>
-  <div class="actions">
-    <%= button_to 'Accept & Continue', request_accept_button_path(request: @request), method: :patch, class: "btn btn-success" %>
-  </div>
-
-  <%= form_with(model: @request, local: true) do |form| %>
-    <div class="field">
-      <%= form.label :rejection_information %>
-      <%= form.text_field :rejection_information, class: 'form-control' %>
-    </div>
-
+<% if @request.pending? && current_user.admin? %>
+  <div id="acceptAndReject">
     <div class="actions">
-      <%= form.hidden_field :status, value: 'rejected' %>
-      <%= form.submit 'Reject', class: "btn btn-danger" %>
+      <%= button_to 'Accept & Continue',
+                    request_accept_button_path(request: @request),
+                    method: :patch,
+                    class: "btn btn-success"
+      %>
     </div>
-  <% end %>
+
+    <%= form_with(model: @request, local: true) do |form| %>
+      <div class="field">
+        <%= form.label :rejection_information %>
+        <%= form.text_field :rejection_information, class: 'form-control' %>
+      </div>
+
+      <div class="actions">
+        <%= form.hidden_field :status, value: 'rejected' %>
+        <%= form.submit 'Reject', class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 
 <%= link_to 'Back', requests_path %>
