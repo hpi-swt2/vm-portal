@@ -22,11 +22,7 @@
         <% @request_templates.each_with_index do |request_template, index| %>
           <ul>
              <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system] %>"/>
-            <%= "#{request_template.name}: 
-                                    #{request_template.cpu_cores} CPU-Cores, 
-                                    #{request_template.ram_mb} MB RAM, 
-                                    #{request_template.storage_mb} MB Storage, 
-                                    #{request_template.operating_system}" 
+            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU-Cores, #{request_template.ram_mb} MB RAM, #{request_template.storage_mb} MB Storage, #{request_template.operating_system}" 
             %>
           </ul>
         <% end %>
@@ -74,7 +70,7 @@
 
   <div class="field">
     <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, {}, id: 'os' %>
+    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system' %>
   </div>
 
   <div class="field">
@@ -102,7 +98,7 @@
     cpus = document.getElementById('cpu');
     ram = document.getElementById('ram');
     storage = document.getElementById('storage');
-    os = document.getElementById('os');
+    os = document.getElementById('operating_system');
     if(this.value == 'none') {
       cpus.value = "";
       ram.value = "";
