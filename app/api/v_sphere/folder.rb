@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
-require 'v_sphere_api'
+require_relative 'connection.rb'
 
 # This class wraps a rbvmomi Folder and provides easy access to common operations
 module VSphere
@@ -10,9 +10,9 @@ module VSphere
       @folder = rbvmomi_folder
     end
 
-    def sub_folders
+    def subfolders
       @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }.map do |each|
-        Folder.new(each)
+        Folder.new each
       end
     end
 
@@ -21,7 +21,7 @@ module VSphere
         VSphere::VirtualMachine.new each
       end
 
-      vms.append(@folder.sub_folders.flat_map(&:vms)) if recursive
+      vms += subfolders.flat_map(&:vms) if recursive
       vms
     end
 
@@ -30,12 +30,15 @@ module VSphere
       vms(recursive).find { |each| each.name = name }
     end
 
+    def name
+      @folder.name
+    end
+
     # Ensure that a subfolder exists and return it
     # folder_name is a string with the name of the subfolder
     def ensure_subfolder(folder_name)
-      connect
-      folder = @folder.find folder_name, RbVmomi::VIM::Folder
-      VSphere::Folder.new(folder || @folder.CreateFolder(name: folder_name))
+      folder = subfolders.find { |each| each.name == folder_name }
+      folder || VSphere::Folder.new(@folder.CreateFolder(name: folder_name))
     end
 
     def move_here(folder_entry)

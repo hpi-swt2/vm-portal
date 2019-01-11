@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
-require 'v_sphere_api'
+require_relative 'connection.rb'
 
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
   class VirtualMachine
     # instance creation
     def self.all
-      VSphere::Connection.root_folder.vms(recursive: true)
+      VSphere::Connection.instance.root_folder.vms(recursive: true)
     end
 
     def self.pending_archivation
@@ -20,7 +20,7 @@ module VSphere
     end
 
     def self.find_by_name(name)
-      VSphere::Connection.root_folder.find_vm(name)
+      VSphere::Connection.instance.root_folder.find_vm(name)
     end
 
     def initialize(rbvmomi_vm)
@@ -107,12 +107,20 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def to_s
+      name
+    end
+
     # We cannot use Object identity to check if to Virtual Machine objects are equal
     # because they are created on demand and to Virtual Machine objects can wrap the same vSphere VM.
     # Therefore we must use another method of comparing equality.
     # vSphere enforces that all VM names must be distinct, so we can use this to check for equality
     def equal?(other)
-      other.name == name
+      (other.is_a? VSphere::VirtualMachine) && other.name == name
+    end
+
+    def ==(other)
+      equal? other
     end
 
     private

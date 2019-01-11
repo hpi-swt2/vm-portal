@@ -2,8 +2,8 @@
 
 require 'rbvmomi'
 require 'singleton'
-require 'virtual_machine'
-require 'folder'
+require_relative 'virtual_machine.rb'
+require_relative 'folder.rb'
 
 # This module is responsible for communicating with vSphere
 # It creates wrapper objects for Virtual Machines and Folders which allow easy access to all tasks and information
