@@ -2,14 +2,20 @@
 
 require 'vmapi.rb'
 
+# rubocop:disable Metrics/ClassLength
 class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
+  before_action :authorize_vm_access, only: %i[show]
 
   def index
-    @vms = filter VmApi.instance.all_vm_infos
+    @vms = if current_user.user?
+             filter current_user.vms
+           else
+             filter VmApi.instance.all_vm_infos
+           end
     @archived_vms = all_archived_vms
     @parameters = determine_params
     @pending_archivation_vms = all_pending_archived_vms
@@ -30,8 +36,7 @@ class VmsController < ApplicationController
   end
 
   def show
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
   def request_vm_archivation
@@ -132,4 +137,12 @@ class VmsController < ApplicationController
   def vm_filter
     { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
   end
+
+  def authorize_vm_access
+    @vm = VmApi.instance.get_vm_info(params[:id])
+    return unless @vm
+
+    redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
+  end
 end
+# rubocop:enable Metrics/ClassLength
