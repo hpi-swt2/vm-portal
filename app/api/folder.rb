@@ -2,6 +2,8 @@
 
 require 'rbvmomi'
 require 'v_sphere_api'
+
+# This class wraps a rbvmomi Folder and provides easy access to common operations
 module VSphere
 
   class Folder
