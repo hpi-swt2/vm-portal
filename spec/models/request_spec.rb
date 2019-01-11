@@ -80,15 +80,7 @@ RSpec.describe Request, type: :model do
     before(:each) do
       @request = FactoryBot.create :request
       @user = FactoryBot.create :user
-      @assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: false)
-      @sudo_assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: true)
     end
-    #let(:request) { FactoryBot.create :request }
-    #let(:user) { FactoryBot.create :user }
-    #let(:assignment) { request.users_assigned_to_requests.build(user_id: user.id, sudo: false) }
-    #let(:sudo_assignment) { request.users_assigned_to_requests.build(user_id: user.id, sudo: true) }
-    #request = FactoryBot.create :request
-    #user = FactoryBot.create :user
 
     context 'when accepting a request' do
       it 'changes status to accepted' do
@@ -100,12 +92,14 @@ RSpec.describe Request, type: :model do
     context 'given a request and an user' do
       it 'creates sudo user assignments correctly' do
         @request.assign_sudo_users([@user.id])
-        expect((@request.sudo_user_assignments.select { |assignment| assignment.user_id == @user.id }).size).to eq(2)
+        expect((@request.sudo_user_assignments.select { |assignment| assignment.user_id == @user.id }).size).to eq(1)
       end
     end
 
     context 'when having a non sudo user' do
-      #assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: false)
+      before(:each) do
+        @assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: false)
+      end
 
       it 'does not return a sudo user' do
         expect(@request.sudo_user_assignments.include?(@assignment)).to be false
@@ -117,7 +111,9 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a sudo user' do
-      #sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
+      before(:each) do
+        @sudo_assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: true)
+      end
 
       it 'does return a sudo user' do
         expect(@request.sudo_user_assignments.include?(@sudo_assignment)).to be true
