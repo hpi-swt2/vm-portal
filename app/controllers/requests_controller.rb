@@ -2,7 +2,7 @@
 
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
-  before_action :set_request, only: %i[show edit update destroy]
+  prepend_before_action :set_request, only: %i[show edit update destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
@@ -45,22 +45,11 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        successfully_saved(format)
+        successful_save(format)
       else
-        unsuccessful(format,:new)
+        unsuccessful_action(format, :new)
       end
     end
-  end
-
-  def successfully_saved(format)
-    notify_users('New VM request', @request.description_text(host_url))
-    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-    format.json { render :show, status: :created, location: @request }
-  end
-
-  def unsuccessful(format, method)
-    format.html { render method }
-    format.json { render json: @request.errors, status: :unprocessable_entity }
   end
 
   # PATCH/PUT /requests/1
@@ -72,7 +61,7 @@ class RequestsController < ApplicationController
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }
         format.json { render :show, status: :ok, location: @request }
       else
-        unsuccessful(format,:edit)
+        unsuccessful_action(format, :edit)
       end
     end
   end
@@ -88,7 +77,6 @@ class RequestsController < ApplicationController
   end
 
   def request_change_state
-    @request = Request.find(params[:id])
     if @request.update(request_params)
       notify_request_update
       redirect_to new_vm_path(request: @request), notice: I18n.t('request.successfully_updated')
@@ -118,7 +106,6 @@ class RequestsController < ApplicationController
 
   def authenticate_state_change
     authenticate_admin
-    @request = Request.find(params[:id])
     redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
   end
 
@@ -133,6 +120,18 @@ class RequestsController < ApplicationController
       notify_users('Request has been rejected', message)
     end
   end
+
+  def successful_save(format)
+    notify_users('New VM request', @request.description_text(host_url))
+    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+    format.json { render :show, status: :created, location: @request }
+  end
+
+  def unsuccessful_action(format, method)
+    format.html { render method }
+    format.json { render json: @request.errors, status: :unprocessable_entity }
+  end
+
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
