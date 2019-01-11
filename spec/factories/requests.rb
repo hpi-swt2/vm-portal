@@ -9,7 +9,7 @@ FactoryBot.define do
     operating_system { 'MyOS' }
     comment { 'Comment' }
     status { 'pending' }
-    user { FactoryBot.create :user, role: :admin }
+    user { FactoryBot.create :admin }
   end
   factory :rejected_request, parent: :request do
     status { 'rejected' }
