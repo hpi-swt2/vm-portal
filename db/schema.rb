@@ -29,8 +29,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
   end
 
   create_table "projects", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
+    t.string "name", null: false
+    t.text "description", null: false
   end
 
   create_table "request_templates", force: :cascade do |t|
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
   end
 
   create_table "responsible_users", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "project_id"
+    t.integer "user_id", null: false
+    t.integer "project_id", null: false
     t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
     t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
   end
