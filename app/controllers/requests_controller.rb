@@ -2,6 +2,7 @@
 
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
+  include RequestsHelper
   before_action :set_request, only: %i[show edit update destroy]
   before_action :authenticate_employee
   before_action :authenticate_admin, only: %i[request_accept_button]
@@ -49,8 +50,9 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
+    params[:request][:name] = replace_whitespaces(params[:request][:name])
     @request = Request.new(request_params)
-    @request.replace_whitespaces
+    #@request.replace_whitespaces
     save_sudo_rights(@request)
 
     respond_to do |format|
@@ -79,6 +81,7 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1.json
   def update
     respond_to do |format|
+      params[:request][:name] = replace_whitespaces(params[:request][:name])
       if @request.update(request_params)
         notify_request_update(@request)
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }

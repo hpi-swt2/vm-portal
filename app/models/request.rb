@@ -8,7 +8,7 @@ class Request < ApplicationRecord
 
   enum status: %i[pending accepted rejected]
   validates :name,
-            length: { maximum: 20, message: "%{count} characters is the maximum allowed" },
+            length: { maximum: 20, message: "only allows a maximum of %{count} characters" },
             format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: "only letters and numbers allowed"},
             uniqueness: true
   validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, presence: true
@@ -26,10 +26,6 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
-  end
-
-  def replace_whitespaces
-    update_attribute(:name, name.parameterize(preserve_case: true))
   end
 
   private
