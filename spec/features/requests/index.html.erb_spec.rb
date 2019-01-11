@@ -7,9 +7,8 @@ describe 'requests/index.html.erb', type: :feature do
   let(:employee) { FactoryBot.create :employee }
   let(:admin) { FactoryBot.create :admin }
 
-  let(:request_from_admin) { FactoryBot.create :request, user: admin, name: 'AdminVM'}
-  let(:request_from_employee) { FactoryBot.create :request, user: employee, name: 'EmployeeVM'}
-
+  let(:request_from_admin) { FactoryBot.create :request, user: admin, name: 'AdminVM' }
+  let(:request_from_employee) { FactoryBot.create :request, user: employee, name: 'EmployeeVM' }
 
   before do
     request_from_admin

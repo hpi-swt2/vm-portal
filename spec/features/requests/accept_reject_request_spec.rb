@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'accepting and rejecting requests', type: :feature do
-  let(:request) { FactoryBot.create :request}
+  let(:request) { FactoryBot.create :request }
   let(:admin) { FactoryBot.create :admin }
 
   before do
@@ -59,7 +59,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
     end
 
     context 'and the request was created by the current user' do
-      let (:request) { FactoryBot.create :request, user: admin}
+      let (:request) { FactoryBot.create :request, user: admin }
 
       context 'clicking the accept button' do
         before do

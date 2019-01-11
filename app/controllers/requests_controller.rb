@@ -133,7 +133,6 @@ class RequestsController < ApplicationController
     format.json { render json: @request.errors, status: :unprocessable_entity }
   end
 
-
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,

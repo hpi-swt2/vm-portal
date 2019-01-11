@@ -130,7 +130,7 @@ RSpec.describe RequestsController, type: :controller do
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',
-          user: user,
+          user: user
         }
       end
 
