@@ -31,7 +31,7 @@ class RequestsController < ApplicationController
     @request_templates = RequestTemplate.all
   end
 
-  def notify_users(message, title)
+  def notify_users(title, message)
     User.all.each do |each|
       each.notify(title, message)
     end
@@ -45,14 +45,22 @@ class RequestsController < ApplicationController
 
     respond_to do |format|
       if @request.save
-        notify_users("New VM request:\n", request.description_text(host_url))
-        format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-        format.json { render :show, status: :created, location: request }
+        successfully_saved(format)
       else
-        format.html { render :new }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
+        unsuccessful(format,:new)
       end
     end
+  end
+
+  def successfully_saved(format)
+    notify_users('New VM request', @request.description_text(host_url))
+    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+    format.json { render :show, status: :created, location: @request }
+  end
+
+  def unsuccessful(format, method)
+    format.html { render method }
+    format.json { render json: @request.errors, status: :unprocessable_entity }
   end
 
   # PATCH/PUT /requests/1
@@ -60,12 +68,11 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       if @request.update(request_params)
-        notify_request_update(@request)
+        notify_request_update
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }
         format.json { render :show, status: :ok, location: @request }
       else
-        format.html { render :edit }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
+        unsuccessful(format,:edit)
       end
     end
   end
@@ -83,7 +90,7 @@ class RequestsController < ApplicationController
   def request_change_state
     @request = Request.find(params[:id])
     if @request.update(request_params)
-      notify_request_update(@request)
+      notify_request_update
       redirect_to new_vm_path(request: @request), notice: I18n.t('request.successfully_updated')
     else
       redirect_to @request, alert: @request.errors
@@ -115,14 +122,14 @@ class RequestsController < ApplicationController
     redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
   end
 
-  def notify_request_update(request)
-    return if request.pending?
+  def notify_request_update
+    return if @request.pending?
 
-    if request.accepted?
+    if @request.accepted?
       notify_users('Request has been accepted', @request.description_text(host_url))
-    elsif request.rejected?
+    elsif @request.rejected?
       message = @request.description_text host_url
-      message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
+      message += request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
       notify_users('Request has been rejected', message)
     end
   end

@@ -129,7 +129,8 @@ RSpec.describe RequestsController, type: :controller do
           storage_mb: 3000,
           operating_system: 'MyNewOS',
           comment: 'newComment',
-          status: 'pending'
+          status: 'pending',
+          user: user,
         }
       end
 
