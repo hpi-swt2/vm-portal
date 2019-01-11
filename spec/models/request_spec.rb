@@ -70,10 +70,17 @@ RSpec.describe Request, type: :model do
       request.storage_mb = 1_000_000
       expect(request).to be_invalid
     end
+
+    it 'is invalid if the name already exists' do
+      FactoryBot.create(:request, name: "DoubledName")
+      request = FactoryBot.build(:request, name: "DoubledName")
+      expect(request).to be_invalid
+    end
   end
 
   context 'when request is valid' do
     it 'is valid with valid attributes' do
+      request = FactoryBot.build(:request, name: "TestVM")
       expect(request).to be_valid
     end
   end
