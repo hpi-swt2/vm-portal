@@ -3,49 +3,85 @@
 <table class="table table-fixed-columns table-striped">
   <tbody>
     <tr>
-      <th>VM Name:</td>
-      <td><%= @request.name %></td>
+      <td><strong>VM Name:</strong></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'vm_name', nil, class: 'form-control', value: @request.name %></td>
+      <% else %>
+        <td><%= @request.name %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Cpu-Cores:</strong></td>
-      <td><%= @request.cpu_cores %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
+      <% else %>
+        <td><%= @request.cpu_cores %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>MB RAM:</strong></td>
-      <td><%= @request.ram_mb %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
+      <% else %>
+        <td><%= @request.ram_mb %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>MB Storage:</strong></td>
-      <td><%= @request.storage_mb %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
+      <% else %>
+        <td><%= @request.storage_mb %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Operating System:</strong></td>
-      <td><%= @request.operating_system %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'operating_system', nil, class: 'form-control', value: @request.operating_system %></td>
+      <% else %>
+        <td><%= @request.operating_system %></td>
+      <% end %>
     </tr>
 
 
     <tr>
       <td><strong>Port:</strong></td>
-      <td><%= @request.port %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
+      <% else %>
+        <td><%= @request.port %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Application Name:</strong></td>
-      <td><%= @request.application_name %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'application_name', nil, class: 'form-control', value: @request.application_name %></td>
+      <% else %>
+        <td><%= @request.application_name %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Comment:</strong></td>
-      <td class="col-md-4"><%= @request.comment %></td>
+      <% if current_user.admin? %>
+        <td class="col-md-4"><%= text_field_tag 'comment', nil, class: 'form-control', value: @request.comment %></td>
+      <% else %>
+        <td><%= @request.comment %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Status:</strong></td>
-      <td><%= @request.status %></td>
+      <% if current_user.admin? %>
+        <td><%= text_field_tag 'status', nil, class: 'form-control', value: @request.status %></td>
+      <% else %>
+        <td><%= @request.status %></td>
+      <% end %>
     </tr>
   </tbody>
 </table>
