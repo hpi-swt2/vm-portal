@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 RSpec.describe 'application/_navbar.html.erb', type: :view do
-  context 'the current user is not an admin' do
-    let(:current_user) { FactoryBot.create :user }
+  before do
+    sign_in current_user
+    allow(view).to receive(:current_user).and_return(current_user)
+    render
+  end
 
-    before do
-      sign_in current_user
-      allow(view).to receive(:current_user).and_return(current_user)
-      render
-    end
+  context 'when the current user is not an admin' do
+    let(:current_user) { FactoryBot.create :user }
 
     it 'links to host list' do
       expect(rendered).to have_link('Hosts', href: hosts_path)
@@ -28,14 +28,8 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
     end
   end
 
-  context 'the current user is an admin' do
+  context 'when the current user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
-
-    before do
-      sign_in current_user
-      allow(view).to receive(:current_user).and_return(current_user)
-      render
-    end
 
     it 'links to users list' do
       expect(rendered).to have_link('Users', href: users_path)

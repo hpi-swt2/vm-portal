@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 describe 'users/show.html.erb', type: :feature do
+  let(:another_user) { FactoryBot.create :user }
+
   context 'when the user is not an admin' do
     let(:user) { FactoryBot.create :user }
-    let(:another_user) { FactoryBot.create :user }
 
     before do
       sign_in user
@@ -34,7 +35,6 @@ describe 'users/show.html.erb', type: :feature do
 
   context 'when the user is an admin' do
     let(:admin) { FactoryBot.create :admin }
-    let(:another_user) { FactoryBot.create :user }
 
     before do
       sign_in admin
