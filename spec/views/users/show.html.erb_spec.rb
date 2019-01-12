@@ -45,11 +45,11 @@ RSpec.describe 'users/show.html.erb', type: :view do
     end
   end
 
-  context 'when the requested user is not the current user' do
-    let(:other_user) { FactoryBot.create :user }
+  context 'when the current user is an admin but not the requested user' do
+    let(:admin) { FactoryBot.create :user }
 
     before do
-      allow(view).to receive(:current_user).and_return(other_user)
+      allow(view).to receive(:current_user).and_return(admin)
       render
     end
 
