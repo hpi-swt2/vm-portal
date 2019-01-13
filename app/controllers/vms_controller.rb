@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-
-# rubocop:disable Metrics/ClassLength
 class VmsController < ApplicationController
   attr_reader :vms
 
