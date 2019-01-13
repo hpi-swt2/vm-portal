@@ -4,48 +4,69 @@ require 'rails_helper'
 RSpec.describe VmsController, type: :controller do
   # Authenticate an user
   before do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in FactoryBot.create :user
   end
 
   describe 'GET #index' do
     before do
+      vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true }
+      vm2 = { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }
       double_api = double
-      allow(double_api).to receive(:all_vms).and_return [{ name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true },
-                                                         { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }]
+      allow(double_api).to receive(:all_vm_infos).and_return [vm1, vm2]
+      allow(double_api).to receive(:ensure_folder)
+      allow(double_api).to receive(:all_vms_in).and_return []
+      allow(double_api).to receive(:user_vms).and_return [vm1]
 
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
-    it 'returns http success' do
-      get :index
-      expect(response).to have_http_status(:success)
+    context 'when the current user is an admin' do
+      before do
+        sign_in FactoryBot.create :admin
+      end
+
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
+
+      it 'returns all VMs' do
+        get(:index)
+        expect(subject.vms.size).to be VmApi.instance.all_vm_infos.size
+      end
+
+      it 'returns online VMs if requested' do
+        get :index, params: { up_vms: 'true' }
+        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
+      end
+
+      it 'returns offline VMs if requested' do
+        get :index, params: { down_vms: 'true' }
+        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
+        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+      end
     end
 
-    it 'renders index page' do
-      expect(get(:index)).to render_template('vms/index')
-    end
+    context 'when the current user is a user' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
 
-    it 'returns all VMs per default' do
-      controller = VmsController.new
-      controller.params = {}
-      controller.index
-      expect(controller.vms.size).to be VmApi.instance.all_vms.size
-    end
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
 
-    it 'returns online VMs if requested' do
-      controller = VmsController.new
-      controller.params = { up_vms: 'true' }
-      controller.index
-      expect(controller.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
-      expect(controller.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
-    end
-
-    it 'returns offline VMs if requested' do
-      controller = VmsController.new
-      controller.params = { down_vms: 'true' }
-      controller.index
-      expect(controller.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
-      expect(controller.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+      it 'returns only vms associated to current usera' do
+        get :index
+        expect(subject.vms.size).to be 1
+      end
     end
   end
 
@@ -93,28 +114,70 @@ RSpec.describe VmsController, type: :controller do
     end
 
     before do
+      @vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true }
+      allow(double_api).to receive(:user_vms).and_return [@vm1]
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
     it 'returns http success or timeout or not found' do
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return(@vm1)
       get :show, params: { id: 1 }
       expect(response).to have_http_status(:success).or have_http_status(408)
     end
 
-    it 'renders show page' do
-      allow(double_api).to receive(:get_vm).and_return({})
-      expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+    context 'when current user is user' do
+      context 'when user is associated to vm' do
+        before do
+          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
+        end
+
+        it 'renders show page' do
+          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+        end
+      end
+
+      context 'when user is not associated to vm' do
+        before do
+          allow(double_api).to receive(:get_vm_info).and_return({})
+        end
+
+        it 'redirects' do
+          get :show, params: { id: 1 }
+          expect(response).to have_http_status 302
+        end
+      end
+    end
+
+    context 'when current user is admin' do
+      context 'when user is associated to vm' do
+        before do
+          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
+        end
+
+        it 'renders show page' do
+          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+        end
+      end
+
+      context 'when user is not associated to vm' do
+        before do
+          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
+        end
+
+        it 'renders show page' do
+          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+        end
+      end
     end
 
     it 'returns http status not found when no vm found' do
-      allow(double_api).to receive(:get_vm).and_return(nil)
+      allow(double_api).to receive(:get_vm_info).and_return(nil)
       get :show, params: { id: 5 }
       expect(response).to have_http_status(:not_found)
     end
 
     it 'renders not found page when no vm found' do
-      allow(double_api).to receive(:get_vm).and_return(nil)
+      allow(double_api).to receive(:get_vm_info).and_return(nil)
       expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
     end
   end
@@ -124,7 +187,7 @@ RSpec.describe VmsController, type: :controller do
       double_api = double
       expect(double_api).to receive(:change_power_state)
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return({})
     end
 
     it 'returns http success' do
@@ -138,7 +201,7 @@ RSpec.describe VmsController, type: :controller do
       double_api = double
       expect(double_api).to receive(:suspend_vm)
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return({})
     end
 
     it 'returns http success' do
@@ -152,7 +215,7 @@ RSpec.describe VmsController, type: :controller do
       double_api = double
       expect(double_api).to receive(:shutdown_guest_os)
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return({})
     end
 
     it 'returns http success' do
@@ -166,7 +229,7 @@ RSpec.describe VmsController, type: :controller do
       double_api = double
       expect(double_api).to receive(:reboot_guest_os)
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return({})
     end
 
     it 'returns http success' do
@@ -180,7 +243,7 @@ RSpec.describe VmsController, type: :controller do
       double_api = double
       expect(double_api).to receive(:reset_vm)
       allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm).and_return({})
+      allow(double_api).to receive(:get_vm_info).and_return({})
     end
 
     it 'returns http success' do

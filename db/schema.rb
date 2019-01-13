@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_16_161526) do
+ActiveRecord::Schema.define(version: 2019_01_10_080254) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -83,11 +85,11 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.string "provider"
-    t.string "uid"
     t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+    t.string "provider"
+    t.string "uid"
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

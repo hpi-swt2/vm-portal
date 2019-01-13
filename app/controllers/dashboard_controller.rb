@@ -6,7 +6,7 @@ class DashboardController < ApplicationController
 
   def index
     redirect_to '/users/sign_in' if current_user.nil?
-    @vms = VmApi.instance.all_vms
+    @vms = VmApi.instance.all_vm_infos
     @hosts = VmApi.instance.all_hosts
     @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
   end
