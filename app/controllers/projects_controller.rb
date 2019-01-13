@@ -1,4 +1,7 @@
 class ProjectsController < ApplicationController
+  def index
+  end
+
   # GET /projects/new
   def new
     @project = Project.new
@@ -9,7 +12,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     if @project.save
-      redirect_to :dashboard
+      redirect_to action: :index
     else
       render :new, locals: {current_user: current_user}
     end

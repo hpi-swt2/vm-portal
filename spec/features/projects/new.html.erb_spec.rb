@@ -82,5 +82,20 @@ describe 'projects/new.html.erb', type: :feature do
         end
       end
     end
+
+    context 'when every field is correctly filled' do
+      before do
+        fill_in 'project[name]', with: 'Name'
+        fill_in 'project[description]', with: 'Description'
+        page.select employee.email, from: 'project[responsible_user_ids][]'
+      end
+
+      context 'when clicking the submit button' do
+        it 'redirects to projects/index' do
+          submit_button.click
+          expect(page).to have_current_path(projects_path)
+        end
+      end
+    end
   end
 end
