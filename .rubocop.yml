@@ -17,5 +17,3 @@ Metrics/ClassLength:
 
 Documentation:
   Enabled: false
-
-EnforcedStyle: expanded
