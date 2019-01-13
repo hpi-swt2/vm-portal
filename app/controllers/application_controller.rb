@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :danger
 
   def after_sign_in_path_for(_resource)
-    vms_path
+    dashboard_path
   end
 
   # Overwriting the sign_out redirect path method
