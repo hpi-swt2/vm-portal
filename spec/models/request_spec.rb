@@ -124,16 +124,17 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a user being assigned as user and sudo user' do
-      user = FactoryBot.build :user
-      request = FactoryBot.create(:request, user_ids: [user.id])
-      request.assign_sudo_users([user.id])
+      before do
+        @request = FactoryBot.create(:request, user_ids: [@user.id])
+        @request.assign_sudo_users([@user.id])
+      end
 
       it 'creates a sudo user assignment' do
-        expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
+        expect((@request.sudo_user_assignments.select { |assignment| assignment.user_id == @user.id && assignment.sudo == true }).size).to eq(1)
       end
 
       it 'does not create a user assignment' do
-        expect(request.users_assigned_to_requests.select { |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
+        expect(@request.users_assigned_to_requests.select { |assignment| assignment.user_id == @user.id && assignment.sudo == false }).to be_empty
       end
     end
   end
