@@ -9,7 +9,7 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   end
 
   context 'when the current user is not an admin' do
-    let(:current_user) {FactoryBot.create :user}
+    let(:current_user) { FactoryBot.create :user }
 
     it 'links to host list' do
       expect(rendered).to have_link('Hosts', href: hosts_path)
@@ -33,7 +33,7 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   end
 
   context 'when the current user is an admin' do
-    let(:current_user) {FactoryBot.create :admin}
+    let(:current_user) { FactoryBot.create :admin }
 
     it 'links to users list' do
       expect(rendered).to have_link('Users', href: users_path)
