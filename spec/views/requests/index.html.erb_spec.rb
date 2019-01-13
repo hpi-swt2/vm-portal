@@ -13,6 +13,7 @@ RSpec.describe 'requests/index', type: :view do
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',
+        description: 'Description',
         comment: 'Comment',
         status: 'pending',
         user: FactoryBot.create(:employee)
@@ -25,6 +26,7 @@ RSpec.describe 'requests/index', type: :view do
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',
+        description: 'Description',
         comment: 'Comment',
         status: 'pending',
         user: FactoryBot.create(:employee)

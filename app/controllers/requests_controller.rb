@@ -41,10 +41,9 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     @request = Request.new(request_params.merge(user: current_user))
-    save_sudo_rights(@request)
-
     respond_to do |format|
       if @request.save
+        @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
         successful_save(format)
       else
         unsuccessful_action(format, :new)
@@ -91,14 +90,6 @@ class RequestsController < ApplicationController
     request.base_url
   end
 
-  def save_sudo_rights(request)
-    sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
-
-    sudo_users_for_request.each do |association|
-      association.sudo = true
-    end
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_request
     @request = Request.find(params[:id])
@@ -136,6 +127,7 @@ class RequestsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
-                                    :port, :application_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :port, :application_name, :description, :comment,
+                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end

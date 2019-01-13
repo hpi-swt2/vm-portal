@@ -72,6 +72,10 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     expect(rendered).to have_button('Shutdown')
   end
 
+  it 'demands confirmation on shutdown' do
+    expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
+  end
+
   it 'shows no power buttons when vmwaretools are not installed' do
     assign(:vms, mock_vms_without_tools)
     assign(:parameters, param)
