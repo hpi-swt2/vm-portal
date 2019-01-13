@@ -17,7 +17,6 @@ describe 'projects/new.html.erb', type: :feature do
     admin
   end
 
-
   context 'when the user is an employee' do
     before do
       sign_in employee

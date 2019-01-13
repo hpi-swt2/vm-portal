@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProjectsController < ApplicationController
   def index
   end
@@ -14,7 +16,7 @@ class ProjectsController < ApplicationController
     if @project.save
       redirect_to action: :index
     else
-      render :new, locals: {current_user: current_user}
+      render :new, locals: { current_user: current_user }
     end
   end
 
