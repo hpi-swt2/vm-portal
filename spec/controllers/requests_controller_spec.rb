@@ -170,4 +170,36 @@ RSpec.describe RequestsController, type: :controller do
       expect(response).to redirect_to(requests_url)
     end
   end
+
+  describe 'POST #push_to_git' do
+    it 'redirects with a success message' do
+      git = double()
+      status = double()
+      expect(git).to receive(:config).with('user.name', 'test_user_name')
+      expect(git).to receive(:config).with('user.email', 'test_user_email')
+      expect(git).to receive(:status).exactly(3).times {status}
+      expect(status).to receive(:untracked) {[]}
+      expect(status).to receive(:changed) {[]}
+      expect(status).to receive(:added) {['added_file']}
+      expect(git).to receive(:add)
+      expect(git).to receive(:commit_all)
+      expect(git).to receive(:push)
+
+      file = double('file')
+      File.should_receive(:open).and_yield(file)
+      expect(file).to receive(:write)
+
+      git_class = class_double("Git").
+          as_stubbed_const(:transfer_nested_constants => true)
+
+      expect(git_class).to receive(:clone) do
+
+        git
+      end
+
+      request = Request.create! valid_attributes
+      post :push_to_git, params: { id: request.to_param }
+      expect(response).to redirect_to(requests_url)
+    end
+  end
 end
