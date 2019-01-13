@@ -143,4 +143,3 @@ class VmsController < ApplicationController
     redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
   end
 end
-# rubocop:enable Metrics/ClassLength

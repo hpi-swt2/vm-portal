@@ -27,7 +27,7 @@ class Request < ApplicationRecord
 
   def assign_sudo_users(sudo_user_ids)
     sudo_user_ids&.each do |id|
-      assignment = users_assigned_to_requests.find { |assignment| assignment.user_id == id.to_i }
+      assignment = users_assigned_to_requests.find { |an_assignment| an_assignment.user_id == id.to_i }
       if !assignment.nil?
         assignment.update_attribute(:sudo, true)
       else
