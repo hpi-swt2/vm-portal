@@ -7,9 +7,12 @@ FactoryBot.define do
     ram_mb { 1000 }
     storage_mb { 2000 }
     operating_system { 'MyOS' }
+    description { 'Description' }
     comment { 'Comment' }
     status { 'pending' }
+    user { FactoryBot.create :admin }
   end
+
   factory :rejected_request, parent: :request do
     status { 'rejected' }
     rejection_information { 'Info' }

@@ -40,7 +40,7 @@
       <td>
         <% if vm[:vmwaretools] %>
           <% if vm[:state] %>
-            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
+            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
           <% else %>
             <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
           <% end %>
@@ -68,12 +68,27 @@
   </tbody>
 </table>
 
+<% if current_user.employee? or current_user.admin? %>
+  <table class="table">
+    <tbody>
+    <tr>
+      <td><%= button_to "Requests",
+                        {controller: :requests, action: 'index'},
+                        method: :get, class: "btn btn-info" %></td>
+      <td><%= button_to "New",
+                        {controller: :vms, action: 'new'},
+                        method: :get, class: "btn btn-info" %></td>
+    </tr>
+    </tbody>
+  </table>
+<% end %>
+
 <h2>Archived VMs</h2>
 <table data-toggle="table" class="table archived">
   <thead>
   <tr>
     <th scope="col" data-sortable="true">VM Name</th>
-    <th scope="col">Power Options</th>
+    <th scope="col">Actions</th>
   </tr>
   </thead>
   <tbody>
@@ -83,26 +98,14 @@
                       {controller: :vms, action: 'show', id: vm[:name]},
                       method: :get, class: "btn btn-link"  %></td>
       <td>
+        <%if current_user.admin? %>
           <%= button_to "reactivate VM", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-danger" %>
+        <% end %>
       </td>
     <tr>
   <% end %>
   </tbody>
 </table>
-
-<table class="table">
-    <tbody>
-      <tr>
-        <td><%= button_to "Requests",
-          {controller: :requests, action: 'index'},
-          method: :get, class: "btn btn-info" %></td>
-        <td><%= button_to "New",
-          {controller: :vms, action: 'new'},
-          method: :get, class: "btn btn-info" %></td>
-    </tr>
-  </tbody>
-</table>
-
 
 <!-- Minified script sources for sortable tables -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"

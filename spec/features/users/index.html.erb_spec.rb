@@ -7,6 +7,17 @@ RSpec.describe 'users/index.html.erb', type: :feature do
   let(:admin) { FactoryBot.create :admin }
   let(:employee) { FactoryBot.create :employee }
 
+  context 'when the current_user is not an admin' do
+    before do
+      sign_in user
+      visit users_path
+    end
+
+    it 'redirects to the dashboard' do
+      expect(page).to have_current_path dashboard_path
+    end
+  end
+
   context 'when the current_user is an admin' do
     before do
       user
