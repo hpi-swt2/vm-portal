@@ -27,7 +27,6 @@
       <td><%= @request.operating_system %></td>
     </tr>
 
-
     <tr>
       <td><strong>Port:</strong></td>
       <td><%= @request.port %></td>
@@ -36,6 +35,11 @@
     <tr>
       <td><strong>Application Name:</strong></td>
       <td><%= @request.application_name %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Description:</strong></td>
+      <td class="col-md-4"><%= @request.description %></td>
     </tr>
 
     <tr>
@@ -51,26 +55,24 @@
 </table>
 
 <p>
-  <strong>Users:</strong>
+  <strong>Users with sudo rights:</strong>
   <ul>
-    <% @request.users.each do |user| %>
-  <p>
-    <li><%= user.email %></li>
-  </p>
+    <% @request.sudo_user_assignments.each do |assignment| %>
+      <p>
+        <li><%= assignment.user.email %></li>
+      </p>
   <% end %>
   </ul>
 </p>
 
 <p>
-  <strong>Users with sudo rights:</strong>
+  <strong>Users:</strong>
   <ul>
-    <% @request.users_assigned_to_requests.each do |userAtRequest| %>
-      <% if userAtRequest.sudo %>
-      <p>
-        <li><%= userAtRequest.user.email %></li>
-      </p>
-      <% end %>
-  <% end %>
+    <% @request.non_sudo_user_assignments.each do |assignment| %>
+        <p>
+          <li><%= assignment.user.email %></li>
+        </p>
+    <% end %>
   </ul>
 </p>
 

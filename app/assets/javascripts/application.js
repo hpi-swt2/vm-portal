@@ -18,3 +18,8 @@
 //= require bootstrap
 //= require doughnut_chart
 //= require_tree .
+//= require select2
+
+document.addEventListener("turbolinks:load", function() {
+  $('.selecttwo').select2();
+})
