@@ -71,7 +71,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     expect(rendered).to have_button('Start')
     expect(rendered).to have_button('Shutdown')
   end
-  
+
   it 'demands confirmation on shutdown' do
     expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
   end

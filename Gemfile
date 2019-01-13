@@ -126,8 +126,6 @@ group :test do
   gem 'shoulda-matchers', '4.0.0.rc1'
   # Code coverage for Ruby, https://github.com/colszowka/simplecov
   gem 'simplecov', require: false
-  # Database cleaning before tests
-  gem 'database_cleaner'
 end
 
 group :production do
