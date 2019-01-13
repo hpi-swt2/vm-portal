@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_10_080254) do
+ActiveRecord::Schema.define(version: 2019_01_11_104519) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.text "description"
     t.integer "user_id"
+    t.text "description"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -92,12 +92,12 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.integer "role"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
@@ -114,6 +114,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end
