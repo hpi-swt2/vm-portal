@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
-
-# rubocop:disable Metrics/ClassLength
 class VmsController < ApplicationController
   attr_reader :vms
 
@@ -145,4 +143,3 @@ class VmsController < ApplicationController
     redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
   end
 end
-# rubocop:enable Metrics/ClassLength

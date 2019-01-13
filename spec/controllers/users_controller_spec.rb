@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  before do
-    sign_in FactoryBot.create :user
-  end
+  let(:user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   describe 'GET #index' do
     it 'returns http success' do
+      sign_in admin
       get :index
       expect(response).to have_http_status(:success)
     end
@@ -16,7 +16,16 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'GET #show' do
     it 'returns http success' do
-      get :show, params: { id: 1 }
+      sign_in admin
+      get :show, params: { id: user }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET #edit' do
+    it 'returns http success' do
+      sign_in user
+      get :show, params: { id: user }
       expect(response).to have_http_status(:success)
     end
   end
