@@ -152,10 +152,23 @@ RSpec.describe Request, type: :model do
       allow(@git).to receive(:commit_all)
       allow(@git).to receive(:push)
 
+      @path = File.join Rails.root, 'public', 'puppet_script_temp', ENV['GIT_REPOSITORY_NAME']
+      node_path = File.join @path, 'Node'
+      name_path = File.join @path, 'Name'
+
       git_class = class_double('Git')
                   .as_stubbed_const(transfer_nested_constants: true)
 
-      allow(git_class).to receive(:clone) { @git }
+      allow(git_class).to receive(:clone) do
+        FileUtils.mkdir_p(@path ) unless File.exist?(@path)
+        FileUtils.mkdir_p(node_path) unless File.exist?(node_path)
+        FileUtils.mkdir_p(name_path) unless File.exist?(name_path)
+        @git
+      end
+    end
+
+    after do
+      FileUtils.rm_rf(@path) if File.exist?(@path)
     end
 
     context 'with a new puppet script' do
