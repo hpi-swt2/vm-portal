@@ -9,6 +9,8 @@ require_relative 'folder.rb'
 # It creates wrapper objects for Virtual Machines and Folders which allow easy access to all tasks and information
 # rbvmomi methods or other underlying vSphere API methods should NOT be called directly outside of this module!
 # If you need additional vSphere features, implement them as methods on classes of the VSphere module
+#
+# To instantiate VMs, please use the VSphere::VirtualMachine static methods
 module VSphere
   # This class manages a connection to the VSphere backend
   # For rbvmomi documentation see: https://github.com/vmware/rbvmomi/tree/master/examples
