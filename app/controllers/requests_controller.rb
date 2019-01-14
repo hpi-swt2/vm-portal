@@ -143,35 +143,13 @@ class RequestsController < ApplicationController
   end
 
   def puppet_node_script(request)
-
-    puppet_string =
-'class node_vm-%s {
-    $admins = [%s]
-    $users = [%s]
-
-    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-    realize(Accounts::Virtual[$users])
-}'
-    admins = request.users_assigned_to_requests.select(&:sudo).to_a
-    admins.map!(&:user)
-    users = request.users.to_a
-
-    admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    format(puppet_string, request.name, admins.join(', '), users.join(', '))
+    request.generate_puppet_node_script
   end
   helper_method :puppet_node_script
 
 
   def puppet_name_script(request)
-    puppet_script =
-'node \'%s\'{
-
-    if defined( node_%s) {
-                class { node_%s: }
-    }
-}'
-    format(puppet_script, request.name, request.name,request.name)
+    request.generate_puppet_name_script
   end
   helper_method :puppet_name_script
 end

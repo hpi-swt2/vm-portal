@@ -34,7 +34,8 @@ class Request < ApplicationRecord
 
       node_script = write_node_script(path)
       g.add(node_script)
-      write_name_script
+      name_script = write_name_script(path)
+      g.add(name_script)
       change_init_script
 
       if g.status.untracked.length == 0 && g.status.added.length != 0
@@ -58,7 +59,7 @@ class Request < ApplicationRecord
     end
   end
 
-  def generate_puppet_script
+  def generate_puppet_node_script
     puppet_string =
         'class node_vm-%s {
     $admins = [%s]
@@ -76,6 +77,16 @@ class Request < ApplicationRecord
     format(puppet_string, name, admins.join(', '), users.join(', '))
   end
 
+  def generate_puppet_name_script
+    puppet_script =
+      'node \'%s\'{
+
+    if defined( node_%s) {
+                class { node_%s: }
+    }
+}'
+    format(puppet_script, name, name, name)
+  end
   private
 
   # TODO get credentials and config for currently logged in user
@@ -93,7 +104,7 @@ class Request < ApplicationRecord
 
   # Creates node_vmname.pp. If file exists, overwrite file with potentially newer content
   def write_node_script(path)
-    puppet_string = generate_puppet_script
+    puppet_string = generate_puppet_node_script
     path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Node', node_script_filename
     File.delete(path) if File.exists?(path)
     File.open(path, 'w') { |f| f.write(puppet_string) }
@@ -102,7 +113,12 @@ class Request < ApplicationRecord
 
   # TODO file not yet created
   # Creates vmname.pp
-  def write_name_script
+  def write_name_script(path)
+    puppet_string = generate_puppet_name_script
+    path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Name', name_script_filename
+    File.delete(path) if File.exists?(path)
+    File.open(path, 'w') { |f| f.write(puppet_string) }
+    path
   end
 
   # TODO logic to change init.pp for new users
@@ -113,6 +129,11 @@ class Request < ApplicationRecord
   def node_script_filename
     "node_#{name}.pp"
   end
+
+  def name_script_filename
+    "#{name}.pp"
+  end
+
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
