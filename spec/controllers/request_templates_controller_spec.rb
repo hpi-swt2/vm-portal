@@ -100,7 +100,57 @@ RSpec.describe RequestTemplatesController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      it 'destroys the requested request_template' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        delete :destroy, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+  end
+
+  context 'when the current_user is an employee' do
+    let(:current_user) { FactoryBot.create :employee }
+
+    describe 'GET #index' do
+      it 'returns a success response' do
+        RequestTemplate.create! valid_attributes
+        get :index, params: {}, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+
+    describe 'GET #new' do
+      it 'returns a no success response' do
+        get :new, params: {}, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'GET #edit' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        get :edit, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'POST #create' do
+      it 'returns a no success response' do
+        post :create, params: { request_template: valid_attributes }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'PUT #update' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      it 'returns a no success response' do
         request_template = RequestTemplate.create! valid_attributes
         delete :destroy, params: { id: request_template.to_param }, session: valid_session
         expect(response).not_to be_successful
