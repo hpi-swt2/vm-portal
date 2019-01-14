@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  before_action :authenticate_employee
+  before_action :authenticate_employee, only: %i[new create]
 
   def index
     @projects = Project.all
