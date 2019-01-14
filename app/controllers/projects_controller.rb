@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  before_action :authenticate_employee
+  before_action :authenticate_employee, only: %i[new create]
 
-  def index; end
+  def index
+    @projects = Project.all
+  end
 
   # GET /projects/new
   def new
@@ -20,6 +22,14 @@ class ProjectsController < ApplicationController
       render :new, locals: { current_user: current_user }
     end
   end
+
+  # GET /projects/1
+  # GET /projects/1.json
+  def show
+    @project = Project.find(params[:id])
+  end
+
+  private
 
   def project_params
     params.require(:project).permit(:name, :description, responsible_user_ids: [])
