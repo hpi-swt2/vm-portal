@@ -86,15 +86,16 @@ module VSphere
     end
 
     def set_pending_archivation
+      move_into pending_archivation_folder
+    end
+
+    def set_archived
       if vm_ware_tools?
         shutdown_guest_os
       else
         power_off
       end
-      move_into pending_archivation_folder
-    end
 
-    def set_archived
       move_into archived_folder
     end
 
