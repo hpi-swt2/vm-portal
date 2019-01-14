@@ -16,25 +16,7 @@
   </tr>
   </thead>
   <tbody>
-<<<<<<< HEAD
-    <% @requests.each do |request| %>
 
-      <tr>
-        <td><%= link_to request.name, request_path(request) %></td>
-        <td><%= request.cpu_cores %></td>
-        <td><%= request.ram_mb %></td>
-        <td><%= request.storage_mb %></td>
-        <td><%= request.operating_system %></td>
-        <td><%= request.port %></td>
-        <td><%= request.application_name %></td>
-        <td><%= request.comment %></td>
-        <td><%= request.status %></td>
-        <%if request.accepted? %>
-          <% create_puppet_script(request) %>
-        <%end %>
-      </tr>
-    <% end %>
-=======
   <% @requests.each do |request| %>
     <tr>
       <td><%= link_to request.name, request_path(request) %></td>
@@ -66,8 +48,8 @@
               </div>
               <div class="modal-body">
                   <pre>
-                  <%= debug puppet_node_script(request) %>
                   <%= debug puppet_name_script(request) %>
+                  <%= debug puppet_node_script(request) %>
                   </pre>
               </div>
               <div class="modal-footer">
@@ -81,15 +63,10 @@
       <%end %>
     </tr>
   <% end %>
->>>>>>> e9b1b50... Undo file creation, fix modal ids
   </tbody>
 </table>
 <br>
 
 <%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
-<<<<<<< HEAD
 <%= link_to 'Manage Templates', request_templates_path, class: 'btn btn-secondary' %>
 <%= link_to 'Manage Operating Systems', operating_systems_path, class: 'btn btn-secondary' %>
-=======
-<%= link_to 'Manage templates', request_templates_path, class: 'btn btn-secondary' %>
->>>>>>> e9b1b50... Undo file creation, fix modal ids
