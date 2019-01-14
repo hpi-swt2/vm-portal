@@ -12,7 +12,6 @@ class RequestsController < ApplicationController
     # TODO: This needs to be changed in a different PR to a filtered version.
     # Therefore distinguish between admin and employee
     @requests = Request.all
-
   end
 
   # GET /requests/1
@@ -146,7 +145,6 @@ class RequestsController < ApplicationController
     request.generate_puppet_node_script
   end
   helper_method :puppet_node_script
-
 
   def puppet_name_script(request)
     request.generate_puppet_name_script

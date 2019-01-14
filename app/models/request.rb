@@ -38,35 +38,35 @@ class Request < ApplicationRecord
       g.add(name_script)
       change_init_script
 
-      if g.status.untracked.length == 0 && g.status.added.length != 0
+      if g.status.untracked.empty? && !g.status.added.empty?
         message = 'Added file and pushed to git.'
-        g.commit_all("Add " + node_script_filename)
+        g.commit_all('Add ' + node_script_filename)
         g.push
-      elsif g.status.untracked.length == 0 && g.status.changed.length != 0
+      elsif g.status.untracked.empty? && !g.status.changed.empty?
         message = 'Changed file and pushed to git.'
-        g.commit_all("Update " + node_script_filename)
+        g.commit_all('Update ' + node_script_filename)
         g.push
       else
-        message = "Already up to date."
+        message = 'Already up to date.'
       end
 
       { notice: message }
     rescue Git::GitExecuteError => e
       puts e
-      { alert: "Could not push to git. Please check that your ssh key and environment variables are set."}
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     ensure
-      FileUtils.rm_rf( path ) if File.exists?( path )
+      FileUtils.rm_rf(path) if File.exist?(path)
     end
   end
 
   def generate_puppet_node_script
     puppet_string =
-        'class node_vm-%s {
-    $admins = [%s]
-    $users = [%s]
+      'class node_vm-%s {
+  $admins = [%s]
+  $users = [%s]
 
-    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-    realize(Accounts::Virtual[$users])
+  realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+  realize(Accounts::Virtual[$users])
 }'
     admins = users_assigned_to_requests.select(&:sudo).to_a
     admins.map!(&:user)
@@ -87,16 +87,17 @@ class Request < ApplicationRecord
 }'
     format(puppet_script, name, name, name)
   end
+
   private
 
-  # TODO get credentials and config for currently logged in user
+  # TODO: get credentials and config for currently logged in user
   # Clones and configures a git repository on dir.
   def setup_git(path)
     # Dir.mkdir(dir) unless File.exists?(dir)
     uri = ENV['GIT_REPOSITORY_URL']
     name = ENV['GIT_REPOSITORY_NAME']
 
-    g = Git.clone(uri, name, :path => path)
+    g = Git.clone(uri, name, path: path)
     g.config('user.name', ENV['GITHUB_USER_NAME'])
     g.config('user.email', ENV['GITHUB_USER_EMAIL'])
     g
@@ -106,25 +107,24 @@ class Request < ApplicationRecord
   def write_node_script(path)
     puppet_string = generate_puppet_node_script
     path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Node', node_script_filename
-    File.delete(path) if File.exists?(path)
+    File.delete(path) if File.exist?(path)
     File.open(path, 'w') { |f| f.write(puppet_string) }
     path
   end
 
-  # TODO file not yet created
+  # TODO: file not yet created
   # Creates vmname.pp
   def write_name_script(path)
     puppet_string = generate_puppet_name_script
     path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Name', name_script_filename
-    File.delete(path) if File.exists?(path)
+    File.delete(path) if File.exist?(path)
     File.open(path, 'w') { |f| f.write(puppet_string) }
     path
   end
 
-  # TODO logic to change init.pp for new users
+  # TODO: logic to change init.pp for new users
   # Adapts init.pp for potential new users
-  def change_init_script
-  end
+  def change_init_script; end
 
   def node_script_filename
     "node_#{name}.pp"
@@ -133,7 +133,6 @@ class Request < ApplicationRecord
   def name_script_filename
     "#{name}.pp"
   end
-
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name

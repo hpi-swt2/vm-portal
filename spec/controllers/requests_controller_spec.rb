@@ -174,9 +174,9 @@ RSpec.describe RequestsController, type: :controller do
   describe 'POST #push_to_git' do
     before do
       request = Request.create! valid_attributes
-      allow(request).to receive(:push_to_git) {{ notice: "Successfully pushed to git." }}
-      request_class = class_double("Request").
-          as_stubbed_const(:transfer_nested_constants => true)
+      allow(request).to receive(:push_to_git).and_return(notice: 'Successfully pushed to git.')
+      request_class = class_double('Request')
+                      .as_stubbed_const(transfer_nested_constants: true)
 
       expect(request_class).to receive(:find) { request }
     end
