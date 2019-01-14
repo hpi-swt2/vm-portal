@@ -76,7 +76,7 @@ class User < ApplicationRecord
   end
 
   def employee_or_admin?
-    user.employee? || user.admin?
+    self.employee? || self.admin?
   end
 
   private
