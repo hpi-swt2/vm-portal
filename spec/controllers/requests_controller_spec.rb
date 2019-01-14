@@ -175,4 +175,24 @@ RSpec.describe RequestsController, type: :controller do
       expect(response).to redirect_to(requests_url)
     end
   end
+
+  describe 'puppet script helper methods' do
+    it 'returns correct declaration script for a given request' do
+      request = Request.create! valid_attributes
+      script = controller.send(:puppet_name_script, request)
+      expected_string = 
+'node \'vm-MyVM\'{
+
+    if defined( node_vm-MyVM) {
+                class { node_vm-MyVM: }
+    }
+}'
+      expect(script).to eq(expected_string)
+    end
+
+    it 'returns correct initialization script for a given request' do
+      skip
+      pending("will be implemented in 10 min")
+    end
+  end
 end
