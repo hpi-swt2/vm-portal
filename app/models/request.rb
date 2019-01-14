@@ -65,16 +65,16 @@ class Request < ApplicationRecord
 
   def generate_puppet_node_script
     puppet_string =
-      'class node_vm-%s {
-  $admins = [%s]
-  $users = [%s]
+'class node_vm-%s {
+    $admins = [%s]
+    $users = [%s]
 
-  realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-  realize(Accounts::Virtual[$users])
+    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+    realize(Accounts::Virtual[$users])
 }'
-    admins = users_assigned_to_requests.select(&:sudo).to_a
+    admins = self.users_assigned_to_requests.select(&:sudo).to_a
     admins.map!(&:user)
-    users = users.to_a
+    users = self.users.to_a
 
     admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
     users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
@@ -83,10 +83,10 @@ class Request < ApplicationRecord
 
   def generate_puppet_name_script
     puppet_script =
-      'node \'%s\'{
+'node \'vm-%s\'{
 
-    if defined( node_%s) {
-                class { node_%s: }
+    if defined( node_vm-%s) {
+                class { node_vm-%s: }
     }
 }'
     format(puppet_script, name, name, name)
