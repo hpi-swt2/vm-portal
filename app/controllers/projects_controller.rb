@@ -23,6 +23,14 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # GET /projects/1
+  # GET /projects/1.json
+  def show
+    @project = Project.find(params[:id])
+  end
+
+  private
+
   def project_params
     params.require(:project).permit(:name, :description, responsible_user_ids: [])
   end
