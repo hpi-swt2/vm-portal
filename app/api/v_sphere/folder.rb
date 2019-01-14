@@ -27,7 +27,7 @@ module VSphere
 
     # name must be the name of the vm as a string
     def find_vm(name, recursive: true)
-      vms(recursive).find { |each| each.name = name }
+      vms(recursive: recursive).find { |each| each.name == name }
     end
 
     def name

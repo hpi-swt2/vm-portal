@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.integer "user_id"
     t.text "description"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 

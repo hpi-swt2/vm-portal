@@ -98,6 +98,10 @@ describe VSphere do
       expect(VSphere::VirtualMachine.pending_archivation).to match_array vms
     end
 
+    it 'VirtualMachine.find_by_name finds all vms' do
+      expect(VSphere::VirtualMachine.find_by_name('Archived VM2')).not_to be_nil
+    end
+
     it 'knows that it is not archived' do
       non_archived_vms = mock_root_folder_vms.map { |each| VSphere::VirtualMachine.new each }
       non_archived_vms.each { |each| expect(each.archived?).to be false }
@@ -113,6 +117,13 @@ describe VSphere do
       allow(mock_archived_vms_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_archived
       expect(mock_archived_vms_folder).to have_received(:MoveIntoFolder_Task)
+    end
+
+    it 'moves into the correct folder when it is pending_archivation' do
+      vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
+      allow(mock_pending_archivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
+      vm.set_pending_archivation
+      expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task)
     end
 
     it 'powers the vm off when its being archived' do # rubocop:disable RSpec/ExampleLength
