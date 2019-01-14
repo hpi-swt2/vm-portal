@@ -5,7 +5,7 @@ require 'rails_helper'
 describe 'projects/new.html.erb', type: :feature do
   let(:user) { FactoryBot.create :user }
   let(:employee) { FactoryBot.create :employee }
-  let(:admin) { FactoryBot.create :admin}
+  let(:admin) { FactoryBot.create :admin }
 
   let(:project_name) { 'Name' }
   let(:project_description) { 'Description' }
