@@ -10,7 +10,7 @@ RSpec.describe 'users/show.html.erb', type: :view do
   before do
     allow(view).to receive(:current_user).and_return(current_user)
     assign(:user, user)
-    project.reload
+    project
     render
   end
 
