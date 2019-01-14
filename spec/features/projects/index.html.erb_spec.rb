@@ -28,8 +28,16 @@ describe 'projects/index.html.erb', type: :feature do
 
     it 'shows the button that leads to new project creation' do
       expect(page).to have_button(id: 'createNewProjectButton')
-      click_button(id: 'createNewProjectButton')
-      expect(page).to have_current_path(new_project_path)
+    end
+
+    context 'when clicking the button for new project creation' do
+      before do
+        click_button(id: 'createNewProjectButton')
+      end
+
+      it 'leads to the new project creation page' do
+        expect(page).to have_current_path(new_project_path)
+      end
     end
   end
 end
