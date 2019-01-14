@@ -111,6 +111,12 @@ class RequestsController < ApplicationController
     end
   end
 
+  # Creates puppet files for request and pushes the created files into a git repository
+  def push_to_git
+    response = @request.push_to_git
+    redirect_to requests_path, response
+  end
+
   private
 
   def host_url
