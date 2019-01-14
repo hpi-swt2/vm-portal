@@ -13,7 +13,7 @@ class Project < ApplicationRecord
   validate :validate_responsible_users
 
   def validate_responsible_users
-    return if responsible_users.empty?
+    return unless responsible_users.empty?
 
     errors.add :responsible_users, 'Each project needs at least one responsible user'
   end
