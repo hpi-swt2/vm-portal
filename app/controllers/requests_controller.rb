@@ -144,11 +144,10 @@ class RequestsController < ApplicationController
     admins = request.users_assigned_to_requests.select(&:sudo).to_a
     admins.map!(&:user)
     users = request.users.to_a
-    vm_name = request.name.gsub(/ /, "-")
 
     admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
     users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    format(puppet_string, vm_name, admins.join(', '), users.join(', '))
+    format(puppet_string, request.name, admins.join(', '), users.join(', '))
   end
   helper_method :puppet_node_script
 
@@ -161,8 +160,7 @@ class RequestsController < ApplicationController
                 class { node_vm-%s: }
     }
 }'
-    vm_name = request.name.gsub(/ /, "-")
-    format(puppet_script, vm_name, request.name,request.name)
+    format(puppet_script, request.name, request.name,request.name)
   end
   helper_method :puppet_name_script
 end
