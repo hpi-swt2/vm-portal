@@ -1,3 +1,7 @@
 <h1>Projects</h1>
 
 <%= render 'list', projects: @projects %>
+
+<%= button_to 'Create new project',
+                  {controller: :projects, action: 'new'},
+                  method: :get, class: "btn btn-info float-right" %>
