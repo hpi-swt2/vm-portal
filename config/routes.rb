@@ -40,5 +40,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :projects, only: %i[new create index]
+
   root 'landing#index'
 end
