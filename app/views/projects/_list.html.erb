@@ -1,11 +1,23 @@
-<% @projects.each do |project| %>
-  <hr>
-  <p><%= link_to project.name, project_path(project) %></p>
-  <p>Description: <%= project.description %></p>
-  <p>Responsible People</p>
-  <ul>
-  <% project.responsible_users.each do |user| %>
-    <li><%= user.name %></li>
-  <% end %>
-  </ul>
-<% end %>
+<table class="table">
+  <thead>
+  <th><%= User.human_attribute_name('name') %></th>
+  <th><%= User.human_attribute_name('description') %></th>
+  <th><%= User.human_attribute_name('responsible_users') %></th>
+  </thead>
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr>
+        <td><%= link_to project.name, project_path(project) %></td>
+        <td><%= project.description %></td>
+        <td>
+          <ul>
+            <% project.responsible_users.each do |user| %>
+                <li><%= user.name %></li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
