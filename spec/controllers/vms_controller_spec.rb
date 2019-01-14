@@ -2,10 +2,11 @@
 
 require 'rails_helper'
 RSpec.describe VmsController, type: :controller do
-  # Authenticate an user
+  let(:current_user) { FactoryBot.create :user }
+
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
-    sign_in FactoryBot.create :user
+    sign_in current_user
   end
 
   describe 'GET #index' do
@@ -21,10 +22,42 @@ RSpec.describe VmsController, type: :controller do
       allow(VmApi).to receive(:instance).and_return double_api
     end
 
-    context 'when the current user is an admin' do
-      before do
-        sign_in FactoryBot.create :admin
+    context 'when the current user is a user' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
       end
+
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
+
+      it 'returns only vms associated to current usera' do
+        get :index
+        expect(subject.vms.size).to be 1
+      end
+    end
+
+    context 'when the current user is an employee' do
+      let(:current_user) { FactoryBot.create :employee }
+
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'renders index page' do
+        expect(get(:index)).to render_template('vms/index')
+      end
+
+      it 'returns only vms associated to current usera' do
+        get :index
+        expect(subject.vms.size).to be 1
+      end
+    end
+
+    context 'when the current user is an admin' do
+      let(:current_user) { FactoryBot.create :admin }
 
       it 'returns http success' do
         get :index
@@ -50,22 +83,6 @@ RSpec.describe VmsController, type: :controller do
         get :index, params: { down_vms: 'true' }
         expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
         expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
-      end
-    end
-
-    context 'when the current user is a user' do
-      it 'returns http success' do
-        get :index
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'renders index page' do
-        expect(get(:index)).to render_template('vms/index')
-      end
-
-      it 'returns only vms associated to current usera' do
-        get :index
-        expect(subject.vms.size).to be 1
       end
     end
   end
