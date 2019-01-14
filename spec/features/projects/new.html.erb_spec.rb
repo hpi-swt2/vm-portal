@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe 'projects/new.html.erb', type: :feature do
-  let(:user) { FactoryBot.create :employee }
+  let(:user) { FactoryBot.create :user }
   let(:employee) { FactoryBot.create :employee }
-  let(:admin) { FactoryBot.create :employee }
+  let(:admin) { FactoryBot.create :admin}
 
   let(:project_name) { 'Name' }
   let(:project_description) { 'Description' }
@@ -18,6 +18,17 @@ describe 'projects/new.html.erb', type: :feature do
     user
     employee
     admin
+  end
+
+  context 'when the user is an user' do
+    before do
+      sign_in user
+      visit new_project_path
+    end
+
+    it 'redirects to the dashboard' do
+      expect(page).to have_current_path(dashboard_path)
+    end
   end
 
   context 'when the user is an employee' do

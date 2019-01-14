@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  before_action :authenticate_employee
+
   def index; end
 
   # GET /projects/new
