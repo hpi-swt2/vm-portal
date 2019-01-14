@@ -32,7 +32,7 @@ class Request < ApplicationRecord
     begin
       git = setup_git(path)
       write_files(git, path)
-      commit_and_push(git)
+      message = commit_and_push(git)
 
       { notice: message }
     rescue Git::GitExecuteError => e
