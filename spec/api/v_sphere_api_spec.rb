@@ -18,7 +18,7 @@ describe VSphere do
     folder
   end
 
-  def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled')
+  def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled') # rubocop:disable Metrics/AbcSize
     vm = double
     allow(vm).to receive(:name).and_return(name)
     allow(vm).to receive(:is_a?).and_return false

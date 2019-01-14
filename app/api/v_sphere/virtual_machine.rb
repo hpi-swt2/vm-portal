@@ -12,11 +12,11 @@ module VSphere
     end
 
     def self.pending_archivation
-      VSphere::VirtualMachine.all.select &:pending_archivation?
+      VSphere::VirtualMachine.all.select(&:pending_archivation?)
     end
 
     def self.archived
-      VSphere::VirtualMachine.all.select &:archived?
+      VSphere::VirtualMachine.all.select(&:archived?)
     end
 
     def self.find_by_name(name)
