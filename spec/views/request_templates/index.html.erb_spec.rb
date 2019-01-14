@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'request_templates/index', type: :view do
-  let(:request_templates) {
+  let(:request_templates) do
     [
       RequestTemplate.create!(
         name: 'string',
@@ -20,9 +20,9 @@ RSpec.describe 'request_templates/index', type: :view do
         operating_system: 'Operating System'
       )
     ]
-  }
+  end
 
-  let(:current_user) { FactoryBot.create :user}
+  let(:current_user) { FactoryBot.create :user }
 
   before do
     sign_in current_user
@@ -47,8 +47,8 @@ RSpec.describe 'request_templates/index', type: :view do
     end
 
     it 'does not have a request delete button' do
-      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}",)
-      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}",)
+      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}")
+      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}")
     end
   end
 
@@ -61,8 +61,8 @@ RSpec.describe 'request_templates/index', type: :view do
     end
 
     it 'does not have a request delete button' do
-      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}",)
-      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}",)
+      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}")
+      expect(rendered).not_to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}")
     end
   end
 
@@ -75,8 +75,8 @@ RSpec.describe 'request_templates/index', type: :view do
     end
 
     it 'does have a request delete button' do
-      expect(rendered).to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}",)
-      expect(rendered).to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}",)
+      expect(rendered).to have_link(id: "deleteRequestTemplateButton-#{request_templates[0].id}")
+      expect(rendered).to have_link(id: "deleteRequestTemplateButton-#{request_templates[1].id}")
     end
   end
 end
