@@ -30,25 +30,9 @@ class Request < ApplicationRecord
     FileUtils.mkdir_p(path) unless File.exist?(path)
 
     begin
-      g = setup_git(path)
-
-      node_script = write_node_script(path)
-      g.add(node_script)
-      name_script = write_name_script(path)
-      g.add(name_script)
-      change_init_script
-
-      if g.status.untracked.empty? && !g.status.added.empty?
-        message = 'Added file and pushed to git.'
-        g.commit_all('Add ' + node_script_filename)
-        g.push
-      elsif g.status.untracked.empty? && !g.status.changed.empty?
-        message = 'Changed file and pushed to git.'
-        g.commit_all('Update ' + node_script_filename)
-        g.push
-      else
-        message = 'Already up to date.'
-      end
+      git = setup_git(path)
+      write_files(git, path)
+      commit_and_push(git)
 
       { notice: message }
     rescue Git::GitExecuteError => e
@@ -97,10 +81,18 @@ class Request < ApplicationRecord
     uri = ENV['GIT_REPOSITORY_URL']
     name = ENV['GIT_REPOSITORY_NAME']
 
-    g = Git.clone(uri, name, path: path)
-    g.config('user.name', ENV['GITHUB_USER_NAME'])
-    g.config('user.email', ENV['GITHUB_USER_EMAIL'])
-    g
+    git = Git.clone(uri, name, path: path)
+    git.config('user.name', ENV['GITHUB_USER_NAME'])
+    git.config('user.email', ENV['GITHUB_USER_EMAIL'])
+    git
+  end
+
+  def write_files(git, path)
+    node_script = write_node_script(path)
+    git.add(node_script)
+    name_script = write_name_script(path)
+    git.add(name_script)
+    change_init_script
   end
 
   # Creates node_vmname.pp. If file exists, overwrite file with potentially newer content
@@ -132,6 +124,20 @@ class Request < ApplicationRecord
 
   def name_script_filename
     "#{name}.pp"
+  end
+
+  def commit_and_push(git)
+    if git.status.untracked.empty? && !git.status.added.empty?
+      git.commit_all('Add ' + node_script_filename)
+      git.push
+      'Added file and pushed to git.'
+    elsif git.status.untracked.empty? && !git.status.changed.empty?
+      git.commit_all('Update ' + node_script_filename)
+      git.push
+      'Changed file and pushed to git.'
+    else
+      'Already up to date.'
+    end
   end
 
   def url(host_name)
