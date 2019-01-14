@@ -3,7 +3,9 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_employee
 
-  def index; end
+  def index
+    @projects = Project.all
+  end
 
   # GET /projects/new
   def new
