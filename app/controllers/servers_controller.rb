@@ -38,9 +38,10 @@ class ServersController < ApplicationController
 
     # merge server_params [and software information
     server_params[:installed_software] = software
+    puts server_params[:installed_software]
 
-    #server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software)
-    server_params.permit!
+    server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software)
+    #server_params.permit!
 
     # create new Server object
     @server = Server.new(
@@ -70,7 +71,7 @@ class ServersController < ApplicationController
   # PATCH/PUT /servers/1.json
   def update
     respond_to do |format|
-      if @server.update(server_params)
+      if @server.update(server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software))
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }
       else

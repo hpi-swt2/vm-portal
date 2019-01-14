@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "servers/new", type: :view do
   before(:each) do
-    assign(:server1, Server.new(
+    assign(:server, Server.new(
     					name: 'SpecServer',
     					cpu_cores: 4,
     					ram_mb: 1024,
@@ -18,27 +18,25 @@ RSpec.describe "servers/new", type: :view do
   it "renders new server form" do
     render
 
-    assert_select "form[action=?][method=?]", servers_path, "post" do
-    	assert_select 'input[name=?]', 'request[name]'
+		assert_select "form[action=?][method=?]", servers_path, "post" do
+    	assert_select 'input[name=?]', 'server[name]'
 
-      	assert_select 'input[name=?][min=?]', 'request[cpu_cores]', '0'
+      	assert_select 'input[name=?][min=?]', 'server[cpu_cores]', '0'
 
-      	assert_select 'input[name=?][min=?]', 'request[ram_mb]', '0'
+      	assert_select 'input[name=?][min=?]', 'server[ram_mb]', '0'
 
-      	assert_select 'input[name=?][min=?]', 'request[storage_mb]', '0'
+      	assert_select 'input[name=?][min=?]', 'server[storage_mb]', '0'
 
-      	assert_select 'input[name=?]', 'request[mac_address]'
+      	assert_select 'input[name=?]', 'server[mac_address]'
 
-      	assert_select 'input[name=?]', 'request[fqdn]'
+      	assert_select 'input[name=?]', 'server[fqdn]'
 
-      	assert_select 'input[name=?]', 'request[ipv4_address]'
+      	assert_select 'input[name=?]', 'server[ipv4_address]'
 
-      	assert_select 'input[name=?]', 'request[ipv6_address]'
+				assert_select 'input[name=?]', 'server[ipv6_address]'
+				
+				expect(rendered).to have_button 'Add Software'
 
-      	assert_select 'button[value=?]', 'Add Software'
-      	
-
-
-    end
+		end
   end
 end

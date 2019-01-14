@@ -24,7 +24,7 @@ RSpec.describe ServersController, type: :controller do
     fqdn: 'arrrr.speck.de',
     ipv4_address: 'c8.a8.d8.b8',
     ipv6_address: 42,
-    installed_software: 'SpeckTester',
+    installed_software: ['SpeckTester'],
   }
   end
 
@@ -90,15 +90,25 @@ RSpec.describe ServersController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      let(:new_attributes) do 
+        {
+          name: 'SpeckServer',
+          cpu_cores: 2,
+          ram_mb: 1024,
+          storage_mb: 4096,
+          mac_address: 'C0:FF:EE:C4:11:42',
+          fqdn: 'arrrr.speck.de',
+          ipv4_address: '8.8.8.8',
+          ipv6_address: '::1',
+          installed_software: ['SpeckTester'],
+        }
+      end
 
       it "updates the requested server" do
         server = Server.create! valid_attributes
         put :update, params: {id: server.to_param, server: new_attributes}, session: valid_session
         server.reload
-        skip("Add assertions for updated state")
+        expect(server.name).to eq('SpeckServer')
       end
 
       it "redirects to the server" do
