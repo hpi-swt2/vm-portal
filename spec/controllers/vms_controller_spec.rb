@@ -32,7 +32,7 @@ RSpec.describe VmsController, type: :controller do
         expect(get(:index)).to render_template('vms/index')
       end
 
-      it 'returns only vms associated to current usera' do
+      it 'returns only vms associated to current user' do
         get :index
         expect(subject.vms.size).to be 1
       end
@@ -50,7 +50,7 @@ RSpec.describe VmsController, type: :controller do
         expect(get(:index)).to render_template('vms/index')
       end
 
-      it 'returns only vms associated to current usera' do
+      it 'returns only vms associated to current user' do
         get :index
         expect(subject.vms.size).to be 1
       end
