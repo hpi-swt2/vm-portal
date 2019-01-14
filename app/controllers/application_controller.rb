@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_employee
-    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless current_user && current_user.employee_or_admin?
+    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless current_user&.employee_or_admin?
   end
 
   def authenticate_admin
