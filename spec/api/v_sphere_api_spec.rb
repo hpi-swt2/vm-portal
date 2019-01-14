@@ -102,6 +102,17 @@ describe VSphere do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2')).not_to be_nil
     end
 
+    it 'does not have users if there is not fitting request' do
+      expect(VSphere::VirtualMachine.find_by_name('Archived VM2').users).to be_empty
+    end
+
+    it 'has users if a fitting request exists' do
+      request = FactoryBot.create :accepted_request
+      request.users << FactoryBot.create(:user)
+      vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
+      expect(vm.users).not_to be_empty
+    end
+
     it 'knows that it is not archived' do
       non_archived_vms = mock_root_folder_vms.map { |each| VSphere::VirtualMachine.new each }
       non_archived_vms.each { |each| expect(each.archived?).to be false }

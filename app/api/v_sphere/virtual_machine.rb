@@ -108,6 +108,15 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def users
+      request = Request.accepted.find { |each| name == each.name }
+      if request
+        request.users
+      else
+        []
+      end
+    end
+
     # We cannot use Object identity to check if to Virtual Machine objects are equal
     # because they are created on demand and to Virtual Machine objects can wrap the same vSphere VM.
     # Therefore we must use another method of comparing equality.
