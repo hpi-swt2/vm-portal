@@ -3,7 +3,7 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
-  patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
+  patch 'requests/request_change_state', to: 'requests#request_change_state', as: 'request_change_state'
   resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests' do
     post :push_to_git, on: :member
@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   post '/vms/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
   post '/vms/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
   post '/vms/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
+  post '/vms/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
+  post '/vms/:id/archive_vm' => 'vms#archive_vm', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
@@ -40,6 +42,8 @@ Rails.application.routes.draw do
       patch :update_role
     end
   end
+
+  resources :projects, only: %i[new create index]
 
   root 'landing#index'
 end

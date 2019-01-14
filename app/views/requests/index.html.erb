@@ -1,71 +1,71 @@
-<p id="notice"><%= notice %></p>
 <h1>Requests</h1>
 <table class="table table-fixed-columns">
   <thead>
-  <tr>
-    <th>VM Name</th>
-    <th style="width: 80px">Cpu-Cores</th>
-    <th style="width: 80px">MB RAM</th>
-    <th style="width: 90px">MB Storage</th>
-    <th>Operating System</th>
-    <th style="width: 80px">Port</th>
-    <th>Application Name</th>
-    <th class="w-25">Comment</th>
-    <th>Status </th>
-    <th>Puppet Script</th>
-  </tr>
+    <tr>
+      <th>VM Name</th>
+      <th style="width: 80px">Cpu-Cores</th>
+      <th style="width: 80px">MB RAM</th>
+      <th style="width: 90px">MB Storage</th>
+      <th>Operating System</th>
+      <th style="width: 80px">Port</th>
+      <th>Application Name</th>
+      <th class="w-25">Comment</th>
+      <th>Status </th>
+      <th>Puppet Script</th>
+    </tr>
   </thead>
   <tbody>
-  <% @requests.each do |request| %>
-    <tr>
-      <td><%= request.name %></td>
-      <td><%= request.cpu_cores %></td>
-      <td><%= request.ram_mb %></td>
-      <td><%= request.storage_mb %></td>
-      <td><%= request.operating_system %></td>
-      <td><%= request.port %></td>
-      <td><%= request.application_name %></td>
-      <td><%= request.comment %></td>
-      <td>
-        <%= link_to request.status,
-                    request_path(request),
-                    class: 'btn btn-primary'
-        %>
-      </td>
-      <%if request.accepted? %>
-        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= '#puppet-script-' + request.name %>>
-          show script
-        </button></td>
-        <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <pre>
-                  <%= debug puppet_node_script(request) %>
-                  <%= debug puppet_name_script(request) %>
-                  </pre>
-              </div>
-              <div class="modal-footer">
-                <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <% @requests.each do |request| %>
+      <tr>
+        <td><%= link_to request.name, request_path(request) %></td>
+        <td><%= request.cpu_cores %></td>
+        <td><%= request.ram_mb %></td>
+        <td><%= request.storage_mb %></td>
+        <td><%= request.operating_system %></td>
+        <td><%= request.port %></td>
+        <td><%= request.application_name %></td>
+        <td><%= request.comment %></td>
+        <td>
+          <%= link_to request.status,
+                      request_path(request),
+                      class: 'btn btn-primary'
+          %>
+        </td>
+        <%if request.accepted? %>
+          <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= '#puppet-script-' + request.name %>>
+            show script
+          </button></td>
+          <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <pre>
+                    <%= debug puppet_node_script(request) %>
+                    <%= debug puppet_name_script(request) %>
+                    </pre>
+                </div>
+                <div class="modal-footer">
+                  <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      <%else %>
-        <td></td>
-      <%end %>
-    </tr>
-  <% end %>
+        <%else %>
+          <td></td>
+        <%end %>
+      </tr>
+    <%end %>
   </tbody>
 </table>
 <br>
 
 <%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
-<%= link_to 'Manage templates', request_templates_path, class: 'btn btn-secondary' %>
+<%= link_to 'Manage Templates', request_templates_path, class: 'btn btn-secondary' %>
+<%= link_to 'Manage Operating Systems', operating_systems_path, class: 'btn btn-secondary' %>

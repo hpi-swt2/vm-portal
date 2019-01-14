@@ -52,6 +52,9 @@ gem 'jquery-rails'
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
 
+# Provides form.select extensions
+gem 'select2-rails'
+
 # Provides different authentication strategies
 gem 'omniauth'
 gem 'omniauth_openid_connect'

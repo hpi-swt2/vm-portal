@@ -35,9 +35,14 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     %w[up_vms down_vms]
   end
 
+  let(:current_user) { FactoryBot.create :user }
+
   before do
     assign(:vms, mock_vms)
     assign(:parameters, param)
+    allow(view).to receive(:current_user).and_return(current_user)
+    assign(:archived_vms, [])
+    assign(:pending_archivation_vms, [])
     render
   end
 
@@ -62,17 +67,13 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     expect(rendered).to have_button('Filter')
   end
 
-  it 'links to new vm page' do
-    expect(rendered).to have_button('New')
-  end
-
-  it 'links to requests overview page' do
-    expect(rendered).to have_button('Requests')
-  end
-
   it 'shows correct power on / off button' do
     expect(rendered).to have_button('Start')
     expect(rendered).to have_button('Shutdown')
+  end
+
+  it 'demands confirmation on shutdown' do
+    expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
   end
 
   it 'shows no power buttons when vmwaretools are not installed' do
@@ -80,5 +81,41 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     assign(:parameters, param)
     render
     expect(rendered).to have_text('VMWare tools are not installed')
+  end
+
+  context 'when the user is a user' do
+    let(:current_user) { FactoryBot.create :user }
+
+    it 'does not link to new vm page' do
+      expect(rendered).not_to have_button('New')
+    end
+
+    it 'does not link to requests overview page' do
+      expect(rendered).not_to have_button('Requests')
+    end
+  end
+
+  context 'when the user is an employee' do
+    let(:current_user) { FactoryBot.create :employee }
+
+    it 'links to new vm page' do
+      expect(rendered).to have_button('New')
+    end
+
+    it 'links to requests overview page' do
+      expect(rendered).to have_button('Requests')
+    end
+  end
+
+  context 'when the user is an admin' do
+    let(:current_user) { FactoryBot.create :admin }
+
+    it 'links to new vm page' do
+      expect(rendered).to have_button('New')
+    end
+
+    it 'links to requests overview page' do
+      expect(rendered).to have_button('Requests')
+    end
   end
 end
