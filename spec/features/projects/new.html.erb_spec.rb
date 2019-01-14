@@ -7,6 +7,9 @@ describe 'projects/new.html.erb', type: :feature do
   let(:employee) { FactoryBot.create :employee }
   let(:admin) { FactoryBot.create :employee }
 
+  let(:project_name) { 'Name' }
+  let(:project_description) { 'Description' }
+
   def submit_button
     page.find(id: 'submitProjectButton')
   end
@@ -41,7 +44,7 @@ describe 'projects/new.html.erb', type: :feature do
 
     context 'when the name is empty' do
       before do
-        fill_in 'project[description]', with: 'Description'
+        fill_in 'project[description]', with: project_description
         page.select employee.email, from: 'project[responsible_user_ids][]'
       end
 
@@ -55,7 +58,7 @@ describe 'projects/new.html.erb', type: :feature do
 
     context 'when the description is empty' do
       before do
-        fill_in 'project[name]', with: 'Name'
+        fill_in 'project[name]', with: project_name
         page.select employee.email, from: 'project[responsible_user_ids][]'
       end
 
@@ -69,8 +72,8 @@ describe 'projects/new.html.erb', type: :feature do
 
     context 'when there is no responsible user selected' do
       before do
-        fill_in 'project[name]', with: 'Name'
-        fill_in 'project[description]', with: 'Description'
+        fill_in 'project[name]', with: project_name
+        fill_in 'project[description]', with: project_description
         page.unselect employee.email, from: 'project[responsible_user_ids][]'
       end
 
@@ -84,15 +87,25 @@ describe 'projects/new.html.erb', type: :feature do
 
     context 'when every field is correctly filled' do
       before do
-        fill_in 'project[name]', with: 'Name'
-        fill_in 'project[description]', with: 'Description'
+        fill_in 'project[name]', with: project_name
+        fill_in 'project[description]', with: project_description
         page.select employee.email, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
-        it 'redirects to projects/index' do
+        before do
           submit_button.click
+        end
+
+        it 'redirects to projects/index' do
           expect(page).to have_current_path(projects_path)
+        end
+
+        it 'has created the project' do
+          project = Project.all.last
+          expect(project.name).to eq project_name
+          expect(project.description).to eq project_description
+          expect(project.responsible_users).to eq [employee]
         end
       end
     end
