@@ -37,3 +37,8 @@
   </a>
 <% end %>
 
+<% unless @user.responsible_projects.empty? %>
+  <h2>Projects</h2>
+
+  <%= render 'projects/list', projects: @user.responsible_projects %>
+<% end %>
