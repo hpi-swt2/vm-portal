@@ -38,11 +38,11 @@ class Request < ApplicationRecord
       change_init_script
 
       if g.status.untracked.length == 0 && g.status.added.length != 0
-        message = "Added file and pushed to git."
+        message = 'Added file and pushed to git.'
         g.commit_all("Add " + node_script_filename)
         g.push
       elsif g.status.untracked.length == 0 && g.status.changed.length != 0
-        message = "Changed file and pushed to git."
+        message = 'Changed file and pushed to git.'
         g.commit_all("Update " + node_script_filename)
         g.push
       else
