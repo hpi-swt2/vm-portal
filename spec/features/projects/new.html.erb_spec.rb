@@ -120,5 +120,37 @@ describe 'projects/new.html.erb', type: :feature do
         end
       end
     end
+
+    context 'when the user is an admin' do
+      before do
+        sign_in admin
+        visit new_project_path
+      end
+
+      context 'when every field is correctly filled' do
+        before do
+          fill_in 'project[name]', with: project_name
+          fill_in 'project[description]', with: project_description
+          page.select admin.email, from: 'project[responsible_user_ids][]'
+        end
+
+        context 'when clicking the submit button' do
+          before do
+            submit_button.click
+          end
+
+          it 'redirects to projects/index' do
+            expect(page).to have_current_path(projects_path)
+          end
+
+          it 'has created the project' do
+            project = Project.all.last
+            expect(project.name).to eq project_name
+            expect(project.description).to eq project_description
+            expect(project.responsible_users).to eq [admin]
+          end
+        end
+      end
+    end
   end
 end

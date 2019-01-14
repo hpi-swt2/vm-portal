@@ -75,6 +75,10 @@ class User < ApplicationRecord
     VmApi.instance.user_vms(self)
   end
 
+  def employee_or_admin?
+    employee? || admin?
+  end
+
   private
 
   def set_default_role
