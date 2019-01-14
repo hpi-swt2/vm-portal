@@ -4,7 +4,7 @@
   <tbody>
     <tr>
       <td><strong>VM Name:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'vm_name', nil, class: 'form-control', value: @request.name %></td>
       <% else %>
         <td><%= @request.name %></td>
@@ -13,7 +13,7 @@
 
     <tr>
       <td><strong>Cpu-Cores:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
       <% else %>
         <td><%= @request.cpu_cores %></td>
@@ -22,7 +22,7 @@
 
     <tr>
       <td><strong>MB RAM:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
       <% else %>
         <td><%= @request.ram_mb %></td>
@@ -31,7 +31,7 @@
 
     <tr>
       <td><strong>MB Storage:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
       <% else %>
         <td><%= @request.storage_mb %></td>
@@ -40,7 +40,7 @@
 
     <tr>
       <td><strong>Operating System:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'operating_system', nil, class: 'form-control', value: @request.operating_system %></td>
       <% else %>
         <td><%= @request.operating_system %></td>
@@ -49,7 +49,7 @@
 
     <tr>
       <td><strong>Port:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
       <% else %>
         <td><%= @request.port %></td>
@@ -58,7 +58,7 @@
 
     <tr>
       <td><strong>Application Name:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'application_name', nil, class: 'form-control', value: @request.application_name %></td>
       <% else %>
         <td><%= @request.application_name %></td>
@@ -67,21 +67,25 @@
 
     <tr>
       <td><strong>Description:</strong></td>
-      <td class="col-md-4"><%= @request.description %></td>
+      <% if current_user.admin? && @request.pending? %>
+        <td class="col-md-4"><%= text_field_tag 'description', nil, class: 'form-control', value: @request.description %></td>
+      <% else %>
+        <td class="col-md-4"><%= @request.description %></td>
+      <% end %>
     </tr>
 
     <tr>
       <td><strong>Comment:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td class="col-md-4"><%= text_field_tag 'comment', nil, class: 'form-control', value: @request.comment %></td>
       <% else %>
-        <td><%= @request.comment %></td>
+        <td class="col-md-4"><%= @request.comment %></td>
       <% end %>
     </tr>
 
     <tr>
       <td><strong>Status:</strong></td>
-      <% if current_user.admin? %>
+      <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'status', nil, class: 'form-control', value: @request.status %></td>
       <% else %>
         <td><%= @request.status %></td>
@@ -124,7 +128,7 @@
     <%= form_with(model: @request, url:{action: 'request_change_state', id: @request}, local: true) do |form| %>
       <div class="actions">
         <%= form.hidden_field :status, value: 'accepted' %>
-        <%= form.submit 'Accept & Continue', id: 'acceptButton', class: "btn btn-success" %>
+        <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
       </div>
     <% end %>
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'vmapi.rb'
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update destroy request_state_change]
@@ -76,9 +77,14 @@ class RequestsController < ApplicationController
   end
 
   def request_change_state
-    if @request.update(request_params)
+    if @request.update(request_params) 
       notify_request_update
-      redirect_to requests_path, notice: I18n.t('request.successfully_updated')
+      if @request.accepted?
+        VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
+        redirect_to @request, notice: I18n.t('request.successfully_updated_and_vm_created')
+      else
+        redirect_to requests_path, notice: I18n.t('request.successfully_updated')
+      end
     else
       redirect_to @request, alert: @request.errors
     end
