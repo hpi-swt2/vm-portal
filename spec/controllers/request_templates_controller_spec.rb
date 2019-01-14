@@ -27,18 +27,30 @@ require 'rails_helper'
 
 RSpec.describe RequestTemplatesController, type: :controller do
   before do
-    sign_in FactoryBot.create :user
+    sign_in current_user
   end
 
   # This should return the minimal set of attributes required to create a valid
   # RequestTemplate. As you add validations to RequestTemplate, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) do
-    skip('Add a hash of attributes valid for your model')
+    {
+      name: 'MyVM',
+      cpu_cores: 2,
+      ram_mb: 1024,
+      storage_mb: 1024,
+      operating_system: 'CentOS'
+    }
   end
 
   let(:invalid_attributes) do
-    skip('Add a hash of attributes invalid for your model')
+    {
+      name: '',
+      cpu_cores: 1024,
+      ram_mb: 1024,
+      storage_mb: 1024,
+      operating_system: 'CentOS'
+    }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -46,100 +58,172 @@ RSpec.describe RequestTemplatesController, type: :controller do
   # RequestTemplatesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe 'GET #index' do
-    it 'returns a success response' do
-      RequestTemplate.create! valid_attributes
-      get :index, params: {}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
+  context 'when the current_user is an user' do
+    let(:current_user) { FactoryBot.create :user }
 
-  describe 'GET #show' do
-    it 'returns a success response' do
-      request_template = RequestTemplate.create! valid_attributes
-      get :show, params: { id: request_template.to_param }, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe 'GET #new' do
-    it 'returns a success response' do
-      get :new, params: {}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe 'GET #edit' do
-    it 'returns a success response' do
-      request_template = RequestTemplate.create! valid_attributes
-      get :edit, params: { id: request_template.to_param }, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe 'POST #create' do
-    context 'with valid params' do
-      it 'creates a new RequestTemplate' do
-        expect do
-          post :create, params: { request_template: valid_attributes }, session: valid_session
-        end.to change(RequestTemplate, :count).by(1)
-      end
-
-      it 'redirects to the created request_template' do
-        post :create, params: { request_template: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(RequestTemplate.last)
-      end
-    end
-
-    context 'with invalid params' do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { request_template: invalid_attributes }, session: valid_session
+    describe 'GET #index' do
+      it 'returns a success response' do
+        RequestTemplate.create! valid_attributes
+        get :index, params: {}, session: valid_session
         expect(response).to be_successful
       end
     end
-  end
 
-  describe 'PUT #update' do
-    context 'with valid params' do
-      let(:new_attributes) do
-        skip('Add a hash of attributes valid for your model')
-      end
-
-      it 'updates the requested request_template' do
-        request_template = RequestTemplate.create! valid_attributes
-        put :update, params: { id: request_template.to_param, request_template: new_attributes }, session: valid_session
-        request_template.reload
-        skip('Add assertions for updated state')
-      end
-
-      it 'redirects to the request_template' do
-        request_template = RequestTemplate.create! valid_attributes
-        put :update, params: { id: request_template.to_param, request_template: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(request_template)
+    describe 'GET #new' do
+      it 'returns a no success response' do
+        get :new, params: {}, session: valid_session
+        expect(response).not_to be_successful
       end
     end
 
-    context 'with invalid params' do
-      it "returns a success response (i.e. to display the 'edit' template)" do
+    describe 'GET #edit' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        get :edit, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'POST #create' do
+      it 'returns a no success response' do
+        post :create, params: { request_template: valid_attributes }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'PUT #update' do
+      it 'returns a no success response' do
         request_template = RequestTemplate.create! valid_attributes
         put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
-        expect(response).to be_successful
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        delete :destroy, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
       end
     end
   end
 
-  describe 'DELETE #destroy' do
-    it 'destroys the requested request_template' do
-      request_template = RequestTemplate.create! valid_attributes
-      expect do
-        delete :destroy, params: { id: request_template.to_param }, session: valid_session
-      end.to change(RequestTemplate, :count).by(-1)
+  context 'when the current_user is an employee' do
+    let(:current_user) { FactoryBot.create :employee }
+
+    describe 'GET #index' do
+      it 'returns a success response' do
+        RequestTemplate.create! valid_attributes
+        get :index, params: {}, session: valid_session
+        expect(response).to be_successful
+      end
     end
 
-    it 'redirects to the request_templates list' do
-      request_template = RequestTemplate.create! valid_attributes
-      delete :destroy, params: { id: request_template.to_param }, session: valid_session
-      expect(response).to redirect_to(request_templates_url)
+    describe 'GET #new' do
+      it 'returns a no success response' do
+        get :new, params: {}, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'GET #edit' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        get :edit, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'POST #create' do
+      it 'returns a no success response' do
+        post :create, params: { request_template: valid_attributes }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'PUT #update' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      it 'returns a no success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        delete :destroy, params: { id: request_template.to_param }, session: valid_session
+        expect(response).not_to be_successful
+      end
+    end
+  end
+
+  context 'when the current_user is an admin' do
+    let(:current_user) { FactoryBot.create :admin }
+    describe 'GET #new' do
+      it 'returns a success response' do
+        get :new, params: {}, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+
+    describe 'GET #edit' do
+      it 'returns a success response' do
+        request_template = RequestTemplate.create! valid_attributes
+        get :edit, params: { id: request_template.to_param }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+
+    describe 'POST #create' do
+      context 'with valid params' do
+        it 'creates a new RequestTemplate' do
+          expect do
+            post :create, params: { request_template: valid_attributes }, session: valid_session
+          end.to change(RequestTemplate, :count).by(1)
+        end
+      end
+
+      context 'with invalid params' do
+        it "returns a success response (i.e. to display the 'new' template)" do
+          post :create, params: { request_template: invalid_attributes }, session: valid_session
+          expect(response).to be_successful
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      context 'with valid params' do
+        let(:new_attributes) do
+          {
+            name: 'newName'
+          }
+        end
+
+        it 'updates the requested request_template' do
+          request_template = RequestTemplate.create! valid_attributes
+          put :update, params: { id: request_template.to_param, request_template: new_attributes }, session: valid_session
+          request_template.reload
+          expect(request_template.name).to eq 'newName'
+        end
+      end
+
+      context 'with invalid params' do
+        it "returns a success response (i.e. to display the 'edit' template)" do
+          request_template = RequestTemplate.create! valid_attributes
+          put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
+          expect(response).to be_successful
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      it 'destroys the requested request_template' do
+        request_template = RequestTemplate.create! valid_attributes
+        expect do
+          delete :destroy, params: { id: request_template.to_param }, session: valid_session
+        end.to change(RequestTemplate, :count).by(-1)
+      end
     end
   end
 end

@@ -68,7 +68,7 @@
   </tbody>
 </table>
 
-<% if current_user.employee? or current_user.admin? %>
+<% if current_user.employee_or_admin? %>
   <table class="table">
     <tbody>
     <tr>

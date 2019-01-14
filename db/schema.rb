@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_10_080254) do
+ActiveRecord::Schema.define(version: 2019_01_11_104519) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -26,6 +26,11 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description", null: false
   end
 
   create_table "request_templates", force: :cascade do |t|
@@ -51,9 +56,16 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.text "description"
     t.integer "user_id"
+    t.text "description"
     t.index ["user_id"], name: "index_requests_on_user_id"
+  end
+
+  create_table "responsible_users", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "project_id", null: false
+    t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
+    t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -102,6 +114,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_080254) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end
