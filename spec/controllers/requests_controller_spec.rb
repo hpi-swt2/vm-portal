@@ -191,8 +191,17 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     it 'returns correct initialization script for a given request' do
-      skip
-      pending("will be implemented in 10 min")
+      request = FactoryBot.create(:request_with_users)
+      script = controller.send(:puppet_node_script, request)
+      expected_string = 
+'class node_vm-MyVM {
+    $admins = []
+    $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
+
+    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+    realize(Accounts::Virtual[$users])
+}'
+      expect(script).to eq(expected_string)
     end
   end
 end
