@@ -37,12 +37,22 @@ class Request < ApplicationRecord
       write_name_script
       change_init_script
 
-      if g.status.untracked.length == 0 && g.status.added.length + g.status.changed.length != 0
-        g.commit_all("Add node " + name)
+      if g.status.untracked.length == 0 && g.status.added.length != 0
+        message = "Added file and pushed to git."
+        g.commit_all("Add " + node_script_filename)
         g.push
+      elsif g.status.untracked.length == 0 && g.status.changed.length != 0
+        message = "Changed file and pushed to git."
+        g.commit_all("Update " + node_script_filename)
+        g.push
+      else
+        message = "Already up to date."
       end
 
-      { notice: "Successfully pushed to git." }
+      { notice: message }
+    rescue Git::GitExecuteError => e
+      puts e
+      { alert: "Could not push to git. Please check that your ssh key and environment variables are set."}
     ensure
       FileUtils.rm_rf( path ) if File.exists?( path )
     end
@@ -84,7 +94,7 @@ class Request < ApplicationRecord
   # Creates node_vmname.pp. If file exists, overwrite file with potentially newer content
   def write_node_script(path)
     puppet_string = generate_puppet_script
-    path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Node', "node_#{name}.pp"
+    path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Node', node_script_filename
     File.delete(path) if File.exists?(path)
     File.open(path, 'w') { |f| f.write(puppet_string) }
     path
@@ -98,6 +108,10 @@ class Request < ApplicationRecord
   # TODO logic to change init.pp for new users
   # Adapts init.pp for potential new users
   def change_init_script
+  end
+
+  def node_script_filename
+    "node_#{name}.pp"
   end
 
   def url(host_name)
