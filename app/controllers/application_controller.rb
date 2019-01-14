@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :danger
 
   def after_sign_in_path_for(_resource)
-    vms_path
+    dashboard_path
   end
 
   # Overwriting the sign_out redirect path method
@@ -22,10 +22,10 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_employee
-    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user && (current_user.admin? || current_user.employee?)
+    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless current_user&.employee_or_admin?
   end
 
   def authenticate_admin
-    redirect_to root_path, alert: I18n.t('authorization.unauthorized') unless current_user&.admin?
+    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless current_user&.admin?
   end
 end
