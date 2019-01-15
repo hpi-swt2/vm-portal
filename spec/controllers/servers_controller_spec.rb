@@ -20,7 +20,7 @@ RSpec.describe ServersController, type: :controller do
     cpu_cores: '',
     ram_mb: 1024,
     storage_mb: 4096,
-    mac_address: 'C0:FF:EE:C4:11:42',
+    mac_address: 'EE:C4:11:42',
     fqdn: 'arrrr.speck.de',
     ipv4_address: 'c8.a8.d8.b8',
     ipv6_address: 42,
