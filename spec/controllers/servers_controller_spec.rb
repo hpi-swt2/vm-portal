@@ -143,3 +143,21 @@ RSpec.describe ServersController, type: :controller do
   end
 
 end
+
+RSpec.describe ServersController, type: :controller do
+
+  let(:valid_session) { {} }
+
+  # Authenticate an user
+  before do
+    sign_in FactoryBot.create :user
+  end
+
+  describe "GET #index" do
+    it "returns a success response" do
+      get :new, params: {}, session: valid_session
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
+end
