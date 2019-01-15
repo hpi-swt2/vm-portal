@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ServersController < ApplicationController
-  before_action :set_server, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_admin, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_server, only: %i[show edit update destroy]
+  before_action :authenticate_admin, only: %i[new create edit update destroy]
   # GET /servers
   # GET /servers.json
   def index
@@ -10,8 +12,7 @@ class ServersController < ApplicationController
 
   # GET /servers/1
   # GET /servers/1.json
-  def show
-  end
+  def show; end
 
   # GET /servers/new
   def new
@@ -19,21 +20,17 @@ class ServersController < ApplicationController
   end
 
   # GET /servers/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /servers
   # POST /servers.json
   def create
     # parse software fields from the post parameters into the server_params
-    software = Array.new
+    software = []
 
-    params.each do | key, value |
-
+    params.each do |key, value|
       key_matcher = /software\d+/
-      if key_matcher.match?(key)
-        software << value
-      end
+      software << value if key_matcher.match?(key)
     end
 
     # merge server_params [and software information
@@ -41,7 +38,7 @@ class ServersController < ApplicationController
     puts server_params[:installed_software]
 
     server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software)
-    #server_params.permit!
+    # server_params.permit!
 
     # create new Server object
     @server = Server.new(
@@ -53,8 +50,8 @@ class ServersController < ApplicationController
       fqdn: server_params[:fqdn],
       ipv4_address: server_params[:ipv4_address],
       ipv6_address: server_params[:ipv6_address],
-      installed_software: server_params[:installed_software],
-      )
+      installed_software: server_params[:installed_software]
+    )
 
     respond_to do |format|
       if @server.save
@@ -92,17 +89,17 @@ class ServersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_server
-      @server = Server.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def server_params
-      #params.require(:server).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address,
-      #                              :mac_address, :fqdn)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_server
+    @server = Server.find(params[:id])
+  end
 
-      params.fetch(:server, {})
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def server_params
+    # params.require(:server).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address,
+    #                              :mac_address, :fqdn)
 
+    params.fetch(:server, {})
+  end
 end
