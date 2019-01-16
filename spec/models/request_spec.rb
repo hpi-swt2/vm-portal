@@ -15,17 +15,17 @@ RSpec.describe Request, type: :model do
       it 'is invalid with too long name' do
       request.name = 'ThisNameIsWayTooLoooong'
       expect(request).to be_invalid
-    end
+      end
 
-    it 'is invalid when it contains special signs besides -' do
-      request.name = 'IsThisValid?!'
-      expect(request).to be_invalid
-    end
+      it 'is invalid when it contains special signs besides -' do
+        request.name = 'IsThisValid?!'
+        expect(request).to be_invalid
+      end
 
-    it 'is invalid with no cpu_cores specifiation' do
-      request.cpu_cores = nil
-      expect(request).to be_invalid
-    end
+      it 'is invalid with no cpu_cores specifiation' do
+        request.cpu_cores = nil
+        expect(request).to be_invalid
+      end
 
       it 'is invalid with no ram specifiation' do
         request.ram_mb = nil
@@ -67,27 +67,28 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
-    it 'is invalid with to much storage' do
-      request.storage_mb = 1_000_000
-      expect(request).to be_invalid
-    end
+      it 'is invalid with to much storage' do
+        request.storage_mb = 1_000_000
+        expect(request).to be_invalid
+      end
 
-    it 'is invalid with no description' do
-      request.description = nil
-      expect(request).to be_invalid
-    end
+      it 'is invalid with no description' do
+        request.description = nil
+        expect(request).to be_invalid
+      end
 
-    it 'is invalid if the name already exists' do
-      FactoryBot.create(:request, name: "DoubledName")
-      request = FactoryBot.build(:request, name: "DoubledName")
-      expect(request).to be_invalid
+      it 'is invalid if the name already exists' do
+        FactoryBot.create(:request, name: "DoubledName")
+        request = FactoryBot.build(:request, name: "DoubledName")
+        expect(request).to be_invalid
+      end
     end
-  end
 
     context 'when request is valid' do
       it 'is valid with valid attributes' do
         request = FactoryBot.build(:request, name: "TestVM")
-      expect(request).to be_validend
+        expect(request).to be_valid
+      end
     end
   end
 
@@ -141,7 +142,7 @@ RSpec.describe Request, type: :model do
 
     context 'when having a user being assigned as user and sudo user' do
       before do
-        @request = FactoryBot.create(:request, user_ids: [@user.id])
+        @request = FactoryBot.create(:request, name: 'MyVM1', user_ids: [@user.id])
         @request.assign_sudo_users([@user.id])
       end
 
@@ -152,14 +153,6 @@ RSpec.describe Request, type: :model do
       it 'does not create a user assignment' do
         expect(@request.users_assigned_to_requests.select { |assignment| assignment.user_id == @user.id && assignment.sudo == false }).to be_empty
       end
-    end
-  end
-
-  context 'when it has a name with whitespaces' do
-    it 'replaces them by -' do
-      request.name = 'VM Name'
-      request.replace_whitespaces
-      expect(request.name).to eq('VM-Name')
     end
   end
 end
