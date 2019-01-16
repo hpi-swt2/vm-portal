@@ -26,8 +26,7 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
-  # Authenticate an user
-  login_employee
+  let(:user) { FactoryBot.create :employee }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -39,8 +38,11 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: 2000,
       operating_system: 'MyOS',
+      description: 'Description',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      user: user,
+      sudo_user_ids: ['']
     }
   end
 
@@ -51,9 +53,17 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
+      description: '',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      user: user,
+      sudo_user_ids: ['']
     }
+  end
+
+  # Authenticate an user
+  before do
+    sign_in user
   end
 
   # This should return the minimal set of values that should be in the session
@@ -99,15 +109,9 @@ RSpec.describe RequestsController, type: :controller do
         end.to change(Request, :count).by(1)
       end
 
-      it 'redirects to the dashboard if user is not an admin' do
+      it 'redirects to the request page index page' do
         post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(dashboard_url)
-      end
-
-      it 'redirects to the accept/reject request page if user is an admin' do
-        sign_in FactoryBot.create(:user, role: :admin)
-        post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(Request.last)
+        expect(response).to redirect_to(requests_path)
       end
     end
 
@@ -129,7 +133,8 @@ RSpec.describe RequestsController, type: :controller do
           storage_mb: 3000,
           operating_system: 'MyNewOS',
           comment: 'newComment',
-          status: 'pending'
+          status: 'pending',
+          user: user
         }
       end
 

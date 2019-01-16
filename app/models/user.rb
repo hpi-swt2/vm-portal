@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sshkey'
+require 'vmapi.rb'
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -19,6 +20,12 @@ class User < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
   validate :valid_ssh_key
+
+  has_and_belongs_to_many :responsible_projects,
+                          class_name: 'Project',
+                          join_table: :responsible_users,
+                          foreign_key: :project_id,
+                          association_foreign_key: :user_id
 
   # slack integration
   has_many :slack_auth_requests, dependent: :destroy
@@ -62,6 +69,14 @@ class User < ApplicationRecord
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
     end
+  end
+
+  def vms
+    VmApi.instance.user_vms(self)
+  end
+
+  def employee_or_admin?
+    employee? || admin?
   end
 
   private

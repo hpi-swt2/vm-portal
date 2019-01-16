@@ -3,16 +3,18 @@
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   include RequestsHelper
-  before_action :set_request, only: %i[show edit update destroy]
+  before_action :set_request, only: %i[show edit update destroy request_state_change]
   before_action :authenticate_employee
-  before_action :authenticate_admin, only: %i[request_accept_button]
+  before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
   # GET /requests.json
   def index
-    # TODO: This needs to be changed in a different PR to a filtered version.
-    # Therefore distinguish between admin and employee
-    @requests = Request.all
+    @requests = if current_user.admin?
+                  Request.all
+                else
+                  Request.select { |r| r.user == current_user }
+                end
   end
 
   # GET /requests/1
@@ -22,10 +24,13 @@ class RequestsController < ApplicationController
   # GET /requests/new
   def new
     @request = Request.new
+    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/1/edit
-  def edit; end
+  def edit
+    @request_templates = RequestTemplate.all
+  end
 
   def notify_users(title, message)
     User.all.each do |each|
@@ -33,47 +38,19 @@ class RequestsController < ApplicationController
     end
   end
 
-  def redirect_according_to_role(format, role)
-    if role == 'admin'
-      format.html { redirect_to @request, notice: 'Request was successfully created.' }
-    else
-      format.html { redirect_to dashboard_url, notice: 'Request was successfully created.' }
-    end
-  end
-
-  def successfully_saved(format, request)
-    notify_users('New VM request', request.description_text(host_url))
-    redirect_according_to_role(format, current_user.role)
-    format.json { render :show, status: :created, location: request }
-  end
-
   # POST /requests
   # POST /requests.json
   def create
     params[:request][:name] = replace_whitespaces(params[:request][:name])
-    @request = Request.new(request_params)
-    #@request.replace_whitespaces
-    save_sudo_rights(@request)
+    @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
       if @request.save
-        successfully_saved(format, @request)
+        @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+        successful_save(format)
       else
-        format.html { render :new }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
+        unsuccessful_action(format, :new)
       end
-    end
-  end
-
-  def notify_request_update(request)
-    return if request.pending?
-
-    if request.accepted?
-      notify_users('Request has been accepted', @request.description_text(host_url))
-    elsif request.rejected?
-      message = @request.description_text host_url
-      message += request.rejection_information.empty? ? '' : "\nwith comment: #{request.rejection_information}"
-      notify_users('Request has been rejected', message)
     end
   end
 
@@ -83,12 +60,11 @@ class RequestsController < ApplicationController
     respond_to do |format|
       params[:request][:name] = replace_whitespaces(params[:request][:name])
       if @request.update(request_params)
-        notify_request_update(@request)
+        notify_request_update
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }
         format.json { render :show, status: :ok, location: @request }
       else
-        format.html { render :edit }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
+        unsuccessful_action(format, :edit)
       end
     end
   end
@@ -103,14 +79,12 @@ class RequestsController < ApplicationController
     end
   end
 
-  def request_accept_button
-    @request = Request.find(params[:request])
-    @request.accept!
-    if @request.save
-      notify_request_update(@request)
-      redirect_to new_vm_path(request: @request)
+  def request_change_state
+    if @request.update(request_params)
+      notify_request_update
+      redirect_to requests_path, notice: I18n.t('request.successfully_updated')
     else
-      redirect_to request_path(@request)
+      redirect_to @request, alert: @request.errors
     end
   end
 
@@ -120,22 +94,44 @@ class RequestsController < ApplicationController
     request.base_url
   end
 
-  def save_sudo_rights(request)
-    sudo_users_for_request = request.users_assigned_to_requests.select { |uatq| request_params[:sudo_user_ids].include?(uatq.user_id.to_s) }
-
-    sudo_users_for_request.each do |association|
-      association.sudo = true
-    end
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_request
     @request = Request.find(params[:id])
   end
 
+  def authenticate_state_change
+    @request = Request.find(params[:id])
+    authenticate_admin
+    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
+  end
+
+  def notify_request_update
+    return if @request.pending?
+
+    if @request.accepted?
+      notify_users('Request has been accepted', @request.description_text(host_url))
+    elsif @request.rejected?
+      message = @request.description_text host_url
+      message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
+      notify_users('Request has been rejected', message)
+    end
+  end
+
+  def successful_save(format)
+    notify_users('New VM request', @request.description_text(host_url))
+    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+    format.json { render :show, status: :created, location: @request }
+  end
+
+  def unsuccessful_action(format, method)
+    format.html { render method }
+    format.json { render json: @request.errors, status: :unprocessable_entity }
+  end
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
-                                    :port, :application_name, :comment, :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :port, :application_name, :description, :comment,
+                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
   end
 end

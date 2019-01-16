@@ -3,7 +3,7 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
-  patch 'requests/request_accept_button', to: 'requests#request_accept_button', as: 'request_accept_button'
+  patch 'requests/request_change_state', to: 'requests#request_change_state', as: 'request_change_state'
   resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests'
   resources :notifications, only: %i[index new create destroy] do
@@ -39,6 +39,8 @@ Rails.application.routes.draw do
       patch :update_role
     end
   end
+
+  resources :projects, only: %i[index new create show]
 
   root 'landing#index'
 end

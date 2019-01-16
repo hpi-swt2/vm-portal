@@ -32,6 +32,11 @@ class VmApi
     end
   end
 
+  def user_vms(user)
+    requests = user.requests.accepted
+    requests.inject([]) { |vms, request| vms << get_vm_info(request.name) }
+  end
+
   def all_vm_infos
     connect
     all_vms.map do |vm|
