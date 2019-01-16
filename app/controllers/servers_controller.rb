@@ -41,17 +41,7 @@ class ServersController < ApplicationController
     # server_params.permit!
 
     # create new Server object
-    @server = Server.new(
-      name: server_params[:name],
-      cpu_cores: server_params[:cpu_cores],
-      ram_mb: server_params[:ram_mb],
-      storage_mb: server_params[:storage_mb],
-      mac_address: server_params[:mac_address],
-      fqdn: server_params[:fqdn],
-      ipv4_address: server_params[:ipv4_address],
-      ipv6_address: server_params[:ipv6_address],
-      installed_software: server_params[:installed_software]
-    )
+    setNewServerObject
 
     respond_to do |format|
       if @server.save
@@ -64,11 +54,28 @@ class ServersController < ApplicationController
     end
   end
 
+  def setNewServerObject
+    @server = Server.new(
+      name: server_params[:name],
+      cpu_cores: server_params[:cpu_cores],
+      ram_mb: server_params[:ram_mb],
+      storage_mb: server_params[:storage_mb],
+      mac_address: server_params[:mac_address],
+      fqdn: server_params[:fqdn],
+      ipv4_address: server_params[:ipv4_address],
+      ipv6_address: server_params[:ipv6_address],
+      installed_software: server_params[:installed_software]
+    )
+  end
+
   # PATCH/PUT /servers/1
   # PATCH/PUT /servers/1.json
   def update
     respond_to do |format|
-      if @server.update(server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software))
+      if @server.update(server_params.permit(
+          :name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software
+          )
+        )
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }
       else

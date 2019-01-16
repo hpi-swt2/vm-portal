@@ -72,9 +72,7 @@ RSpec.describe ServersController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Server' do
-        expect {
-          post :create, params: { server: valid_attributes }, session: valid_session
-        }.to change(Server, :count).by(1)
+        expect { post :create, params: { server: valid_attributes }, session: valid_session}.to change(Server, :count).by(1)
       end
 
       it 'redirects to the created server' do
@@ -133,9 +131,7 @@ RSpec.describe ServersController, type: :controller do
   describe 'DELETE #destroy' do
     it 'destroys the requested server' do
       server = Server.create! valid_attributes
-      expect {
-        delete :destroy, params: { id: server.to_param }, session: valid_session
-      }.to change(Server, :count).by(-1)
+      expect { delete :destroy, params: { id: server.to_param }, session: valid_session }.to change(Server, :count).by(-1)
     end
 
     it 'redirects to the servers list' do
