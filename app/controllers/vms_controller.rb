@@ -10,7 +10,7 @@ class VmsController < ApplicationController
 
   def index
     @vms = if current_user.user?
-             filter current_user.vms
+             filter current_user.vm_infos
            else
              filter VmApi.instance.all_vm_infos
            end
@@ -141,6 +141,6 @@ class VmsController < ApplicationController
     @vm = VmApi.instance.get_vm_info(params[:id])
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
+    redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)
   end
 end
