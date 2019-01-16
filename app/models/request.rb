@@ -14,8 +14,8 @@ class Request < ApplicationRecord
 
   enum status: %i[pending accepted rejected]
   validates :name,
-            length: { maximum: MAX_NAME_LENGTH, message: "only allows a maximum of %{count} characters" },
-            format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: "only letters and numbers allowed"},
+            length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
+            format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
   validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { greater_than: 0, less_than: MAX_CPU_CORES }
@@ -58,5 +58,4 @@ class Request < ApplicationRecord
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
   end
-
 end

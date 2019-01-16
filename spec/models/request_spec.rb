@@ -13,8 +13,8 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with too long name' do
-      request.name = 'ThisNameIsWayTooLoooong'
-      expect(request).to be_invalid
+        request.name = 'ThisNameIsWayTooLoooong'
+        expect(request).to be_invalid
       end
 
       it 'is invalid when it contains special signs besides -' do
@@ -78,15 +78,15 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid if the name already exists' do
-        FactoryBot.create(:request, name: "DoubledName")
-        request = FactoryBot.build(:request, name: "DoubledName")
+        FactoryBot.create(:request, name: 'DoubledName')
+        request = FactoryBot.build(:request, name: 'DoubledName')
         expect(request).to be_invalid
       end
     end
 
     context 'when request is valid' do
       it 'is valid with valid attributes' do
-        request = FactoryBot.build(:request, name: "TestVM")
+        request = FactoryBot.build(:request, name: 'TestVM')
         expect(request).to be_valid
       end
     end
