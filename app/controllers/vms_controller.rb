@@ -10,18 +10,7 @@ class VmsController < ApplicationController
 
   def index
     vms = filter(current_user.admin? ? VSphere::VirtualMachine.all : current_user.vms)
-    @vms = []
-    @archived_vms = []
-    @pending_archivation_vms = []
-    vms.each do |each|
-      if each.archived?
-        @archived_vms << each
-      elsif each.pending_archivation?
-        @pending_archivation_vms << each
-      else
-        @vms << each
-      end
-    end
+    split_into_categories vms
     @parameters = determine_params
   end
 
@@ -110,6 +99,21 @@ class VmsController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
+  def split_into_categories(vms)
+    @vms = []
+    @archived_vms = []
+    @pending_archivation_vms = []
+    vms.each do |each|
+      if each.archived?
+        @archived_vms << each
+      elsif each.pending_archivation?
+        @pending_archivation_vms << each
+      else
+        @vms << each
+      end
+    end
+  end
 
   def filter(list)
     if no_params_set?

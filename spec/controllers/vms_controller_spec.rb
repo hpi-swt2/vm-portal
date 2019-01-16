@@ -4,7 +4,6 @@ require 'rails_helper'
 require './spec/api/v_sphere_api_helper'
 
 RSpec.describe VmsController, type: :controller do
-
   let(:current_user) { FactoryBot.create :user }
 
   before do
