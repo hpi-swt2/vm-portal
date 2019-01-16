@@ -100,10 +100,14 @@ class VmsController < ApplicationController
 
   private
 
-  def split_into_categories(vms)
+  def initialize_vm_categories
     @vms = []
     @archived_vms = []
     @pending_archivation_vms = []
+  end
+
+  def split_into_categories(vms)
+    initialize_vm_categories
     vms.each do |each|
       if each.archived?
         @archived_vms << each

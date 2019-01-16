@@ -4,7 +4,6 @@ require 'rails_helper'
 require './app/api/v_sphere/folder'
 require './app/api/v_sphere/virtual_machine'
 
-
 # This file contains a few helper methods which allow for easy mocking of instances of the vSphere module
 #
 # To mock the entire VSphere API in one go, create new VSphere::Connection with
