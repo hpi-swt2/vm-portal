@@ -23,6 +23,11 @@ module VSphere
       VSphere::Connection.instance.root_folder.find_vm(name)
     end
 
+    def self.user_vms(user)
+      requests = user.requests.accepted
+      requests.map { |request| find_by_name(request.name) }.compact
+    end
+
     def initialize(rbvmomi_vm)
       @v_sphere = VSphere::Connection.instance
       @vm = rbvmomi_vm
