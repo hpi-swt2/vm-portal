@@ -38,30 +38,31 @@ class VmsController < ApplicationController
   end
 
   def request_vm_archivation
-    @vm = VmApi.instance.get_vm(params[:id])
-    return if archived?(@vm) || pending_archivation?(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived? || @vm.pending_archivation?
 
-    VmApi.instance.change_power_state(@vm.name, false)
     User.admin.each do |each|
       each.notify("VM #{@vm.name} has been requested to be archived",
                   "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
     end
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
                   "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
-    set_pending_archivation(@vm)
+    @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
   def archive_vm
-    @vm = VmApi.instance.get_vm(params[:id])
-    set_archived(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived?
+
+    @vm.set_archived
 
     # inform users
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
