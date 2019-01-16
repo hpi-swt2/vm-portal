@@ -3,12 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe 'users/show.html.erb', type: :view do
-  let(:user) { FactoryBot.create :user }
-  let(:current_user) { FactoryBot.create :user }
+  let(:project) { FactoryBot.create :project }
+  let(:user) { FactoryBot.create :user, responsible_projects: [project] }
+  let(:current_user) { FactoryBot.create :user, responsible_projects: [project] }
 
   before do
     allow(view).to receive(:current_user).and_return(current_user)
     assign(:user, user)
+    project
     render
   end
 
@@ -18,6 +20,14 @@ RSpec.describe 'users/show.html.erb', type: :view do
 
   it 'shows the users email' do
     expect(rendered).to include user.email
+  end
+
+  it 'shows the responsible projects name' do
+    expect(rendered).to include project.name
+  end
+
+  it 'shows other users of the responsible projects' do
+    expect(rendered).to include current_user.name
   end
 
   context 'when the requested user is the current user' do
