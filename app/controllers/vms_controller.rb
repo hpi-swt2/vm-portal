@@ -9,11 +9,7 @@ class VmsController < ApplicationController
   before_action :authorize_vm_access, only: %i[show]
 
   def index
-    vms = if current_user.user?
-            filter current_user.vms
-          else
-            filter VSphere::VirtualMachine.all
-          end
+    vms = filter(current_user.admin? ? VSphere::VirtualMachine.all : current_user.vms)
     @vms = []
     @archived_vms = []
     @pending_archivation_vms = []
