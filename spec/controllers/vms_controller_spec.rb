@@ -205,11 +205,12 @@ RSpec.describe VmsController, type: :controller do
       expect(double_api).to receive(:change_power_state)
       allow(VmApi).to receive(:instance).and_return double_api
       allow(double_api).to receive(:get_vm_info).and_return({})
+      request.env["HTTP_REFERER"] = "where_i_came_from" unless request.nil? or request.env.nil?
     end
 
-    it 'returns http success' do
+    it 'returns http success and redirects to previous location' do
       post :change_power_state, params: { id: 0 }
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to("where_i_came_from")
     end
   end
 
@@ -219,11 +220,12 @@ RSpec.describe VmsController, type: :controller do
       expect(double_api).to receive(:suspend_vm)
       allow(VmApi).to receive(:instance).and_return double_api
       allow(double_api).to receive(:get_vm_info).and_return({})
+      request.env["HTTP_REFERER"] = "where_i_came_from" unless request.nil? or request.env.nil?
     end
 
-    it 'returns http success' do
+    it 'returns http success and redirects to previous location' do
       post :suspend_vm, params: { id: 0 }
-      expect(response).to redirect_to(vm_path)
+      expect(response).to redirect_to("where_i_came_from")
     end
   end
 
@@ -233,11 +235,12 @@ RSpec.describe VmsController, type: :controller do
       expect(double_api).to receive(:shutdown_guest_os)
       allow(VmApi).to receive(:instance).and_return double_api
       allow(double_api).to receive(:get_vm_info).and_return({})
+      request.env["HTTP_REFERER"] = "where_i_came_from" unless request.nil? or request.env.nil?
     end
 
-    it 'returns http success' do
+    it 'returns http success and redirects to previous location' do
       post :shutdown_guest_os, params: { id: 0 }
-      expect(response).to redirect_to(vm_path)
+      expect(response).to redirect_to("where_i_came_from")
     end
   end
 
@@ -247,11 +250,12 @@ RSpec.describe VmsController, type: :controller do
       expect(double_api).to receive(:reboot_guest_os)
       allow(VmApi).to receive(:instance).and_return double_api
       allow(double_api).to receive(:get_vm_info).and_return({})
+      request.env["HTTP_REFERER"] = "where_i_came_from" unless request.nil? or request.env.nil?
     end
 
-    it 'returns http success' do
+    it 'returns http success and redirects to previous location' do
       post :reboot_guest_os, params: { id: 0 }
-      expect(response).to redirect_to(vm_path)
+      expect(response).to redirect_to("where_i_came_from")
     end
   end
 
@@ -261,11 +265,12 @@ RSpec.describe VmsController, type: :controller do
       expect(double_api).to receive(:reset_vm)
       allow(VmApi).to receive(:instance).and_return double_api
       allow(double_api).to receive(:get_vm_info).and_return({})
+      request.env["HTTP_REFERER"] = "where_i_came_from" unless request.nil? or request.env.nil?
     end
 
-    it 'returns http success' do
+    it 'returns http success and redirects to previous location' do
       post :reset_vm, params: { id: 0 }
-      expect(response).to redirect_to(vm_path)
+      expect(response).to redirect_to("where_i_came_from")
     end
   end
 end
