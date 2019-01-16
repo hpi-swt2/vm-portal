@@ -72,7 +72,7 @@ RSpec.describe ServersController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Server' do
-        expect { post :create, params: { server: valid_attributes }, session: valid_session}.to change(Server, :count).by(1)
+        expect { post :create, params: { server: valid_attributes }, session: valid_session }.to change(Server, :count).by(1)
       end
 
       it 'redirects to the created server' do

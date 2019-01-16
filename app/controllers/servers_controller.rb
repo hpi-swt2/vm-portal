@@ -73,9 +73,8 @@ class ServersController < ApplicationController
   def update
     respond_to do |format|
       if @server.update(server_params.permit(
-          :name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software
-          )
-        )
+                          :name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software
+                        ))
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }
       else
