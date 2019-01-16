@@ -7,15 +7,20 @@ class Request < ApplicationRecord
 
   attr_accessor :sudo_user_ids
 
+  MAX_NAME_LENGTH = 20
+  MAX_CPU_CORES = 64
+  MAX_RAM_MB = 256_999
+  MAX_STORAGE_MB = 999_999
+
   enum status: %i[pending accepted rejected]
   validates :name,
-            length: { maximum: 20, message: "only allows a maximum of %{count} characters" },
+            length: { maximum: MAX_NAME_LENGTH, message: "only allows a maximum of %{count} characters" },
             format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: "only letters and numbers allowed"},
             uniqueness: true
   validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
-  validates :cpu_cores, numericality: { greater_than: 0, less_than: 65 }
-  validates :ram_mb, numericality: { greater_than: 0, less_than: 257_000 }
-  validates :storage_mb, numericality: { greater_than: 0, less_than: 1_000_000 }
+  validates :cpu_cores, numericality: { greater_than: 0, less_than: MAX_CPU_CORES }
+  validates :ram_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
+  validates :storage_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"

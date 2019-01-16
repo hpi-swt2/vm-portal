@@ -48,7 +48,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to many cpu_cores ' do
-        request.cpu_cores = 65
+        request.cpu_cores = Request::MAX_CPU_CORES + 1
         expect(request).to be_invalid
       end
 
@@ -58,7 +58,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to much ram' do
-        request.ram_mb = 257_000
+        request.ram_mb = Request::MAX_RAM_MB + 1
         expect(request).to be_invalid
       end
 
@@ -68,7 +68,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to much storage' do
-        request.storage_mb = 1_000_000
+        request.storage_mb = Request::MAX_STORAGE_MB + 1
         expect(request).to be_invalid
       end
 
