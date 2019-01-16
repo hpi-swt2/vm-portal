@@ -9,10 +9,10 @@ class VmsController < ApplicationController
   before_action :authorize_vm_access, only: %i[show]
 
   def index
-    @vms = if current_user.user?
-             filter current_user.vm_infos
-           else
+    @vms = if current_user.admin?
              filter VmApi.instance.all_vm_infos
+           else
+             filter current_user.vm_infos
            end
     @archived_vms = all_archived_vms
     @parameters = determine_params

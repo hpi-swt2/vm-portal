@@ -5,7 +5,7 @@
   <th><%= User.human_attribute_name('responsible_users') %></th>
   </thead>
   <tbody>
-    <% @projects.each do |project| %>
+    <% projects.each do |project| %>
       <tr>
         <td><%= link_to project.name, project_path(project) %></td>
         <td><%= project.description %></td>
@@ -20,4 +20,3 @@
     <% end %>
   </tbody>
 </table>
-

@@ -37,3 +37,9 @@
   </a>
 <% end %>
 
+<h2>Projects</h2>
+<% if @user.responsible_projects.empty? %>
+  <p>You are not part of any projects. All your projects will be shown here.</p>
+<% else %>
+  <%= render 'projects/list', projects: @user.responsible_projects %>
+<% end %>
