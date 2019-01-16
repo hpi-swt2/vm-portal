@@ -3,31 +3,14 @@
 require 'rails_helper'
 
 require './app/api/v_sphere/folder'
+require './app/api/v_sphere/virtual_machine'
 require './app/api/v_sphere/connection'
+require_relative 'v_sphere_api_helper'
 
 # We really want to be able to stub message chains in this Spec, because the API that is provided by vSphere
 # has many messages that have to be chained which we want to mock.
 # rubocop:disable RSpec/MessageChain
 describe VSphere do
-  def vim_folder_mock(name, subfolders, vms) # rubocop:disable Metrics/AbcSize
-    folder = double
-    allow(folder).to receive(:name).and_return(name)
-    allow(folder).to receive(:children).and_return(subfolders + vms)
-    allow(folder).to receive(:is_a?).and_return false
-    allow(folder).to receive(:is_a?).with(RbVmomi::VIM::Folder).and_return true
-    folder
-  end
-
-  def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled') # rubocop:disable Metrics/AbcSize
-    vm = double
-    allow(vm).to receive(:name).and_return(name)
-    allow(vm).to receive(:is_a?).and_return false
-    allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
-    allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
-    allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
-    vm
-  end
-
   let(:mock_archived_vms) do
     vms = []
     (1..5).each do |each|

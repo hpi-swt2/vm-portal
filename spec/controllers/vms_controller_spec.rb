@@ -1,24 +1,29 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require './spec/api/v_sphere_api_helper'
+
 RSpec.describe VmsController, type: :controller do
+  let(:user) do
+    FactoryBot.create :user
+  end
+
   # Authenticate an user
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
-    sign_in FactoryBot.create :user
+    sign_in user
   end
 
   describe 'GET #index' do
     before do
-      vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true }
-      vm2 = { name: 'another VM', state: false, boot_time: 'now', vmwaretools: true }
-      double_api = double
-      allow(double_api).to receive(:all_vm_infos).and_return [vm1, vm2]
-      allow(double_api).to receive(:ensure_folder)
-      allow(double_api).to receive(:all_vms_in).and_return []
-      allow(double_api).to receive(:user_vms).and_return [vm1]
+      vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
 
-      allow(VmApi).to receive(:instance).and_return double_api
+      # associate vm2 with the user
+      request = FactoryBot.create :accepted_request
+      request.users << user
+      vm2 = v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
+
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [])
     end
 
     context 'when the current user is an admin' do
@@ -37,19 +42,19 @@ RSpec.describe VmsController, type: :controller do
 
       it 'returns all VMs' do
         get(:index)
-        expect(subject.vms.size).to be VmApi.instance.all_vm_infos.size
+        expect(subject.vms.size).to be VSphere::VirtualMachine.all.size
       end
 
       it 'returns online VMs if requested' do
         get :index, params: { up_vms: 'true' }
-        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
-        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
+        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any? { |vm| vm.powered_on? } }
+        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm.powered_on? } }
       end
 
       it 'returns offline VMs if requested' do
         get :index, params: { down_vms: 'true' }
-        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm[:state] } }
-        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| vm[:state] } }
+        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any? { |vm| vm.powered_off? } }
+        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_off? } }
       end
     end
 
@@ -63,7 +68,7 @@ RSpec.describe VmsController, type: :controller do
         expect(get(:index)).to render_template('vms/index')
       end
 
-      it 'returns only vms associated to current usera' do
+      it 'returns only vms associated to current user' do
         get :index
         expect(subject.vms.size).to be 1
       end

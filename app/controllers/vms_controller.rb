@@ -9,14 +9,24 @@ class VmsController < ApplicationController
   before_action :authorize_vm_access, only: %i[show]
 
   def index
-    @vms = if current_user.user?
-             filter current_user.vm_infos
-           else
-             filter VmApi.instance.all_vm_infos
-           end
-    @archived_vms = all_archived_vms
+    vms = if current_user.user?
+            filter current_user.vms
+          else
+            filter VSphere::VirtualMachine.all
+          end
+    @vms = []
+    @archived_vms = []
+    @pending_archivation_vms = []
+    vms.each do |each|
+      if each.archived?
+        @archived_vms << each
+      elsif each.pending_archivation?
+        @pending_archivation_vms << each
+      else
+        @vms << each
+      end
+    end
     @parameters = determine_params
-    @pending_archivation_vms = all_pending_archived_vms
   end
 
   def destroy
@@ -134,7 +144,7 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+    { up_vms: proc(&:powered_on?), down_vms: proc(&:powered_off?) }
   end
 
   def authorize_vm_access
