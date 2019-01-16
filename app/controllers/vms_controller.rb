@@ -12,7 +12,7 @@ class VmsController < ApplicationController
     @vms = if current_user.admin?
              filter VmApi.instance.all_vm_infos
            else
-             filter current_user.vms
+             filter current_user.vm_infos
            end
     @archived_vms = all_archived_vms
     @parameters = determine_params
@@ -140,6 +140,6 @@ class VmsController < ApplicationController
     @vm = VmApi.instance.get_vm_info(params[:id])
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
+    redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)
   end
 end
