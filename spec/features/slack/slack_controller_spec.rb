@@ -19,10 +19,6 @@ describe SlackController do
     mock_sign_in.slack_auth_requests.create state: 'This is a state'
   end
 
-  def mock_auth_request
-    mock_sign_in.slack_auth_requests.create state: 'This is a state'
-  end
-
   it 'renders an error if the state is invald' do
     mock_sign_in
     visit update_slack_path
