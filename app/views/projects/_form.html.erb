@@ -28,10 +28,11 @@
                                                      :email,
                                                      selected: current_user&.id),
                   {},
-                  multiple: true,
-                  size: 10 %>
+                  { multiple: true, class: "selecttwo", data: { placeholder: 'Responsible users' }, style: 'width: 50%' }
+  %>
 
   <div class="actions">
+    <br />
     <%= form.submit id: 'submitProjectButton', class: "btn btn-primary" %>
   </div>
 <% end %>

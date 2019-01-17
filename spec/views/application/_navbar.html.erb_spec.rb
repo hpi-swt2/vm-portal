@@ -27,6 +27,10 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
       expect(rendered).to have_link('VMs', href: vms_path)
     end
 
+    it 'links to the project list' do
+      expect(rendered).to have_link('Projects', href: projects_path)
+    end
+
     it 'does not link to users list' do
       expect(rendered).not_to have_link('Users', href: users_path)
     end

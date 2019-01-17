@@ -17,12 +17,26 @@
   <tbody>
     <% @request_templates.each do |request_template| %>
       <tr>
-        <td><%= link_to request_template.name, edit_request_template_path(request_template) %></td>
+        <% if current_user.admin? %>
+          <td><%= link_to request_template.name, edit_request_template_path(request_template) %></td>
+        <% else %>
+          <td><%= request_template.name %></td>
+        <% end %>
         <td><%= request_template.cpu_cores %></td>
         <td><%= request_template.ram_mb %></td>
         <td><%= request_template.storage_mb %></td>
         <td><%= request_template.operating_system %></td>
-        <td><%= link_to 'Delete', request_template, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+        <% if current_user.admin? %>
+          <td>
+            <%= link_to 'Delete',
+                        request_template,
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        id: "deleteRequestTemplateButton-#{request_template.id}",
+                        class: 'btn btn-danger'
+            %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

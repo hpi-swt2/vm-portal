@@ -12,6 +12,16 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
+      it 'is invalid with too long name' do
+        request.name = 'ThisNameIsWayTooLoooong'
+        expect(request).to be_invalid
+      end
+
+      it 'is invalid when it contains special signs besides -' do
+        request.name = 'IsThisValid?!'
+        expect(request).to be_invalid
+      end
+
       it 'is invalid with no cpu_cores specifiation' do
         request.cpu_cores = nil
         expect(request).to be_invalid
@@ -38,7 +48,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to many cpu_cores ' do
-        request.cpu_cores = 65
+        request.cpu_cores = Request::MAX_CPU_CORES + 1
         expect(request).to be_invalid
       end
 
@@ -48,7 +58,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to much ram' do
-        request.ram_mb = 257_000
+        request.ram_mb = Request::MAX_RAM_MB + 1
         expect(request).to be_invalid
       end
 
@@ -58,7 +68,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with to much storage' do
-        request.storage_mb = 1_000_000
+        request.storage_mb = Request::MAX_STORAGE_MB + 1
         expect(request).to be_invalid
       end
 
@@ -66,10 +76,17 @@ RSpec.describe Request, type: :model do
         request.description = nil
         expect(request).to be_invalid
       end
+
+      it 'is invalid if the name already exists' do
+        FactoryBot.create(:request, name: 'DoubledName')
+        request = FactoryBot.build(:request, name: 'DoubledName')
+        expect(request).to be_invalid
+      end
     end
 
     context 'when request is valid' do
       it 'is valid with valid attributes' do
+        request = FactoryBot.build(:request, name: 'TestVM')
         expect(request).to be_valid
       end
     end
@@ -125,7 +142,7 @@ RSpec.describe Request, type: :model do
 
     context 'when having a user being assigned as user and sudo user' do
       before do
-        @request = FactoryBot.create(:request, user_ids: [@user.id])
+        @request = FactoryBot.create(:request, name: 'MyVM1', user_ids: [@user.id])
         @request.assign_sudo_users([@user.id])
       end
 
