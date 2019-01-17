@@ -7,6 +7,13 @@ class ProjectsController < ApplicationController
     @projects = Project.all
   end
 
+  # GET /projects/1
+  # GET /projects/1.json
+  def show
+    @project = Project.find(params[:id])
+  end
+
+
   # GET /projects/new
   def new
     @project = Project.new
@@ -23,9 +30,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # GET /projects/1
-  # GET /projects/1.json
-  def show
+  def edit
     @project = Project.find(params[:id])
   end
 

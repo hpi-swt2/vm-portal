@@ -23,7 +23,15 @@
   </tbody>
 </table>
 
-<%= link_to 'All Projects',
-            projects_path,
-            class: 'btn btn-primary'
-%>
+<div class="float-right">
+  <%= link_to 'All Projects',
+              projects_path,
+              class: 'btn btn-primary'
+  %>
+  <% if @project.responsible_users.include? current_user  %>
+    <%= link_to 'Edit',
+                edit_project_path(@project),
+                class: 'btn btn-primary'
+    %>
+  <% end %>
+</div>
