@@ -26,7 +26,7 @@
                   options_from_collection_for_select(User.all,
                                                      :id,
                                                      :email,
-                                                     selected: current_user&.id),
+                                                     selected: selected_users&.map(&:id)),
                   {},
                   { multiple: true, class: "selecttwo", data: { placeholder: 'Responsible users' }, style: 'width: 50%' }
   %>
