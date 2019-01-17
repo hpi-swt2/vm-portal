@@ -1,0 +1,24 @@
+<h1><%= I18n.t('project.title') %></h1>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= Project.human_attribute_name('name') %></td>
+      <td><%= @project.name %></td>
+    </tr>
+    <tr>
+      <td><%= Project.human_attribute_name('description') %></td>
+      <td><%= @project.description %></td>
+    </tr>
+    <tr>
+      <td><%= Project.human_attribute_name('responsible_users') %></td>
+      <td>
+        <ul>
+          <% @project.responsible_users.each do |user| %>
+            <li><%= user.name %></li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -46,3 +46,5 @@ en:
   request:
     unauthorized_state_change: "You can not change the status of your own requests."
     successfully_updated: "Request was successfully updated."
+  project:
+    title: "Project Overview"
