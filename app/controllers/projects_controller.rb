@@ -13,7 +13,6 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
-
   # GET /projects/new
   def new
     @project = Project.new
