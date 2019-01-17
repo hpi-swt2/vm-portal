@@ -153,7 +153,7 @@ RSpec.describe ServersController, type: :controller do
   describe 'GET #index' do
     it 'returns a success response' do
       get :new, params: {}, session: valid_session
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(dashboard_path)
     end
   end
 end
