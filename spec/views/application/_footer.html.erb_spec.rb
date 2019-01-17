@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 RSpec.describe 'application/_footer.html.erb', type: :view do
-
   before do
     render
   end
@@ -14,6 +13,4 @@ RSpec.describe 'application/_footer.html.erb', type: :view do
   it 'links to HPI Imprint' do
     expect(rendered).to have_link('Legal Notice', href: 'https://hpi.de/en/impressum.html')
   end
-
-
 end
