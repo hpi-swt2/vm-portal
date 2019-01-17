@@ -34,6 +34,8 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  def update; end
+
   private
 
   def authenticate_responsible_user
