@@ -2,7 +2,7 @@
 
 class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
-  before_action :authenticate_responsible_user, only: %i[edit]
+  before_action :authenticate_responsible_user, only: %i[edit update]
 
   def index
     @projects = Project.all
@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     if @project.update(project_params)
-      render :show
+      redirect_to action: :show
     else
       render :edit
     end

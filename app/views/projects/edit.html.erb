@@ -1,3 +1,4 @@
 <h1>Edit Project</h1>
 
 <%= render 'form', project: @project, selected_users: @project.responsible_users %>
+<%= link_to 'Back', project_path(@project) %>
