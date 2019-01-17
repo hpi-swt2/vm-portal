@@ -2,9 +2,16 @@
 
 class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
+  before_action :authenticate_responsible_user, only: %i[edit]
 
   def index
     @projects = Project.all
+  end
+
+  # GET /projects/1
+  # GET /projects/1.json
+  def show
+    @project = Project.find(params[:id])
   end
 
   # GET /projects/new
@@ -23,13 +30,16 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # GET /projects/1
-  # GET /projects/1.json
-  def show
+  def edit
     @project = Project.find(params[:id])
   end
 
   private
+
+  def authenticate_responsible_user
+    @project = Project.find(params[:id])
+    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless @project.responsible_users.include? current_user
+  end
 
   def project_params
     params.require(:project).permit(:name, :description, responsible_user_ids: [])
