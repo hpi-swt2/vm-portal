@@ -1,0 +1,38 @@
+<%= form_with(model: project, local: true) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control' %>
+  </div>
+
+  <p>Responsible users:</p>
+  <%= form.select 'responsible_user_ids',
+                  options_from_collection_for_select(User.all,
+                                                     :id,
+                                                     :email,
+                                                     selected: current_user&.id),
+                  {},
+                  { multiple: true, class: "selecttwo", data: { placeholder: 'Responsible users' }, style: 'width: 50%' }
+  %>
+
+  <div class="actions">
+    <br />
+    <%= form.submit id: 'submitProjectButton', class: "btn btn-primary" %>
+  </div>
+<% end %>

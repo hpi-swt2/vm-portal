@@ -13,19 +13,23 @@ RSpec.describe 'requests/index', type: :view do
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',
+        description: 'Description',
         comment: 'Comment',
-        status: 'pending'
+        status: 'pending',
+        user: FactoryBot.create(:employee)
       ),
       Request.create!(
-        name: 'MyVM',
+        name: 'MyVM1',
         cpu_cores: 2,
         ram_mb: 1000,
         storage_mb: 2000,
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',
+        description: 'Description',
         comment: 'Comment',
-        status: 'pending'
+        status: 'pending',
+        user: FactoryBot.create(:employee)
       )
     ]
   end
@@ -36,7 +40,8 @@ RSpec.describe 'requests/index', type: :view do
   end
 
   it 'renders a list of requests' do
-    assert_select 'tr>td', text: 'MyVM'.to_s, count: 2
+    assert_select 'tr>td', text: 'MyVM'.to_s, count: 1
+    assert_select 'tr>td', text: 'MyVM1'.to_s, count: 1
     assert_select 'tr>td', text: 2.to_s, count: 2
     assert_select 'tr>td', text: 1000.to_s, count: 2
     assert_select 'tr>td', text: 2000.to_s, count: 2

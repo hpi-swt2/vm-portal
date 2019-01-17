@@ -7,6 +7,17 @@ RSpec.describe 'users/index.html.erb', type: :feature do
   let(:admin) { FactoryBot.create :admin }
   let(:employee) { FactoryBot.create :employee }
 
+  context 'when the current_user is not an admin' do
+    before do
+      sign_in user
+      visit users_path
+    end
+
+    it 'redirects to the dashboard' do
+      expect(page).to have_current_path dashboard_path
+    end
+  end
+
   context 'when the current_user is an admin' do
     before do
       user
@@ -23,9 +34,9 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       end
 
       it 'shows that the role is user' do
-        expect(@button_user[:class]).to include 'active'
-        expect(@button_employee[:class]).not_to include 'active'
-        expect(@button_admin[:class]).not_to include 'active'
+        expect(@button_user[:class]).to include 'primary'
+        expect(@button_employee[:class]).not_to include 'primary'
+        expect(@button_admin[:class]).not_to include 'primary'
       end
 
       context 'clicking the employee button' do
@@ -40,7 +51,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
 
         it 'shows that users role is now employee' do
-          expect(@button_employee[:class]).to include 'active'
+          expect(@button_employee[:class]).to include 'primary'
         end
       end
 
@@ -56,7 +67,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
 
         it 'shows that users role is now admin' do
-          expect(@button_admin[:class]).to include 'active'
+          expect(@button_admin[:class]).to include 'primary'
         end
       end
     end
@@ -69,9 +80,9 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       end
 
       it 'shows that the role is employee' do
-        expect(@button_user[:class]).not_to include 'active'
-        expect(@button_employee[:class]).to include 'active'
-        expect(@button_admin[:class]).not_to include 'active'
+        expect(@button_user[:class]).not_to include 'primary'
+        expect(@button_employee[:class]).to include 'primary'
+        expect(@button_admin[:class]).not_to include 'primary'
       end
 
       context 'clicking the user button' do
@@ -85,8 +96,8 @@ RSpec.describe 'users/index.html.erb', type: :feature do
           expect(employee.role).to eq 'user'
         end
 
-        it 'shows that employees role is now role' do
-          expect(@button_user[:class]).to include 'active'
+        it 'shows that employees role is now user' do
+          expect(@button_user[:class]).to include 'primary'
         end
       end
 
@@ -102,7 +113,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
 
         it 'shows that users role is now admin' do
-          expect(@button_admin[:class]).to include 'active'
+          expect(@button_admin[:class]).to include 'primary'
         end
       end
     end
@@ -115,9 +126,9 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       end
 
       it 'shows that the role is admin' do
-        expect(@button_user[:class]).not_to include 'active'
-        expect(@button_employee[:class]).not_to include 'active'
-        expect(@button_admin[:class]).to include 'active'
+        expect(@button_user[:class]).not_to include 'secondary'
+        expect(@button_employee[:class]).not_to include 'secondary'
+        expect(@button_admin[:class]).to include 'secondary'
       end
 
       context 'when there is only one admin' do
@@ -143,7 +154,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
           end
 
           it 'shows that admins role is still admin' do
-            expect(@button_admin[:class]).to include 'active'
+            expect(@button_admin[:class]).to include 'secondary'
           end
         end
 
@@ -159,7 +170,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
           end
 
           it 'shows that admins role is still admin' do
-            expect(@button_admin[:class]).to include 'active'
+            expect(@button_admin[:class]).to include 'secondary'
           end
         end
       end

@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'requests/new', type: :view do
   before do
+    @user = FactoryBot.create(:user)
     assign(:request, Request.new(
                        name: 'MyVM',
                        cpu_cores: 2,
@@ -12,8 +13,10 @@ RSpec.describe 'requests/new', type: :view do
                        operating_system: 'MyOS',
                        port: '4000',
                        application_name: 'MyName',
+                       description: 'Description',
                        comment: 'Comment',
-                       status: 'pending'
+                       status: 'pending',
+                       user: FactoryBot.create(:employee)
                      ))
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
@@ -60,7 +63,11 @@ RSpec.describe 'requests/new', type: :view do
 
       assert_select 'input[name=?]', 'request[application_name]'
 
+      assert_select 'textarea[name=?]', 'request[description]'
+
       assert_select 'textarea[name=?]', 'request[comment]'
     end
+
+    expect(rendered).to match(@user.email)
   end
 end
