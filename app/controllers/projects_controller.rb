@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
     if @project.save
       redirect_to action: :index
     else
-      render :new, locals: { current_user: current_user }
+      render :new, locals: { selected_users: [current_user] }
     end
   end
 
@@ -34,7 +34,14 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
-  def update; end
+  def update
+    @project = Project.find(params[:id])
+    if @project.update(project_params)
+      render :show
+    else
+      render :edit
+    end
+  end
 
   private
 
