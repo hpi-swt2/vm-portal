@@ -33,7 +33,7 @@ Rails.application.routes.draw do
                omniauth_callbacks: 'users/omniauth_callbacks'
              }
 
-  resources :vms, :hosts
+  resources :vms, :hosts, :servers
   resources :users do
     member do
       patch :update_role
