@@ -2,6 +2,8 @@
 <div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
   <h1 class="mb-0"><%= @server.name %></h1>
 </div>
+
+<% if @user_is_admin then %>
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%;">
   <div class="text-right float-right" style="width: 20%">
     <div class="dropdown border text-right">
@@ -18,14 +20,18 @@
     </div>
   </div>
 </div>
+<% end %>
 
 <%
-  @hardware = {'IP Address' =>  sanitize([ @server.ipv4_address, @server.ipv6_address ].reject(&:blank?).join('<br />')),
+  @hardware = {'Vendor' => @server.vendor,
+               'Model' => @server.model,
+               'IP Address' =>  sanitize([ @server.ipv4_address, @server.ipv6_address ].reject(&:blank?).join('<br />')),
                'MAC Address' => @server.mac_address,
                'CPU Cores' => @server.cpu_cores,
-               'RAM' => "#{@server.ram_mb} MB",
-               'HDD' => "#{@server.storage_mb} MB",
-               'FQDN' => @server.fqdn }         
+               'RAM' => "#{@server.ram_gb} GB",
+               'HDD' => "#{@server.storage_gb} GB",
+               'FQDN' => @server.fqdn,
+               'Description' => @server.description }         
   %>
 
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
