@@ -39,7 +39,6 @@ end
 # Load FactoryBot config
 require 'support/factory_bot'
 
-
 require './app/api/v_sphere/connection'
 require './spec/api/v_sphere_api_mocker'
 
