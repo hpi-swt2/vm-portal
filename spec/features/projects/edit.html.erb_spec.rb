@@ -20,24 +20,20 @@ describe 'projects/edit.html.erb', type: :feature do
     employee
     admin
     project
+    sign_in current_user
+    visit edit_project_path(project)
   end
 
-  context 'when the user is not an responsible user' do
-    before do
-      sign_in user
-      visit edit_project_path(project)
-    end
+  context 'when the user is not a responsible user' do
+    let(:current_user) { user }
 
     it 'redirects to the dashboard' do
       expect(page).to have_current_path(dashboard_path)
     end
   end
 
-  context 'when the user an responsible user' do
-    before do
-      sign_in employee
-      visit edit_project_path(project)
-    end
+  context 'when the user a responsible user' do
+    let(:current_user) { employee }
 
     it 'shows a field for the name' do
       expect(page).to have_field 'project[name]'
@@ -47,7 +43,7 @@ describe 'projects/edit.html.erb', type: :feature do
       expect(page).to have_field 'project[description]'
     end
 
-    it 'shows a field for the responsible_users' do
+    it 'shows a field for the responsible users' do
       expect(page).to have_select 'project[responsible_user_ids][]'
     end
 
