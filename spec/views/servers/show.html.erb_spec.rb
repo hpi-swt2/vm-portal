@@ -34,7 +34,7 @@ RSpec.describe 'servers/show', type: :view do
       end
     end
   end
-  
+
   it 'shows delete and edit links to admin' do
     @user_is_admin = true
     render
