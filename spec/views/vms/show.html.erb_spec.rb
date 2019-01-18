@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: klären, inwieweit View tests gemacht werden sollen
-
 require 'rails_helper'
 
 RSpec.describe 'vms/show.html.erb', type: :view do
@@ -83,6 +81,10 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
   it 'has a link to delete VM' do
     expect(rendered).to have_link 'Delete'
+  end
+
+  it 'has a button to edit information' do
+    expect(rendered).to have_button 'Edit VM information'
   end
 
   it 'shows CPU usage' do
