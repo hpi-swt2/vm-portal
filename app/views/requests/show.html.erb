@@ -41,7 +41,7 @@
     <tr>
       <td><strong>Operating System:</strong></td>
       <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'operating_system', nil, class: 'form-control', value: @request.operating_system %></td>
+        <td><%= select_tag 'operating_system', options_for_select( operating_system_options, @request.operating_system) %></td>
       <% else %>
         <td><%= @request.operating_system %></td>
       <% end %>
@@ -97,10 +97,18 @@
 <p>
   <strong>Users with sudo rights:</strong>
   <ul>
-    <% @request.sudo_user_assignments.each do |assignment| %>
-      <p>
-        <li><%= assignment.user.email %></li>
-      </p>
+    <% if current_user.admin? && @request.pending? %>
+      <%= select_tag 'sudo_user_ids',
+                    options_from_collection_for_select(User.all,
+                                                     :id,
+                                                     :email, @request.sudo_user_assignments.collect {|sudo_user| sudo_user.id}),
+                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
+    <% else %>
+      <% @request.sudo_user_assignments.each do |assignment| %>
+        <p>
+          <li><%= assignment.user.email %></li>
+        </p>
+    <% end %>
   <% end %>
   </ul>
 </p>
@@ -108,10 +116,18 @@
 <p>
   <strong>Users:</strong>
   <ul>
-    <% @request.non_sudo_user_assignments.each do |assignment| %>
-        <p>
-          <li><%= assignment.user.email %></li>
-        </p>
+    <% if current_user.admin? && @request.pending? %>
+      <%= select_tag 'user_ids',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email),
+                    { multiple: true, class: "selecttwo", data: { placeholder: @request.non_sudo_user_assignments }, style: 'width: 50%' } %>
+    <% else %>
+      <% @request.non_sudo_user_assignments.each do |assignment| %>
+          <p>
+            <li><%= assignment.user.email %></li>
+          </p>
+      <% end %>
     <% end %>
   </ul>
 </p>

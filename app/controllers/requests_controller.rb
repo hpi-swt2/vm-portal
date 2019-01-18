@@ -76,12 +76,16 @@ class RequestsController < ApplicationController
     end
   end
 
+  def recap
+    @request = Request.find(params[:id])
+  end
+
   def request_change_state
-    if @request.update(request_params) 
-      notify_request_update
+    if @request.update(request_params)
+      #notify_request_update
       if @request.accepted?
-        VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
-        redirect_to @request, notice: I18n.t('request.successfully_updated_and_vm_created')
+        #VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
+        redirect_to recap_requests_path, notice: I18n.t('request.successfully_updated_and_vm_created')
       else
         redirect_to requests_path, notice: I18n.t('request.successfully_updated')
       end
@@ -104,7 +108,7 @@ class RequestsController < ApplicationController
   def authenticate_state_change
     @request = Request.find(params[:id])
     authenticate_admin
-    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
+    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user && !current_user.admin?
   end
 
   def notify_request_update

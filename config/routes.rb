@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
 
+  get '/requests/:id/recap', to: 'requests#recap'
+
   devise_for :users,
              path: 'users',
              controllers: {

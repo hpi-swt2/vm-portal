@@ -1,0 +1,92 @@
+ <h1>Here is a summary of your accepted request:</h1>
+
+<table class="table table-fixed-columns table-striped">
+  <tbody>
+    <tr>
+      <td><strong>VM Name:</strong></td>
+      <td><%= @request.name %></td>
+    </tr>
+
+    <tr>
+      <td><strong>MAC-Address:</strong></td>
+      <td><%=  %></td>
+    </tr>
+
+    <tr>
+      <td><strong>IP:</strong></td>
+      <td><%= text_field_tag 'ip', nil, class: 'form-control', placeholder: 'Please enter an IP' %></td>
+    </tr>
+
+    <tr>
+      <td><strong>DNS:</strong></td>
+      <td><%= text_field_tag 'dns', nil, class: 'form-control', placeholder: 'Please enter a DNS' %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Cpu-Cores:</strong></td>
+      <td><%= @request.cpu_cores %></td>
+    </tr>
+
+    <tr>
+      <td><strong>MB RAM:</strong></td>
+      <td><%= @request.ram_mb %></td>
+    </tr>
+
+    <tr>
+      <td><strong>MB Storage:</strong></td>
+      <td><%= @request.storage_mb %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Operating System:</strong></td>
+      <td><%= @request.operating_system %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Port:</strong></td>
+        <td><%= @request.port %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Application Name:</strong></td>
+      <td><%= @request.application_name %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Description:</strong></td>
+      <td class="col-md-4"><%= @request.description %></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  <strong>Users with sudo rights:</strong>
+  <ul>
+    <% @request.sudo_user_assignments.each do |assignment| %>
+      <p>
+        <li><%= assignment.user.email %></li>
+      </p>
+    <% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Users:</strong>
+  <ul>
+    <% @request.non_sudo_user_assignments.each do |assignment| %>
+        <p>
+          <li><%= assignment.user.email %></li>
+        </p>
+    <% end %>
+  </ul>
+</p>
+
+<table class="table">
+  <tbody>
+  <tr>
+	<td><%= button_to "Accept",
+                        {controller: :vms, action: 'index'},
+                        method: :get, class: "btn btn-success" %></td>
+  </tr>
+  </tbody>
+</table>
