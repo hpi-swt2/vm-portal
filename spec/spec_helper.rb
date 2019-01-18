@@ -42,7 +42,6 @@ require 'support/factory_bot'
 require './app/api/vmapi'
 
 RSpec.configure do |config|
-
   config.before(:suite) do
     puts '------------------------------------------------'
     puts 'before suite'
@@ -51,8 +50,7 @@ RSpec.configure do |config|
     VmApi.instance.define_singleton_method(:all_vm_infos) { [] }
     VmApi.instance.define_singleton_method(:all_hosts) { [] }
   end
-
-
+  
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
