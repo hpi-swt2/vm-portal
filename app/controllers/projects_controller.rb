@@ -2,25 +2,10 @@
 
 class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
+  before_action :authenticate_responsible_user, only: %i[edit update]
 
   def index
     @projects = Project.all
-  end
-
-  # GET /projects/new
-  def new
-    @project = Project.new
-    @current_user = current_user
-  end
-
-  # POST /requests.json
-  def create
-    @project = Project.new(project_params)
-    if @project.save
-      redirect_to action: :index
-    else
-      render :new, locals: { current_user: current_user }
-    end
   end
 
   # GET /projects/1
@@ -29,7 +14,42 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  # GET /projects/new
+  def new
+    @project = Project.new
+    @selected_user_ids = [current_user.id]
+  end
+
+  # POST /requests.json
+  def create
+    @project = Project.new(project_params)
+    if @project.save
+      redirect_to action: :index
+    else
+      @selected_user_ids = project_params[:responsible_user_ids]
+      render :new
+    end
+  end
+
+  def edit
+    @project = Project.find(params[:id])
+  end
+
+  def update
+    @project = Project.find(params[:id])
+    if @project.update(project_params)
+      redirect_to action: :show
+    else
+      render :edit
+    end
+  end
+
   private
+
+  def authenticate_responsible_user
+    @project = Project.find(params[:id])
+    redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless @project.responsible_users.include? current_user
+  end
 
   def project_params
     params.require(:project).permit(:name, :description, responsible_user_ids: [])
