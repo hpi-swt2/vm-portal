@@ -57,7 +57,6 @@ RSpec.describe ServersController, type: :controller do
       get :show, params: { id: 'invalid_id' }, session: valid_session
       expect(response.status).to eq(404)
     end
-
   end
 
   describe 'GET #new' do
