@@ -71,6 +71,12 @@ class User < ApplicationRecord
     end
   end
 
+  def self.from_mail_identifier(mail_id)
+    all do |user|
+      return user if user.email.split('@').first == mail_id
+    end
+  end
+
   def vm_infos
     VmApi.instance.user_vms(self)
   end
