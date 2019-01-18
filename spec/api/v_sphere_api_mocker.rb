@@ -78,7 +78,7 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-def vim_cluster_mock(name, hosts)
+def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
   hosts = extract_vim_objects hosts
   cluster = double
   allow(cluster).to receive(:is_a?).and_return false
