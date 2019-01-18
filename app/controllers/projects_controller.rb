@@ -2,7 +2,7 @@
 
 class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
-  before_action :authenticate_responsible_user, only: %i[edit]
+  before_action :authenticate_responsible_user, only: %i[edit update]
 
   def index
     @projects = Project.all
@@ -26,12 +26,21 @@ class ProjectsController < ApplicationController
     if @project.save
       redirect_to action: :index
     else
-      render :new, locals: { current_user: current_user }
+      render :new, locals: { selected_users: [current_user] }
     end
   end
 
   def edit
     @project = Project.find(params[:id])
+  end
+
+  def update
+    @project = Project.find(params[:id])
+    if @project.update(project_params)
+      redirect_to action: :show
+    else
+      render :edit
+    end
   end
 
   private

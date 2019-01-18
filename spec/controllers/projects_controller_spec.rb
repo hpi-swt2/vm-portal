@@ -48,4 +48,53 @@ RSpec.describe ProjectsController, type: :controller do
       expect(response).to redirect_to(dashboard_path)
     end
   end
+
+  describe 'PUT #update' do
+    let(:other_user) { FactoryBot.create :employee }
+
+    before do
+      put :update, params: { id: project.id, project: new_attributes }
+      project.reload
+    end
+
+    context 'with valid params' do
+      let(:new_attributes) do
+        {
+          name: 'Super new Project',
+          description: 'Super Awesome Description',
+          responsible_user_ids: [other_user.id]
+        }
+      end
+
+      it 'updates the requested project name' do
+        expect(project.name).to eq(new_attributes[:name])
+      end
+
+      it 'updates the requested project description' do
+        expect(project.description).to eq(new_attributes[:description])
+      end
+
+      it 'updates the requested project responsible user' do
+        expect(project.responsible_users.map(&:id)).to eq(new_attributes[:responsible_user_ids])
+      end
+
+      it 'redirects to the project' do
+        expect(response).to redirect_to(project)
+      end
+    end
+
+    context 'with invalid params' do
+      let(:new_attributes) do
+        {
+          name: '',
+          description: 'Super Awesome Description',
+          responsible_user_ids: [other_user.id]
+        }
+      end
+
+      it 'does not update the project' do
+        expect(project.name).not_to be(new_attributes[:name])
+      end
+    end
+  end
 end
