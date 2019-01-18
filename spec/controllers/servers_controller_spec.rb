@@ -52,6 +52,12 @@ RSpec.describe ServersController, type: :controller do
       get :show, params: { id: server.to_param }, session: valid_session
       expect(response).to be_successful
     end
+
+    it 'returns 404 when id is not valid' do
+      get :show, params: { id: 'invalid_id' }, session: valid_session
+      expect(response.status).to eq(404)
+    end
+
   end
 
   describe 'GET #new' do

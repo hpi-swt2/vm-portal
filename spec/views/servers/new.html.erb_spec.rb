@@ -7,8 +7,8 @@ RSpec.describe 'servers/new', type: :view do
     assign(:server, Server.new(
                       name: 'SpecServer',
                       cpu_cores: 4,
-                      ram_mb: 1024,
-                      storage_mb: 4096,
+                      ram_gb: 1024,
+                      storage_gb: 4096,
                       mac_address: 'C0:FF:EE:C4:11:42',
                       fqdn: 'arrrr.speck.de',
                       ipv4_address: '8.8.8.8',
@@ -25,9 +25,9 @@ RSpec.describe 'servers/new', type: :view do
 
       assert_select 'input[name=?][min=?]', 'server[cpu_cores]', '0'
 
-      assert_select 'input[name=?][min=?]', 'server[ram_mb]', '0'
+      assert_select 'input[name=?][min=?]', 'server[ram_gb]', '0'
 
-      assert_select 'input[name=?][min=?]', 'server[storage_mb]', '0'
+      assert_select 'input[name=?][min=?]', 'server[storage_gb]', '0'
 
       assert_select 'input[name=?]', 'server[mac_address]'
 

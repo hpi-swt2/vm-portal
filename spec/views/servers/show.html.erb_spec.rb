@@ -7,8 +7,8 @@ RSpec.describe 'servers/show', type: :view do
     @server = assign(:server, Server.create!(
                                 name: 'SpecServer',
                                 cpu_cores: 4,
-                                ram_mb: 1024,
-                                storage_mb: 4096,
+                                ram_gb: 1024,
+                                storage_gb: 4096,
                                 mac_address: 'C0:FF:EE:C4:11:42',
                                 fqdn: 'arrrr.speck.de',
                                 ipv4_address: '8.8.8.8',
