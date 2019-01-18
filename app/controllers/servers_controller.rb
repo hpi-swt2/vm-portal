@@ -2,6 +2,7 @@
 
 class ServersController < ApplicationController
   before_action :set_server, only: %i[show edit update destroy]
+  before_action :authenticate_employee, only: %i[show]
   before_action :authenticate_admin, only: %i[new create edit update destroy]
   # GET /servers
   # GET /servers.json
@@ -107,5 +108,12 @@ class ServersController < ApplicationController
     #                              :mac_address, :fqdn)
 
     params.fetch(:server, {})
+  end
+
+  def authorize_server_access
+    @server = set_server
+    return unless @server
+
+    redirect_to servers_path if current_user.user?
   end
 end
