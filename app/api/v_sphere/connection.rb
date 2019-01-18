@@ -102,11 +102,7 @@ module VSphere
 
     def extract_clusters(element)
       if element.class == RbVmomi::VIM::Folder
-        clusters = []
-        element.children.each do |child|
-          clusters << extract_clusters(child)
-        end
-        clusters
+        element.children.map(&method(:extract_clusters))
       else
         [element]
       end

@@ -12,11 +12,9 @@ require_relative 'v_sphere_api_helper'
 # rubocop:disable RSpec/MessageChain
 describe VSphere do
   let(:mock_archived_vms) do
-    vms = []
-    (1..5).each do |each|
-      vms << vim_vm_mock('Archived VM' + each.to_s, power_state: 'poweredOff')
+    (1..5).map do |each|
+      vim_vm_mock('Archived VM' + each.to_s, power_state: 'poweredOff')
     end
-    vms
   end
 
   let(:mock_archived_vms_folder) do
@@ -24,11 +22,9 @@ describe VSphere do
   end
 
   let(:mock_pending_archivings_vms) do
-    vms = []
-    (1..5).each do |each|
-      vms << vim_vm_mock('Pending Archiving VM' + each.to_s)
+    (1..5).map do |each|
+      vim_vm_mock('Pending Archiving VM' + each.to_s)
     end
-    vms
   end
 
   let(:mock_pending_archivings_folder) do
@@ -36,11 +32,9 @@ describe VSphere do
   end
 
   let(:mock_root_folder_vms) do
-    vms = []
-    (1..5).each do |each|
-      vms << vim_vm_mock('Root folder VM' + each.to_s, power_state: 'poweredOff')
+    (1..5).map do |each|
+      vim_vm_mock('Root folder VM' + each.to_s, power_state: 'poweredOff')
     end
-    vms
   end
 
   let(:mock_folder) do
