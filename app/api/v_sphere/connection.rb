@@ -43,7 +43,6 @@ module VSphere
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
       @vm_folder = VSphere::Folder.new @dc.vmFolder
       @cluster_folder = VSphere::Folder.new @dc.hostFolder
-      @resource_pool = VSphere::Cluster.all.first.resource_pool
     end
   end
 end
