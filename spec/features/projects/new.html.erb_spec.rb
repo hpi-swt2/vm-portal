@@ -96,6 +96,22 @@ describe 'projects/new.html.erb', type: :feature do
       end
     end
 
+    context 'when something is not correctly filled' do
+      context 'when only multiple responsible users are selected' do
+        before do
+          page.select employee.email, from: 'project[responsible_user_ids][]'
+          page.select admin.email, from: 'project[responsible_user_ids][]'
+        end
+
+        context 'when clicking the submit button' do
+          it 'still selects the selected responsible user' do
+            submit_button.click
+            expect(page).to have_select('project[responsible_user_ids][]', selected: [employee.email, admin.email])
+          end
+        end
+      end
+    end
+
     context 'when every field is correctly filled' do
       before do
         fill_in 'project[name]', with: project_name

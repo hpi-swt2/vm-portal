@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   def new
     @project = Project.new
-    @current_user = current_user
+    @selected_user_ids = [current_user.id]
   end
 
   # POST /requests.json
@@ -26,7 +26,8 @@ class ProjectsController < ApplicationController
     if @project.save
       redirect_to action: :index
     else
-      render :new, locals: { selected_users: [current_user] }
+      @selected_user_ids = project_params[:responsible_user_ids]
+      render :new
     end
   end
 
