@@ -71,8 +71,12 @@ class User < ApplicationRecord
     end
   end
 
-  def vms
+  def vm_infos
     VmApi.instance.user_vms(self)
+  end
+
+  def vms
+    VSphere::VirtualMachine.user_vms self
   end
 
   def employee_or_admin?

@@ -19,6 +19,10 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
       expect(rendered).to have_link('Profile', href: user_path(current_user))
     end
 
+    it 'links to servers list' do
+      expect(rendered).to have_link('Servers', href: servers_path)
+    end
+
     it 'links to the Notification Page' do
       expect(rendered).to have_link(href: notifications_path)
     end

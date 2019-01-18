@@ -1,0 +1,4 @@
+<h1>Edit Project</h1>
+
+<%= render 'form', project: @project, selected_user_ids: @project.responsible_users.map(&:id) %>
+<%= link_to 'Back', project_path(@project) %>

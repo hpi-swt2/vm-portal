@@ -26,12 +26,13 @@
                   options_from_collection_for_select(User.all,
                                                      :id,
                                                      :email,
-                                                     selected: current_user&.id),
+                                                     selected: selected_user_ids),
                   {},
                   { multiple: true, class: "selecttwo", data: { placeholder: 'Responsible users' }, style: 'width: 50%' }
   %>
 
   <div class="actions">
+    <br />
     <%= form.submit id: 'submitProjectButton', class: "btn btn-primary" %>
   </div>
 <% end %>

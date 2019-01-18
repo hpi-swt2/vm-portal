@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.integer "user_id"
     t.text "description"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -66,6 +66,20 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.integer "project_id", null: false
     t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
     t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
+  end
+
+  create_table "servers", force: :cascade do |t|
+    t.string "name"
+    t.integer "cpu_cores"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
+    t.string "mac_address"
+    t.string "fqdn"
+    t.string "ipv4_address"
+    t.string "ipv6_address"
+    t.string "installed_software", default: "--- []\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -114,8 +128,6 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end

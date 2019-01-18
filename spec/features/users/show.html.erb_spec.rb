@@ -7,8 +7,10 @@ describe 'users/show.html.erb', type: :feature do
 
   context 'when the user is not an admin' do
     let(:user) { FactoryBot.create :user }
+    let(:project) { FactoryBot.create :project, responsible_users: [user] }
 
     before do
+      project
       sign_in user
     end
 
@@ -19,6 +21,10 @@ describe 'users/show.html.erb', type: :feature do
 
       it 'does not redirect' do
         expect(page).to have_current_path(user_path(user))
+      end
+
+      it 'has a link to the responsible project' do
+        expect(page).to have_link(project.name, href: project_path(project))
       end
     end
 

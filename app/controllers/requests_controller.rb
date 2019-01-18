@@ -3,6 +3,7 @@
 require 'vmapi.rb'
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
+  include RequestsHelper
   before_action :set_request, only: %i[show edit update destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
@@ -41,7 +42,9 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
+    params[:request][:name] = replace_whitespaces(params[:request][:name])
     @request = Request.new(request_params.merge(user: current_user))
+
     respond_to do |format|
       if @request.save
         @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
@@ -56,6 +59,7 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1.json
   def update
     respond_to do |format|
+      params[:request][:name] = replace_whitespaces(params[:request][:name])
       if @request.update(request_params)
         notify_request_update
         format.html { redirect_to @request, notice: 'Request was successfully updated.' }

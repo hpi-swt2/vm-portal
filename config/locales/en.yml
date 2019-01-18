@@ -47,3 +47,5 @@ en:
     unauthorized_state_change: "You can not change the status of your own requests."
     successfully_updated: "Request was successfully updated."
     successfully_updated_and_vm_created: "Request was successfully updated and the vm was successfully created."
+  project:
+    title: "Project Overview"
