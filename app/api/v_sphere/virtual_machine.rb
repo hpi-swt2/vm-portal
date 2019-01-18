@@ -8,19 +8,23 @@ module VSphere
   class VirtualMachine
     # instance creation
     def self.all
-      VSphere::Connection.instance.root_folder.vms(recursive: true)
+      VSphere::Connection.instance.root_folder.vms
+    end
+
+    def self.rest
+      all - pending_archivation - archived - pending_revivings
     end
 
     def self.pending_archivation
-      VSphere::VirtualMachine.all.select(&:pending_archivation?)
+      VSphere::Connection.instance.root_folder.ensure_subfolder('Pending archivings').vms
     end
 
     def self.archived
-      VSphere::VirtualMachine.all.select(&:archived?)
+      VSphere::Connection.instance.root_folder.ensure_subfolder('Archived VMs').vms
     end
 
     def self.pending_revivings
-      VSphere::VirtualMachine.all.select(&:pending_reviving?)
+      VSphere::Connection.instance.root_folder.ensure_subfolder('Pending revivings').vms
     end
 
     def self.find_by_name(name)
@@ -173,7 +177,7 @@ module VSphere
       ensure_root_subfolder('Pending archivings')
     end
 
-    def pending_revive_folder
+    def pending_revivings
       ensure_root_subfolder('Pending revivings')
     end
   end

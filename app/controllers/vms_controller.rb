@@ -30,7 +30,7 @@ class VmsController < ApplicationController
   end
 
   def show
-    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
   def request_vm_archivation
@@ -81,6 +81,11 @@ class VmsController < ApplicationController
   def revive_vm
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.set_revived
+    @vm.power_on
+
+    @vm.users.each do | each |
+      each.notify("VM #{@vm.name} has been revived", url_for(controller: :vms, action: 'show', id: @vm.name))
+    end
 
     redirect_to controller: :vms, action: 'index', id: @vm.name
   end
@@ -122,22 +127,14 @@ class VmsController < ApplicationController
   private
 
   def initialize_vm_categories
-    @vms = []
-    @archived_vms = []
-    @pending_archivation_vms = []
+    @vms = VSphere::VirtualMachine.rest
+    @archived_vms = VSphere::VirtualMachine.archived
+    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
   end
 
   def split_into_categories(vms)
     initialize_vm_categories
-    vms.each do |each|
-      if each.archived?
-        @archived_vms << each
-      elsif each.pending_archivation?
-        @pending_archivation_vms << each
-      else
-        @vms << each
-      end
-    end
   end
 
   def filter(list)

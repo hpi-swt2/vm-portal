@@ -94,7 +94,7 @@
   </thead>
   <tbody>
   <% @pending_reviving_vms.each  do |vm| %>
-    <tr class="table-primary">
+    <tr class="table-success">
       <td ><%= link_to vm.name,
                        {controller: :vms, action: 'show', id: vm.name},
                        method: :get, class: "btn btn-link"  %></td>
@@ -112,11 +112,7 @@
       <td><%= link_to vm.name,
                       {controller: :vms, action: 'show', id: vm.name},
                       method: :get, class: "btn btn-link"  %></td>
-      <td>
-        <%if current_user.admin? %>
-          <%= button_to "reactivate VM", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-danger" %>
-        <% end %>
-      </td>
+      <td></td>
     <tr>
   <% end %>
 
