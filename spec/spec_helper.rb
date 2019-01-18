@@ -44,7 +44,7 @@ require './app/api/vmapi'
 RSpec.configure do |config|
   config.before(:suite) do
     puts '------------------------------------------------'
-    puts 'before suite'
+    puts 'Replacing VmApi with a few mock methods!'
     puts '------------------------------------------------'
 
     VmApi.instance.define_singleton_method(:all_vm_infos) { [] }
