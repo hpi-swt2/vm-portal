@@ -101,7 +101,8 @@
       <%= select_tag 'sudo_user_ids',
                     options_from_collection_for_select(User.all,
                                                      :id,
-                                                     :email, @request.sudo_user_assignments.collect {|sudo_user| sudo_user.id}),
+                                                     :email, 
+                                                     @request.sudo_user_assignments.collect {|sudo_user| sudo_user.user_id}),
                     { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
     <% else %>
       <% @request.sudo_user_assignments.each do |assignment| %>
@@ -120,7 +121,8 @@
       <%= select_tag 'user_ids',
                     options_from_collection_for_select(User.all,
                                                        :id,
-                                                       :email),
+                                                       :email,
+                                                       @request.non_sudo_user_assignments.collect {|sudo_user| sudo_user.user_id}),
                     { multiple: true, class: "selecttwo", data: { placeholder: @request.non_sudo_user_assignments }, style: 'width: 50%' } %>
     <% else %>
       <% @request.non_sudo_user_assignments.each do |assignment| %>

@@ -134,6 +134,10 @@ module VSphere
       equal? other
     end
 
+    def macs
+      @vm.macs
+    end
+
     private
 
     def managed_folder_entry

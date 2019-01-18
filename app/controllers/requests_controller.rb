@@ -20,7 +20,9 @@ class RequestsController < ApplicationController
 
   # GET /requests/1
   # GET /requests/1.json
-  def show; end
+  def show
+    @request_templates = RequestTemplate.all
+  end
 
   # GET /requests/new
   def new
@@ -82,13 +84,14 @@ class RequestsController < ApplicationController
 
   def recap
     @request = Request.find(params[:id])
+    @vm = VSphere::VirtualMachine.find_by_name(@request.name)
   end
 
   def request_change_state
     if @request.update(request_params)
       #notify_request_update
       if @request.accepted?
-        #VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
+        VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
         redirect_to recap_requests_path, notice: I18n.t('request.successfully_updated_and_vm_created')
       else
         redirect_to requests_path, notice: I18n.t('request.successfully_updated')

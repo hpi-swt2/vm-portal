@@ -19,12 +19,14 @@
           <input type="radio" class="template" name="template" id="template" value="none"/>
           <%= "None" %>
         </ul>
+        <% unless @request_templates.nil? %>
         <% @request_templates.each_with_index do |request_template, index| %>
           <ul>
              <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system] %>"/>
             <%= "#{request_template.name}: #{request_template.cpu_cores} CPU-Cores, #{request_template.ram_mb} MB RAM, #{request_template.storage_mb} MB Storage, #{request_template.operating_system}" 
             %>
           </ul>
+        <% end %>
         <% end %>
       </div>
     </div>
