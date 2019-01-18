@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require './spec/api/v_sphere_api_helper'
+require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
@@ -20,7 +20,7 @@ RSpec.describe VmsController, type: :controller do
       request.users << current_user
       vm2 = v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
 
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [])
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [])
     end
 
     context 'when the current user is a user' do

@@ -3,6 +3,8 @@
 require 'rails_helper'
 require './app/api/v_sphere/folder'
 require './app/api/v_sphere/virtual_machine'
+require './app/api/v_sphere/cluster'
+require './app/api/v_sphere/host'
 
 # This file contains a few helper methods which allow for easy mocking of instances of the vSphere module
 #
@@ -23,39 +25,29 @@ require './app/api/v_sphere/virtual_machine'
 # has many messages that have to be chained which we want to mock.
 # rubocop:disable RSpec/MessageChain
 
-def extract_vim_vms(vms)
-  vms.map do |each|
-    if each.is_a? VSphere::VirtualMachine
-      each.instance_eval { managed_folder_entry }
+def extract_vim_objects(collection)
+  collection.map do |each|
+    if [VSphere::Cluster, VSphere::Folder, VSphere::VirtualMachine].include? each.class
+      each.instance_exec { managed_folder_entry }
     else
       each
     end
   end
 end
 
-def extract_vim_folders(folders)
-  folders.map do |each|
-    if each.is_a? VSphere::Folder
-      each.instance_eval { managed_folder_entry }
-    else
-      each
-    end
-  end
-end
-
-def vim_folder_mock(name, subfolders, vms) # rubocop:disable Metrics/AbcSize
-  vms = extract_vim_vms vms
-  subfolders = extract_vim_folders subfolders
+def vim_folder_mock(name, subfolders, vms, clusters) # rubocop:disable Metrics/AbcSize
+  children = subfolders + vms + clusters
+  children = extract_vim_objects children
   folder = double
   allow(folder).to receive(:name).and_return(name)
-  allow(folder).to receive(:children).and_return(subfolders + vms)
+  allow(folder).to receive(:children).and_return(children)
   allow(folder).to receive(:is_a?).and_return false
   allow(folder).to receive(:is_a?).with(RbVmomi::VIM::Folder).and_return true
   folder
 end
 
-def v_sphere_folder_mock(name, subfolder, vms)
-  VSphere::Folder.new vim_folder_mock(name, subfolder, vms)
+def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
+  VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
 def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday') # rubocop:disable Metrics/AbcSize
@@ -76,12 +68,38 @@ def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotIns
                                           boot_time: boot_time)
 end
 
-def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms)
-  archived_vms_folder = v_sphere_folder_mock 'Archived VMs', [], archived_vms
-  pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', [], pending_archivation_vms
-  root_folder = v_sphere_folder_mock 'root', [archived_vms_folder, pending_archivation_vms_folder], normal_vms
+def vim_host_mock(name)
+  host = double
+  allow(host).to receive(:name).and_return name
+  host
+end
+
+def v_sphere_host_mock(name)
+  VSphere::Host.new vim_host_mock(name)
+end
+
+def vim_cluster_mock(name, hosts)
+  hosts = extract_vim_objects hosts
+  cluster = double
+  allow(cluster).to receive(:is_a?).and_return false
+  allow(cluster).to receive(:is_a?).with(RbVmomi::VIM::ComputeResource).and_return true
+  allow(cluster).to receive(:host).and_return hosts
+  allow(cluster).to receive(:name).and_return name
+  cluster
+end
+
+def v_sphere_cluster_mock(name, hosts)
+  VSphere::Cluster.new vim_cluster_mock(name, hosts)
+end
+
+def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, clusters)
+  archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
+  pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
+  root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder], vms: normal_vms
+  clusters_folder = v_sphere_folder_mock 'clusters', clusters: clusters
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder
+  allow(double_connection).to receive(:clusters_folder).and_return clusters_folder
   double_connection
 end
 
