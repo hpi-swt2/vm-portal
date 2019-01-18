@@ -100,3 +100,5 @@ end %>
     </table>
   </div>
 </div>
+
+<%= button_to "Edit VM information", {controller: :vms, action: 'edit', id: @vm[:name]}, method: :get, class: "btn btn-info" %>

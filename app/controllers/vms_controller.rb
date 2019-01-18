@@ -6,7 +6,7 @@ class VmsController < ApplicationController
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
-  before_action :authorize_vm_access, only: %i[show]
+  before_action :authorize_vm_access, only: %i[show edit]
 
   def index
     @vms = if current_user.admin?
@@ -34,6 +34,10 @@ class VmsController < ApplicationController
   end
 
   def show
+    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  end
+
+  def edit
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
