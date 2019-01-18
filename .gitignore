@@ -44,3 +44,5 @@ coverage
 
 # Ignore locks
 .lock*
+
+config/credentials.yml.enc
