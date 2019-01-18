@@ -40,19 +40,19 @@ class ServersController < ApplicationController
     server_params[:installed_software] = software
 
     server_params.permit(
-                          :name,
-                          :cpu_cores,
-                          :ram_gb,
-                          :storage_gb,
-                          :ipv4_address,
-                          :ipv6_address,
-                          :mac_address,
-                          :fqdn,
-                          :installed_software,
-                          :vendor,
-                          :model,
-                          :description
-                        )
+      :name,
+      :cpu_cores,
+      :ram_gb,
+      :storage_gb,
+      :ipv4_address,
+      :ipv6_address,
+      :mac_address,
+      :fqdn,
+      :installed_software,
+      :vendor,
+      :model,
+      :description
+    )
 
     # create new Server object
     setNewServerObject
@@ -131,9 +131,6 @@ class ServersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def server_params
-    # params.require(:server).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address,
-    #                              :mac_address, :fqdn)
-
     params.fetch(:server, {})
   end
 end
