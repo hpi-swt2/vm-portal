@@ -8,18 +8,18 @@
     </tr>
 
     <tr>
-      <td><strong>Cpu-Cores:</strong></td>
+      <td><strong>CPU cores:</strong></td>
       <td><%= @request.cpu_cores %></td>
     </tr>
 
     <tr>
-      <td><strong>MB RAM:</strong></td>
-      <td><%= @request.ram_mb %></td>
+      <td><strong>RAM in GB:</strong></td>
+      <td><%= mb_to_gb(@request.ram_mb) %></td>
     </tr>
 
     <tr>
-      <td><strong>MB Storage:</strong></td>
-      <td><%= @request.storage_mb %></td>
+      <td><strong>Storage in GB:</strong></td>
+      <td><%= mb_to_gb(@request.storage_mb) %></td>
     </tr>
 
     <tr>

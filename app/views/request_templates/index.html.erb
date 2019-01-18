@@ -6,9 +6,9 @@
   <thead>
     <tr>
       <th>Template name</th>
-      <th>Cpu count</th>
-      <th>Ram mb</th>
-      <th>Storage mb</th>
+      <th>CPU cores</th>
+      <th>RAM in GB</th>
+      <th>Storage in GB</th>
       <th>Operating system</th>
       <th colspan="1"></th>
     </tr>
@@ -23,8 +23,8 @@
           <td><%= request_template.name %></td>
         <% end %>
         <td><%= request_template.cpu_cores %></td>
-        <td><%= request_template.ram_mb %></td>
-        <td><%= request_template.storage_mb %></td>
+        <td><%= mb_to_gb(request_template.ram_mb) %></td>
+        <td><%= mb_to_gb(request_template.storage_mb) %></td>
         <td><%= request_template.operating_system %></td>
         <% if current_user.admin? %>
           <td>

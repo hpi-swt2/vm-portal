@@ -4,9 +4,9 @@
   <thead>
     <tr>
       <th>VM Name</th>
-      <th style="width: 80px">Cpu-Cores</th>
-      <th style="width: 80px">MB RAM</th>
-      <th style="width: 90px">MB Storage</th>
+      <th style="width: 80px">CPU cores</th>
+      <th style="width: 80px">RAM in GB</th>
+      <th style="width: 90px">Storage in GB</th>
       <th>Operating System</th>
       <th style="width: 80px">Port</th>
       <th>Application Name</th>
@@ -20,8 +20,8 @@
       <tr>
         <td><%= link_to request.name, request_path(request) %></td>
         <td><%= request.cpu_cores %></td>
-        <td><%= request.ram_mb %></td>
-        <td><%= request.storage_mb %></td>
+        <td><%= mb_to_gb(request.ram_mb) %></td>
+        <td><%= mb_to_gb(request.storage_mb) %></td>
         <td><%= request.operating_system %></td>
         <td><%= request.port %></td>
         <td><%= request.application_name %></td>

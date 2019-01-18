@@ -41,7 +41,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    params[:request][:name] = replace_whitespaces(params[:request][:name])
+    prepare_params
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -126,6 +126,12 @@ class RequestsController < ApplicationController
   def unsuccessful_action(format, method)
     format.html { render method }
     format.json { render json: @request.errors, status: :unprocessable_entity }
+  end
+
+  def prepare_params
+    params[:request][:name] = replace_whitespaces(params[:request][:name])
+    params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i)
+    params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
