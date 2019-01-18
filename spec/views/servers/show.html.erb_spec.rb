@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/show', type: :view do
-
   let :server_values do
     { name: 'SpecServer',
       cpu_cores: 4,
@@ -19,7 +18,6 @@ RSpec.describe 'servers/show', type: :view do
       installed_software: ['SpeckTester'] }
   end
 
-
   before do
     @server = assign(:server, Server.create!(server_values))
   end
@@ -28,16 +26,15 @@ RSpec.describe 'servers/show', type: :view do
     render
     server_values.values.each do |value|
       if value.class == Array
-        then
-          value.each do |element|
-            expect(rendered).to include(element.to_s)
-          end
-        else
-          expect(rendered).to include(value.to_s)
+        value.each do |element|
+          expect(rendered).to include(element.to_s)
+        end
+      else
+        expect(rendered).to include(value.to_s)
       end
     end
   end
-
+  
   it 'shows delete and edit links to admin' do
     @user_is_admin = true
     render
