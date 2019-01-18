@@ -19,6 +19,10 @@ module VSphere
       VSphere::VirtualMachine.all.select(&:archived?)
     end
 
+    def self.pending_revivings
+      VSphere::VirtualMachine.all.select(&:pending_reviving?)
+    end
+
     def self.find_by_name(name)
       VSphere::Connection.instance.root_folder.find_vm(name)
     end
@@ -104,6 +108,19 @@ module VSphere
       move_into archived_folder
     end
 
+    # Reviving
+    def pending_reviving?
+      pending_revive_folder.vms.any? { |vm| vm.equal? self }
+    end
+
+    def set_pending_reviving
+      move_into pending_revive_folder
+    end
+
+    def set_revived
+      move_into root_folder
+    end
+
     # Utilities
     def move_into(folder)
       folder.move_here self
@@ -140,12 +157,24 @@ module VSphere
       @vm
     end
 
+    def ensure_root_subfolder(name)
+      @v_sphere.root_folder.ensure_subfolder(name)
+    end
+
+    def root_folder
+      @v_sphere.root_folder
+    end
+
     def archived_folder
-      @v_sphere.root_folder.ensure_subfolder('Archived VMs')
+      ensure_root_subfolder('Archived VMs')
     end
 
     def pending_archivation_folder
-      @v_sphere.root_folder.ensure_subfolder('Pending archivings')
+      ensure_root_subfolder('Pending archivings')
+    end
+
+    def pending_revive_folder
+      ensure_root_subfolder('Pending revivings')
     end
   end
 end

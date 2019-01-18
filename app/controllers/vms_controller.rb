@@ -8,6 +8,7 @@ class VmsController < ApplicationController
   before_action :authenticate_admin, only: %i[archive_vm]
   before_action :authorize_vm_access, only: %i[show]
 
+  # Todo: use one request to the vm and filter them afterwarts instead of request all seperately
   def index
     @vms = if current_user.admin?
              filter VmApi.instance.all_vm_infos
@@ -17,6 +18,7 @@ class VmsController < ApplicationController
     @archived_vms = all_archived_vms
     @parameters = determine_params
     @pending_archivation_vms = all_pending_archived_vms
+    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
   end
 
   def destroy
@@ -56,6 +58,19 @@ class VmsController < ApplicationController
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
+  def request_vm_revive
+    @vm = VSphere::VirtualMachine.find_by_name(params[:vm_name])
+    return unless @vm.archived? # Todo: add pending revive
+
+    User.admin.each do |each|
+      each.notify("VM #{@vm.name} has been requested to be revived",
+                  "The VM has to be revived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
+    end
+
+    @vm.set_pending_reviving
+    redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
   def archive_vm
     @vm = VmApi.instance.get_vm(params[:id])
     set_archived(@vm)
@@ -64,6 +79,13 @@ class VmsController < ApplicationController
     VmApi.instance.vm_users(@vm).each do |each|
       each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
     end
+
+    redirect_to controller: :vms, action: 'index', id: @vm.name
+  end
+
+  def revive_vm
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.set_revived
 
     redirect_to controller: :vms, action: 'index', id: @vm.name
   end

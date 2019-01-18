@@ -92,6 +92,20 @@
   </tr>
   </thead>
   <tbody>
+  <% @pending_reviving_vms.each  do |vm| %>
+    <tr class="table-primary">
+      <td ><%= link_to vm.name,
+                       {controller: :vms, action: 'show', id: vm.name},
+                       method: :get, class: "btn btn-link"  %></td>
+      <td>
+        <%if current_user.admin? %>
+          <%= button_to "Confirm reviving", {controller: :vms, action: 'revive_vm', id: vm.name}, method: :post, class: "btn btn-danger" %>
+        <% else %>
+          <p class="text-info">Waiting for confirmation by an admin</p>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
   <% @archived_vms.each do |vm| %>
     <tr>
       <td><%= link_to vm[:name],
@@ -104,6 +118,7 @@
       </td>
     <tr>
   <% end %>
+
   </tbody>
 </table>
 
