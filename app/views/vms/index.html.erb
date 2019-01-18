@@ -33,16 +33,16 @@
   <tbody>
   <% @vms.each do |vm| %>
     <tr>
-      <td><%= link_to vm[:name],
-                      {controller: :vms, action: 'show', id: vm[:name]},
+      <td><%= link_to vm.name,
+                      {controller: :vms, action: 'show', id: vm.name},
                       method: :get, class: "btn btn-link"  %></td>
-      <td><%= vm[:boot_time] if vm[:state] %></td>
+      <td><%= vm.boot_time if vm.powered_on? %></td>
       <td>
-        <% if vm[:vmwaretools] %>
-          <% if vm[:state] %>
-            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+        <% if vm.vm_ware_tools? %>
+          <% if vm.powered_on? %>
+            <%= button_to "Shutdown", {controller: :vms, action: 'change_power_state', id: vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
           <% else %>
-            <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm[:name]}, method: :post, class: "btn btn-success" %>
+            <%= button_to "Start", {controller: :vms, action: 'change_power_state', id: vm.name}, method: :post, class: "btn btn-success" %>
           <% end %>
         <% else %>
           <p class="text-muted">VMWare tools are not installed</p>
@@ -52,13 +52,14 @@
   <% end %>
   <% @pending_archivation_vms.each  do |vm| %>
   <tr class="table-danger">
-    <td ><%= link_to vm[:name],
-                  {controller: :vms, action: 'show', id: vm[:name]},
-                  method: :get, class: "btn btn-link"  %></td>
-    <td></td>
+    <td ><%= link_to vm.name,
+                  {controller: :vms, action: 'show', id: vm.name},
+                  method: :get, class: "btn btn-link"  %>
+    </td>
+    <td><%= vm.boot_time if vm.powered_on? %></td>
     <td>
       <%if current_user.admin? %>
-        <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm[:name]}, method: :post, class: "btn btn-danger" %>
+        <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
       <% else %>
         <p class="text-info">Waiting for confirmation by an admin</p>
       <% end %>
@@ -108,8 +109,8 @@
   <% end %>
   <% @archived_vms.each do |vm| %>
     <tr>
-      <td><%= link_to vm[:name],
-                      {controller: :vms, action: 'show', id: vm[:name]},
+      <td><%= link_to vm.name,
+                      {controller: :vms, action: 'show', id: vm.name},
                       method: :get, class: "btn btn-link"  %></td>
       <td>
         <%if current_user.admin? %>
