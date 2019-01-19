@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/edit', type: :view do
-  before(:each) do
+  before do
     @server = assign(:server1, Server.create!(
                                  name: 'SpecServer',
                                  cpu_cores: 4,

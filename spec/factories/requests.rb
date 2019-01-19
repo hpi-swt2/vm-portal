@@ -24,7 +24,7 @@ FactoryBot.define do
 
   factory :request_with_users, parent: :request do
     transient do
-      users_count 4
+      users_count { 4 }
     end
 
     after(:create) do |request, evaluator|

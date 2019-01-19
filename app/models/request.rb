@@ -55,55 +55,62 @@ class Request < ApplicationRecord
 
   def push_to_git
     path = File.join Rails.root, 'public', 'puppet_script_temp'
-
     FileUtils.mkdir_p(path) unless File.exist?(path)
-
     begin
-      git = setup_git(path)
-      write_files(git, path)
-      message = commit_and_push(git)
-
+      message = write_to_git(path)
       { notice: message }
-    rescue Git::GitExecuteError => e
-      puts e
+    rescue Git::GitExecuteError
       { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     ensure
       FileUtils.rm_rf(path) if File.exist?(path)
     end
   end
 
+  def write_to_git(path)
+    git = setup_git(path)
+    write_files(git, path)
+    message = perform_git_action(git)
+    message
+  end
+
   def generate_puppet_node_script
     puppet_string =
-'class node_vm-%s {
-    $admins = [%s]
-    $users = [%s]
+      'class node_vm-%s {
+          $admins = [%s]
+          $users = [%s]
 
-    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-    realize(Accounts::Virtual[$users])
-}'
-    admins = self.users_assigned_to_requests.select(&:sudo).to_a
-    admins.map!(&:user)
-    users = self.users.to_a
-
-    admins.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    format(puppet_string, name, admins.join(', '), users.join(', '))
+          realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+          realize(Accounts::Virtual[$users])
+      }'
+    users_string, admins_string = generate_users
+    format(puppet_string, name, admins_string, users_string)
   end
 
   def generate_puppet_name_script
     puppet_script =
-'node \'vm-%s\'{
+      'node \'vm-%s\'{
 
-    if defined( node_vm-%s) {
-                class { node_vm-%s: }
-    }
-}'
+          if defined( node_vm-%s) {
+                      class { node_vm-%s: }
+          }
+      }'
     format(puppet_script, name, name, name)
   end
 
   private
 
-  # TODO: get credentials and config for currently logged in user
+  def generate_users
+    admin_users = users_assigned_to_requests.select(&:sudo).to_a
+    admin_users.map!(&:user)
+    [generate_user_array(admin_users), generate_user_array(users.to_a)]
+  end
+
+  def generate_user_array(users)
+    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
+    users.join(', ')
+    users
+  end
+
   # Clones and configures a git repository on dir.
   def setup_git(path)
     # Dir.mkdir(dir) unless File.exists?(dir)
@@ -155,18 +162,21 @@ class Request < ApplicationRecord
     "#{name}.pp"
   end
 
-  def commit_and_push(git)
-    if git.status.untracked.empty? && !git.status.added.empty?
-      git.commit_all('Add ' + node_script_filename)
-      git.push
+  def perform_git_action(git)
+    if !git.status.added.empty?
+      commit_and_push('Add ' + node_script_filename)
       'Added file and pushed to git.'
-    elsif git.status.untracked.empty? && !git.status.changed.empty?
-      git.commit_all('Update ' + node_script_filename)
-      git.push
+    elsif !git.status.changed.empty?
+      commit_and_push('Update ' + node_script_filename)
       'Changed file and pushed to git.'
     else
       'Already up to date.'
     end
+  end
+
+  def commit_and_push(message)
+    git.commit_all(message)
+    git.push
   end
 
   def url(host_name)

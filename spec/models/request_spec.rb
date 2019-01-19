@@ -157,33 +157,32 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'puppet script helper methods' do
-
     before do
       @request = FactoryBot.create(:request_with_users)
     end
 
     it 'returns correct declaration script for a given request' do
       script = @request.generate_puppet_name_script
-      expected_string = 
-'node \'vm-MyVM\'{
+      expected_string =
+        'node \'vm-MyVM\'{
 
-    if defined( node_vm-MyVM) {
-                class { node_vm-MyVM: }
-    }
-}'
+            if defined( node_vm-MyVM) {
+                        class { node_vm-MyVM: }
+            }
+        }'
       expect(script).to eq(expected_string)
     end
 
     it 'returns correct initialization script for a given request' do
       script = @request.generate_puppet_node_script
-      expected_string = 
-'class node_vm-MyVM {
-    $admins = []
-    $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
+      expected_string =
+        'class node_vm-MyVM {
+            $admins = []
+            $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
 
-    realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-    realize(Accounts::Virtual[$users])
-}'
+            realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+            realize(Accounts::Virtual[$users])
+        }'
       expect(script).to eq(expected_string)
     end
   end

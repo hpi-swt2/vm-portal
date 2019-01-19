@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/index', type: :view do
-  before(:each) do
+  before do
     assign(:servers, [
              Server.create!(
                name: 'SpecServer',
