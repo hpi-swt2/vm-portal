@@ -163,26 +163,28 @@ RSpec.describe Request, type: :model do
 
     it 'returns correct declaration script for a given request' do
       script = @request.generate_puppet_name_script
-      expected_string =
-        'node \'vm-MyVM\'{
+      expected_string = <<~NAME_SCRIPT
+        node \'vm-MyVM\'{
 
             if defined( node_vm-MyVM) {
                         class { node_vm-MyVM: }
             }
-        }'
+        }
+      NAME_SCRIPT
       expect(script).to eq(expected_string)
     end
 
     it 'returns correct initialization script for a given request' do
       script = @request.generate_puppet_node_script
-      expected_string =
-        'class node_vm-MyVM {
-            $admins = []
-            $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
+      expected_string = <<~NODE_SCRIPT
+        class node_vm-MyVM {
+                $admins = []
+                $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
 
-            realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-            realize(Accounts::Virtual[$users])
-        }'
+                realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+                realize(Accounts::Virtual[$users])
+        }
+      NODE_SCRIPT
       expect(script).to eq(expected_string)
     end
   end
@@ -221,7 +223,6 @@ RSpec.describe Request, type: :model do
 
     context 'with a new puppet script' do
       before do
-        allow(@status).to receive(:untracked).and_return([])
         allow(@status).to receive(:changed).and_return([])
         allow(@status).to receive(:added).and_return(['added_file'])
       end
@@ -229,8 +230,7 @@ RSpec.describe Request, type: :model do
       it 'correctly calls git' do
         expect(@git).to receive(:config).with('user.name', 'test_user_name')
         expect(@git).to receive(:config).with('user.email', 'test_user_email')
-        expect(@git).to(receive(:status).twice) { @status }
-        expect(@status).to receive(:untracked).once
+        expect(@git).to(receive(:status).once) { @status }
         expect(@status).to receive(:added).once
         expect(@status).not_to receive(:changed)
 
@@ -247,7 +247,6 @@ RSpec.describe Request, type: :model do
 
     context 'with a changed puppet script' do
       before do
-        allow(@status).to receive(:untracked).and_return([])
         allow(@status).to receive(:changed).and_return(['changed_file'])
         allow(@status).to receive(:added).and_return([])
       end
@@ -255,8 +254,7 @@ RSpec.describe Request, type: :model do
       it 'correctly calls git' do
         expect(@git).to receive(:config).with('user.name', 'test_user_name')
         expect(@git).to receive(:config).with('user.email', 'test_user_email')
-        expect(@git).to(receive(:status).exactly(4).times) { @status }
-        expect(@status).to receive(:untracked).twice
+        expect(@git).to(receive(:status).twice) { @status }
         expect(@status).to receive(:added).once
         expect(@status).to receive(:changed).once
 
@@ -273,7 +271,6 @@ RSpec.describe Request, type: :model do
 
     context 'without any changes' do
       before do
-        allow(@status).to receive(:untracked).and_return([])
         allow(@status).to receive(:changed).and_return([])
         allow(@status).to receive(:added).and_return([])
       end
@@ -281,8 +278,7 @@ RSpec.describe Request, type: :model do
       it 'correctly calls git' do
         expect(@git).to receive(:config).with('user.name', 'test_user_name')
         expect(@git).to receive(:config).with('user.email', 'test_user_email')
-        expect(@git).to(receive(:status).exactly(4).times) { @status }
-        expect(@status).to receive(:untracked).twice
+        expect(@git).to(receive(:status).twice) { @status }
         expect(@status).to receive(:added).once
         expect(@status).to receive(:changed).once
 

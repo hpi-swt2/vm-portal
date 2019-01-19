@@ -74,26 +74,28 @@ class Request < ApplicationRecord
   end
 
   def generate_puppet_node_script
-    puppet_string =
-      'class node_vm-%s {
-          $admins = [%s]
-          $users = [%s]
+    puppet_string = <<~NODE_SCRIPT
+      class node_vm-%s {
+              $admins = [%s]
+              $users = [%s]
 
-          realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-          realize(Accounts::Virtual[$users])
-      }'
-    users_string, admins_string = generate_users
+              realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+              realize(Accounts::Virtual[$users])
+      }
+    NODE_SCRIPT
+    admins_string, users_string = generate_users
     format(puppet_string, name, admins_string, users_string)
   end
 
   def generate_puppet_name_script
-    puppet_script =
-      'node \'vm-%s\'{
+    puppet_script = <<~NAME_SCRIPT
+      node \'vm-%s\'{
 
           if defined( node_vm-%s) {
                       class { node_vm-%s: }
           }
-      }'
+      }
+    NAME_SCRIPT
     format(puppet_script, name, name, name)
   end
 
@@ -108,7 +110,6 @@ class Request < ApplicationRecord
   def generate_user_array(users)
     users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
     users.join(', ')
-    users
   end
 
   # Clones and configures a git repository on dir.
@@ -164,17 +165,17 @@ class Request < ApplicationRecord
 
   def perform_git_action(git)
     if !git.status.added.empty?
-      commit_and_push('Add ' + node_script_filename)
+      commit_and_push(git, 'Add ' + node_script_filename)
       'Added file and pushed to git.'
     elsif !git.status.changed.empty?
-      commit_and_push('Update ' + node_script_filename)
+      commit_and_push(git, 'Update ' + node_script_filename)
       'Changed file and pushed to git.'
     else
       'Already up to date.'
     end
   end
 
-  def commit_and_push(message)
+  def commit_and_push(git, message)
     git.commit_all(message)
     git.push
   end
