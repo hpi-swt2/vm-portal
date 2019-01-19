@@ -39,16 +39,16 @@ end
 # Load FactoryBot config
 require 'support/factory_bot'
 
-require './app/api/vmapi'
+require './app/api/v_sphere/connection'
+require './spec/api/v_sphere_api_mocker'
 
 RSpec.configure do |config|
-  config.before(:suite) do
-    puts '------------------------------------------------'
-    puts 'Replacing VmApi with a few mock methods!'
-    puts '------------------------------------------------'
-
-    VmApi.instance.define_singleton_method(:all_vm_infos) { [] }
-    VmApi.instance.define_singleton_method(:all_hosts) { [] }
+  config.before do
+    root_folder = v_sphere_folder_mock 'root'
+    clusters_folder = v_sphere_folder_mock 'clusters'
+    VSphere::Connection.instance.instance_variable_set :@vm_folder, root_folder
+    VSphere::Connection.instance.instance_variable_set :@cluster_folder, clusters_folder
+    VSphere::Connection.instance.define_singleton_method(:connect) {}
   end
 
   # rspec-expectations config goes here. You can use an alternate
