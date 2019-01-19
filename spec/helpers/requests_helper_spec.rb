@@ -12,3 +12,18 @@ require 'rails_helper'
 #     end
 #   end
 # end
+
+RSpec.describe RequestsHelper, type: :helper do
+  it 'replaces whitespaces correctly' do
+    expect(replace_whitespaces('Testing String')).to eq('Testing-String')
+  end
+
+  it 'replaces special characters correctly' do
+    expect(replace_whitespaces('Testing Test#! String')).to eq('Testing-Test-String')
+  end
+
+  it 'does not modify a string without whitespaces' do
+    teststring = 'TestString'
+    expect(replace_whitespaces(teststring)).to eq(teststring)
+  end
+end

@@ -9,14 +9,9 @@ class VmsController < ApplicationController
   before_action :authorize_vm_access, only: %i[show]
 
   def index
-    @vms = if current_user.user?
-             filter current_user.vms
-           else
-             filter VmApi.instance.all_vm_infos
-           end
-    @archived_vms = all_archived_vms
+    vms = filter(current_user.admin? ? VSphere::VirtualMachine.all : current_user.vms)
+    split_into_categories vms
     @parameters = determine_params
-    @pending_archivation_vms = all_pending_archived_vms
   end
 
   def destroy
@@ -38,30 +33,31 @@ class VmsController < ApplicationController
   end
 
   def request_vm_archivation
-    @vm = VmApi.instance.get_vm(params[:id])
-    return if archived?(@vm) || pending_archivation?(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived? || @vm.pending_archivation?
 
-    VmApi.instance.change_power_state(@vm.name, false)
     User.admin.each do |each|
       each.notify("VM #{@vm.name} has been requested to be archived",
                   "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
     end
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
                   "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
-    set_pending_archivation(@vm)
+    @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
   def archive_vm
-    @vm = VmApi.instance.get_vm(params[:id])
-    set_archived(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived?
+
+    @vm.set_archived
 
     # inform users
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
@@ -71,31 +67,31 @@ class VmsController < ApplicationController
   def change_power_state
     @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.change_power_state(@vm[:name], !@vm[:state])
-    redirect_to root_path
+    redirect_back(fallback_location: root_path)
   end
 
   def suspend_vm
     @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.suspend_vm(@vm[:name])
-    redirect_to action: :show, id: params[:id]
+    redirect_back(fallback_location: root_path)
   end
 
   def shutdown_guest_os
     @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.shutdown_guest_os(@vm[:name])
-    redirect_to action: :show, id: params[:id]
+    redirect_back(fallback_location: root_path)
   end
 
   def reboot_guest_os
     @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reboot_guest_os(@vm[:name])
-    redirect_to action: :show, id: params[:id]
+    redirect_back(fallback_location: root_path)
   end
 
   def reset_vm
     @vm = VmApi.instance.get_vm_info(params[:id])
     VmApi.instance.reset_vm(@vm[:name])
-    redirect_to action: :show, id: params[:id]
+    redirect_back(fallback_location: root_path)
   end
 
   # This controller doesn't use strong parameters
@@ -103,6 +99,25 @@ class VmsController < ApplicationController
   # Because no Active Record model is being wrapped
 
   private
+
+  def initialize_vm_categories
+    @vms = []
+    @archived_vms = []
+    @pending_archivation_vms = []
+  end
+
+  def split_into_categories(vms)
+    initialize_vm_categories
+    vms.each do |each|
+      if each.archived?
+        @archived_vms << each
+      elsif each.pending_archivation?
+        @pending_archivation_vms << each
+      else
+        @vms << each
+      end
+    end
+  end
 
   def filter(list)
     if no_params_set?
@@ -133,13 +148,13 @@ class VmsController < ApplicationController
   end
 
   def vm_filter
-    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+    { up_vms: proc(&:powered_on?), down_vms: proc(&:powered_off?) }
   end
 
   def authorize_vm_access
     @vm = VmApi.instance.get_vm_info(params[:id])
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !current_user.vms.include?(@vm)
+    redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)
   end
 end

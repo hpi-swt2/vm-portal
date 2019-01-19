@@ -1,0 +1,10 @@
+<h1>Projects</h1>
+
+<%= render 'list', projects: @projects %>
+
+<% if current_user.employee_or_admin? %>
+  <hr>
+  <%= button_to 'Create new project',
+                    {controller: :projects, action: 'new'},
+                    method: :get, id: 'createNewProjectButton', class: "btn btn-info float-right" %>
+<% end %>

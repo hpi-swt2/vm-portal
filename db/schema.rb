@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_11_104519) do
+ActiveRecord::Schema.define(version: 2019_01_18_134041) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -66,6 +66,23 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.integer "project_id", null: false
     t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
     t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
+  end
+
+  create_table "servers", force: :cascade do |t|
+    t.string "name"
+    t.integer "cpu_cores"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
+    t.string "mac_address"
+    t.string "fqdn"
+    t.string "ipv4_address"
+    t.string "ipv6_address"
+    t.string "installed_software", default: "--- []\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "model"
+    t.string "vendor"
+    t.string "description"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
