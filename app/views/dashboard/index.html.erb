@@ -22,13 +22,13 @@
           <tbody>
           <% @vms.each do |vm| %>
             <tr>
-              <td><%= vm[:name] %></td>
-              <td><%= vm[:boot_time] %></td>
+              <td><%= vm.name %></td>
+              <td><%= vm.boot_time %></td>
               <td><%= button_to "Details",
-                                {controller: :vms, action: 'show', id: vm[:name]},
+                                {controller: :vms, action: 'show', id: vm.name},
                                 method: :get, class: "btn btn-info" %></td>
               <td><%= button_to "Delete",
-                                {controller: :vms, action: 'destroy', id: vm[:name]},
+                                {controller: :vms, action: 'destroy', id: vm.name},
                                 method: :delete, class: "btn btn-danger" %></td>
             <tr>
           <% end %>
@@ -55,17 +55,15 @@
           <tbody>
           <% @hosts.each do |host| %>
             <tr>
-              <td><%= link_to host[:name],
-                              {controller: :hosts, action: 'show', id: host[:name]},
+              <td><%= link_to host.name,
+                              {controller: :hosts, action: 'show', id: host.name},
                               method: :get, class: "btn btn-link" %></td>
-              <td><%= host[:connectionState] %></td>
+              <td><%= host.connection_state %></td>
               <td>
                 <ul>
-                  <% if not host[:vm_names].nil?
-                       host[:vm_names].each do |vm_name| %>
-                      <li> <%= vm_name %></li>
-                    <% end
-                       end %>
+                  <% host.vms.each do |vm| %>
+                      <li> <%= vm.name %></li>
+                    <% end %>
                 </ul>
               </td>
             </tr>
