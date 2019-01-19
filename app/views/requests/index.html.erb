@@ -6,13 +6,13 @@
       <td>
         <%=link_to(fa_icon('plus'),
         {controller: :requests, action: 'new'},
-        method: :get, class: 'btn btn-info') %>
+        method: :get, class: 'btn btn-primary') %>
       </td>
       <td>
-        <%= link_to 'Templates', request_templates_path, class: 'btn btn-info' %>
+        <%= link_to 'Templates', request_templates_path, class: 'btn btn-primary' %>
       </td>
       <td>
-        <%= link_to 'Operating Systems', operating_systems_path, class: 'btn btn-info' %>      
+        <%= link_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary' %>
       </td>
     </tr>
   </tbody>
@@ -47,7 +47,7 @@
         <td>
           <%= link_to request.status,
                       request_path(request),
-                      class: 'btn btn-info'
+                      class: 'btn btn-primary'
           %>
         </td>
       </tr>

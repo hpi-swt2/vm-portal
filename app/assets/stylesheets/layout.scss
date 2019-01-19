@@ -1,5 +1,5 @@
-$info: #0C415F;
-$danger: #cb3448;
+$primary: #0C415F;
+$danger: #a80833;
 $success: #d7e76f;
 
 @import "bootstrap";
@@ -16,11 +16,11 @@ html, body {
 }
 
 .btn-link, a {
-  color: $info;
+  color: $primary;
 }
 
 h1 {
-  color: $info;
+  color: $primary;
   margin-bottom: .5em;
 }
 

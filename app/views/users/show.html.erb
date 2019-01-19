@@ -26,7 +26,7 @@
             <% if @user == current_user %>
               <%= link_to(fa_icon('edit', text: t('actions.edit')),
                           edit_user_path(@user),
-                          class: 'btn btn-info',
+                          class: 'btn btn-primary',
                           id: 'editUserButton')
               -%>
             <% end %>
