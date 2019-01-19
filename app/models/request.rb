@@ -55,130 +55,29 @@ class Request < ApplicationRecord
 
   def push_to_git
     path = File.join Rails.root, 'public', 'puppet_script_temp'
-    FileUtils.mkdir_p(path) unless File.exist?(path)
+
     begin
-      message = write_to_git(path)
+      message = GitHelper.write_to_repository(path, name) do |git_writer|
+        git_writer.write_file('Name/' + "node_#{name}.pp", generate_puppet_node_script)
+        git_writer.write_file('Node/' + "#{name}.pp", generate_puppet_name_script)
+      end
       { notice: message }
     rescue Git::GitExecuteError
       { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
-    ensure
-      FileUtils.rm_rf(path) if File.exist?(path)
     end
-  end
-
-  def write_to_git(path)
-    git = setup_git(path)
-    write_files(git, path)
-    message = perform_git_action(git)
-    message
   end
 
   def generate_puppet_node_script
-    puppet_string = <<~NODE_SCRIPT
-      class node_vm-%s {
-              $admins = [%s]
-              $users = [%s]
-
-              realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-              realize(Accounts::Virtual[$users])
-      }
-    NODE_SCRIPT
-    admins_string, users_string = generate_users
-    format(puppet_string, name, admins_string, users_string)
+    admin_users = users_assigned_to_requests.select(&:sudo).to_a
+    admin_users.map!(&:user)
+    Puppetscript.node_script(name, admin_users, users.to_a)
   end
 
   def generate_puppet_name_script
-    puppet_script = <<~NAME_SCRIPT
-      node \'vm-%s\'{
-
-          if defined( node_vm-%s) {
-                      class { node_vm-%s: }
-          }
-      }
-    NAME_SCRIPT
-    format(puppet_script, name, name, name)
+    Puppetscript.name_script(name)
   end
 
   private
-
-  def generate_users
-    admin_users = users_assigned_to_requests.select(&:sudo).to_a
-    admin_users.map!(&:user)
-    [generate_user_array(admin_users), generate_user_array(users.to_a)]
-  end
-
-  def generate_user_array(users)
-    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
-    users.join(', ')
-  end
-
-  # Clones and configures a git repository on dir.
-  def setup_git(path)
-    # Dir.mkdir(dir) unless File.exists?(dir)
-    uri = ENV['GIT_REPOSITORY_URL']
-    name = ENV['GIT_REPOSITORY_NAME']
-
-    git = Git.clone(uri, name, path: path)
-    git.config('user.name', ENV['GITHUB_USER_NAME'])
-    git.config('user.email', ENV['GITHUB_USER_EMAIL'])
-    git
-  end
-
-  def write_files(git, path)
-    node_script = write_node_script(path)
-    git.add(node_script)
-    name_script = write_name_script(path)
-    git.add(name_script)
-    change_init_script
-  end
-
-  # Creates node_vmname.pp. If file exists, overwrite file with potentially newer content
-  def write_node_script(path)
-    puppet_string = generate_puppet_node_script
-    path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Node', node_script_filename
-    File.delete(path) if File.exist?(path)
-    File.open(path, 'w') { |f| f.write(puppet_string) }
-    path
-  end
-
-  # TODO: file not yet created
-  # Creates vmname.pp
-  def write_name_script(path)
-    puppet_string = generate_puppet_name_script
-    path = File.join path, ENV['GIT_REPOSITORY_NAME'], 'Name', name_script_filename
-    File.delete(path) if File.exist?(path)
-    File.open(path, 'w') { |f| f.write(puppet_string) }
-    path
-  end
-
-  # TODO: logic to change init.pp for new users
-  # Adapts init.pp for potential new users
-  def change_init_script; end
-
-  def node_script_filename
-    "node_#{name}.pp"
-  end
-
-  def name_script_filename
-    "#{name}.pp"
-  end
-
-  def perform_git_action(git)
-    if !git.status.added.empty?
-      commit_and_push(git, 'Add ' + node_script_filename)
-      'Added file and pushed to git.'
-    elsif !git.status.changed.empty?
-      commit_and_push(git, 'Update ' + node_script_filename)
-      'Changed file and pushed to git.'
-    else
-      'Already up to date.'
-    end
-  end
-
-  def commit_and_push(git, message)
-    git.commit_all(message)
-    git.push
-  end
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
