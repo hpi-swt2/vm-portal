@@ -11,7 +11,7 @@ html, body {
 }
 
 .page-container {
-  margin: 50px 0px 0px 50px;
+  margin: 50px 0 0 50px;
   width: calc(100% - 100px);
 }
 
@@ -59,11 +59,11 @@ body {
 .small-btn {
   height: auto;
   width: 100%;
-  padding: 3px 0 3px 0;
+  padding: 3px 0 3px;
 }
 
 .dropdown-menu {
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   width: auto;
 }
 
@@ -75,7 +75,7 @@ body {
 .table-bar {
   width: auto;
   border: 0;
-  margin: 1.5em 0 1em 0;
+  margin: 1.5em 0 1em;
 
   td {
     padding-right: 20px;
