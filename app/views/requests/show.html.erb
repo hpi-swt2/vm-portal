@@ -68,31 +68,9 @@
           <p><%= userAtRequest.user.email %></p>
         <% end %>
       </td>
-    </tr>
+    </tr>  
   </tbody>
 </table>
-
-<p>
-  <strong>Users with sudo rights:</strong>
-  <ul>
-    <% @request.sudo_user_assignments.each do |assignment| %>
-      <p>
-        <li><%= assignment.user.email %></li>
-      </p>
-  <% end %>
-  </ul>
-</p>
-
-<p>
-  <strong>Users:</strong>
-  <ul>
-    <% @request.non_sudo_user_assignments.each do |assignment| %>
-        <p>
-          <li><%= assignment.user.email %></li>
-        </p>
-    <% end %>
-  </ul>
-</p>
 
 <% if @request.rejected? %>
   <p>
@@ -122,6 +100,4 @@
       </div>
     <% end %>
   </div>
-<% end %>
-
 <% end %>

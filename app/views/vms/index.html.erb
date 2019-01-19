@@ -11,7 +11,7 @@
       <td>
         <%=link_to(fa_icon('plus'),
         {controller: :vms, action: 'new'},
-        method: :get, class: 'btn btn-primary') %>
+        method: :get, class: 'btn btn-primary', id: 'createNewVMButton') %>
       </td>
       <% end %>
       <td>
@@ -36,7 +36,7 @@
       <td>
         <%= link_to "Requests",
           {controller: :requests, action: 'index'},
-          method: :get, class: "btn btn-primary" %>
+          method: :get, class: 'btn btn-primary', id: 'requestsButton' %>
       </td>
       <% end %>
     </tr></tbody></table>

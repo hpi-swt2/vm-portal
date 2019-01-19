@@ -80,11 +80,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :user }
 
     it 'does not link to new vm page' do
-      expect(rendered).not_to have_button('New')
+      expect(rendered).not_to have_link(id: 'createNewVMButton')
     end
 
     it 'does not link to requests overview page' do
-      expect(rendered).not_to have_button('Requests')
+      expect(rendered).not_to have_link(id: 'requestsButton')
     end
   end
 
@@ -92,11 +92,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New')
+      expect(rendered).to have_link(id: 'createNewVMButton')
     end
 
     it 'links to requests overview page' do
-      expect(rendered).to have_button('Requests')
+      expect(rendered).to have_link(id: 'requestsButton')
     end
   end
 
@@ -104,11 +104,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :admin }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New')
+      expect(rendered).to have_link(id: 'createNewVMButton')
     end
 
     it 'links to requests overview page' do
-      expect(rendered).to have_button('Requests')
+      expect(rendered).to have_link(id: 'requestsButton')
     end
   end
 end
