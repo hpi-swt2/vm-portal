@@ -164,10 +164,10 @@ RSpec.describe Request, type: :model do
     it 'returns correct declaration script for a given request' do
       script = @request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
-        node \'vm-MyVM\'{
+        node \'$MyVM\'{
 
-            if defined( node_vm-MyVM) {
-                        class { node_vm-MyVM: }
+            if defined( node_$MyVM) {
+                        class { node_$MyVM: }
             }
         }
       NAME_SCRIPT
@@ -177,7 +177,7 @@ RSpec.describe Request, type: :model do
     it 'returns correct initialization script for a given request' do
       script = @request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
-        class node_vm-MyVM {
+        class node_$MyVM {
                 $admins = []
                 $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
 
