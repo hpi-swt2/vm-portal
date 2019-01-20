@@ -1,34 +1,26 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/index.html.erb', type: :view do
   let(:mock_vms) do
-    [{
-      name: 'My insanely cool vm',
-      state: true,
-      boot_time: 'Yesterday',
-      vmwaretools: true
-    }, {
-      name: 'Another VM',
-      state: false,
-      boot_time: 'Friday',
-      vmwaretools: true
-    }]
+    [v_sphere_vm_mock('My insanely cool vm',
+                      power_state: 'poweredOn',
+                      vm_ware_tools: 'toolsInstalled'),
+     v_sphere_vm_mock('Another VM',
+                      power_state: 'poweredOff',
+                      boot_time: 'Friday',
+                      vm_ware_tools: 'toolsInstalled')]
   end
 
   let(:mock_vms_without_tools) do
-    [{
-      name: 'My insanely cool vm',
-      state: true,
-      boot_time: 'Yesterday',
-      vmwaretools: false
-    }, {
-      name: 'Another VM',
-      state: false,
-      boot_time: 'Friday',
-      vmwaretools: false
-    }]
+    [v_sphere_vm_mock('My insanely cool vm',
+                      vm_ware_tools: 'toolsNotInstalled'),
+     v_sphere_vm_mock('Another VM',
+                      power_state: 'poweredOff',
+                      boot_time: 'Friday',
+                      vm_ware_tools: 'toolsNotInstalled')]
   end
 
   let(:param) do
@@ -48,18 +40,18 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   it 'renders the vm names' do
     mock_vms.each do |vm|
-      expect(rendered).to include vm[:name]
+      expect(rendered).to include vm.name
     end
   end
 
   it 'renders the boot times' do
-    expect(rendered).to include mock_vms[0][:boot_time]
-    expect(rendered).not_to include mock_vms[1][:boot_time]
+    expect(rendered).to include mock_vms.first.boot_time
+    expect(rendered).not_to include mock_vms.second.boot_time
   end
 
   it 'links to vm detail pages' do
     mock_vms.each do |vm|
-      expect(rendered).to have_link(vm[:name])
+      expect(rendered).to have_link(vm.name)
     end
   end
 

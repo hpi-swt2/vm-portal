@@ -40,11 +40,11 @@ RSpec.describe VmApi do
   end
 
   describe 'all_vms' do
-    subject { api.all_vms }
+    subject { api.all_vm_infos }
 
     let(:vm_folder_mock) do
       mock = double
-      expect(mock).to receive(:children).and_return([])
+      allow(mock).to receive(:children).and_return([])
       mock
     end
 
@@ -71,14 +71,14 @@ RSpec.describe VmApi do
 
     let(:cluster_mock) do
       mock = double
-      expect(mock).to receive(:host).and_return([host_mock])
+      allow(mock).to receive(:host).and_return([host_mock])
       mock
     end
 
     let(:host_mock) do
       mock = double
-      expect(mock).to receive(:vm).and_return([vm_mock])
-      expect(mock).to receive(:name).and_return('a name')
+      allow(mock).to receive(:vm).and_return([vm_mock])
+      allow(mock).to receive(:name).and_return('a name')
       allow(mock).to receive_message_chain(:hardware, :systemInfo, :vendor).and_return('name')
       allow(mock).to receive_message_chain(:hardware, :systemInfo, :model).and_return('brot')
       allow(mock).to receive_message_chain(:runtime, :bootTime).and_return('101010')
@@ -89,7 +89,7 @@ RSpec.describe VmApi do
 
     let(:vm_mock) do
       mock = double
-      expect(mock).to receive(:name).and_return(vm)
+      allow(mock).to receive(:name).and_return(vm)
       allow(mock).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
       mock
     end
