@@ -41,6 +41,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
+    params[:request][:name] = replace_whitespaces(params[:request][:name])
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -56,6 +57,7 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1
   # PATCH/PUT /requests/1.json
   def update
+    params[:request][:name] = replace_whitespaces(params[:request][:name])
     respond_to do |format|
       if @request.update(request_params)
         notify_request_update
@@ -134,7 +136,6 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params[:request][:name] = replace_whitespaces(params[:request][:name])
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
                                     :rejection_information, :status, user_ids: [], sudo_user_ids: [])
