@@ -6,11 +6,11 @@ module GitHelper
     git_writer = GitWriter.new(path, name)
     begin
       yield git_writer
+      message = git_writer.save
+      message
     ensure
       FileUtils.rm_rf(path) if File.exist?(path)
     end
-    message = git_writer.save
-    message
   end
 
   class GitWriter

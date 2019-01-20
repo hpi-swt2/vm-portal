@@ -58,12 +58,12 @@ class Request < ApplicationRecord
 
     begin
       message = GitHelper.write_to_repository(path, name) do |git_writer|
-        git_writer.write_file('Name/' + "node_#{name}.pp", generate_puppet_node_script)
-        git_writer.write_file('Node/' + "#{name}.pp", generate_puppet_name_script)
+        git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
+        git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
       end
       { notice: message }
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+    #rescue Git::GitExecuteError
+     # { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 
