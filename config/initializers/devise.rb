@@ -296,9 +296,9 @@ Devise.setup do |config|
                     port: 443,
                     scheme: 'https',
                     host: 'oidc.hpi.de',
-                    identifier: ENV['client_id'],
-                    secret: ENV['client_secret'],
-                    redirect_uri: ENV['redirect_uri'],
+                    identifier: Rails.application.credentials.hpi_openid.try(:client_id),
+                    secret: Rails.application.credentials.hpi_openid.try(:client_secret),
+                    redirect_uri: Rails.application.credentials.hpi_openid.try(:redirect_uri),
                     authorization_endpoint: '/auth'
                   },
                   client_auth_method: :other,

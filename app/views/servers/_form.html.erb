@@ -15,10 +15,22 @@
     <%= form.label :name %>
     <%= form.text_field :name, class: 'form-control' %>
   </div>
+  <div class="field">
+    <%= form.label :description, "Description" %>
+    <%= form.text_field :description, class: 'form-control' %>
+  </div>
 
   <div class="field">
     <h5>Hardware Information</h5>
   </div>
+      <div class="field">
+        <%= form.label :vendor, "Vendor" %>
+        <%= form.text_field :vendor, class: 'form-control' %>
+      </div>
+      <div class="field">
+        <%= form.label :model, "Model" %>
+        <%= form.text_field :model, class: 'form-control' %>
+      </div>
 
       <div class="field">
         <%= form.label :cpu_cores, "CPU cores" %>
@@ -26,13 +38,13 @@
       </div>
 
       <div class="field">
-        <%= form.label :ram_mb, "RAM in MB" %>
-        <%= form.number_field :ram_mb, min: 0, class: 'form-control' %>
+        <%= form.label :ram_gb, "RAM in GB" %>
+        <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
       </div>
 
       <div class="field">
-        <%= form.label :storage_mb, "Storage in MB" %>
-        <%= form.number_field :storage_mb, min: 0, class: 'form-control' %>
+        <%= form.label :storage_gb, "Storage in GB" %>
+        <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
       </div>
 
   <div class="field">

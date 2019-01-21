@@ -15,10 +15,15 @@ class ApplicationController < ActionController::Base
     root_path
   end
 
-  rescue_from Net::OpenTimeout, Errno::ENETUNREACH, Errno::EHOSTUNREACH, with: :error_render_method
+  rescue_from Net::OpenTimeout, Errno::ENETUNREACH, Errno::EHOSTUNREACH, with: :render_timeout
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
-  def error_render_method
+  def render_timeout
     render(template: 'errors/timeout', status: 408) && return
+  end
+
+  def render_not_found
+    render(template: 'errors/not_found', status: 404) && return
   end
 
   def authenticate_employee
