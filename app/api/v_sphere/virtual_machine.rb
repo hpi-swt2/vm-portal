@@ -172,6 +172,15 @@ module VSphere
       end
     end
 
+    def root_users
+      request = Request.accepted.find { |each| name == each.name }
+      if request
+        Request.first.users_assigned_to_requests.select(&:sudo).map(&:user)
+      else
+        []
+      end
+    end
+
     def belongs_to(user)
       users.include? user
     end
