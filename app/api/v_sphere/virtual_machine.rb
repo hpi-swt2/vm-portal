@@ -114,11 +114,11 @@ module VSphere
 
     # Reviving
     def pending_reviving?
-      pending_revive_folder.vms.any? { |vm| vm.equal? self }
+      pending_revivings_folder.vms.any? { |vm| vm.equal? self }
     end
 
     def set_pending_reviving
-      move_into pending_revive_folder
+      move_into pending_revivings_folder
     end
 
     def set_revived
@@ -177,7 +177,7 @@ module VSphere
       ensure_root_subfolder('Pending archivings')
     end
 
-    def pending_revivings
+    def pending_revivings_folder
       ensure_root_subfolder('Pending revivings')
     end
   end

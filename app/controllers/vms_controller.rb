@@ -52,7 +52,7 @@ class VmsController < ApplicationController
   end
 
   def request_vm_revive
-    @vm = VSphere::VirtualMachine.find_by_name(params[:vm_name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm.archived? # Todo: add pending revive
 
     User.admin.each do |each|
