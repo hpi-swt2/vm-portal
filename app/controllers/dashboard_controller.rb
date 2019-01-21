@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-require 'vmapi.rb'
+require './app/api/v_sphere/virtual_machine'
+require './app/api/v_sphere/host'
+
 class DashboardController < ApplicationController
   attr_reader :vms, :hosts, :notifications
 
   def index
     redirect_to '/users/sign_in' if current_user.nil?
-    @vms = VmApi.instance.all_vm_infos
-    @hosts = VmApi.instance.all_hosts
+    @vms = VSphere::VirtualMachine.all
+    @hosts = VSphere::Host.all
     @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
   end
 
