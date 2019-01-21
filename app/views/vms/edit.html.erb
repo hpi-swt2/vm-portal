@@ -1,2 +1,25 @@
 <h1>Edit VM information of <%= @vm[:name] %></h1>
 <p>Find me in app/views/vms/edit.html.erb</p>
+
+<ul>
+    <% @users.each do |user| %>
+        <li><%= user %></li>
+    <% end %>
+</ul>
+
+<%= @users %>
+
+<%= form_with(local: true) do |form| %>
+<div class="field">
+    <p>Users with sudo rights:</p>
+    <%= form.select 'sudo_user_ids',
+                    options_from_collection_for_select(User.all,
+                                                     :id,
+                                                     :email,
+                                                     @users),
+                    {},
+                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
+</div>
+<% end %>
+
+<p>Rendering new edit page </p>

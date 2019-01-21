@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
+require './app/api/v_sphere/virtual_machine'
+
 class VmsController < ApplicationController
   attr_reader :vms
 
@@ -34,6 +36,7 @@ class VmsController < ApplicationController
 
   def edit
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    @users = VSphere::VirtualMachine.find_by_name(@vm[:name]).users
   end
 
   def request_vm_archivation
