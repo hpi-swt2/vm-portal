@@ -15,5 +15,9 @@ Metrics/ClassLength:
   Exclude:
     - 'app/controllers/**/*.rb'
 
+RSpec/NamedSubject:
+  Enabled: false
+
+
 Documentation:
   Enabled: false

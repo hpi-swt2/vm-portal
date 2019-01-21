@@ -80,23 +80,40 @@ RSpec.describe VmsController, type: :controller do
         expect(subject.vms.size).to be VSphere::VirtualMachine.all.size
       end
 
-      it 'returns online VMs if requested' do
-        get :index, params: { up_vms: 'true' }
-        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any?(&:powered_on?) }
-        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm.powered_on? } }
+      context 'when requesting online vms' do
+        before do
+          get :index, params: { up_vms: 'true' }
+        end
+
+        it 'returns online VMs if requested' do
+          expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any?(&:powered_on?) }
+        end
+
+        it 'does not return not online vms' do
+          expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_on? } }
+        end
       end
 
-      it 'returns offline VMs if requested' do
-        get :index, params: { down_vms: 'true' }
-        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any?(&:powered_off?) }
-        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_off? } }
+      context 'when requesting offline vms' do
+        before do
+          get :index, params: { down_vms: 'true' }
+        end
+
+        it 'returns offline VMs' do
+          expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any?(&:powered_off?) }
+        end
+
+        it 'does not return not offline vms' do
+          expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_off? } }
+        end
       end
     end
   end
 
   describe 'POST #create' do
+    let(:double_api) { double }
+
     before do
-      double_api = double
       allow(double_api).to receive(:create_vm)
       allow(VmApi).to receive(:instance).and_return double_api
     end
