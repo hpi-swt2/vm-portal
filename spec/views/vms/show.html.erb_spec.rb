@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# TODO: klären, inwieweit View tests gemacht werden sollen
+# TODO: check, to which degree view tests should be created
 
 require 'rails_helper'
 require './spec/api/v_sphere_api_mocker'
@@ -17,13 +17,13 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   let(:vm_on_without_tools) do
-  v_sphere_vm_mock(
+    v_sphere_vm_mock(
       'VM',
       power_state: 'poweredOn',
       boot_time: Time.current,
       guest_heartbeat_status: 'green',
       vm_ware_tools: 'toolsNotInstalled'
-  )
+    )
   end
 
   let(:vm_off) do
@@ -130,13 +130,15 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       it 'demands confirmation on critical actions' do
         expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on.name)}'][data-confirm='Are you sure?']")
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'shutdown_guest_os', id: vm_on.name)}'][data-confirm='Are you sure?']"
-                            )
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reboot_guest_os', id: vm_on.name)}'][data-confirm='Are you sure?']")
+          "a[href='#{url_for(controller: :vms, action: 'shutdown_guest_os', id: vm_on.name)}'][data-confirm='Are you sure?']"
+        )
+        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms,
+                                                             action: 'reboot_guest_os',
+                                                             id: vm_on.name)}'][data-confirm='Are you sure?']")
         expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on.name)}'][data-confirm='Are you sure?']")
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on.name)}'][data-confirm='Are you sure?']"
-                            )
+          "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on.name)}'][data-confirm='Are you sure?']"
+        )
         expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on.name)}'][data-confirm='Are you sure?']")
       end
 
@@ -182,17 +184,17 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
       it 'demands confirmation on critical actions' do
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-                            )
+          "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
+        )
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-                            )
+          "a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
+        )
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-                            )
+          "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
+        )
         expect(rendered).to have_selector(
-                                "a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-                            )
+          "a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
+        )
       end
     end
 
