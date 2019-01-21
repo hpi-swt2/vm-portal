@@ -41,7 +41,6 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request] && params[:request][:name]
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -131,6 +130,7 @@ class RequestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
+    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request] && params[:request][:name]
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
                                     :rejection_information, :status, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
