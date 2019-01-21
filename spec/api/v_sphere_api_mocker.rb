@@ -50,6 +50,7 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def vim_vm_summary_mock
   summary_double = double
   allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
@@ -66,6 +67,7 @@ def vim_vm_summary_mock
   allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
   summary_double
 end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 # rubocop:disable Metrics/AbcSize
 def vim_vm_mock(
@@ -74,7 +76,7 @@ def vim_vm_mock(
     vm_ware_tools: 'toolsNotInstalled',
     boot_time: 'Yesterday',
     guest_heartbeat_status: 'green'
-)
+  )
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:is_a?).and_return false
@@ -94,13 +96,12 @@ def v_sphere_vm_mock(
     vm_ware_tools: 'toolsNotInstalled',
     boot_time: 'Yesterday',
     guest_heartbeat_status: 'green'
-)
+  )
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
                                           boot_time: boot_time,
-                                          guest_heartbeat_status: guest_heartbeat_status,
-                              )
+                                          guest_heartbeat_status: guest_heartbeat_status)
 end
 
 def vim_host_mock(name)
