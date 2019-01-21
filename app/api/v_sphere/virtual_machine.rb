@@ -143,6 +143,16 @@ module VSphere
       end
     end
 
+    def belongs_to(user)
+      request = Request.accepted.find { |each| name == each.name }
+      if request
+        request.users.include? user
+      else
+        false
+      end
+
+    end
+
     # We cannot use Object identity to check if to Virtual Machine objects are equal
     # because they are created on demand and to Virtual Machine objects can wrap the same vSphere VM.
     # Therefore we must use another method of comparing equality.

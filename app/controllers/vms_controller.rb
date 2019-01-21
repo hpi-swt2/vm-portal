@@ -10,8 +10,8 @@ class VmsController < ApplicationController
 
   # Todo: use one request to the vm and filter them afterwarts instead of request all seperately
   def index
-    vms = filter(current_user.admin? ? VSphere::VirtualMachine.all : current_user.vms)
-    split_into_categories vms
+    initialize_vm_categories
+    filter_vm_categories current_user unless current_user.admin?
     @parameters = determine_params
   end
 
@@ -83,7 +83,7 @@ class VmsController < ApplicationController
     @vm.set_revived
     @vm.power_on
 
-    @vm.users.each do | each |
+    @vm.users.each do |each|
       each.notify("VM #{@vm.name} has been revived", url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
@@ -131,6 +131,13 @@ class VmsController < ApplicationController
     @archived_vms = VSphere::VirtualMachine.archived
     @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
     @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
+  end
+
+  def filter_vm_categories(user)
+    @vms = @vms.select { |each| each.belongs_to user }
+    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
+    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
   end
 
   def split_into_categories(vms)
