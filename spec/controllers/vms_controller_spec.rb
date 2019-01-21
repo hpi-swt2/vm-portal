@@ -116,6 +116,7 @@ RSpec.describe VmsController, type: :controller do
     before do
       allow(double_api).to receive(:create_vm)
       allow(VmApi).to receive(:instance).and_return double_api
+      post :create, params: { name: 'My insanely cool vm', ram: '1024', capacity: '10000', cpu: 2 }
     end
 
     it 'has received create_vm' do
@@ -123,7 +124,6 @@ RSpec.describe VmsController, type: :controller do
     end
 
     it 'returns http success' do
-      post :create, params: { name: 'My insanely cool vm', ram: '1024', capacity: '10000', cpu: 2 }
       expect(response).to redirect_to(vms_path)
     end
   end

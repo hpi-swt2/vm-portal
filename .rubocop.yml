@@ -18,6 +18,5 @@ Metrics/ClassLength:
 RSpec/NamedSubject:
   Enabled: false
 
-
 Documentation:
   Enabled: false
