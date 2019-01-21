@@ -50,22 +50,43 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday') # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize
+def vim_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green',
+    summary: 'Some Summary'
+)
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
-  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
+  allow(vm).to receive(:guestHeartbeatStatus).and_return guest_heartbeat_status
+  allow(vm).to receive(:summary).and_return summary
+  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   vm
 end
+# rubocop:enable Metrics/AbcSize
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday')
+def v_sphere_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green',
+    summary: 'Some Summary'
+)
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
-                                          boot_time: boot_time)
+                                          boot_time: boot_time,
+                                          guest_heartbeat_status: guest_heartbeat_status,
+                                          summary: summary
+                              )
 end
 
 def vim_host_mock(name)
@@ -78,7 +99,8 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize
+def vim_cluster_mock(name, hosts)
   hosts = extract_vim_objects hosts
   cluster = double
   allow(cluster).to receive(:is_a?).and_return false
@@ -87,6 +109,7 @@ def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
   allow(cluster).to receive(:name).and_return name
   cluster
 end
+# rubocop:enable Metrics/AbcSize
 
 def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)

@@ -33,7 +33,7 @@ end %>
                         {controller: :vms, action: 'reset_vm', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
             <%= link_to 'Power Off',
                         {controller: :vms, action: 'change_power_state', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
-  
+
             <% if @vm.vm_ware_tools? %>
               <div class="dropdown-divider"></div>
               <%= link_to 'Shutdown Guest OS',
