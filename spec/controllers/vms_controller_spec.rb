@@ -11,9 +11,13 @@ RSpec.describe VmsController, type: :controller do
     sign_in current_user
   end
 
+  let(:vm1) do
+    v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+  end
+
   describe 'GET #index' do
     before do
-      vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+      vm1
 
       # associate vm2 with the user
       request = FactoryBot.create :accepted_request
@@ -88,20 +92,6 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
-    before do
-      double_api = double
-      expect(double_api).to receive(:delete_vm)
-      allow(VmApi).to receive(:instance).and_return double_api
-    end
-
-    it 'returns http success' do
-      delete :destroy, params: { id: 'my insanely cool vm' }
-      expect(response).to have_http_status(:success)
-      skip
-    end
-  end
-
   describe 'POST #create' do
     before do
       double_api = double
@@ -127,151 +117,233 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:double_api) do
-      double
-    end
+    context 'when vm is found' do
+      before do
+        allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      end
 
-    before do
-      @vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true }
-      allow(double_api).to receive(:user_vms).and_return [@vm1]
-      allow(VmApi).to receive(:instance).and_return double_api
-    end
+      context 'when current user is user' do
+        context 'when user is associated to vm' do
+          before do
+            FactoryBot.create :accepted_request, name: vm1.name, users: [current_user]
+          end
 
-    it 'returns http success or timeout or not found' do
-      allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-      get :show, params: { id: 1 }
-      expect(response).to have_http_status(:success).or have_http_status(408)
-    end
-
-    context 'when current user is user' do
-      context 'when user is associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
+          it 'renders show page' do
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
+          end
         end
 
-        it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+        context 'when user is not associated to vm' do
+
+          it 'redirects' do
+            get :show, params: { id: vm1.name }
+            expect(response).to have_http_status (:redirect)
+          end
         end
       end
 
-      context 'when user is not associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return({})
+      context 'when current user is admin' do
+        let(:current_user) { FactoryBot.create :admin }
+
+        context 'when user is associated to vm' do
+          before do
+            FactoryBot.create :accepted_request, name: vm1.name, users: [current_user]
+          end
+
+          it 'renders show page' do
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
+          end
         end
 
-        it 'redirects' do
-          get :show, params: { id: 1 }
-          expect(response).to have_http_status 302
-        end
-      end
-    end
+        context 'when user is not associated to vm' do
 
-    context 'when current user is admin' do
-      context 'when user is associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-        end
-
-        it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
-        end
-      end
-
-      context 'when user is not associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-        end
-
-        it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+          it 'renders show page' do
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
+          end
         end
       end
     end
 
-    it 'returns http status not found when no vm found' do
-      allow(double_api).to receive(:get_vm_info).and_return(nil)
-      get :show, params: { id: 5 }
-      expect(response).to have_http_status(:not_found)
-    end
+    context 'when no vm found' do
+      before do
+        allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return nil
+      end
 
-    it 'renders not found page when no vm found' do
-      allow(double_api).to receive(:get_vm_info).and_return(nil)
-      expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
+      it 'returns http status not found when no vm found' do
+        get :show, params: { id: 5 }
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'renders not found page when no vm found' do
+        expect(get(:show, params: { id: vm1.name })).to render_template('errors/not_found')
+      end
     end
   end
 
+  let(:old_path) { 'old_path' }
+
+  def set_old_path
+    request.env['HTTP_REFERER'] = 'old_path' unless request.nil? || request.env.nil?
+  end
+
+
   describe 'POST #change_power_state' do
     before do
-      double_api = double
-      expect(double_api).to receive(:change_power_state)
-      allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm_info).and_return({})
-      request.env['HTTP_REFERER'] = 'where_i_came_from' unless request.nil? || request.env.nil?
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      set_old_path
     end
 
-    it 'returns http success and redirects to previous location' do
-      post :change_power_state, params: { id: 0 }
-      expect(response).to redirect_to('where_i_came_from')
+    context 'when the current_user is a root_user' do
+      before do
+        vm_request = FactoryBot.create :accepted_request, name: vm1.name
+        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        expect(vm1).to receive(:change_power_state)
+        post :change_power_state, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to the path the user came from' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is not a root_user' do
+      before do
+        post :change_power_state, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to vms_path' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(vms_path)
+      end
     end
   end
 
   describe 'POST #suspend_vm' do
     before do
-      double_api = double
-      expect(double_api).to receive(:suspend_vm)
-      allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm_info).and_return({})
-      request.env['HTTP_REFERER'] = 'where_i_came_from' unless request.nil? || request.env.nil?
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      set_old_path
     end
 
-    it 'returns http success and redirects to previous location' do
-      post :suspend_vm, params: { id: 0 }
-      expect(response).to redirect_to('where_i_came_from')
+    context 'when the current_user is a root_user' do
+      before do
+        vm_request = FactoryBot.create :accepted_request, name: vm1.name
+        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        expect(vm1).to receive(:suspend_vm)
+        post :suspend_vm, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to the path the user came from' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is not a root_user' do
+      before do
+        post :suspend_vm, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to vms_path' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(vms_path)
+      end
     end
   end
 
   describe 'POST #shutdown_guest_os' do
     before do
-      double_api = double
-      expect(double_api).to receive(:shutdown_guest_os)
-      allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm_info).and_return({})
-      request.env['HTTP_REFERER'] = 'where_i_came_from' unless request.nil? || request.env.nil?
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      set_old_path
     end
 
-    it 'returns http success and redirects to previous location' do
-      post :shutdown_guest_os, params: { id: 0 }
-      expect(response).to redirect_to('where_i_came_from')
+    context 'when the current_user is a root_user' do
+      before do
+        vm_request = FactoryBot.create :accepted_request, name: vm1.name
+        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        expect(vm1).to receive(:shutdown_guest_os)
+        post :shutdown_guest_os, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to the path the user came from' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is not a root_user' do
+      before do
+        post :shutdown_guest_os, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to vms_path' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(vms_path)
+      end
     end
   end
 
   describe 'POST #reboot_guest_os' do
     before do
-      double_api = double
-      expect(double_api).to receive(:reboot_guest_os)
-      allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm_info).and_return({})
-      request.env['HTTP_REFERER'] = 'where_i_came_from' unless request.nil? || request.env.nil?
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      set_old_path
     end
 
-    it 'returns http success and redirects to previous location' do
-      post :reboot_guest_os, params: { id: 0 }
-      expect(response).to redirect_to('where_i_came_from')
+    context 'when the current_user is a root_user' do
+      before do
+        vm_request = FactoryBot.create :accepted_request, name: vm1.name
+        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        expect(vm1).to receive(:reboot_guest_os)
+        post :reboot_guest_os, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to the path the user came from' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is not a root_user' do
+      before do
+        post :reboot_guest_os, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to vms_path' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(vms_path)
+      end
     end
   end
 
   describe 'POST #reset_vm' do
     before do
-      double_api = double
-      expect(double_api).to receive(:reset_vm)
-      allow(VmApi).to receive(:instance).and_return double_api
-      allow(double_api).to receive(:get_vm_info).and_return({})
-      request.env['HTTP_REFERER'] = 'where_i_came_from' unless request.nil? || request.env.nil?
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      set_old_path
     end
 
-    it 'returns http success and redirects to previous location' do
-      post :reset_vm, params: { id: 0 }
-      expect(response).to redirect_to('where_i_came_from')
+    context 'when the current_user is a root_user' do
+      before do
+        vm_request = FactoryBot.create :accepted_request, name: vm1.name
+        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        expect(vm1).to receive(:reset_vm)
+        post :reset_vm, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to the path the user came from' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is not a root_user' do
+      before do
+        post :reset_vm, params: { id: vm1.name }
+      end
+
+      it 'returns http redirect and redirects to vms_path' do
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(vms_path)
+      end
     end
   end
 end

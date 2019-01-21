@@ -6,30 +6,12 @@ require 'rails_helper'
 require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/show.html.erb', type: :view do
-  let(:summary) do
-    summary_double = double
-    allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
-    allow(summary_double).to receive_message_chain(:storage, :uncommitted).and_return(100)
-    allow(summary_double).to receive_message_chain(:config, :guestId).and_return('Win10')
-    allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
-    allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
-    allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
-    allow(summary_double).to receive_message_chain(:config, :cpuReservation).and_return(100)
-    allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
-    allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
-    allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
-    allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
-    allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
-    summary_double
-  end
-
   let(:vm_on) do
     v_sphere_vm_mock(
       'VM',
       power_state: 'poweredOn',
       boot_time: Time.current,
       guest_heartbeat_status: 'green',
-      summary: summary,
       vm_ware_tools: 'toolsInstalled'
     )
   end
@@ -40,7 +22,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       power_state: 'poweredOn',
       boot_time: Time.current,
       guest_heartbeat_status: 'green',
-      summary: summary,
       vm_ware_tools: 'toolsNotInstalled'
   )
   end
@@ -51,7 +32,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       power_state: 'poweredOff',
       boot_time: Time.current,
       guest_heartbeat_status: 'green',
-      summary: summary,
       vm_ware_tools: 'toolsInstalled'
     )
   end
@@ -81,7 +61,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'does not shows vm OS when unknown' do
-    allow(summary).to receive_message_chain(:config, :guestFullName).and_return('Other (32-bit)')
+    allow(vm_on).to receive_message_chain(:summary, :config, :guestFullName).and_return('Other (32-bit)')
     expect(rendered).not_to include vm_on.summary.config.guestFullName
   end
 

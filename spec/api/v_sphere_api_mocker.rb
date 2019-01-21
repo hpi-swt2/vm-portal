@@ -50,14 +50,30 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
+def vim_vm_summary_mock
+  summary_double = double
+  allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
+  allow(summary_double).to receive_message_chain(:storage, :uncommitted).and_return(100)
+  allow(summary_double).to receive_message_chain(:config, :guestId).and_return('Win10')
+  allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
+  allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
+  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
+  allow(summary_double).to receive_message_chain(:config, :cpuReservation).and_return(100)
+  allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
+  allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
+  allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
+  allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
+  allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
+  summary_double
+end
+
 # rubocop:disable Metrics/AbcSize
 def vim_vm_mock(
     name,
     power_state: 'poweredOn',
     vm_ware_tools: 'toolsNotInstalled',
     boot_time: 'Yesterday',
-    guest_heartbeat_status: 'green',
-    summary: 'Some Summary'
+    guest_heartbeat_status: 'green'
 )
   vm = double
   allow(vm).to receive(:name).and_return(name)
@@ -66,7 +82,7 @@ def vim_vm_mock(
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
   allow(vm).to receive(:guestHeartbeatStatus).and_return guest_heartbeat_status
-  allow(vm).to receive(:summary).and_return summary
+  allow(vm).to receive(:summary).and_return vim_vm_summary_mock
   allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   vm
 end
@@ -77,15 +93,13 @@ def v_sphere_vm_mock(
     power_state: 'poweredOn',
     vm_ware_tools: 'toolsNotInstalled',
     boot_time: 'Yesterday',
-    guest_heartbeat_status: 'green',
-    summary: 'Some Summary'
+    guest_heartbeat_status: 'green'
 )
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
                                           boot_time: boot_time,
                                           guest_heartbeat_status: guest_heartbeat_status,
-                                          summary: summary
                               )
 end
 

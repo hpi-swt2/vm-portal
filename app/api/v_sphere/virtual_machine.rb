@@ -108,7 +108,15 @@ module VSphere
       @vm.runtime.powerState == 'poweredOff'
     end
 
-    # Power state
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
+    end
+
+      # Power state
     def power_on
       @vm.PowerOnVM_Task.wait_for_completion unless powered_on?
     end
