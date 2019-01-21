@@ -8,8 +8,24 @@ RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
 
   let(:vm1) do
-    v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock(
+      'My insanely cool vm',
+      power_state: 'poweredOn',
+      boot_time: 'Thursday',
+      vm_ware_tools: 'toolsInstalled'
+    )
   end
+
+  let(:vm2) do
+    v_sphere_vm_mock(
+      vm_request.name,
+      power_state: 'poweredOff',
+      boot_time: 'now',
+      vm_ware_tools: 'toolsInstalled'
+    )
+  end
+
+  let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
 
   let(:old_path) { 'old_path' }
 
@@ -19,14 +35,7 @@ RSpec.describe VmsController, type: :controller do
 
   describe 'GET #index' do
     before do
-      vm1
-
-      # associate vm2 with the user
-      request = FactoryBot.create :accepted_request
-      request.users << current_user
-      vm2 = v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
-
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [])
     end
 
     context 'when the current user is a user' do

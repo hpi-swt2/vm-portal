@@ -60,9 +60,11 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to include vm_on.summary.config.guestFullName
   end
 
-  it 'does not shows vm OS when unknown' do
-    allow(vm_on).to receive_message_chain(:summary, :config, :guestFullName).and_return('Other (32-bit)')
-    expect(rendered).not_to include vm_on.summary.config.guestFullName
+  context 'when the OS is unknown' do
+    it 'does not shows vms OS' do
+      allow(vm_on).to receive_message_chain(:summary, :config, :guestFullName).and_return('Other (32-bit)')
+      expect(rendered).not_to include vm_on.summary.config.guestFullName
+    end
   end
 
   it 'shows vm IP address' do
