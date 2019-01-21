@@ -64,6 +64,18 @@ module VSphere
       @vm.name
     end
 
+    def summary
+      @vm.summary
+    end
+
+    def host
+      @vm.summary.runtime.host.name
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
+    end
+
     # Guest OS communication
     def vm_ware_tools?
       @vm.guest.toolsStatus != 'toolsNotInstalled'
