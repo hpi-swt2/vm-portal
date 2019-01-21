@@ -59,7 +59,9 @@
     <td><%= vm.boot_time if vm.powered_on? %></td>
     <td>
       <%if current_user.admin? %>
-        <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
+        <% if allowed_to_be_archived?(vm) %>
+          <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
+        <% end %>
       <% else %>
         <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
       <% end %>

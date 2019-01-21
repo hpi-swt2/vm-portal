@@ -3,6 +3,7 @@
 require 'vmapi.rb'
 class VmsController < ApplicationController
   attr_reader :vms
+  helper_method :allowed_to_be_archived?
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
@@ -50,8 +51,18 @@ class VmsController < ApplicationController
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
+  def allowed_to_be_archived?(vm)
+    request = ArchivationRequest.find_by_name vm.name
+    if request
+      request.can_be_executed?
+    else
+      true
+    end
+  end
+
   def stop_archiving
     @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.set_revived
   end
 
   def archive_vm

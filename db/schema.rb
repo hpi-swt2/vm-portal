@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_18_134041) do
+ActiveRecord::Schema.define(version: 2019_01_21_210719) do
+
+  create_table "archivation_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -131,8 +137,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_134041) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end

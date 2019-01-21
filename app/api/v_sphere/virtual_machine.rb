@@ -104,6 +104,10 @@ module VSphere
       move_into archived_folder
     end
 
+    def set_revived
+      move_into root_folder
+    end
+
     # Utilities
     def move_into(folder)
       folder.move_here self
@@ -138,6 +142,10 @@ module VSphere
 
     def managed_folder_entry
       @vm
+    end
+
+    def root_folder
+      @v_sphere.root_folder
     end
 
     def archived_folder
