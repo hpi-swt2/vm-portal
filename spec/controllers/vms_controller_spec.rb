@@ -3,16 +3,18 @@
 require 'rails_helper'
 require './spec/api/v_sphere_api_mocker'
 
+# rubocop:disable RSpec/NestedGroups
 RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
 
-  before do
-    @request.env['devise.mapping'] = Devise.mappings[:user]
-    sign_in current_user
-  end
-
   let(:vm1) do
     v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+  end
+
+  let(:old_path) { 'old_path' }
+
+  before do
+    sign_in current_user
   end
 
   describe 'GET #index' do
@@ -95,8 +97,12 @@ RSpec.describe VmsController, type: :controller do
   describe 'POST #create' do
     before do
       double_api = double
-      expect(double_api).to receive(:create_vm)
+      allow(double_api).to receive(:create_vm)
       allow(VmApi).to receive(:instance).and_return double_api
+    end
+
+    it 'has received create_vm' do
+      expect(double_api).to have_received(:create_vm)
     end
 
     it 'returns http success' do
@@ -134,10 +140,9 @@ RSpec.describe VmsController, type: :controller do
         end
 
         context 'when user is not associated to vm' do
-
           it 'redirects' do
             get :show, params: { id: vm1.name }
-            expect(response).to have_http_status (:redirect)
+            expect(response).to have_http_status :redirect
           end
         end
       end
@@ -156,7 +161,6 @@ RSpec.describe VmsController, type: :controller do
         end
 
         context 'when user is not associated to vm' do
-
           it 'renders show page' do
             expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
@@ -180,12 +184,9 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  let(:old_path) { 'old_path' }
-
   def set_old_path
     request.env['HTTP_REFERER'] = 'old_path' unless request.nil? || request.env.nil?
   end
-
 
   describe 'POST #change_power_state' do
     before do
@@ -197,23 +198,33 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-        expect(vm1).to receive(:change_power_state)
+        allow(vm1).to receive(:change_power_state)
         post :change_power_state, params: { id: vm1.name }
       end
 
-      it 'returns http redirect and redirects to the path the user came from' do
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:change_power_state)
+      end
+
+      it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
         expect(response).to redirect_to(old_path)
       end
     end
 
     context 'when the current_user is not a root_user' do
       before do
-        post :change_power_state, params: { id: vm1.name }
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to vms_path' do
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -229,23 +240,33 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-        expect(vm1).to receive(:suspend_vm)
+        allow(vm1).to receive(:suspend_vm)
         post :suspend_vm, params: { id: vm1.name }
       end
 
-      it 'returns http redirect and redirects to the path the user came from' do
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:suspend_vm)
+      end
+
+      it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
         expect(response).to redirect_to(old_path)
       end
     end
 
     context 'when the current_user is not a root_user' do
       before do
-        post :suspend_vm, params: { id: vm1.name }
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to vms_path' do
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -261,23 +282,33 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-        expect(vm1).to receive(:shutdown_guest_os)
+        allow(vm1).to receive(:shutdown_guest_os)
         post :shutdown_guest_os, params: { id: vm1.name }
       end
 
-      it 'returns http redirect and redirects to the path the user came from' do
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:shutdown_guest_os)
+      end
+
+      it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
         expect(response).to redirect_to(old_path)
       end
     end
 
     context 'when the current_user is not a root_user' do
       before do
-        post :shutdown_guest_os, params: { id: vm1.name }
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to vms_path' do
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -293,23 +324,33 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-        expect(vm1).to receive(:reboot_guest_os)
+        allow(vm1).to receive(:reboot_guest_os)
         post :reboot_guest_os, params: { id: vm1.name }
       end
 
-      it 'returns http redirect and redirects to the path the user came from' do
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:reboot_guest_os)
+      end
+
+      it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
         expect(response).to redirect_to(old_path)
       end
     end
 
     context 'when the current_user is not a root_user' do
       before do
-        post :reboot_guest_os, params: { id: vm1.name }
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to vms_path' do
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -325,12 +366,19 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-        expect(vm1).to receive(:reset_vm)
+        allow(vm1).to receive(:reset_vm)
         post :reset_vm, params: { id: vm1.name }
       end
 
-      it 'returns http redirect and redirects to the path the user came from' do
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:reset_vm)
+      end
+
+      it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
         expect(response).to redirect_to(old_path)
       end
     end
@@ -342,8 +390,12 @@ RSpec.describe VmsController, type: :controller do
 
       it 'returns http redirect and redirects to vms_path' do
         expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to vms_path' do
         expect(response).to redirect_to(vms_path)
       end
     end
   end
 end
+# rubocop:enable RSpec/NestedGroups
