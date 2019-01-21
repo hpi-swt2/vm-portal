@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rbvmomi'
-require_relative 'connection.rb'
+require_relative 'connection'
 
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere

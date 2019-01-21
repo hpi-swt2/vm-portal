@@ -2,8 +2,9 @@
 
 require 'rbvmomi'
 require 'singleton'
-require_relative 'virtual_machine.rb'
-require_relative 'folder.rb'
+require_relative 'virtual_machine'
+require_relative 'folder'
+require_relative 'cluster'
 
 # This module is responsible for communicating with vSphere
 # It creates wrapper objects for Virtual Machines and Folders which allow easy access to all tasks and information
@@ -23,89 +24,25 @@ module VSphere
     API_SERVER_USER = 'administrator@swt.local'
     API_SERVER_PASSWORD = 'Vcsaswt"2018'
 
-    def create_vm(cpu, ram, capacity, name)
-      connect
-      vm_config = creation_config(cpu, ram, capacity, name)
-      vm = @vm_folder.CreateVM_Task(config: vm_config, pool: @resource_pool).wait_for_completion
-      VSphere::VirtualMachine.new(vm)
-    end
-
     def root_folder
       connect
 
       @vm_folder
     end
 
-    private
+    def clusters_folder
+      connect
 
-    def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength
-      {
-        name: name,
-        guestId: 'otherGuest',
-        files: { vmPathName: '[Datastore]' },
-        numCPUs: cpu,
-        memoryMB: ram,
-        deviceChange: [
-          {
-            operation: :add,
-            device: RbVmomi::VIM.VirtualLsiLogicController(
-              key: 1000,
-              busNumber: 0,
-              sharedBus: :noSharing
-            )
-          }, {
-            operation: :add,
-            fileOperation: :create,
-            device: RbVmomi::VIM.VirtualDisk(
-              key: 0,
-              backing: RbVmomi::VIM.VirtualDiskFlatVer2BackingInfo(
-                fileName: '[Datastore]',
-                diskMode: :persistent,
-                thinProvisioned: true
-              ),
-              controllerKey: 1000,
-              unitNumber: 0,
-              capacityInKB: capacity
-            )
-          }, {
-            operation: :add,
-            device: RbVmomi::VIM.VirtualE1000(
-              key: 0,
-              deviceInfo: {
-                label: 'Network Adapter 1',
-                summary: 'VM Network'
-              },
-              backing: RbVmomi::VIM.VirtualEthernetCardNetworkBackingInfo(
-                deviceName: 'VM Network'
-              ),
-              addressType: 'generated'
-            )
-          }
-        ],
-        extraConfig: [
-          {
-            key: 'bios.bootOrder',
-            value: 'ethernet0'
-          }
-        ]
-      }
+      @cluster_folder
     end
+
+    private
 
     def connect
       @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
-      @vm_folder = VSphere::Folder.new(@dc.vmFolder)
-      @cluster_folder = @dc.hostFolder
-      @clusters = extract_clusters(@cluster_folder).flatten
-      @resource_pool = @clusters.first.resourcePool
-    end
-
-    def extract_clusters(element)
-      if element.class == RbVmomi::VIM::Folder
-        element.children.map(&method(:extract_clusters))
-      else
-        [element]
-      end
+      @vm_folder = VSphere::Folder.new @dc.vmFolder
+      @cluster_folder = VSphere::Folder.new @dc.hostFolder
     end
   end
 end
