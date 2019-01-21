@@ -4,6 +4,7 @@ class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
+  has_and_belongs_to_many :responsible_users, class_name: 'User', join_table: 'requests_responsible_users'
 
   attr_accessor :sudo_user_ids
 
@@ -21,6 +22,7 @@ class Request < ApplicationRecord
   validates :cpu_cores, numericality: { greater_than: 0, less_than: MAX_CPU_CORES }
   validates :ram_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
   validates :storage_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
+  validates :responsible_users, presence: true
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"

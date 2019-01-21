@@ -41,7 +41,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    params[:request][:name] = replace_whitespaces(params[:request][:name])
+    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request] && params[:request][:name]
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -124,6 +124,7 @@ class RequestsController < ApplicationController
   end
 
   def unsuccessful_action(format, method)
+    @request_templates = RequestTemplate.all
     format.html { render method }
     format.json { render json: @request.errors, status: :unprocessable_entity }
   end
@@ -132,6 +133,6 @@ class RequestsController < ApplicationController
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, :status, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
   end
 end

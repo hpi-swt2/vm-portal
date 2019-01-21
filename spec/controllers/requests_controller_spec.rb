@@ -42,7 +42,8 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      sudo_user_ids: [''],
+      responsible_user_ids: [user.id]
     }
   end
 
@@ -116,6 +117,12 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     context 'with invalid params' do
+      it 'does not create a request if responible users are empty' do
+        request_count = Request.all.size
+        post :create, params: { request: valid_attributes.except(:responsible_user_ids) }
+        expect(request_count).to equal(Request.all.size)
+      end
+
       it 'returns a success response (i.e. to display the "new" template)' do
         post :create, params: { request: invalid_attributes }
         expect(response).to be_successful

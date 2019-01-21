@@ -55,6 +55,17 @@
 </table>
 
 <p>
+  <strong>Responsible users:</strong>
+  <ul>
+    <% @request.responsible_users.each do |user| %>
+      <p>
+        <li><%= user.email %></li>
+      </p>
+    <% end %>
+  </ul>
+</p>
+
+<p>
   <strong>Users with sudo rights:</strong>
   <ul>
     <% @request.sudo_user_assignments.each do |assignment| %>
