@@ -131,8 +131,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_134041) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
 end

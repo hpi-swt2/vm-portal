@@ -9,8 +9,8 @@ RSpec.describe 'request_templates/edit', type: :view do
     @request_template = assign(:request_template, RequestTemplate.create!(
                                                     name: 'myString',
                                                     cpu_cores: 1,
-                                                    ram_mb: 1,
-                                                    storage_mb: 1,
+                                                    ram_mb: 1000,
+                                                    storage_mb: 1000,
                                                     operating_system: 'MyString'
                                                   ))
   end

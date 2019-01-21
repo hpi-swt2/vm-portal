@@ -8,15 +8,15 @@ RSpec.describe 'request_templates/index', type: :view do
       RequestTemplate.create!(
         name: 'string',
         cpu_cores: 2,
-        ram_mb: 3,
-        storage_mb: 4,
+        ram_mb: 3000,
+        storage_mb: 4000,
         operating_system: 'Operating System'
       ),
       RequestTemplate.create!(
         name: 'string',
         cpu_cores: 2,
-        ram_mb: 3,
-        storage_mb: 4,
+        ram_mb: 3000,
+        storage_mb: 4000,
         operating_system: 'Operating System'
       )
     ]
