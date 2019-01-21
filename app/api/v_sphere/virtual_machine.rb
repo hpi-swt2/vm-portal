@@ -25,6 +25,7 @@ end
 
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
+  # rubocop:disable Metrics/ClassLength
   class VirtualMachine
     # instance creation
     def self.all
@@ -116,7 +117,7 @@ module VSphere
       end
     end
 
-      # Power state
+    # Power state
     def power_on
       @vm.PowerOnVM_Task.wait_for_completion unless powered_on?
     end
@@ -227,4 +228,5 @@ module VSphere
       @vm
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
