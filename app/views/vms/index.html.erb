@@ -61,7 +61,7 @@
       <%if current_user.admin? %>
         <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
       <% else %>
-        <p class="text-info">Waiting for confirmation by an admin</p>
+        <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
       <% end %>
     </td>
   </tr>

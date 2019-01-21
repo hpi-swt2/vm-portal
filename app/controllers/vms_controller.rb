@@ -42,12 +42,16 @@ class VmsController < ApplicationController
     end
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
+                  "The VM has been shut down and will soon be archived.\nYou can raise an objection to this on the vms overview site\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  def stop_archiving
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
   end
 
   def archive_vm
