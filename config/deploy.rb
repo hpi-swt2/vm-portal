@@ -61,6 +61,7 @@ task :deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     comment "Deploying #{fetch(:repository)} (#{fetch(:branch)}) to #{fetch(:domain)}"
+    command "export BASE_URL=#{fetch(:base_url)}"
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     # invoke :'rvm:load_env_vars'

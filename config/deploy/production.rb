@@ -15,3 +15,6 @@ set :branch, 'master'
 set :slack_username, 'Production System' # displayed as name of message sender
 set :slack_emoji, ':production:' # will be used as the avatar for the message
 set :slack_stage, 'master'
+
+set :base_url, 'https://hart.epic-hpi.de'
+
