@@ -51,31 +51,31 @@ RSpec.describe PuppetParserHelper, type: :helper do
     end
 
     it 'raises an error if trying to read a puppet file which does not contain admins' do
-      expect { PuppetParserHelper.read_node_file('example2', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example2', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file with the node name not matching the file namne' do
-      expect { PuppetParserHelper.read_node_file('example3', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example3', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which admins are not added as sudoroot' do
-      expect { PuppetParserHelper.read_node_file('example4', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example4', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which admins are not added as virtual user' do
-      expect { PuppetParserHelper.read_node_file('example5', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example5', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which users are not added as virtual user' do
-      expect { PuppetParserHelper.read_node_file('example6', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example6', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file with missing class declaration on the first line' do
-      expect { PuppetParserHelper.read_node_file('example7', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example7', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file with missing closing bracket for the class declaration' do
-      expect { PuppetParserHelper.read_node_file('example8', path) }.to raise_error 'unsupported Format'
+      expect { PuppetParserHelper.read_node_file('example8', path) }.to raise_error 'Unsupported Format'
     end
   end
 end
