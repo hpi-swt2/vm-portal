@@ -168,7 +168,7 @@ class VmsController < ApplicationController
   end
 
   def authorize_vm_access
-    @vm = VmApi.instance.get_vm_info(params[:id])
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return unless @vm
 
     redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)

@@ -2,6 +2,6 @@
 
 class ArchivationRequest < ApplicationRecord
   def can_be_executed?
-    created_at + (60 * 60 * 24 * 3) >= Time.now
+    Time.now >= created_at + (60 * 60 * 24 * 3)
   end
 end
