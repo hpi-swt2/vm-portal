@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/index', type: :view do
-  before() do
+  before do
     assign(:servers, [
              Server.create!(
                name: 'SpecServer',
@@ -39,11 +39,11 @@ RSpec.describe 'servers/index', type: :view do
   it 'shows new link to admin' do
     assign(:user_is_admin, true)
     render
-    expect(rendered).to have_button("New")
+    expect(rendered).to have_button('New')
   end
 
   it 'does not show new link per default' do
     render
-    expect(rendered).not_to have_button("New")
+    expect(rendered).not_to have_button('New')
   end
 end
