@@ -62,8 +62,8 @@ class Request < ApplicationRecord
         git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
       end
       { notice: message }
-    #rescue Git::GitExecuteError
-     # { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+    rescue Git::GitExecuteError
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 
