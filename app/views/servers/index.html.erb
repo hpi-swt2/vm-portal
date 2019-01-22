@@ -2,40 +2,33 @@
   Servers
 </h1>
 
-<input type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search for server..">
+<input class="float-left bg-dark border-0 rounded mb-3 text-white" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
+<% if @user_is_admin %>
+  <%= button_to "New",
+    {controller: :servers, action: 'new'},
+    method: :get, class: "btn btn-info float-right mb-3" %>
+<% end %>
 
-<table data-toggle="table" class="table" id="servers">
+<table data-toggle="table" class="table table-fixed-columns" id="servers">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true">Name</th>
-    <th scope="col" data-sortable="true">Vendor</th>
-    <th scope="col" data-sortable="true">Model</th>
-    <th scope="col" data-sortable="true">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-secondary">Name</th>
+    <th scope="col" data-sortable="true" class="bg-secondary">Vendor</th>
+    <th scope="col" data-sortable="true" class="bg-secondary">Model</th>
+    <th scope="col" data-sortable="true" class="bg-secondary">Responsible</th>
   </tr>
   </thead>
   <tbody>
   <% @servers.each do |server| %>
     <tr>
-      <td><%= link_to server.name, server  %></td>
-      <td><%= server.vendor %></td>
-      <td><%= server.model %></td>
-      <td><%= server.responsible %></td>
+      <td class="table-active"><%= link_to server.name, server  %></td>
+      <td class="table-active"><%= server.vendor %></td>
+      <td class="table-active"><%= server.model %></td>
+      <td class="table-active"><%= server.responsible %></td>
     </tr>
   <% end %>
   </tbody>
 </table>
-
-<% if @user_is_admin %>
-  <table class="table">
-    <tbody>
-    <tr>
-      <td><%= button_to "New",
-                        {controller: :servers, action: 'new'},
-                        method: :get, class: "btn btn-info" %></td>
-    </tr>
-    </tbody>
-  </table>
-<% end %>
 
 <!-- Minified script sources for sortable tables -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
