@@ -13,7 +13,8 @@ RSpec.describe 'servers/new', type: :view do
                       fqdn: 'arrrr.speck.de',
                       ipv4_address: '8.8.8.8',
                       ipv6_address: '::1',
-                      installed_software: ['SpeckTester']
+                      installed_software: ['SpeckTester'],
+                      responsible: 'Hans Wurst'
                     ))
   end
 
@@ -36,6 +37,8 @@ RSpec.describe 'servers/new', type: :view do
       assert_select 'input[name=?]', 'server[ipv4_address]'
 
       assert_select 'input[name=?]', 'server[ipv6_address]'
+
+      assert_select 'input[name=?]', 'server[responsible]'
 
       expect(rendered).to have_button 'Add Software'
     end

@@ -14,7 +14,8 @@ RSpec.describe 'servers/index', type: :view do
                fqdn: 'arrrr.speck.de',
                ipv4_address: '8.8.8.8',
                ipv6_address: '::1',
-               installed_software: ['SpeckTester']
+               installed_software: ['SpeckTester'],
+               responsible: 'Hans Wurst'
              ),
              Server.create!(
                name: 'SpecServer',
@@ -25,7 +26,8 @@ RSpec.describe 'servers/index', type: :view do
                fqdn: 'arrrr.speck.de',
                ipv4_address: '8.8.8.8',
                ipv6_address: '::1',
-               installed_software: ['SpeckTester']
+               installed_software: ['SpeckTester'],
+               responsible: 'Hans Wurst'
              )
            ])
   end

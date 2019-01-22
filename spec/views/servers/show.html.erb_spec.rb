@@ -15,6 +15,7 @@ RSpec.describe 'servers/show', type: :view do
       model: 'Blade Center xyz',
       vendor: 'IBM',
       description: 'How to serve men',
+      responsible: 'Hans Wurst',
       installed_software: ['SpeckTester'] }
   end
 
