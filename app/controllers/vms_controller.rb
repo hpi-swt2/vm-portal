@@ -51,6 +51,7 @@ class VmsController < ApplicationController
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
+  # TODO: delete archivation requests
   def allowed_to_be_archived?(vm)
     request = ArchivationRequest.find_by_name vm.name
     if request
