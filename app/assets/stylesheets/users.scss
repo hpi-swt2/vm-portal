@@ -1,15 +1,3 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-$primary-active: #1f6993;
-$primary-hover: #1a5b82;
-
-#btns_users_role .btn-primary.active {
-  background-color: $primary-active;
-  border-color: $primary-active;
-}
-
-#btns_users_role .btn-primary:hover {
-  background-color: $primary-hover;
-  border-color: $primary-hover;
-}

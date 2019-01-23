@@ -1,6 +1,8 @@
 $primary: #0C415F;
 $danger: #a80833;
 $success: #d7e76f;
+$primary-active: #1f6993;
+$primary-hover: #1a5b82;
 
 @import "bootstrap";
 
@@ -22,6 +24,15 @@ html, body {
 h1 {
   color: $primary;
   margin-bottom: .5em;
+}
+
+.dashboard-header-link {
+  text-decoration: none !important;
+}
+
+h3:hover {
+  text-decoration: none;
+  color: $primary-hover;
 }
 
 body {
@@ -87,4 +98,14 @@ body {
 
 .table-flex-width {
   width: auto;
+}
+
+#btns_users_role .btn-primary.active {
+  background-color: $primary-active;
+  border-color: $primary-active;
+}
+
+#btns_users_role .btn-primary:hover {
+  background-color: $primary-hover;
+  border-color: $primary-hover;
 }
