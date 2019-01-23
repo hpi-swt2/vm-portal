@@ -163,12 +163,7 @@ module VSphere
     end
 
     def belongs_to(user)
-      request = Request.accepted.find { |each| name == each.name }
-      if request
-        request.users.include? user
-      else
-        false
-      end
+      users.include? user
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
