@@ -67,7 +67,8 @@ describe VSphere do
 
   describe VSphere::Folder do
     it 'finds all vms recursively' do
-      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms + mock_pending_revivings_vms).map { |each| VSphere::VirtualMachine.new each }
+      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms +
+          mock_pending_revivings_vms).map { |each| VSphere::VirtualMachine.new each }
       expect(root_folder.vms(recursive: true)).to match_array vms
     end
 
