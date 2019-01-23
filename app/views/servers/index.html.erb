@@ -2,12 +2,17 @@
 
 <h1>Servers</h1>
 
-<table>
-  <thead>
+<table class="table-bar">
+  <tbody>
     <tr>
-      <th colspan="3"></th>
+      <td>
+        <%=link_to(fa_icon('plus'),
+        {controller: :servers, action: 'new'},
+        method: :get, class: 'btn btn-primary') %>
+      </td>
     </tr>
-  </thead>
+  </tbody>
+</table>
 
   <tbody>
     <% @servers.each do |server| %>
@@ -20,6 +25,6 @@
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Server', new_server_path %>
+<% if @servers.length == 0 %>
+<p class="empty-table-label">No servers created yet</p>
+<% end %>

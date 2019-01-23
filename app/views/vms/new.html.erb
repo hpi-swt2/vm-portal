@@ -1,20 +1,22 @@
 <h1>Create a new Virtual Machine</h1>
 <%= form_tag('/vms') do %>
+<div class="create-form">
   <div class="form-group">
-    <%= label_tag 'Name' %>
+    <label for="name">Name</label>
     <%= text_field_tag 'name', nil, class: 'form-control', value: @request[:name] %>
   </div>
   <div class="form-group">
-    <%= label_tag 'CPU' %>
+    <label for="cpu">CPU</label>
     <%= text_field_tag 'cpu', nil, class: 'form-control', value: @request[:cpu_cores] %>
   </div>
   <div class="form-group">
-    <%= label_tag 'RAM' %>
+    <label for="ram">RAM</label>
     <%= text_field_tag 'ram', nil, class: 'form-control', value: @request[:ram_mb] %>
   </div>
   <div class="form-group">
-    <%= label_tag 'Capacity' %>
+    <label for="capacity">Capacity</label>
     <%= text_field_tag 'capacity', nil, class: 'form-control', value: @request[:storage_mb] %>
   </div>
-  <div ><%= submit_tag 'Create VM', class: "btn btn-primary" %></div>
+</div>
+<div ><%= submit_tag 'Create VM', class: "btn btn-primary" %></div>
 <% end %>
