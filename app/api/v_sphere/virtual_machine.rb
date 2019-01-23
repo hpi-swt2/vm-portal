@@ -113,13 +113,12 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def responsible_users
+      request&.responsible_users || []
+    end
+
     def users
-      request = Request.accepted.find { |each| name == each.name }
-      if request
-        request.users
-      else
-        []
-      end
+      request&.users || []
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
@@ -135,6 +134,10 @@ module VSphere
     end
 
     private
+
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
 
     def managed_folder_entry
       @vm

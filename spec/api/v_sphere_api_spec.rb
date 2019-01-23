@@ -111,7 +111,7 @@ describe VSphere do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2')).not_to be_nil
     end
 
-    it 'does not have users if there is not fitting request' do
+    it 'does not have users if there is no fitting request' do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2').users).to be_empty
     end
 
@@ -119,7 +119,18 @@ describe VSphere do
       request = FactoryBot.create :accepted_request
       request.users << FactoryBot.create(:user)
       vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
-      expect(vm.users).not_to be_empty
+      expect(vm.users).to match_array(request.users)
+    end
+
+    it 'does not have responsible users if there is no fitting request' do
+      expect(VSphere::VirtualMachine.find_by_name('Archived VM2').responsible_users).to be_empty
+    end
+
+    it 'has responsible users if a fitting request exists' do
+      request = FactoryBot.create :accepted_request
+      request.responsible_users << FactoryBot.create(:user)
+      vm = v_sphere_vm_mock request.name
+      expect(vm.responsible_users).to match_array(request.responsible_users)
     end
 
     it 'knows that it is not archived' do
