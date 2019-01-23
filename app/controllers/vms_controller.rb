@@ -37,7 +37,9 @@ class VmsController < ApplicationController
   def edit
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
 
-    @users = VSphere::VirtualMachine.find_by_name(@vm[:name]).users
+    @request = Request.where(status: 'accepted', name: @vm[:name]).first
+    @sudoer_ids = @request.sudo_user_assignments.map { |user| user.id }
+    @non_sudoer_ids = @request.non_sudo_user_assignments.map { |user| user.id}
   end
 
   def request_vm_archivation
