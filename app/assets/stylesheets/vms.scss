@@ -6,6 +6,28 @@
     flex: 1;
 }
 
+.table-bar {
+  width: auto;
+  border: 0;
+  margin: 1.5em 0 1em;
+
+  td {
+    padding-right: 20px;
+  }
+}
+
+.create-form {
+  width: auto;
+  padding-bottom: 1.5em;
+}
+
+.login-form-group {
+  padding-bottom: 1.5em;
+}
+
+.filter_icon {
+  font-size: 2em;
+}
 .archived{
   background: #eee;
 }

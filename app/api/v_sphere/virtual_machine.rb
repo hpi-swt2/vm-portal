@@ -3,24 +3,52 @@
 require 'rbvmomi'
 require_relative 'connection'
 
+def root_folder
+  VSphere::Connection.instance.root_folder
+end
+
+def ensure_root_subfolder(name)
+  root_folder.ensure_subfolder(name)
+end
+
+def archived_folder
+  ensure_root_subfolder('Archived VMs')
+end
+
+def pending_archivation_folder
+  ensure_root_subfolder('Pending archivings')
+end
+
+def pending_revivings_folder
+  ensure_root_subfolder('Pending revivings')
+end
+
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
   class VirtualMachine
     # instance creation
     def self.all
-      VSphere::Connection.instance.root_folder.vms(recursive: true)
+      root_folder.vms
+    end
+
+    def self.rest
+      all - pending_archivation - archived - pending_revivings
     end
 
     def self.pending_archivation
-      VSphere::VirtualMachine.all.select(&:pending_archivation?)
+      pending_archivation_folder.vms
     end
 
     def self.archived
-      VSphere::VirtualMachine.all.select(&:archived?)
+      archived_folder.vms
+    end
+
+    def self.pending_revivings
+      pending_revivings_folder.vms
     end
 
     def self.find_by_name(name)
-      VSphere::Connection.instance.root_folder.find_vm(name)
+      root_folder.find_vm(name)
     end
 
     def self.user_vms(user)
@@ -29,7 +57,6 @@ module VSphere
     end
 
     def initialize(rbvmomi_vm)
-      @v_sphere = VSphere::Connection.instance
       @vm = rbvmomi_vm
     end
 
@@ -104,6 +131,29 @@ module VSphere
       move_into archived_folder
     end
 
+    # Reviving
+    def pending_reviving?
+      pending_revivings_folder.vms.any? { |vm| vm.equal? self }
+    end
+
+    def set_pending_reviving
+      move_into pending_revivings_folder
+    end
+
+    def set_revived
+      move_into root_folder
+    end
+
+    # Config methods
+    # All the properties that HART saves internally
+    def ip
+      config&.ip || ''
+    end
+
+    def dns
+      config&.dns || ''
+    end
+
     # Utilities
     def move_into(folder)
       folder.move_here self
@@ -122,6 +172,10 @@ module VSphere
       end
     end
 
+    def belongs_to(user)
+      users.include? user
+    end
+
     # We cannot use Object identity to check if to Virtual Machine objects are equal
     # because they are created on demand and to Virtual Machine objects can wrap the same vSphere VM.
     # Therefore we must use another method of comparing equality.
@@ -136,16 +190,12 @@ module VSphere
 
     private
 
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
+
     def managed_folder_entry
       @vm
-    end
-
-    def archived_folder
-      @v_sphere.root_folder.ensure_subfolder('Archived VMs')
-    end
-
-    def pending_archivation_folder
-      @v_sphere.root_folder.ensure_subfolder('Pending archivings')
     end
   end
 end

@@ -1,26 +1,46 @@
 <h1>
   Virtual Machines
 </h1>
-<small class="text-muted">This is the overview page for all currently existing VMs</small>
+<small class="text-muted">This is the overview page for all currently existing VMs.</small>
 
 <%= form_tag({controller: "vms", action: "index"}, method: "get", class: "nifty_form") do %>
-<table class="table">
+<table class="table-bar">
   <tbody>
     <tr>
+      <% if current_user.employee_or_admin? %>
       <td>
-        <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
-        <%= label_tag(:up_vms, "connected") %>
+        <%=link_to(fa_icon('plus'),
+        {controller: :vms, action: 'new'},
+        method: :get, class: 'btn btn-primary', id: 'createNewVMButton') %>
       </td>
+      <% end %>
       <td>
-        <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
-        <%= label_tag(:down_vms, "not connected") %>
+        <div class="dropdown">
+          <button class="fa fa-filter btn btn-primary" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div>
+              <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
+              Connected
+            </div>
+            <div>
+              <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
+              Not connected
+            </div>
+            <div class="dropdown-divider"></div>
+            <%= submit_tag "Filter", class: "btn btn-primary small-btn" %>
+          </div>
+        </div>
       </td>
+      <% if current_user.employee_or_admin? %>
       <td>
-        <%= submit_tag"Filter", class: "btn btn-info" %>
+        <%= link_to "Requests",
+          {controller: :requests, action: 'index'},
+          method: :get, class: 'btn btn-primary', id: 'requestsButton' %>
       </td>
+      <% end %>
     </tr></tbody></table>
 <% end %>
-
 
 <table data-toggle="table" class="table">
   <thead>
@@ -61,28 +81,13 @@
       <%if current_user.admin? %>
         <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
       <% else %>
-        <p class="text-info">Waiting for confirmation by an admin</p>
+        <p class="text-primary">Waiting for confirmation by an admin</p>
       <% end %>
     </td>
   </tr>
   <% end %>
   </tbody>
 </table>
-
-<% if current_user.employee_or_admin? %>
-  <table class="table">
-    <tbody>
-    <tr>
-      <td><%= button_to "Requests",
-                        {controller: :requests, action: 'index'},
-                        method: :get, class: "btn btn-info" %></td>
-      <td><%= button_to "New",
-                        {controller: :vms, action: 'new'},
-                        method: :get, class: "btn btn-info" %></td>
-    </tr>
-    </tbody>
-  </table>
-<% end %>
 
 <h2>Archived VMs</h2>
 <table data-toggle="table" class="table archived">
@@ -93,18 +98,29 @@
   </tr>
   </thead>
   <tbody>
+  <% @pending_reviving_vms.each  do |vm| %>
+    <tr class="table-success">
+      <td ><%= link_to vm.name,
+                       {controller: :vms, action: 'show', id: vm.name},
+                       method: :get, class: "btn btn-link"  %></td>
+      <td>
+        <%if current_user.admin? %>
+          <%= button_to "Confirm reviving", {controller: :vms, action: 'revive_vm', id: vm.name}, method: :post, class: "btn btn-danger" %>
+        <% else %>
+          <p class="text-info">Waiting for confirmation by an admin</p>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
   <% @archived_vms.each do |vm| %>
     <tr>
       <td><%= link_to vm.name,
                       {controller: :vms, action: 'show', id: vm.name},
                       method: :get, class: "btn btn-link"  %></td>
-      <td>
-        <%if current_user.admin? %>
-          <%= button_to "reactivate VM", {controller: :vms, action: 'index'}, method: :get, class: "btn btn-danger" %>
-        <% end %>
-      </td>
+      <td></td>
     <tr>
   <% end %>
+
   </tbody>
 </table>
 
