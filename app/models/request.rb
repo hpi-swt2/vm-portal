@@ -53,6 +53,15 @@ class Request < ApplicationRecord
     users_assigned_to_requests - sudo_user_assignments
   end
 
+  def create_vm
+    folder = VSphere::Connection.instance.root_folder
+    clusters = VSphere::Cluster.all
+    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first)
+    config = VirtualMachineConfig.new
+    config.name = name
+    config.save
+  end
+
   private
 
   def url(host_name)

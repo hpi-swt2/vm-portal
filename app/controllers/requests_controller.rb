@@ -39,7 +39,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    params[:request][:name] = replace_whitespaces(params[:request][:name])
+    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request] && params[:request][:name]
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -79,6 +79,8 @@ class RequestsController < ApplicationController
 
   def recap
     @request = Request.find(params[:id])
+    return unless @request
+
     @vm = VSphere::VirtualMachine.find_by_name(@request.name)
     @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
   end
@@ -86,10 +88,8 @@ class RequestsController < ApplicationController
   def request_change_state
     if @request.update(request_params)
       if @request.accepted?
-        folder = VSphere::Connection.instance.root_folder
-        clusters = VSphere::Cluster.all
-        folder.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name, clusters.first)
-        redirect_to 'vms/requests/#{params[:id]}/recap', notice: I18n.t('request.successfully_updated_and_vm_created')
+        @request.create_vm
+        redirect_to({controller: :vms, action: 'recap', id: @request.id}, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created'))
       else
         notify_request_update
         redirect_to requests_path, notice: I18n.t('request.successfully_updated')
