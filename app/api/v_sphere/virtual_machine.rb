@@ -3,12 +3,32 @@
 require 'rbvmomi'
 require_relative 'connection'
 
+def root_folder
+  VSphere::Connection.instance.root_folder
+end
+
+def ensure_root_subfolder(name)
+  root_folder.ensure_subfolder(name)
+end
+
+def archived_folder
+  ensure_root_subfolder('Archived VMs')
+end
+
+def pending_archivation_folder
+  ensure_root_subfolder('Pending archivings')
+end
+
+def pending_revivings_folder
+  ensure_root_subfolder('Pending revivings')
+end
+
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
   class VirtualMachine
     # instance creation
     def self.all
-      VSphere::Connection.instance.root_folder.vms
+      root_folder.vms
     end
 
     def self.rest
@@ -16,15 +36,15 @@ module VSphere
     end
 
     def self.pending_archivation
-      VSphere::Connection.instance.root_folder.ensure_subfolder('Pending archivings').vms
+      pending_archivation_folder.vms
     end
 
     def self.archived
-      VSphere::Connection.instance.root_folder.ensure_subfolder('Archived VMs').vms
+      archived_folder.vms
     end
 
     def self.pending_revivings
-      VSphere::Connection.instance.root_folder.ensure_subfolder('Pending revivings').vms
+      pending_revivings_folder.vms
     end
 
     def self.find_by_name(name)
@@ -37,7 +57,6 @@ module VSphere
     end
 
     def initialize(rbvmomi_vm)
-      @v_sphere = VSphere::Connection.instance
       @vm = rbvmomi_vm
     end
 
@@ -169,26 +188,6 @@ module VSphere
 
     def managed_folder_entry
       @vm
-    end
-
-    def ensure_root_subfolder(name)
-      @v_sphere.root_folder.ensure_subfolder(name)
-    end
-
-    def root_folder
-      @v_sphere.root_folder
-    end
-
-    def archived_folder
-      ensure_root_subfolder('Archived VMs')
-    end
-
-    def pending_archivation_folder
-      ensure_root_subfolder('Pending archivings')
-    end
-
-    def pending_revivings_folder
-      ensure_root_subfolder('Pending revivings')
     end
   end
 end
