@@ -1,5 +1,5 @@
 
-<div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
+<div class="container mb-3 pl-0 pr-0 clearfix">
   <h1 class="mb-0"><%= @server.name %></h1>
 </div>
 
@@ -10,7 +10,7 @@
       <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
         Manage
       </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
          <%= link_to 'Edit',
                       {controller: :servers, action: 'edit', id: @server.id}, method: :get, class: 'dropdown-item' %>
 
