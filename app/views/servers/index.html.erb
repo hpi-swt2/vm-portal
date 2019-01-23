@@ -2,14 +2,16 @@
   Servers
 </h1>
 
-<input class="float-left bg-dark border-0 rounded mb-3 text-white" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
-<% if @user_is_admin %>
-  <%= button_to "New",
-    {controller: :servers, action: 'new'},
-    method: :get, class: "btn btn-info float-right mb-3" %>
-<% end %>
+<div class="mb-3 clearfix">
+  <input class="float-left bg-dark border-0 rounded text-white" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
+  <% if @user_is_admin %>
+    <%= button_to "New",
+      {controller: :servers, action: 'new'},
+      method: :get, class: "btn btn-info float-right" %>
+  <% end %>
+</div>
 
-<table data-toggle="table" class="table table-fixed-columns" id="servers">
+<table data-toggle="table" class="table" id="servers">
   <thead>
   <tr>
     <th scope="col" data-sortable="true" class="bg-secondary">Name</th>
