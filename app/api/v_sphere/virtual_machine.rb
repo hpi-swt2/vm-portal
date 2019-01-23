@@ -146,6 +146,19 @@ module VSphere
 
     # Config methods
     # All the properties that HART saves internally
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
+
+    def ensure_config
+      unless config
+        @config = VirtualMachineConfig.new
+        @config.name = name
+        @config.save
+      end
+      @config
+    end
+
     def ip
       config&.ip || ''
     end
@@ -209,10 +222,6 @@ module VSphere
     end
 
     private
-
-    def config
-      @config ||= VirtualMachineConfig.find_by_name name
-    end
 
     def managed_folder_entry
       @vm

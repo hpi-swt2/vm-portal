@@ -6,7 +6,7 @@ class VmsController < ApplicationController
   helper_method :allowed_to_be_archived?
 
   include VmsHelper
-  before_action :authenticate_admin, only: %i[archive_vm]
+  before_action :authenticate_admin, only: %i[archive_vm ]
   before_action :authorize_vm_access, only: %i[show]
 
   def index
@@ -31,6 +31,22 @@ class VmsController < ApplicationController
 
   def show
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  end
+
+  def edit_config
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.ensure_config
+  end
+
+  def update_config
+    @config = VirtualMachineConfig.find_by_name params[:id]
+    redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!' unless @config
+
+    if @config.update(config_params)
+      redirect_to controller: :vms, action: 'show', id: params[:id], notice: 'Configuration updated succesfully!'
+    else
+      redirect_to controller: :vms, action: 'show', id: params[:id], alert: 'Configuration could not be updated!'
+    end
   end
 
   def request_vm_archivation
@@ -192,5 +208,9 @@ class VmsController < ApplicationController
     return unless @vm
 
     redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)
+  end
+
+  def config_params
+    params.require(:virtual_machine_config).permit(:ip, :dns)
   end
 end

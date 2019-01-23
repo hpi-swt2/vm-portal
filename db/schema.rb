@@ -12,6 +12,12 @@
 
 ActiveRecord::Schema.define(version: 2019_01_23_102046) do
 
+  create_table "archivation_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
     t.string "title"
@@ -56,8 +62,8 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.integer "user_id"
     t.text "description"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -123,10 +129,10 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.string "ssh_key"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -137,6 +143,8 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "virtual_machine_configs", force: :cascade do |t|
