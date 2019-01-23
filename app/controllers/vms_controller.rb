@@ -6,7 +6,7 @@ class VmsController < ApplicationController
   helper_method :allowed_to_be_archived?
 
   include VmsHelper
-  before_action :authenticate_admin, only: %i[archive_vm ]
+  before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show]
 
   def index

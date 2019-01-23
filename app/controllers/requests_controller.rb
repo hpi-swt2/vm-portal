@@ -77,19 +77,11 @@ class RequestsController < ApplicationController
     end
   end
 
-  def recap
-    @request = Request.find(params[:id])
-    return unless @request
-
-    @vm = VSphere::VirtualMachine.find_by_name(@request.name)
-    @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
-  end
-
   def request_change_state
     if @request.update(request_params)
       if @request.accepted?
-        @request.create_vm
-        redirect_to({controller: :vms, action: 'recap', id: @request.id}, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created'))
+        vm = @request.create_vm
+        redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created'))
       else
         notify_request_update
         redirect_to requests_path, notice: I18n.t('request.successfully_updated')
