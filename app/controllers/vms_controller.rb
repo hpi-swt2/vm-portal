@@ -36,6 +36,7 @@ class VmsController < ApplicationController
 
   def edit
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+
     @users = VSphere::VirtualMachine.find_by_name(@vm[:name]).users
   end
 

@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe 'vms/edit.html.erb', type: :view do
   let(:vm) do
-    { name: 'VM',
+    { id: 1,
+      name: 'VM',
       state: true,
       boot_time: Time.current,
       host: 'aHost',
@@ -18,12 +19,11 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
   end
 
   it 'shows vm name' do
-    expect(rendered).to include vm[:name]
+    expect(rendered).to have_text vm[:name]
   end
 
   it 'says edit' do
-    expect(rendered).to include 'edit'
+    expect(rendered).to have_text 'Edit'
   end
 
- 
 end
