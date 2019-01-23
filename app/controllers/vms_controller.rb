@@ -3,6 +3,7 @@
 require 'vmapi.rb'
 class VmsController < ApplicationController
   attr_reader :vms
+  helper_method :allowed_to_be_archived?
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
@@ -42,7 +43,7 @@ class VmsController < ApplicationController
     end
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
+                  "The VM has been shut down and will soon be archived.\nYou can raise an objection to this on the vms overview site\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
@@ -61,6 +62,21 @@ class VmsController < ApplicationController
 
     @vm.set_pending_reviving
     redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  # TODO: delete archivation requests
+  def allowed_to_be_archived?(vm)
+    request = ArchivationRequest.find_by_name vm.name
+    if request
+      request.can_be_executed?
+    else
+      true
+    end
+  end
+
+  def stop_archiving
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.set_revived
   end
 
   def archive_vm
@@ -172,7 +188,7 @@ class VmsController < ApplicationController
   end
 
   def authorize_vm_access
-    @vm = VmApi.instance.get_vm_info(params[:id])
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return unless @vm
 
     redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)

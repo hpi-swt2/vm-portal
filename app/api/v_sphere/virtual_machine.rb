@@ -163,6 +163,22 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def summary
+      @vm.summary
+    end
+
+    def guestHeartbeatStatus
+      @vm.guestHeartbeatStatus
+    end
+
+    def vmwaretools_installed?
+      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    end
+
+    def host_name
+      @vm.summary.runtime.host.name
+    end
+
     def users
       request = Request.accepted.find { |each| name == each.name }
       if request
