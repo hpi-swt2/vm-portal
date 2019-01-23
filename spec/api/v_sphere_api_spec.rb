@@ -5,7 +5,7 @@ require 'rails_helper'
 require './app/api/v_sphere/folder'
 require './app/api/v_sphere/virtual_machine'
 require './app/api/v_sphere/connection'
-require_relative 'v_sphere_api_helper'
+require_relative 'v_sphere_api_mocker'
 
 # We really want to be able to stub message chains in this Spec, because the API that is provided by vSphere
 # has many messages that have to be chained which we want to mock.
@@ -18,7 +18,7 @@ describe VSphere do
   end
 
   let(:mock_archived_vms_folder) do
-    vim_folder_mock('Archived VMs', [], mock_archived_vms)
+    vim_folder_mock('Archived VMs', [], mock_archived_vms, [])
   end
 
   let(:mock_pending_archivings_vms) do
@@ -28,7 +28,7 @@ describe VSphere do
   end
 
   let(:mock_pending_archivings_folder) do
-    vim_folder_mock('Pending archivings', [], mock_pending_archivings_vms)
+    vim_folder_mock('Pending archivings', [], mock_pending_archivings_vms, [])
   end
 
   let(:mock_root_folder_vms) do
@@ -38,10 +38,22 @@ describe VSphere do
   end
 
   let(:mock_folder) do
-    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder], mock_root_folder_vms)
+    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder], mock_root_folder_vms, [])
   end
 
   let(:root_folder) { VSphere::Folder.new(mock_folder) }
+
+  let(:cluster1_hosts) do
+    [v_sphere_host_mock('test'), v_sphere_host_mock('another test')]
+  end
+
+  let(:cluster2_hosts) do
+    [v_sphere_host_mock('')]
+  end
+
+  let(:clusters_mock) do
+    [v_sphere_cluster_mock('cluster1', cluster1_hosts), v_sphere_cluster_mock('cluster2', cluster2_hosts)]
+  end
 
   describe VSphere::Folder do
     it 'finds all vms recursively' do
@@ -52,6 +64,26 @@ describe VSphere do
     it 'finds all vms non-recursively' do
       vms = mock_root_folder_vms.map { |each| VSphere::VirtualMachine.new each }
       expect(root_folder.vms(recursive: false)).to match_array vms
+    end
+  end
+
+  describe VSphere::Cluster do
+    before do
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], clusters_mock)
+    end
+
+    it 'Cluster.all finds all clusters' do
+      expect(VSphere::Cluster.all).to match_array clusters_mock
+    end
+  end
+
+  describe VSphere::Host do
+    before do
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], clusters_mock)
+    end
+
+    it 'Host.all finds all hosts' do
+      expect(VSphere::Host.all).to match_array(cluster1_hosts + cluster2_hosts)
     end
   end
 

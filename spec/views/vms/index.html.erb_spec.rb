@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require './spec/api/v_sphere_api_helper'
+require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/index.html.erb', type: :view do
   let(:mock_vms) do
