@@ -23,4 +23,4 @@
 
 document.addEventListener("turbolinks:load", function() {
   $('.selecttwo').select2();
-})
+});

@@ -14,3 +14,12 @@
  *= require_self
  *= require_tree .
  */
+
+
+.bulletless {
+  list-style-type: none;
+}
+
+#menu-profile-dropdown {
+  padding-top: 3px;
+}
