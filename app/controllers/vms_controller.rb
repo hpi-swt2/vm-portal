@@ -127,17 +127,17 @@ class VmsController < ApplicationController
   private
 
   def initialize_vm_categories
-    @vms = VSphere::VirtualMachine.rest
-    @archived_vms = VSphere::VirtualMachine.archived
-    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
-    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
+    @vms = filter VSphere::VirtualMachine.rest
+    @archived_vms = filter VSphere::VirtualMachine.archived
+    @pending_archivation_vms = filter VSphere::VirtualMachine.pending_archivation
+    @pending_reviving_vms = filter VSphere::VirtualMachine.pending_revivings
   end
 
   def filter_vm_categories(user)
-    @vms = filter(@vms.select { |each| each.belongs_to user })
-    @archived_vms = filter(@archived_vms.select { |each| each.belongs_to user })
-    @pending_archivation_vms = filter(@pending_archivation_vms.select { |each| each.belongs_to user })
-    @pending_reviving_vms = filter(@pending_reviving_vms.select { |each| each.belongs_to user })
+    @vms = @vms.select { |each| each.belongs_to user }
+    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
+    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
   end
 
   def split_into_categories(vms)
