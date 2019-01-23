@@ -14,8 +14,8 @@ end %>
 
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%">
   <% up_time = seconds_to_units(Time.current - @vm.boot_time) unless @vm.boot_time.nil? %>
-  <div class="<%= @vm.powered_on? ? 'bg-success' : 'bg-danger' %> text-white float-left pb-1 px-4 mr-2">
-    <%= @vm.powered_on? ? 'online' : 'offline' %>
+  <div class="<%= button_style_for @vm %> text-white float-left pb-1 px-4 mr-2">
+    <%= status_for @vm %>
   </div>
   <%= " for #{up_time}" if @vm.powered_on? %>
   <div class="text-right float-right" style="width: 20%">
@@ -82,7 +82,7 @@ end %>
              hdd_allocation: hdd_allocation,
              cpu_cores: cpu_cores }
 
-  @hardware = {'IP Address' => @vm.summary&.guest&.ipAddress,
+  @hardware = {'IP Address' => @vm.ip,
                'Heartbeat Status' => @vm.guestHeartbeatStatus }
   %>
 

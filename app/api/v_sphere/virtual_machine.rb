@@ -32,7 +32,12 @@ module VSphere
     end
 
     def self.rest
-      all - pending_archivation - archived - pending_revivings
+      to_exclude = []
+      pending_archivation.each { | each | to_exclude << each.name }
+      archived.each { | each | to_exclude << each.name }
+      pending_revivings.each { | each | to_exclude << each.name }
+
+      all.select { | each | !to_exclude.include? each.name }
     end
 
     def self.pending_archivation
@@ -190,6 +195,22 @@ module VSphere
 
     def host_name
       @vm.summary.runtime.host.name
+    end
+
+    def status
+      if archived?
+        return :archived
+      elsif pending_archivation?
+        return :pending_archivation
+      elsif pending_reviving?
+        return :pending_reviving
+      end
+
+      if powered_on?
+        :online
+      else
+        :offline
+      end
     end
 
     def users

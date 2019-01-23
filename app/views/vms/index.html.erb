@@ -58,13 +58,19 @@
     </td>
     <td><%= vm.boot_time if vm.powered_on? %></td>
     <td>
-      <%if current_user.admin? %>
-        <% if allowed_to_be_archived?(vm) %>
-          <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-around">
+        <div class="col-xs-1">
+          <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
+        </div>
+        <%if current_user.admin? %>
+          <% if allowed_to_be_archived?(vm) %>
+            <div class="col-xs-1">
+              <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
+            </div>
+          <% end %>
         <% end %>
-      <% else %>
-        <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
-      <% end %>
+      </div>
+
     </td>
   </tr>
   <% end %>

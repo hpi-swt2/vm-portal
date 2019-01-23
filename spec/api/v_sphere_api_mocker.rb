@@ -50,18 +50,32 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday') # rubocop:disable Metrics/AbcSize
+def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60*60*24, hearteat_status: 'green',
+                guest_id: 'Win10', guest_name: 'Win10 EE', host_name: 'ibmesx13.eaalab.hpi.uni-potsdam.de', committed_storage: 100, uncommitted_storage: 100,
+                cpu_usage: 50, cpu_reservation: 100, guest_memory_usage: 1024, memory_size: 2024, cpu_number: 1) # rubocop:disable Metrics/AbcSize
   vm = double
   allow(vm).to receive(:name).and_return(name)
+  allow(vm).to receive(:guestHeartbeatStatus).and_return(hearteat_status)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
   allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
+  allow(vm).to receive_message_chain(:summary, :config, :guestId).and_return guest_id
+  allow(vm).to receive_message_chain(:summary, :config, :guestFullName).and_return guest_name
+  allow(vm).to receive_message_chain(:summary, :runtime, :host, :name).and_return host_name
+  allow(vm).to receive_message_chain(:summary, :storage, :committed).and_return committed_storage
+  allow(vm).to receive_message_chain(:summary, :storage, :uncommitted).and_return uncommitted_storage
+  allow(vm).to receive_message_chain(:summary, :quickStats, :overallCpuUsage).and_return cpu_usage
+  allow(vm).to receive_message_chain(:summary, :config, :cpuReservation).and_return cpu_reservation
+  allow(vm).to receive_message_chain(:summary, :quickStats, :guestMemoryUsage).and_return guest_memory_usage
+  allow(vm).to receive_message_chain(:summary, :config, :memorySizeMB).and_return memory_size
+  allow(vm).to receive_message_chain(:summary, :config, :numCpu).and_return cpu_number
+
   vm
 end
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday')
+def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60*60*24)
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,

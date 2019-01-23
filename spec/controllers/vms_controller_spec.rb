@@ -11,17 +11,24 @@ RSpec.describe VmsController, type: :controller do
     sign_in current_user
   end
 
+  let(:vm1) do
+    vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+  end
+
+  let(:vm2) do
+    # associate vm2 with the user
+    request = FactoryBot.create :accepted_request
+    request.users << current_user
+    v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
+  end
+
+  before do
+    allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
+  end
+
   describe 'GET #index' do
-    before do
-      vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
 
-      # associate vm2 with the user
-      request = FactoryBot.create :accepted_request
-      request.users << current_user
-      vm2 = v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
 
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
-    end
 
     context 'when the current user is a user' do
       it 'returns http success' do
@@ -116,75 +123,48 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:double_api) do
-      double
-    end
-
-    before do
-      @vm1 = { name: 'My insanely cool vm', state: true, boot_time: 'Thursday', vmwaretools: true }
-      allow(double_api).to receive(:user_vms).and_return [@vm1]
-      allow(VmApi).to receive(:instance).and_return double_api
-    end
-
     it 'returns http success or timeout or not found' do
-      allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-      get :show, params: { id: 1 }
+      get :show, params: { id: vm2.name }
       expect(response).to have_http_status(:success).or have_http_status(408)
     end
 
     context 'when current user is user' do
       context 'when user is associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-        end
-
         it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+          expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
         end
       end
 
       context 'when user is not associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return({})
-        end
-
         it 'redirects' do
-          get :show, params: { id: 1 }
+          get :show, params: { id: vm1.name }
           expect(response).to have_http_status 302
         end
       end
     end
 
     context 'when current user is admin' do
-      context 'when user is associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-        end
+      let(:current_user) { FactoryBot.create :admin }
 
+      context 'when user is associated to vm' do
         it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+          expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
         end
       end
 
       context 'when user is not associated to vm' do
-        before do
-          allow(double_api).to receive(:get_vm_info).and_return(@vm1)
-        end
-
         it 'renders show page' do
-          expect(get(:show, params: { id: 1 })).to render_template('vms/show')
+          expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
         end
       end
     end
 
     it 'returns http status not found when no vm found' do
-      allow(double_api).to receive(:get_vm_info).and_return(nil)
       get :show, params: { id: 5 }
       expect(response).to have_http_status(:not_found)
     end
 
     it 'renders not found page when no vm found' do
-      allow(double_api).to receive(:get_vm_info).and_return(nil)
       expect(get(:show, params: { id: 1 })).to render_template('errors/not_found')
     end
   end

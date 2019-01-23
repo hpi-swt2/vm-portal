@@ -108,6 +108,11 @@ describe VSphere do
       expect(VSphere::VirtualMachine.all).to match_array vms
     end
 
+    it 'VirtualMachine.all finds all vms that not have a special status' do
+      vms = (mock_root_folder_vms).map { |each| VSphere::VirtualMachine.new each }
+      expect(VSphere::VirtualMachine.rest).to match_array vms
+    end
+
     it 'VirtualMachine.archived finds only archived VMs' do
       vms = mock_archived_vms.map { |each| VSphere::VirtualMachine.new each }
       expect(VSphere::VirtualMachine.archived).to match_array vms

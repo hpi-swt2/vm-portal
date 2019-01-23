@@ -46,7 +46,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   it 'renders the boot times' do
-    expect(rendered).to include mock_vms.first.boot_time
+    expect(rendered).to include mock_vms.first.boot_time.to_s
     expect(rendered).not_to include mock_vms.second.boot_time
   end
 
