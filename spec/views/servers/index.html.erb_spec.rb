@@ -15,8 +15,8 @@ RSpec.describe 'servers/index', type: :view do
       ipv4_address: '8.8.8.8',
       ipv6_address: '::1',
       installed_software: ['SpeckTester'],
-      responsible: 'Hans Wurst'),
-    Server.create!(
+      responsible: 'Hans Wurst'
+    ), Server.create!(
       name: 'SpecServer2',
       cpu_cores: 8,
       ram_gb: 32,
@@ -26,7 +26,8 @@ RSpec.describe 'servers/index', type: :view do
       ipv4_address: '8.8.8.9',
       ipv6_address: '::2',
       installed_software: ['SpeckTester'],
-      responsible: 'Hans Wurst')]
+      responsible: 'Hans Wurst'
+    )]
   end
 
   before do
@@ -49,7 +50,6 @@ RSpec.describe 'servers/index', type: :view do
     it 'shows new server button to admin' do
       render
       expect(rendered).to have_button('New')
-      
     end
   end
 end

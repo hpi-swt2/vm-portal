@@ -45,7 +45,7 @@ RSpec.describe 'servers/show', type: :view do
 
   context 'admin' do
     let(:current_user) { FactoryBot.create :admin }
-    
+
     it 'shows delete and edit links to admin' do
       render
       expect(rendered).to have_link 'Delete'

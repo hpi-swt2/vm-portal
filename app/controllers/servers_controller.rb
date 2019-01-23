@@ -12,8 +12,7 @@ class ServersController < ApplicationController
 
   # GET /servers/1
   # GET /servers/1.json
-  def show
-  end
+  def show; end
 
   # GET /servers/new
   def new
