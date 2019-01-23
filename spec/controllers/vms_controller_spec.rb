@@ -115,17 +115,6 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'GET #new' do
-    it 'returns http success' do
-      get :new
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'renders new page' do
-      expect(get(:new)).to render_template('vms/new')
-    end
-  end
-
   describe 'GET #show' do
     let(:double_api) do
       double

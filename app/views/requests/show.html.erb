@@ -14,7 +14,7 @@
     <tr>
       <td><strong>Cpu-Cores:</strong></td>
       <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
+        <td><%= number_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
       <% else %>
         <td><%= @request.cpu_cores %></td>
       <% end %>
@@ -23,7 +23,7 @@
     <tr>
       <td><strong>MB RAM:</strong></td>
       <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
+        <td><%= number_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
       <% else %>
         <td><%= @request.ram_mb %></td>
       <% end %>
@@ -32,7 +32,7 @@
     <tr>
       <td><strong>MB Storage:</strong></td>
       <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
+        <td><%= number_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
       <% else %>
         <td><%= @request.storage_mb %></td>
       <% end %>
@@ -50,7 +50,7 @@
     <tr>
       <td><strong>Port:</strong></td>
       <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
+        <td><%= number_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
       <% else %>
         <td><%= @request.port %></td>
       <% end %>
@@ -85,11 +85,7 @@
 
     <tr>
       <td><strong>Status:</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'status', nil, class: 'form-control', value: @request.status %></td>
-      <% else %>
-        <td><%= @request.status %></td>
-      <% end %>
+      <td><%= @request.status %></td>
     </tr>
   </tbody>
 </table>

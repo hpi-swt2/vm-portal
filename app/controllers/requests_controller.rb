@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'vmapi.rb'
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   include RequestsHelper
@@ -85,15 +84,18 @@ class RequestsController < ApplicationController
   def recap
     @request = Request.find(params[:id])
     @vm = VSphere::VirtualMachine.find_by_name(@request.name)
+    @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
   end
 
   def request_change_state
     if @request.update(request_params)
-      #notify_request_update
       if @request.accepted?
-        VmApi.instance.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name)
-        redirect_to recap_requests_path, notice: I18n.t('request.successfully_updated_and_vm_created')
+        folder = VSphere::Connection.instance.root_folder
+        clusters = VSphere::Cluster.all
+        folder.create_vm(@request.cpu_cores, @request.ram_mb, @request.storage_mb, @request.name, clusters.first)
+        redirect_to 'vms/requests/#{params[:id]}/recap', notice: I18n.t('request.successfully_updated_and_vm_created')
       else
+        notify_request_update
         redirect_to requests_path, notice: I18n.t('request.successfully_updated')
       end
     else

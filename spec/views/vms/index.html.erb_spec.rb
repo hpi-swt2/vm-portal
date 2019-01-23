@@ -90,10 +90,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   context 'when the user is an employee' do
     let(:current_user) { FactoryBot.create :employee }
 
-    it 'links to new vm page' do
-      expect(rendered).to have_button('New')
-    end
-
     it 'links to requests overview page' do
       expect(rendered).to have_button('Requests')
     end
@@ -101,10 +97,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
-
-    it 'links to new vm page' do
-      expect(rendered).to have_button('New')
-    end
 
     it 'links to requests overview page' do
       expect(rendered).to have_button('Requests')
