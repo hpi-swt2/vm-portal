@@ -138,6 +138,28 @@ describe VSphere do
       expect(vm.users).not_to be_empty
     end
 
+    it 'does not have an IP if the fitting config does not exist' do
+      vm = v_sphere_vm_mock 'There shall not be a VM config with this name!'
+      expect(vm.ip).to be_empty
+    end
+
+    it 'has an IP if the fitting config exists' do
+      config = FactoryBot.create :virtual_machine_config
+      vm = v_sphere_vm_mock config.name
+      expect(vm.ip).to be == config.ip
+    end
+
+    it 'does not have a dns if the fitting config does not exist' do
+      vm = v_sphere_vm_mock 'There shall not be a VM config with this name!'
+      expect(vm.dns).to be_empty
+    end
+
+    it 'has a dns if the fitting config exists' do
+      config = FactoryBot.create :virtual_machine_config
+      vm = v_sphere_vm_mock config.name
+      expect(vm.dns).to be == config.dns
+    end
+
     it 'knows that it is not archived' do
       non_archived_vms = mock_root_folder_vms.map { |each| VSphere::VirtualMachine.new each }
       non_archived_vms.each { |each| expect(each.archived?).to be false }

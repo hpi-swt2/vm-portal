@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_18_134041) do
+ActiveRecord::Schema.define(version: 2019_01_23_102046) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -59,6 +59,12 @@ ActiveRecord::Schema.define(version: 2019_01_18_134041) do
     t.integer "user_id"
     t.text "description"
     t.index ["user_id"], name: "index_requests_on_user_id"
+  end
+
+  create_table "requests_responsible_users", id: false, force: :cascade do |t|
+    t.integer "request_id", null: false
+    t.integer "user_id", null: false
+    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
   end
 
   create_table "responsible_users", force: :cascade do |t|
@@ -133,6 +139,14 @@ ActiveRecord::Schema.define(version: 2019_01_18_134041) do
     t.datetime "updated_at", null: false
     t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
     t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  end
+
+  create_table "virtual_machine_configs", force: :cascade do |t|
+    t.string "name"
+    t.string "ip"
+    t.string "dns"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
