@@ -11,7 +11,6 @@ class VmsController < ApplicationController
   def index
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-    @parameters = determine_params
   end
 
   def destroy
