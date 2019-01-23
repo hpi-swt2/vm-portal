@@ -3,7 +3,6 @@
 require 'vmapi.rb'
 class VmsController < ApplicationController
   attr_reader :vms
-  helper_method :allowed_to_be_archived?
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
@@ -62,16 +61,6 @@ class VmsController < ApplicationController
 
     @vm.set_pending_reviving
     redirect_to controller: :vms, action: 'show', id: @vm.name
-  end
-
-  # TODO: delete archivation requests
-  def allowed_to_be_archived?(vm)
-    request = ArchivationRequest.find_by_name vm.name
-    if request
-      request.can_be_executed?
-    else
-      true
-    end
   end
 
   def stop_archiving
