@@ -15,23 +15,16 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   let(:mock_vms_without_tools) do
-    [v_sphere_vm_mock('My insanely cool vm',
-                      vm_ware_tools: 'toolsNotInstalled'),
+    [v_sphere_vm_mock('My insanely cool vm'),
      v_sphere_vm_mock('Another VM',
                       power_state: 'poweredOff',
-                      boot_time: 'Friday',
-                      vm_ware_tools: 'toolsNotInstalled')]
-  end
-
-  let(:param) do
-    %w[up_vms down_vms]
+                      boot_time: 'Friday')]
   end
 
   let(:current_user) { FactoryBot.create :user }
 
   before do
     assign(:vms, mock_vms)
-    assign(:parameters, param)
     allow(view).to receive(:current_user).and_return(current_user)
     assign(:archived_vms, [])
     assign(:pending_archivation_vms, [])
@@ -55,35 +48,32 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
   end
 
-  it 'can filter resources' do
-    expect(rendered).to have_button('Filter')
-  end
-
   it 'shows correct power on / off button' do
-    expect(rendered).to have_button('Start')
-    expect(rendered).to have_button('Shutdown')
+    expect(rendered).to have_css('a.btn-manage.play')
+    expect(rendered).to have_css('a.btn-manage.stop')
   end
 
   it 'demands confirmation on shutdown' do
-    expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
+    expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
   end
 
   it 'shows no power buttons when vmwaretools are not installed' do
     assign(:vms, mock_vms_without_tools)
-    assign(:parameters, param)
+    rendered = nil
     render
-    expect(rendered).to have_text('VMWare tools are not installed')
+    expect(rendered).not_to have_css('a.btn-manage.play')
+    expect(rendered).not_to have_css('a.btn-manage.stop')
   end
 
   context 'when the user is a user' do
     let(:current_user) { FactoryBot.create :user }
 
     it 'does not link to new vm page' do
-      expect(rendered).not_to have_button('New')
+      expect(rendered).not_to have_button('New Request')
     end
 
     it 'does not link to requests overview page' do
-      expect(rendered).not_to have_button('Requests')
+      expect(rendered).not_to have_button('All Requests')
     end
   end
 
@@ -91,11 +81,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New')
+      expect(rendered).to have_button('New Request')
     end
 
     it 'links to requests overview page' do
-      expect(rendered).to have_button('Requests')
+      expect(rendered).to have_button('All Requests')
     end
   end
 
@@ -103,11 +93,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :admin }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New')
+      expect(rendered).to have_button('New Request')
     end
 
     it 'links to requests overview page' do
-      expect(rendered).to have_button('Requests')
+      expect(rendered).to have_button('All Requests')
     end
   end
 end

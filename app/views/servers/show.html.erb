@@ -3,7 +3,7 @@
   <h1 class="mb-0"><%= @server.name %></h1>
 </div>
 
-<% if @user_is_admin then %>
+<% if current_user.admin? then %>
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%;">
   <div class="text-right float-right" style="width: 20%">
     <div class="dropdown border text-right">

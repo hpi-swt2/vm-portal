@@ -9,12 +9,14 @@ RSpec.describe 'hosts/index.html.erb', type: :view do
     allow(host).to receive(:model).and_return('cool machine')
     allow(host).to receive(:vendor).and_return('nice vendor')
     allow(host).to receive(:connection_state).and_return('connected')
-    allow(host).to receive(:name).and_return('someHostMachine')
     host
   end
 
+  let(:current_user) { FactoryBot.create :user }
+
   before do
     assign(:hosts, [host])
+    allow(view).to receive(:current_user).and_return(current_user)
     render
   end
 
@@ -34,8 +36,11 @@ RSpec.describe 'hosts/index.html.erb', type: :view do
     expect(rendered).to include host.connection_state
   end
 
-
   it 'links to resource detail pages' do
     expect(rendered).to have_link(host.name, count: 1)
+  end
+
+  it 'does not show new server button per default' do
+    expect(rendered).not_to have_button('New')
   end
 end

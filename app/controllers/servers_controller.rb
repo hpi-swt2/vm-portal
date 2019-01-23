@@ -7,14 +7,12 @@ class ServersController < ApplicationController
   # GET /servers
   # GET /servers.json
   def index
-    @user_is_admin = current_user.admin?
     @servers = Server.all
   end
 
   # GET /servers/1
   # GET /servers/1.json
   def show
-    @user_is_admin = current_user.admin?
   end
 
   # GET /servers/new

@@ -73,18 +73,6 @@ RSpec.describe VmsController, type: :controller do
         get(:index)
         expect(subject.vms.size).to be VSphere::VirtualMachine.all.size
       end
-
-      it 'returns online VMs if requested' do
-        get :index, params: { up_vms: 'true' }
-        expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any?(&:powered_on?) }
-        expect(subject.vms).not_to satisfy('include offline VMs') { |vms| vms.any? { |vm| !vm.powered_on? } }
-      end
-
-      it 'returns offline VMs if requested' do
-        get :index, params: { down_vms: 'true' }
-        expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any?(&:powered_off?) }
-        expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_off? } }
-      end
     end
   end
 
