@@ -134,10 +134,10 @@ class VmsController < ApplicationController
   end
 
   def filter_vm_categories(user)
-    @vms = @vms.select { |each| each.belongs_to user }
-    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
-    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
-    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
+    @vms = filter(@vms.select { |each| each.belongs_to user })
+    @archived_vms = filter(@archived_vms.select { |each| each.belongs_to user })
+    @pending_archivation_vms = filter(@pending_archivation_vms.select { |each| each.belongs_to user })
+    @pending_reviving_vms = filter(@pending_reviving_vms.select { |each| each.belongs_to user })
   end
 
   def split_into_categories(vms)
