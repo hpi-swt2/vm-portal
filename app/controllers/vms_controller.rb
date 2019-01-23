@@ -8,7 +8,7 @@ class VmsController < ApplicationController
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm]
-  before_action :authorize_vm_access, only: %i[show edit]
+  before_action :authorize_vm_access, only: %i[show edit update]
 
   def index
     vms = filter(current_user.admin? ? VSphere::VirtualMachine.all : current_user.vms)
@@ -40,6 +40,22 @@ class VmsController < ApplicationController
     @request = Request.where(status: 'accepted', name: @vm[:name]).first
     @sudoer_ids = @request.sudo_user_assignments.map { |user| user.id }
     @non_sudoer_ids = @request.non_sudo_user_assignments.map { |user| user.id}
+  end
+
+  def update
+    request = Request.where(status: 'accepted', name: @vm[:name]).first
+    request.description = params[:description]
+    request.save!
+
+    sudoer_ids = @request.sudo_user_assignments.map { |user| user.id }
+    new_sudoer_ids = params[:sudo_user_ids] - sudoer_ids
+    # save new_sudoer_ids
+    removed_sudoer_ids = sudoer_ids - params[:sudo_user_ids]
+
+    # Do it in the request model
+    
+
+    redirect_to vm_path(@vm[:name])
   end
 
   def request_vm_archivation

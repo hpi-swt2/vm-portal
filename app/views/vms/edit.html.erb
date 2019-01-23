@@ -1,6 +1,6 @@
 <h1>Edit VM information of <%= @vm[:name] %></h1>
 
-<%= form_with(url: edit_vm_path(@vm[:name]), local: true) do |form| %>
+<%= form_with(url: vm_path(@vm[:name]), local: true, method: :put) do |form| %>
 
 <div class="field">
     <label for="sudo_user_ids">Users with sudo rights:</label>
@@ -24,5 +24,6 @@
         <%= form.label 'description' %>
         <%= form.text_area 'description', cols: "40", rows: "4", class: 'form-control', value: @request.description %>
     </div>
+    <%= form.submit 'save', class: 'btn btn-primary' %>
 </div>
 <% end %>
