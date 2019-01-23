@@ -25,7 +25,6 @@ describe 'Dashboard', type: :feature do
   it 'does render notifications for a user' do
     visit(:dashboard)
     expect(page).to(have_text('Notifications'))
-    skip('user is not yet connected to his notifications')
   end
 
   it 'does render a list of servers for a signed user' do
@@ -71,7 +70,6 @@ describe 'Dashboard', type: :feature do
 
   context 'without notifications' do
     it 'informs about no notifications' do
-      skip 'Find solution for timeout when loading dashboard'
       visit dashboard_path
       expect(page).to have_text('You don\'t have any notifications at the moment.')
     end
