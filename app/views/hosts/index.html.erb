@@ -13,11 +13,11 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <div>
-              <%= check_box_tag(:up_vms, true, @parameters.include?('up_vms')) %>
+              <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
               Connected
             </div>
             <div>
-              <%= check_box_tag(:down_vms, true, @parameters.include?('down_vms')) %>
+              <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
               Not connected
             </div>
             <div class="dropdown-divider"></div>
@@ -55,15 +55,12 @@
           <% if not host[:vms].nil?
               vms = host[:vms].keys.take(3)
               vms.each do |vm| %>
-                <%= vm -%>
-                <% if not vm == vms.last %>
-                  ,
-                <% end %>
+              <li><%= vm -%></li>
               <% end %>
           <% end %>
 
           <% if host[:vms].length>3 %>
-              ...
+              ... (<%=host[:vms].length%>)
           <% end %>
 
 

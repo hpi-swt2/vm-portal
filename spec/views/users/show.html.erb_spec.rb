@@ -36,6 +36,10 @@ RSpec.describe 'users/show.html.erb', type: :view do
       render
     end
 
+    it 'shows an edit button' do
+     expect(rendered).to have_link(id: 'editUserButton', href: edit_user_path(user))
+   end
+
     context 'when the user has a ssh key' do
       it 'shows the ssh key' do
         expect(rendered).to include user.ssh_key
