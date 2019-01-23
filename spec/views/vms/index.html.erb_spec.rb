@@ -35,6 +35,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     allow(view).to receive(:current_user).and_return(current_user)
     assign(:archived_vms, [])
     assign(:pending_archivation_vms, [])
+    assign(:pending_reviving_vms, [])
     render
   end
 

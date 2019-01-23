@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   post '/vms/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
   post '/vms/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
   post '/vms/:id/archive_vm' => 'vms#archive_vm', constraints: { id: /.*/ }
+  post '/vms/:id/request_vm_revive' => 'vms#request_vm_revive', constraints: { id: /.*/ }
+  post '/vms/:id/revive_vm' => 'vms#revive_vm', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack

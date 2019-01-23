@@ -10,11 +10,7 @@ class RequestsController < ApplicationController
   # GET /requests
   # GET /requests.json
   def index
-    @requests = if current_user.admin?
-                  Request.all
-                else
-                  Request.select { |r| r.user == current_user }
-                end
+    @requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
   end
 
   # GET /requests/1
@@ -139,6 +135,7 @@ class RequestsController < ApplicationController
   end
 
   def unsuccessful_action(format, method)
+    @request_templates = RequestTemplate.all
     format.html { render method }
     format.json { render json: @request.errors, status: :unprocessable_entity }
   end
