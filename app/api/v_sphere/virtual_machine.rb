@@ -48,7 +48,7 @@ module VSphere
     end
 
     def self.find_by_name(name)
-      VSphere::Connection.instance.root_folder.find_vm(name)
+      root_folder.find_vm(name)
     end
 
     def self.user_vms(user)
