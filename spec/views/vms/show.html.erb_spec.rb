@@ -84,7 +84,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'has a button to edit information' do
-    expect(rendered).to have_button 'Edit VM information'
+    expect(rendered).to have_link 'Edit'
   end
 
   it 'shows CPU usage' do

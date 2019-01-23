@@ -50,6 +50,10 @@ end %>
         <%= link_to 'Delete VM',
                       {controller: :vms, action: 'destroy', id: @vm[:name]},
                       method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+        <div class="dropdown-divider"></div>
+        <%= link_to 'Edit',
+                      {controller: :vms, action: 'edit', id: @vm[:name]},
+                      method: :get, class: "dropdown-item" %>
       </div>
     </div>
   </div>
@@ -100,5 +104,3 @@ end %>
     </table>
   </div>
 </div>
-
-<%= button_to "Edit VM information", {controller: :vms, action: 'edit', id: @vm[:name]}, method: :get, class: "btn btn-info" %>
