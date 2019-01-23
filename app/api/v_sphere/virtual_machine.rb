@@ -147,7 +147,7 @@ module VSphere
     private
 
     def config
-      VirtualMachineConfig.find_by_name name
+      @config ||= VirtualMachineConfig.find_by_name name
     end
 
     def managed_folder_entry
