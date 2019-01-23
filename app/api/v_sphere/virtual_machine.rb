@@ -104,6 +104,16 @@ module VSphere
       move_into archived_folder
     end
 
+    # Config methods
+    # All the properties that HART saves internally
+    def ip
+      config&.ip || ''
+    end
+
+    def dns
+      config&.dns || ''
+    end
+
     # Utilities
     def move_into(folder)
       folder.move_here self
@@ -135,6 +145,10 @@ module VSphere
     end
 
     private
+
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
 
     def managed_folder_entry
       @vm
