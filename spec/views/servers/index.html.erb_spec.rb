@@ -41,7 +41,7 @@ RSpec.describe 'servers/index', type: :view do
 
   it 'does not show new server button per default' do
     render
-    expect(rendered).not_to have_button('New')
+    expect(rendered).not_to have_css('a i.fa-plus')
   end
 
   context 'admin' do
@@ -49,7 +49,7 @@ RSpec.describe 'servers/index', type: :view do
 
     it 'shows new server button to admin' do
       render
-      expect(rendered).to have_button('New')
+      expect(rendered).to have_css('a i.fa-plus')
     end
   end
 end

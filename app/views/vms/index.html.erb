@@ -3,10 +3,10 @@
   <% if current_user.employee_or_admin? %>
     <%= button_to "New Request", new_request_path,
       method: :get,
-      class: "btn btn-info float-right mt-3" %>
+      class: "btn btn-primary float-right mt-3" %>
     <%= button_to "All Requests", requests_path,
       method: :get,
-      class: "btn btn-info float-right mt-3 mr-3" %>
+      class: "btn btn-primary float-right mt-3 mr-3" %>
   <% end %>
 </div>
 
