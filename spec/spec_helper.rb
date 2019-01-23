@@ -44,11 +44,7 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.configure do |config|
   config.before do
-    root_folder = v_sphere_folder_mock 'root'
-    clusters_folder = v_sphere_folder_mock 'clusters'
-    VSphere::Connection.instance.instance_variable_set :@vm_folder, root_folder
-    VSphere::Connection.instance.instance_variable_set :@cluster_folder, clusters_folder
-    VSphere::Connection.instance.define_singleton_method(:connect) {}
+    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
   end
 
   # rspec-expectations config goes here. You can use an alternate

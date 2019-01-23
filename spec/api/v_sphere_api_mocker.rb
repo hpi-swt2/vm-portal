@@ -92,10 +92,12 @@ def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
 end
 
-def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, clusters)
+def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, pending_revivings_vms, clusters)
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
-  root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder], vms: normal_vms
+  pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms
+  root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder,
+                                                          pending_reviving_vms_folder], vms: normal_vms
   clusters_folder = v_sphere_folder_mock 'clusters', clusters: clusters
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder

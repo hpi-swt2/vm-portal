@@ -31,6 +31,16 @@ describe VSphere do
     vim_folder_mock('Pending archivings', [], mock_pending_archivings_vms, [])
   end
 
+  let(:mock_pending_revivings_vms) do
+    (1..5).map do |each|
+      vim_vm_mock('Pending Revivings VM' + each.to_s)
+    end
+  end
+
+  let(:mock_pending_revivings_folder) do
+    vim_folder_mock('Pending revivings', [], mock_pending_revivings_vms, [])
+  end
+
   let(:mock_root_folder_vms) do
     (1..5).map do |each|
       vim_vm_mock('Root folder VM' + each.to_s, power_state: 'poweredOff')
@@ -38,7 +48,7 @@ describe VSphere do
   end
 
   let(:mock_folder) do
-    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder], mock_root_folder_vms, [])
+    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder, mock_pending_revivings_folder], mock_root_folder_vms, [])
   end
 
   let(:root_folder) { VSphere::Folder.new(mock_folder) }
@@ -57,7 +67,8 @@ describe VSphere do
 
   describe VSphere::Folder do
     it 'finds all vms recursively' do
-      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms).map { |each| VSphere::VirtualMachine.new each }
+      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms +
+          mock_pending_revivings_vms).map { |each| VSphere::VirtualMachine.new each }
       expect(root_folder.vms(recursive: true)).to match_array vms
     end
 
@@ -69,7 +80,7 @@ describe VSphere do
 
   describe VSphere::Cluster do
     before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], clusters_mock)
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], [], clusters_mock)
     end
 
     it 'Cluster.all finds all clusters' do
@@ -79,7 +90,7 @@ describe VSphere do
 
   describe VSphere::Host do
     before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], clusters_mock)
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], [], clusters_mock)
     end
 
     it 'Host.all finds all hosts' do
@@ -93,7 +104,7 @@ describe VSphere do
     end
 
     it 'VirtualMachine.all finds all vms' do
-      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms).map { |each| VSphere::VirtualMachine.new each }
+      vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms + mock_pending_revivings_vms).map { |each| VSphere::VirtualMachine.new each }
       expect(VSphere::VirtualMachine.all).to match_array vms
     end
 
@@ -105,6 +116,11 @@ describe VSphere do
     it 'VirtualMachine.pending_archivation finds only vms that are pending archivation' do
       vms = mock_pending_archivings_vms.map { |each| VSphere::VirtualMachine.new each }
       expect(VSphere::VirtualMachine.pending_archivation).to match_array vms
+    end
+
+    it 'VirtualMachine.pending_archivation finds only vms that are pending reviving' do
+      vms = mock_pending_revivings_vms.map { |each| VSphere::VirtualMachine.new each }
+      expect(VSphere::VirtualMachine.pending_revivings).to match_array vms
     end
 
     it 'VirtualMachine.find_by_name finds all vms' do
@@ -166,6 +182,20 @@ describe VSphere do
       allow(mock_pending_archivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_pending_archivation
       expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task)
+    end
+
+    it 'moves into the correct folder when it is pending_reviving' do
+      vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
+      allow(mock_pending_revivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
+      vm.set_pending_reviving
+      expect(mock_pending_revivings_folder).to have_received(:MoveIntoFolder_Task)
+    end
+
+    it 'moves into the correct folder when it is revived' do
+      vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
+      allow(mock_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
+      vm.set_revived
+      expect(mock_folder).to have_received(:MoveIntoFolder_Task)
     end
 
     it 'powers the vm off when its being archived' do # rubocop:disable RSpec/ExampleLength
