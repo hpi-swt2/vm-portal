@@ -169,7 +169,6 @@ module VSphere
       else
         false
       end
-
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
