@@ -47,6 +47,8 @@ end %>
         <div class="dropdown-divider"></div>
         <%= link_to 'Archive VM',
                     {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
+        <%= link_to 'Revive VM',
+                    {controller: :vms, action: 'request_vm_revive', id: @vm[:name]}, method: :post, class: 'dropdown-item'%>
         <div class="dropdown-divider"></div>
         <%= link_to 'Delete VM',
                       {controller: :vms, action: 'destroy', id: @vm.name},

@@ -45,4 +45,3 @@ coverage
 # Ignore locks
 .lock*
 
-credentials.yml.enc
