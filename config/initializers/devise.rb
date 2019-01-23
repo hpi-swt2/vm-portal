@@ -296,9 +296,9 @@ Devise.setup do |config|
                     port: 443,
                     scheme: 'https',
                     host: 'oidc.hpi.de',
-                    identifier: Rails.application.credentials.hpi_openid.try(:client_id),
-                    secret: Rails.application.credentials.hpi_openid.try(:client_secret),
-                    redirect_uri: Rails.application.credentials.hpi_openid.try(:redirect_uri),
+                    identifier: Rails.application.credentials.hpi_openid[:client_id],
+                    secret: Rails.application.credentials.hpi_openid[:client_secret],
+                    redirect_uri: 'https://hart-dev.epic-hpi.de/users/auth/hpi/callback',
                     authorization_endpoint: '/auth'
                   },
                   client_auth_method: :other,
