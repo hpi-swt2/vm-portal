@@ -22,9 +22,9 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
         expect(request.status).to eq('accepted')
       end
 
-      it 'redirects to the recap page of the request' do
-        expect(page).to have_current_path('vms/requests/#{request.id}/recap')
-      end
+      it 'redirects to the config page of the request' do
+        expect(page).to have_current_path('vms/configs/#{request.name}')
+      end 
     end
 
     context 'clicking the reject button' do

@@ -1,9 +1,9 @@
 <h1>Request Information</h1>
 
-<table class="table table-fixed-columns table-striped">
+<table class="table table-fixed-columns table-flex-width">
   <tbody>
     <tr>
-      <td><strong>VM Name:</strong></td>
+      <th style="width: 300px">VM Name</td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'vm_name', nil, class: 'form-control', value: @request.name %></td>
       <% else %>
@@ -12,7 +12,7 @@
     </tr>
 
     <tr>
-      <td><strong>Cpu-Cores:</strong></td>
+      <td><strong>Cpu Cores</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= number_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
       <% else %>
@@ -21,7 +21,7 @@
     </tr>
 
     <tr>
-      <td><strong>MB RAM:</strong></td>
+      <td><strong>MB RAM</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= number_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
       <% else %>
@@ -30,7 +30,7 @@
     </tr>
 
     <tr>
-      <td><strong>MB Storage:</strong></td>
+      <td><strong>MB Storage</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= number_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
       <% else %>
@@ -39,7 +39,7 @@
     </tr>
 
     <tr>
-      <td><strong>Operating System:</strong></td>
+      <td><strong>Operating System</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= select_tag 'operating_system', options_for_select( operating_system_options, @request.operating_system) %></td>
       <% else %>
@@ -48,7 +48,7 @@
     </tr>
 
     <tr>
-      <td><strong>Port:</strong></td>
+      <td><strong>Port</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= number_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
       <% else %>
@@ -57,7 +57,7 @@
     </tr>
 
     <tr>
-      <td><strong>Application Name:</strong></td>
+      <td><strong>Application Name</strong></td>
       <% if current_user.admin? && @request.pending? %>
         <td><%= text_field_tag 'application_name', nil, class: 'form-control', value: @request.application_name %></td>
       <% else %>
@@ -84,14 +84,14 @@
     </tr>
 
     <tr>
-      <td><strong>Status:</strong></td>
+      <td><strong>Status</strong></td>
       <td><%= @request.status %></td>
     </tr>
   </tbody>
 </table>
 
 <p>
-  <strong>Users with sudo rights:</strong>
+  <strong>Users with sudo rights</strong>
   <ul>
     <% if current_user.admin? && @request.pending? %>
       <%= select_tag 'sudo_user_ids',
@@ -111,7 +111,7 @@
 </p>
 
 <p>
-  <strong>Users:</strong>
+  <strong>Users</strong>
   <ul>
     <% if current_user.admin? && @request.pending? %>
       <%= select_tag 'user_ids',
