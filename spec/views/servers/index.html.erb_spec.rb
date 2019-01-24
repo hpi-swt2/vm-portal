@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe 'servers/index', type: :view do
   let(:current_user) { FactoryBot.create :user }
   let :server_params_1 do
-    {name: 'SpecServer',
+    {
+      name: 'SpecServer',
       cpu_cores: 4,
       ram_gb: 1024,
       storage_gb: 4096,
@@ -16,11 +17,13 @@ RSpec.describe 'servers/index', type: :view do
       ipv4_address: '8.8.8.8',
       ipv6_address: '::1',
       installed_software: ['SpeckTester'],
-      responsible: FactoryBot.create(:admin)}
+      responsible: FactoryBot.create(:admin)
+    }
   end
 
   let :server_params_2 do
-    {name: 'SpecServer2',
+    {
+      name: 'SpecServer2',
       cpu_cores: 8,
       ram_gb: 32,
       storage_gb: 2048,
@@ -31,7 +34,8 @@ RSpec.describe 'servers/index', type: :view do
       ipv4_address: '8.8.8.9',
       ipv6_address: '::2',
       installed_software: ['SpeckTester'],
-      responsible: FactoryBot.create(:admin)}
+      responsible: FactoryBot.create(:admin)
+    }
   end
 
   let(:servers) do

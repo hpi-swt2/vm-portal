@@ -32,7 +32,7 @@
                'HDD' => "#{@server.storage_gb} GB",
                'FQDN' => @server.fqdn,
                'Description' => @server.description,
-               'Responsible' => @server.responsible.name }         
+               'Responsible' => @server.responsible&.name }         
   %>
 
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
@@ -45,7 +45,7 @@
         <tr>
           <th colspan="2"><h4 class="mb-0">Software</h4></th>
         </tr>
-        <% @server.installed_software.each do |software| %>
+        <% @server.installed_software&.each do |software| %>
         <tr>
             <td><%= software %></td> 
         </tr>

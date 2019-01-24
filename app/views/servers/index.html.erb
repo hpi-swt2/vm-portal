@@ -6,15 +6,15 @@
   <% end %>
 </div>
 
-<input class="mb-3 bg-dark border-0 rounded text-white filter-box" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
 
 <table data-toggle="table" class="table" id="servers">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-secondary">Name</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Vendor</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Model</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Vendor</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Model</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
   </tr>
   </thead>
   <tbody>
@@ -23,7 +23,7 @@
       <td class="table-active"><%= link_to server.name, server, class: "btn btn-link" %></td>
       <td class="table-active"><%= server.vendor %></td>
       <td class="table-active"><%= server.model %></td>
-      <td class="table-active"><%= server.responsible.name %></td>
+      <td class="table-active"><%= server.responsible&.name %></td>
     </tr>
   <% end %>
   </tbody>
