@@ -3,7 +3,6 @@
 require 'vmapi.rb'
 
 module VmsHelper
-  # TODO: delete archivation requests
   def allowed_to_be_archived?(vm)
     request = ArchivationRequest.find_by_name vm.name
     if request

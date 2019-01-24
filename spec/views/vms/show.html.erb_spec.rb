@@ -20,6 +20,8 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
   before do
     assign(:vm, vm_on)
+    connection = v_sphere_connection_mock [vm_on, vm_on_without_tools, vm_off], [], [], [], []
+    allow(VSphere::Connection).to receive(:instance).and_return connection
     render
   end
 

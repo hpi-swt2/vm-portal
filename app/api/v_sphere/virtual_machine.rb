@@ -124,6 +124,7 @@ module VSphere
 
     def set_pending_archivation
       move_into pending_archivation_folder
+      ArchivationRequest.new(name: name).save
     end
 
     def set_archived
@@ -134,6 +135,7 @@ module VSphere
       end
 
       move_into archived_folder
+      archivation_request&.delete
     end
 
     # Reviving
@@ -147,6 +149,7 @@ module VSphere
 
     def set_revived
       move_into root_folder
+      archivation_request&.delete
     end
 
     # Config methods
@@ -226,6 +229,10 @@ module VSphere
     end
 
     private
+
+    def archivation_request
+      ArchivationRequest.find_by_name(name)
+    end
 
     def config
       @config ||= VirtualMachineConfig.find_by_name name
