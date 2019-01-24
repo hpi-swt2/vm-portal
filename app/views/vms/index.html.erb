@@ -21,10 +21,10 @@
 <table data-toggle="table" class="table" id="vms_active">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Status</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
   </tr>
   </thead>
   <tbody>
@@ -66,15 +66,15 @@
 
 <h2 id="to_be_archived">To be archived</h2>
 
-<input class="mb-3 bg-dark border-0 rounded text-white filter-box" type="text" id="filter_to_be_archived" onkeyup="filter_table('filter_to_be_archived', 'vms_to_be_archived', document)" placeholder="Search">
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_to_be_archived" onkeyup="filter_table('filter_to_be_archived', 'vms_to_be_archived', document)" placeholder="Search">
 
 <table data-toggle="table" class="table" id="vms_to_be_archived">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-secondary">Name</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Project</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Responsible</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Status</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
   </tr>
   </thead>
   <tbody>
@@ -96,12 +96,12 @@
         </div>
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'archive_vm', id: vm.name }, 
+            {controller: :vms, action: 'archive_vm', id: vm.name}, 
             method: :post,
             class: "btn-manage float-right checkmark" %>
           <%= link_to '',
-            {controller: :vms, action: 'index'},
-            method: :get,
+            {controller: :vms, action: 'revive_vm', id: vm.name},
+            method: :post,
             class: "btn-manage float-right cross" %>
         <% end %>
       </td>
@@ -112,14 +112,14 @@
 
 <h2 id="archived">Archived machines</h2>
 
-<input class="mb-3 bg-dark border-0 rounded text-white filter-box" type="text" id="filter_archived" onkeyup="filter_table('filter_archived', 'vms_archived', document)" placeholder="Search">
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_archived" onkeyup="filter_table('filter_archived', 'vms_archived', document)" placeholder="Search">
 
 <table data-toggle="table" class="table" id="vms_archived">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-secondary">Name</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Project</th>
-    <th scope="col" data-sortable="true" class="bg-secondary">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
   </tr>
   </thead>
   <tbody>
@@ -135,8 +135,8 @@
         ipsum
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'index'},
-            method: :get,
+            {controller: :vms, action: 'revive_vm', id: vm.name},
+            method: :post,
             class: "btn-manage float-right arrow-up" %>
         <% end %>
       </td>
