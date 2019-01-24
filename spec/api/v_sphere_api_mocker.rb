@@ -50,22 +50,58 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday') # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+def vim_vm_summary_mock
+  summary_double = double
+  allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
+  allow(summary_double).to receive_message_chain(:storage, :uncommitted).and_return(100)
+  allow(summary_double).to receive_message_chain(:config, :guestId).and_return('Win10')
+  allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
+  allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
+  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
+  allow(summary_double).to receive_message_chain(:config, :cpuReservation).and_return(100)
+  allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
+  allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
+  allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
+  allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
+  allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
+  summary_double
+end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+# rubocop:disable Metrics/AbcSize
+def vim_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green'
+  )
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
-  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
+  allow(vm).to receive(:guestHeartbeatStatus).and_return guest_heartbeat_status
+  allow(vm).to receive(:summary).and_return vim_vm_summary_mock
+  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   vm
 end
+# rubocop:enable Metrics/AbcSize
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: 'Yesterday')
+def v_sphere_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green'
+  )
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
-                                          boot_time: boot_time)
+                                          boot_time: boot_time,
+                                          guest_heartbeat_status: guest_heartbeat_status)
 end
 
 def vim_host_mock(name)
@@ -78,7 +114,8 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize
+def vim_cluster_mock(name, hosts)
   hosts = extract_vim_objects hosts
   cluster = double
   allow(cluster).to receive(:is_a?).and_return false
@@ -87,15 +124,24 @@ def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
   allow(cluster).to receive(:name).and_return name
   cluster
 end
+# rubocop:enable Metrics/AbcSize
 
 def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
 end
 
-def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, clusters)
+def v_sphere_connection_mock(
+    normal_vms,
+    archived_vms,
+    pending_archivation_vms,
+    pending_revivings_vms,
+    clusters
+  )
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
-  root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder], vms: normal_vms
+  pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms
+  root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder,
+                                                          pending_reviving_vms_folder], vms: normal_vms
   clusters_folder = v_sphere_folder_mock 'clusters', clusters: clusters
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder

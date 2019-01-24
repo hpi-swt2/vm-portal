@@ -2,6 +2,20 @@
 
 <h1>Request Templates</h1>
 
+<table class="table-bar">
+  <tbody>
+    <tr>
+      <td>
+        <%=link_to(fa_icon('plus'),
+         new_request_template_path, class: 'btn btn-primary') %>
+      </td>
+      <td>
+        <%= link_to 'Requests', requests_path, class: 'btn btn-primary' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <table class="table">
   <thead>
     <tr>
@@ -9,8 +23,7 @@
       <th>CPU cores</th>
       <th>RAM in GB</th>
       <th>Storage in GB</th>
-      <th>Operating system</th>
-      <th colspan="1"></th>
+      <th colspan="2">Operating system</th>
     </tr>
   </thead>
 
@@ -42,7 +55,6 @@
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Request Template', new_request_template_path, class: 'btn btn-primary' %>
-<%= link_to 'Show requests', requests_path, class: 'btn btn-secondary' %>
+<% if @request_templates.length == 0 %>
+<p class="empty-table-label">No templates created yet</p>
+<% end %>
