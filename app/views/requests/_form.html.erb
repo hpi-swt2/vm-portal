@@ -20,8 +20,8 @@
         </ul>
         <% @request_templates.each_with_index do |request_template, index| %>
           <ul>
-             <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system] %>"/>
-            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_mb} GB RAM, #{request_template.storage_mb} GB Storage, #{request_template.operating_system}"
+             <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_gb, request_template.storage_gb, request_template.operating_system] %>"/>
+            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}"
             %>
           </ul>
         <% end %>
@@ -44,7 +44,7 @@
     <%= form.number_field :ram_mb, min: 0, class: 'form-control', id: 'ram' %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :storage_mb, "Storage in GB" %>
     <%= form.number_field :storage_mb, min: 0, class: 'form-control', id: 'storage' %>
   </div>

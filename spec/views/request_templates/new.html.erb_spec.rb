@@ -9,8 +9,8 @@ RSpec.describe 'request_templates/new', type: :view do
     assign(:request_template, RequestTemplate.new(
                                 name: 'string',
                                 cpu_cores: 1,
-                                ram_mb: 1000,
-                                storage_mb: 1000,
+                                ram_gb: 1,
+                                storage_gb: 1,
                                 operating_system: 'MyString'
                               ))
   end
@@ -23,9 +23,9 @@ RSpec.describe 'request_templates/new', type: :view do
 
       assert_select 'input[name=?]', 'request_template[cpu_cores]'
 
-      assert_select 'input[name=?]', 'request_template[ram_mb]'
+      assert_select 'input[name=?]', 'request_template[ram_gb]'
 
-      assert_select 'input[name=?]', 'request_template[storage_mb]'
+      assert_select 'input[name=?]', 'request_template[storage_gb]'
 
       assert_select 'select[name=?]', 'request_template[operating_system]'
     end

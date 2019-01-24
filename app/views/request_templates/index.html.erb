@@ -36,8 +36,8 @@
           <td><%= request_template.name %></td>
         <% end %>
         <td><%= request_template.cpu_cores %></td>
-        <td><%= mb_to_gb(request_template.ram_mb) %></td>
-        <td><%= mb_to_gb(request_template.storage_mb) %></td>
+        <td><%= request_template.ram_gb %></td>
+        <td><%= request_template.storage_gb %></td>
         <td><%= request_template.operating_system %></td>
         <% if current_user.admin? %>
           <td>
