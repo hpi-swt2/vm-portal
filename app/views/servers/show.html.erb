@@ -22,6 +22,13 @@
 </div>
 <% end %>
 
+<div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
+  Responsible: <%= @server.responsible&.name %>
+</div>
+<div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
+  Description: <%= @server.description %>
+</div>
+
 <%
   @hardware = {'Vendor' => @server.vendor,
                'Model' => @server.model,
@@ -30,9 +37,7 @@
                'CPU Cores' => @server.cpu_cores,
                'RAM' => "#{@server.ram_gb} GB",
                'HDD' => "#{@server.storage_gb} GB",
-               'FQDN' => @server.fqdn,
-               'Description' => @server.description,
-               'Responsible' => @server.responsible&.name }         
+               'FQDN' => @server.fqdn}         
   %>
 
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">

@@ -68,7 +68,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     context 'when vmwaretools are not installed' do
       before do
         assign(:vms, mock_vms_without_tools)
-        assign(:parameters, param)
         render
       end
 
