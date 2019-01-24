@@ -45,15 +45,9 @@ class VmsController < ApplicationController
   def update
     request = Request.where(status: 'accepted', name: @vm[:name]).first
     request.description = params[:description]
+    request.new_sudo_user_ids params[:sudo_user_ids] # TODO: setter for sudoers, also notifying changed users
+    request.new_non_sudo_user_ids params[:sudo_user_ids] # TODO: setter for non-sudoers, also notifying changed users
     request.save!
-
-    sudoer_ids = @request.sudo_user_assignments.map { |user| user.id }
-    new_sudoer_ids = params[:sudo_user_ids] - sudoer_ids
-    # save new_sudoer_ids
-    removed_sudoer_ids = sudoer_ids - params[:sudo_user_ids]
-
-    # Do it in the request model
-    
 
     redirect_to vm_path(@vm[:name])
   end
