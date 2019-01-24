@@ -98,7 +98,7 @@ RSpec.describe VmsController, type: :controller do
           expect(subject.vms).to satisfy('include online VMs') { |vms| vms.any?(&:powered_on?) }
         end
 
-        it 'does not return not online vms' do
+        it 'does not return online vms' do
           expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_on? } }
         end
       end
@@ -112,7 +112,7 @@ RSpec.describe VmsController, type: :controller do
           expect(subject.vms).to satisfy('include offline VMs') { |vms| vms.any?(&:powered_off?) }
         end
 
-        it 'does not return not offline vms' do
+        it 'does not return online vms' do
           expect(subject.vms).not_to satisfy('include online VMs') { |vms| vms.any? { |vm| !vm.powered_off? } }
         end
       end
