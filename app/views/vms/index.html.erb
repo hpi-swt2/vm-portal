@@ -44,18 +44,22 @@
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if vm.vm_ware_tools? %>
-          <%= link_to '',
-            {controller: :vms, action: 'change_power_state', id: vm.name},
-            method: :post,
-            data: { confirm: 'Are you sure?' },
-            class: "btn-manage float-right #{ vm.powered_on? ? 'stop' : 'play' }" %>
-          <% if vm.powered_on? %>
+        <% if vm.root_users.include?(current_user) %>
+          <% if vm.vm_ware_tools? %>
             <%= link_to '',
-              {controller: :vms, action: 'reboot_guest_os', id: vm.name},
+              {controller: :vms, action: 'change_power_state', id: vm.name},
               method: :post,
               data: { confirm: 'Are you sure?' },
-              class: "btn-manage float-right replay" %>
+              class: "btn-manage float-right #{ vm.powered_on? ? 'stop' : 'play' }" %>
+            <% if vm.powered_on? %>
+              <%= link_to '',
+                {controller: :vms, action: 'reboot_guest_os', id: vm.name},
+                method: :post,
+                data: { confirm: 'Are you sure?' },
+                class: "btn-manage float-right replay" %>
+            <% end %>
+          <% else %>
+            <p class="text-muted">VMWare tools are not installed</p>
           <% end %>
         <% end %>
       </td>
@@ -80,6 +84,7 @@
   <tbody>
   <% @pending_archivation_vms&.each do |vm| %>
     <tr>
+
       <td class="table-active">
         <%= link_to vm.name,
           {controller: :vms, action: 'show', id: vm.name},
@@ -103,6 +108,7 @@
             {controller: :vms, action: 'revive_vm', id: vm.name},
             method: :post,
             class: "btn-manage float-right cross" %>
+        
         <% end %>
       </td>
     </tr>

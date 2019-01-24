@@ -48,21 +48,42 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
   end
 
-  it 'shows correct power on / off button' do
-    expect(rendered).to have_css('a.btn-manage.play')
-    expect(rendered).to have_css('a.btn-manage.stop')
+  context 'when the user is a root user for the vms' do
+    before do
+      request = FactoryBot.create :accepted_request, name: mock_vms[0].name
+      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
+      request = FactoryBot.create :accepted_request, name: mock_vms[1].name
+      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
+      render
+    end
+
+    it 'shows correct power on / off button' do
+      expect(rendered).to have_css('a.btn-manage.play')
+    end
+
+    it 'demands confirmation on shutdown' do
+      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
+    end
+
+    context 'when vmwaretools are not installed' do
+      before do
+        assign(:vms, mock_vms_without_tools)
+        assign(:parameters, param)
+        render
+      end
+
+      it 'shows no power buttons when vmwaretools are not installed' do
+        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
+      end
+    end
   end
 
-  it 'demands confirmation on shutdown' do
-    expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
-  end
-
-  it 'shows no power buttons when vmwaretools are not installed' do
-    assign(:vms, mock_vms_without_tools)
-    rendered = nil
-    render
-    expect(rendered).not_to have_css('a.btn-manage.play')
-    expect(rendered).not_to have_css('a.btn-manage.stop')
+  context 'when the user is not a root user for the vms' do
+    it 'does not show any manage buttons' do
+      expect(rendered).not_to have_css('a.btn-manage.play')
+      expect(rendered).not_to have_css('a.btn-manage.stop')
+      expect(rendered).not_to have_text('VMWare tools are not installed')
+    end
   end
 
   context 'when the user is a user' do
