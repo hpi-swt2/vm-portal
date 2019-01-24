@@ -67,8 +67,8 @@ end %>
 </div>
 
 <%
-  committed = (@vm.summary&.storage&.committed / 1024**3).round(2) || 0
-  uncommitted = (@vm.summary&.storage&.committed / 1024**3).round(2) || 0
+  committed = (@vm.summary&.storage&.committed.to_f / 1024**3).round(2) || 0
+  uncommitted = (@vm.summary&.storage&.committed.to_f / 1024**3).round(2) || 0
   
   hdd_usage = committed
   hdd_allocation = (committed + uncommitted).round(2)
