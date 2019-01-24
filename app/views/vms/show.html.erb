@@ -10,7 +10,7 @@ end %>
   <h1 class="mb-0"><%= @vm.name unless @vm.nil? %></h1>
   <% os = @vm.summary&.config&.guestFullName %>
   <% unless os.nil? || os.downcase.include?('other') %>
-    <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})" unless os.nil? || os.downcase.include?('other')%></h2></div>
+    <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})"%></h2></div>
   <% end %>
 </div>
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%">
@@ -99,9 +99,9 @@ end %>
   <div class="column float-right half-screen-box">
     <table class="table table-borderless" style="width: 100%">
       <tbody class="table-active">
-      <tr>
-        <th colspan="2" ><h4 class="mb-0">Users</h4></th>
-      </tr>
+        <tr>
+          <th colspan="2" ><h4 class="mb-0">Users</h4></th>
+        </tr>
       </tbody>
     </table>
   </div>
