@@ -35,7 +35,7 @@ RSpec.describe VmsController, type: :controller do
 
   describe 'GET #index' do
     before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [])
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
     end
 
     context 'when the current user is a user' do

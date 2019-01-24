@@ -130,7 +130,13 @@ def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
 end
 
-def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, pending_revivings_vms, clusters)
+def v_sphere_connection_mock(
+    normal_vms,
+    archived_vms,
+    pending_archivation_vms,
+    pending_revivings_vms,
+    clusters
+  )
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
   pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms
