@@ -14,7 +14,7 @@ RSpec.describe ServersController, type: :controller do
       ipv4_address: '8.8.8.8',
       ipv6_address: '::1',
       installed_software: ['SpeckTester'],
-      responsible: 'Hans Wurst'
+      responsible: FactoryBot.create(:user)
     }
   end
 
@@ -109,7 +109,7 @@ RSpec.describe ServersController, type: :controller do
           ipv4_address: '8.8.8.8',
           ipv6_address: '::1',
           installed_software: ['SpeckTester'],
-          responsible: 'Hans Wurst'
+          responsible: FactoryBot.create(:admin)
         }
       end
 

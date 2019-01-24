@@ -48,7 +48,7 @@ class ServersController < ApplicationController
       :installed_software,
       :vendor,
       :model,
-      :responsible,
+      :responsible_id,
       :description
     )
 
@@ -80,7 +80,7 @@ class ServersController < ApplicationController
       vendor: server_params[:vendor],
       model: server_params[:model],
       description: server_params[:description],
-      responsible: server_params[:responsible]
+      responsible_id: server_params[:responsible]
     )
   end
 
@@ -101,7 +101,7 @@ class ServersController < ApplicationController
                           :model,
                           :vendor,
                           :description,
-                          :responsible
+                          :responsible_id
                         ))
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }

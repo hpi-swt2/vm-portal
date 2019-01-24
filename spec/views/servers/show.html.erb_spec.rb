@@ -16,7 +16,7 @@ RSpec.describe 'servers/show', type: :view do
       model: 'Blade Center xyz',
       vendor: 'IBM',
       description: 'How to serve men',
-      responsible: 'Hans Wurst',
+      responsible: FactoryBot.create(:admin),
       installed_software: ['SpeckTester'] }
   end
 
@@ -32,6 +32,8 @@ RSpec.describe 'servers/show', type: :view do
         value.each do |element|
           expect(rendered).to include(element.to_s)
         end
+      elsif value.class == User
+        expect(rendered).to include(value.name)
       else
         expect(rendered).to include(value.to_s)
       end
