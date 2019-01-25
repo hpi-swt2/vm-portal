@@ -19,7 +19,7 @@ describe 'projects/index.html.erb', type: :feature do
     end
 
     it 'does not show the button for new project creation' do
-      expect(page).not_to have_button(id: 'createNewProjectButton')
+      expect(page).not_to have_link(id: 'createNewProjectButton')
     end
   end
 
@@ -27,12 +27,12 @@ describe 'projects/index.html.erb', type: :feature do
     let(:user) { FactoryBot.create :employee }
 
     it 'shows the button that leads to new project creation' do
-      expect(page).to have_button(id: 'createNewProjectButton')
+      expect(page).to have_link(id: 'createNewProjectButton')
     end
 
     context 'when clicking the button for new project creation' do
       before do
-        click_button(id: 'createNewProjectButton')
+        click_link(id: 'createNewProjectButton')
       end
 
       it 'leads to the new project creation page' do

@@ -1,5 +1,28 @@
 <h1>New Request</h1>
 
-<%= render 'form', request: @request %>
+<h2>Request templates</h2>
+<fieldset class="form-group">
+  <div class="row bottom-buffer">
+    <!--<legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>-->
+    <div class="col-sm-10">
+      <ul>
+        <input type="radio" class="template" name="template" id="template" value="none"/>
+        <%= "None" %>
+      </ul>
+      <% unless @request_templates.nil? %>
+        <% @request_templates.each_with_index do |request_template, index| %>
+          <ul>
+            <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_gb, request_template.storage_gb, request_template.operating_system] %>"/>
+            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}"
+            %>
+          </ul>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</fieldset>
+
+<h2>Create your request</h2>
+<%= render 'form', request: @request, locals: { updating: false } %>
 
 <%= link_to 'Back', requests_path %>

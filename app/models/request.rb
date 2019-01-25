@@ -9,8 +9,8 @@ class Request < ApplicationRecord
 
   MAX_NAME_LENGTH = 20
   MAX_CPU_CORES = 64
-  MAX_RAM_MB = 256_999
-  MAX_STORAGE_MB = 999_999
+  MAX_RAM_MB = 256_000
+  MAX_STORAGE_MB = 1_000_000
 
   enum status: %i[pending accepted rejected]
   validates :name,
@@ -18,9 +18,9 @@ class Request < ApplicationRecord
             format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
   validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
-  validates :cpu_cores, numericality: { greater_than: 0, less_than: MAX_CPU_CORES }
-  validates :ram_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
-  validates :storage_mb, numericality: { greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
+  validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
+  validates :ram_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
+  validates :storage_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
@@ -32,6 +32,10 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
+  end
+
+  def reject!
+    self.status = 'rejected'
   end
 
   def assign_sudo_users(sudo_user_ids)
@@ -49,8 +53,18 @@ class Request < ApplicationRecord
     users_assigned_to_requests.select(&:sudo)
   end
 
+  def sudo_users
+    sudo_user_assignments.map(&:user)
+  end
+
   def non_sudo_user_assignments
     users_assigned_to_requests - sudo_user_assignments
+  end
+
+  def create_vm
+    folder = VSphere::Connection.instance.root_folder
+    clusters = VSphere::Cluster.all
+    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) if clusters.first
   end
 
   def push_to_git
