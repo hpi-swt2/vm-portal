@@ -70,18 +70,6 @@ module VSphere
       @vm.name
     end
 
-    def summary
-      @vm.summary
-    end
-
-    def host
-      @vm.summary.runtime.host.name
-    end
-
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
-    end
-
     # Guest OS communication
     def vm_ware_tools?
       @vm.guest.toolsStatus != 'toolsNotInstalled'
@@ -114,14 +102,6 @@ module VSphere
       @vm.runtime.powerState == 'poweredOff'
     end
 
-    def change_power_state
-      if powered_on?
-        power_off
-      else
-        power_on
-      end
-    end
-
     # Power state
     def power_on
       @vm.PowerOnVM_Task.wait_for_completion unless powered_on?
@@ -129,6 +109,14 @@ module VSphere
 
     def power_off
       @vm.PowerOffVM_Task.wait_for_completion unless powered_off?
+    end
+
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
     end
 
     # Archiving
@@ -145,6 +133,16 @@ module VSphere
 
     def set_pending_archivation
       move_into pending_archivation_folder
+      ArchivationRequest.new(name: name).save
+    end
+
+    def archivable?
+      request = ArchivationRequest.find_by_name name
+      if request
+        request.can_be_executed?
+      else
+        true
+      end
     end
 
     def set_archived
@@ -155,6 +153,7 @@ module VSphere
       end
 
       move_into archived_folder
+      archivation_request&.delete
     end
 
     # Reviving
@@ -168,6 +167,7 @@ module VSphere
 
     def set_revived
       move_into root_folder
+      archivation_request&.delete
     end
 
     # Config methods
@@ -206,7 +206,7 @@ module VSphere
       @vm.summary
     end
 
-    def guestHeartbeatStatus
+    def guest_heartbeat_status
       @vm.guestHeartbeatStatus
     end
 
@@ -274,6 +274,10 @@ module VSphere
 
     def request
       Request.accepted.find { |each| name == each.name }
+    end
+
+    def archivation_request
+      ArchivationRequest.find_by_name(name)
     end
 
     def managed_folder_entry

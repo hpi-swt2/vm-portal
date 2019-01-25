@@ -40,7 +40,7 @@
       <td class="table-active"><%= 'ipsum' %></td>
       <td class="table-active align-middle">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
-          <div class="round 
+          <div class="round
             <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>">
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
@@ -95,22 +95,21 @@
       <td class="table-active"><%= 'ipsum' %></td>
       <td class="table-active">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
-          <div class="round 
+          <div class="round
             <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>">
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if current_user.admin? %>
+        <%if current_user.admin? && vm.archivable? %>
           <%= link_to '',
-            {controller: :vms, action: 'archive_vm', id: vm.name}, 
-            method: :post,
-            class: "btn-manage float-right checkmark" %>
-          <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name},
-            method: :post,
-            class: "btn-manage float-right cross" %>
-        
+                      {controller: :vms, action: 'archive_vm', id: vm.name},
+                      method: :post,
+                      class: "btn-manage float-right checkmark" %>
         <% end %>
+        <%= link_to '',
+                    {controller: :vms, action: 'revive_vm', id: vm.name},
+                    method: :post,
+                    class: "btn-manage float-right cross" %>
       </td>
     </tr>
   <% end %>
@@ -142,10 +141,10 @@
       <td class="table-active"><%= 'ipsum' %>
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name}, 
+            {controller: :vms, action: 'revive_vm', id: vm.name},
             method: :post,
             class: "btn-manage float-right checkmark" %>
-        
+
         <% end %>
       </td>
     </tr>
