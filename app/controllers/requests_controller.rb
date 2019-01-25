@@ -37,7 +37,7 @@ class RequestsController < ApplicationController
   # POST /requests
   # POST /requests.json
   def create
-    params[:request][:name] = replace_whitespaces(params[:request][:name])
+    prepare_params
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
@@ -123,6 +123,13 @@ class RequestsController < ApplicationController
     @request_templates = RequestTemplate.all
     format.html { render method }
     format.json { render json: @request.errors, status: :unprocessable_entity }
+  end
+
+  # Storage and RAM are displayed in GB but internally stored in MB.
+  def prepare_params
+    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request][:name]
+    params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i) if params[:request][:ram_mb]
+    params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i) if params[:request][:storage_mb]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
