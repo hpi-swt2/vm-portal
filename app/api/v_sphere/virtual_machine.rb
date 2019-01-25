@@ -213,6 +213,10 @@ module VSphere
       @vm.summary.runtime.host.name
     end
 
+    def active?
+      !archived? && !pending_archivation? && !pending_reviving?
+    end
+
     def status
       if archived?
         return :archived
