@@ -127,15 +127,9 @@ class RequestsController < ApplicationController
 
   # Storage and RAM are displayed in GB but internally stored in MB.
   def prepare_params
-    if params[:request][:name]
-      params[:request][:name] = replace_whitespaces(params[:request][:name])
-    end
-    if params[:request][:ram_mb]
-      params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i)
-    end
-    if params[:request][:storage_mb]
-      params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i)
-    end
+    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request][:name]
+    params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i) if params[:request][:ram_mb]
+    params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i) if params[:request][:storage_mb]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
