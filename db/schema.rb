@@ -56,15 +56,9 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.integer "user_id"
     t.text "description"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
-  end
-
-  create_table "requests_responsible_users", id: false, force: :cascade do |t|
-    t.integer "request_id", null: false
-    t.integer "user_id", null: false
-    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
   end
 
   create_table "responsible_users", force: :cascade do |t|
@@ -115,12 +109,12 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.integer "role"
     t.string "provider"
     t.string "uid"
     t.string "first_name"
