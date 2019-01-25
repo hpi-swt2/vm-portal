@@ -1,6 +1,5 @@
 <h1>Editing Request</h1>
 
-<%= render 'form', request: @request %>
+<%= render 'form', request: @request, locals: { updating: true } %>
 
-<%= link_to 'Show', @request %> |
 <%= link_to 'Back', requests_path %>
