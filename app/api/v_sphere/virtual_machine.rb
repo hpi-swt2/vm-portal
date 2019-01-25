@@ -30,9 +30,7 @@ module VSphere
       files.each do |vm_name|
         users = PuppetParserHelper.read_node_file(vm_name)
         users = users['admins'] + users['users'] | []
-        if users.include? user
-          vms += find_by_name(vm_name)
-        end
+        vms += find_by_name(vm_name) if users.include? user
       end
       vms
     end
