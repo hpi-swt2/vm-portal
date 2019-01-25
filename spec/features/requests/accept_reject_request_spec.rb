@@ -22,7 +22,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
         expect(request.status).to eq('accepted')
       end
 
-      it 'redirects to the requests_path' do
+      it 'redirects to the requests page, as the vm cannot be created' do
         expect(page).to have_current_path(requests_path)
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
       end
     end
 
-    context 'and the request was created by the current user' do
+    context 'and the request was created by an admin' do
       let(:request) { FactoryBot.create :request, user: admin }
 
       context 'clicking the accept button' do
@@ -60,12 +60,8 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
           request.reload
         end
 
-        it 'does not change the requests state' do
-          expect(request.status).to eq 'pending'
-        end
-
-        it 'shows an error message' do
-          expect(page).to have_text(I18n.t('request.unauthorized_state_change'))
+        it 'change the requests state' do
+          expect(request.status).to eq 'accepted'
         end
       end
 
@@ -75,12 +71,8 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
           request.reload
         end
 
-        it 'does not change the requests state' do
-          expect(request.status).to eq 'pending'
-        end
-
-        it 'shows an error message' do
-          expect(page).to have_text(I18n.t('request.unauthorized_state_change'))
+        it 'change the requests state' do
+          expect(request.status).to eq 'rejected'
         end
       end
     end

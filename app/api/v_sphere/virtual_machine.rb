@@ -102,14 +102,6 @@ module VSphere
       @vm.runtime.powerState == 'poweredOff'
     end
 
-    def change_power_state
-      if powered_on?
-        power_off
-      else
-        power_on
-      end
-    end
-
     # Power state
     def power_on
       @vm.PowerOnVM_Task.wait_for_completion unless powered_on?
@@ -180,6 +172,19 @@ module VSphere
 
     # Config methods
     # All the properties that HART saves internally
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
+
+    def ensure_config
+      unless config
+        @config = VirtualMachineConfig.new
+        @config.name = name
+        @config.save
+      end
+      @config
+    end
+
     def ip
       config&.ip || ''
     end
@@ -230,7 +235,6 @@ module VSphere
     end
 
     def users
-      request = Request.accepted.find { |each| name == each.name }
       if request
         request.users
       else
@@ -238,10 +242,9 @@ module VSphere
       end
     end
 
-    def root_users
-      request = Request.accepted.find { |each| name == each.name }
+    def sudo_users
       if request
-        request.sudo_user_assignments.map(&:user)
+        request.sudo_users
       else
         []
       end
@@ -263,14 +266,18 @@ module VSphere
       equal? other
     end
 
+    def macs
+      @vm.macs
+    end
+
     private
+
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
 
     def archivation_request
       ArchivationRequest.find_by_name(name)
-    end
-
-    def config
-      @config ||= VirtualMachineConfig.find_by_name name
     end
 
     def managed_folder_entry

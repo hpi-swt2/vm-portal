@@ -30,7 +30,7 @@ RSpec.describe 'requests/new', type: :view do
 
   context 'when a template should be selected' do
     it 'has a list of templates' do
-      expect(rendered).to have_text('VM Templates:')
+      expect(rendered).to have_text('Request templates')
       expect(rendered).to have_css('.template')
     end
 
