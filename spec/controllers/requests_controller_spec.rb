@@ -160,8 +160,8 @@ RSpec.describe RequestsController, type: :controller do
         {
           name: 'MyNewVM',
           cpu_cores: 3,
-          ram_mb: 2000,
-          storage_mb: 3000,
+          ram_mb: 2,
+          storage_mb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',

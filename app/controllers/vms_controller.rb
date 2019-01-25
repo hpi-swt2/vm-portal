@@ -39,12 +39,14 @@ class VmsController < ApplicationController
 
   def update_config
     @config = VirtualMachineConfig.find_by_name params[:id]
-    redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!' unless @config
-
-    if @config.update(config_params)
-      redirect_to requests_path, notice: 'Successfully updated configuration'
+    if @config
+      if @config.update(config_params)
+        redirect_to requests_path, notice: 'Successfully updated configuration'
+      else
+        redirect_to requests_path, notice: 'Could not update the configuration'
+      end
     else
-      redirect_to requests_path, notice: 'Could not update the configuration'
+      redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!'
     end
   end
 

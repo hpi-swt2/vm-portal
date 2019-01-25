@@ -8,32 +8,31 @@ RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
 
   let(:vm1) do
-    v_sphere_vm_mock(
-      'My insanely cool vm',
-      power_state: 'poweredOn',
-      boot_time: 'Thursday',
-      vm_ware_tools: 'toolsInstalled'
-    )
+    vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm2) do
-    v_sphere_vm_mock(
-      vm_request.name,
-      power_state: 'poweredOff',
-      boot_time: 'now',
-      vm_ware_tools: 'toolsInstalled'
-    )
+    # associate vm2 with the user
+    request = FactoryBot.create :accepted_request
+    request.users << current_user
+    v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
-
   let(:old_path) { 'old_path' }
 
   before do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
+  end
+  before do
+    allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
 
   describe 'GET #index' do
+
+
+
     context 'when the current user is a user' do
       it 'returns http success' do
         get :index
@@ -105,6 +104,17 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
+  describe 'GET #new' do
+    it 'returns http success' do
+      get :new
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders new page' do
+      expect(get(:new)).to render_template('vms/new')
+    end
+  end
+
   describe 'GET #show' do
     context 'when vm is found' do
       before do
@@ -134,12 +144,8 @@ RSpec.describe VmsController, type: :controller do
         let(:current_user) { FactoryBot.create :admin }
 
         context 'when user is associated to vm' do
-          before do
-            FactoryBot.create :accepted_request, name: vm1.name, users: [current_user]
-          end
-
           it 'renders show page' do
-            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
+            expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
           end
         end
 
