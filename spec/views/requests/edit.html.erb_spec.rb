@@ -20,8 +20,8 @@ RSpec.describe 'requests/edit', type: :view do
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
+      ram_gb: 1,
+      storage_gb: 2,
       operating_system: 'CentOS 7'
     )])
   end
