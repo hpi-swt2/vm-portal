@@ -1,22 +1,29 @@
 <h1>
   Hosts
 </h1>
-<small class="text-muted">This is the overview page for all currently existing hosts</small>
+<small class="text-muted">This is the overview page for all currently existing hosts.</small>
 
 <%= form_tag({controller: "hosts", action: "index"}, method: "get", class: "nifty_form") do %>
-<table class="table">
+<table class="table-bar">
   <tbody>
     <tr>
       <td>
-        <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
-        <%= label_tag(:up_hosts, "connected") %>
-      </td>
-      <td>
-        <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
-        <%= label_tag(:down_hosts, "not connected") %>
-      </td>
-      <td>
-        <%= submit_tag"Filter", class: "btn btn-info" %>
+        <div class="dropdown">
+          <button class="fa fa-filter btn btn-primary" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div>
+              <%= check_box_tag(:up_hosts, true, @parameters.include?('up_hosts')) %>
+              Connected
+            </div>
+            <div>
+              <%= check_box_tag(:down_hosts, true, @parameters.include?('down_hosts')) %>
+              Not connected
+            </div>
+            <div class="dropdown-divider"></div>
+            <%= submit_tag "Filter", class: "btn btn-primary small-btn" %>
+          </div>
+        </div>
       </td>
     </tr></tbody></table>
 <% end %>
@@ -44,17 +51,24 @@
       <td><%= host[:connectionState] %></td>
       <td><%= host[:bootTime] %></td>
       <td>
-        <ul>
+        <ul class="bulletless pl-1">
           <% if not host[:vms].nil?
-               host[:vms].keys.each do |name| %>
-              <li> <%= name %></li>
-            <% end
-               end %>
+              vms = host[:vms].keys.take(3)
+              vms.each do |vm| %>
+              <li><%= vm -%></li>
+              <% end %>
+          <% end %>
+
+          <% if host[:vms].length>3 %>
+              ... (<%=host[:vms].length%>)
+          <% end %>
+
+
         </ul>
       </td>
-      <td><%= button_to "Reserve",
+      <td class="text-center"><%= button_to "Reserve",
                         "",
-                        method: :get, class: "btn btn-info" %></td>
+                        method: :get, class: "btn btn-primary" %></td>
     </tr>
   <% end %>
   </tbody>

@@ -25,6 +25,7 @@ end
 
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
+  # rubocop:disable Metrics/ClassLength
   class VirtualMachine
     # instance creation
     def self.all
@@ -69,6 +70,18 @@ module VSphere
       @vm.name
     end
 
+    def summary
+      @vm.summary
+    end
+
+    def host
+      @vm.summary.runtime.host.name
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
+    end
+
     # Guest OS communication
     def vm_ware_tools?
       @vm.guest.toolsStatus != 'toolsNotInstalled'
@@ -99,6 +112,14 @@ module VSphere
 
     def powered_off?
       @vm.runtime.powerState == 'poweredOff'
+    end
+
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
     end
 
     # Power state
@@ -212,6 +233,15 @@ module VSphere
       end
     end
 
+    def root_users
+      request = Request.accepted.find { |each| name == each.name }
+      if request
+        Request.first.users_assigned_to_requests.select(&:sudo).map(&:user)
+      else
+        []
+      end
+    end
+
     def belongs_to(user)
       users.include? user
     end
@@ -242,4 +272,5 @@ module VSphere
       @vm
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

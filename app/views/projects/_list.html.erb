@@ -10,7 +10,7 @@
         <td><%= link_to project.name, project_path(project) %></td>
         <td><%= project.description %></td>
         <td>
-          <ul>
+          <ul class="bulletless pl-1">
             <% project.responsible_users.each do |user| %>
                 <li><%= user.name %></li>
             <% end %>

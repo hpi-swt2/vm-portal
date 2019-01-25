@@ -6,10 +6,12 @@
     }
 end %>
 
-<div class="container mb-3 pl-0 pr-0 clearfix" style="width: 100%">
-  <h1 class="mb-0 float-left"><%= @vm.name unless @vm.nil? %></h1>
+<div class="container mb-3 pl-0 pr-0 clearfix">
+  <h1 class="mb-0"><%= @vm.name unless @vm.nil? %></h1>
   <% os = @vm.summary&.config&.guestFullName %>
-  <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})" unless os.nil? || os.downcase.include?('other')%></h2></div>
+  <% unless os.nil? || os.downcase.include?('other') %>
+    <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})"%></h2></div>
+  <% end %>
 </div>
 
 <div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%">
@@ -18,44 +20,46 @@ end %>
     <%= status_for @vm %>
   </div>
   <%= " for #{up_time}" if @vm.powered_on? %>
-  <div class="text-right float-right" style="width: 20%">
-    <div class="dropdown border text-right">
-      <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
-        Manage
-      </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <% if @vm.powered_on? %>
-          <%= link_to 'Suspend VM',
-                      {controller: :vms, action: 'suspend_vm', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item'%>
-          <%= link_to 'Reset VM',
-                      {controller: :vms, action: 'reset_vm', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
-          <%= link_to 'Power Off',
-                      {controller: :vms, action: 'change_power_state', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+  <% if @vm.root_users.include?(current_user) %>
+    <div class="text-right float-right" style="width: 20%">
+      <div class="dropdown border text-right">
+        <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+          Manage
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <% if @vm.powered_on? %>
+            <%= link_to 'Suspend VM',
+                        {controller: :vms, action: 'suspend_vm', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item'%>
+            <%= link_to 'Reset VM',
+                        {controller: :vms, action: 'reset_vm', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+            <%= link_to 'Power Off',
+                        {controller: :vms, action: 'change_power_state', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
 
-          <% if @vm.vmwaretools_installed? %>
-            <div class="dropdown-divider"></div>
-            <%= link_to 'Shutdown Guest OS',
-                        {controller: :vms, action: 'shutdown_guest_os', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
-            <%= link_to 'Restart Guest OS',
-                        {controller: :vms, action: 'reboot_guest_os', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+            <% if @vm.vmwaretools_installed? %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'Shutdown Guest OS',
+                          {controller: :vms, action: 'shutdown_guest_os', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+              <%= link_to 'Restart Guest OS',
+                          {controller: :vms, action: 'reboot_guest_os', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+            <% end %>
+          <% else %>
+            <%= link_to 'Power On',
+                          {controller: :vms, action: 'change_power_state', id: @vm.name},
+                          method: :post, class: 'dropdown-item' %>
           <% end %>
-        <% else %>
-          <%= link_to 'Power On',
-                        {controller: :vms, action: 'change_power_state', id: @vm.name},
-                        method: :post, class: 'dropdown-item' %>
-        <% end %>
-        <div class="dropdown-divider"></div>
-        <%= link_to 'Archive VM',
-                    {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
-        <%= link_to 'Revive VM',
-                    {controller: :vms, action: 'request_vm_revive', id: @vm.name}, method: :post, class: 'dropdown-item'%>
-        <div class="dropdown-divider"></div>
-        <%= link_to 'Delete VM',
-                      {controller: :vms, action: 'destroy', id: @vm.name},
-                      method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+          <div class="dropdown-divider"></div>
+          <%= link_to 'Archive VM',
+                      {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
+          <%= link_to 'Revive VM',
+                      {controller: :vms, action: 'request_vm_revive', id: @vm.name}, method: :post, class: 'dropdown-item'%>
+          <div class="dropdown-divider"></div>
+          <%= link_to 'Delete VM',
+                        {controller: :vms, action: 'destroy', id: @vm.name},
+                        method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
@@ -87,7 +91,7 @@ end %>
   %>
 
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
-      <%= render 'templates/resource_allocation', values: @values %>
+  <%= render 'templates/resource_allocation', values: @values %>
 </div>
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
   <div class="column float-left mr-3 half-screen-box">
