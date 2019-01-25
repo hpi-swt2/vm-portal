@@ -11,5 +11,6 @@ FactoryBot.define do
     ipv4_address { '8.8.8.8' }
     ipv6_address { '::1' }
     installed_software { ['some software'] }
+    responsible { FactoryBot.create(:admin) }
   end
 end

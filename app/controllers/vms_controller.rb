@@ -7,16 +7,16 @@ class VmsController < ApplicationController
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show]
+  before_action :authenticate_root_user, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
   def index
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-    @parameters = determine_params
   end
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    # VmApi.instance.delete_vm(params[:id])
+    # VSphere::VirtualMachine.delete_vm(params[:id])
   end
 
   def create
@@ -111,32 +111,32 @@ class VmsController < ApplicationController
   end
 
   def change_power_state
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.change_power_state(@vm[:name], !@vm[:state])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.change_power_state
     redirect_back(fallback_location: root_path)
   end
 
   def suspend_vm
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.suspend_vm(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.suspend_vm
     redirect_back(fallback_location: root_path)
   end
 
   def shutdown_guest_os
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.shutdown_guest_os(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.shutdown_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reboot_guest_os
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.reboot_guest_os(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.reboot_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reset_vm
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.reset_vm(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.reset_vm
     redirect_back(fallback_location: root_path)
   end
 
@@ -147,10 +147,10 @@ class VmsController < ApplicationController
   private
 
   def initialize_vm_categories
-    @vms = filter VSphere::VirtualMachine.rest
-    @archived_vms = filter VSphere::VirtualMachine.archived
-    @pending_archivation_vms = filter VSphere::VirtualMachine.pending_archivation
-    @pending_reviving_vms = filter VSphere::VirtualMachine.pending_revivings
+    @vms = VSphere::VirtualMachine.rest
+    @archived_vms = VSphere::VirtualMachine.archived
+    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
   end
 
   def filter_vm_categories(user)
@@ -158,38 +158,6 @@ class VmsController < ApplicationController
     @archived_vms = @archived_vms.select { |each| each.belongs_to user }
     @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
     @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
-  end
-
-  def filter(list)
-    if no_params_set?
-      list
-    else
-      result = []
-      vm_filter.keys.each do |key|
-        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
-      end
-      result
-    end
-  end
-
-  def determine_params
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    if no_params_set?
-      all_parameters
-    else
-      all_parameters - (all_parameters - actual_params)
-    end
-  end
-
-  def no_params_set?
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    (all_parameters - actual_params).size == all_parameters.size
-  end
-
-  def vm_filter
-    { up_vms: proc(&:powered_on?), down_vms: proc(&:powered_off?) }
   end
 
   def authorize_vm_access
@@ -201,5 +169,13 @@ class VmsController < ApplicationController
 
   def config_params
     params.require(:virtual_machine_config).permit(:ip, :dns)
+  end
+
+  def authenticate_root_user
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    return unless @vm
+
+    redirect_to vms_path unless @vm.root_users.include?(current_user)
+
   end
 end

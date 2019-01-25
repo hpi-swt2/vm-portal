@@ -50,39 +50,60 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-# rubocop:disable Metrics/AbcSize Metrics/ParameterLists
-def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24, hearteat_status: 'green',
-                guest_id: 'Win10', guest_name: 'Win10 EE', host_name: 'ibmesx13.eaalab.hpi.uni-potsdam.de', committed_storage: 100, uncommitted_storage: 100,
-                cpu_usage: 50, cpu_reservation: 100, guest_memory_usage: 1024, memory_size: 2024, cpu_number: 1, macs: [['Network Adapter 1', '00-14-22-01-23-45']])
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+def vim_vm_summary_mock
+  summary_double = double
+  allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
+  allow(summary_double).to receive_message_chain(:storage, :uncommitted).and_return(100)
+  allow(summary_double).to receive_message_chain(:config, :guestId).and_return('Win10')
+  allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
+  allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
+  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
+  allow(summary_double).to receive_message_chain(:config, :cpuReservation).and_return(100)
+  allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
+  allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
+  allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
+  allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
+  allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
+  summary_double
+end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+# rubocop:disable Metrics/AbcSize
+def vim_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green',
+    macs: [['Network Adapter 1', 'My Mac address']]
+  )
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:guestHeartbeatStatus).and_return(hearteat_status)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
-  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
-  allow(vm).to receive_message_chain(:summary, :config, :guestId).and_return guest_id
-  allow(vm).to receive_message_chain(:summary, :config, :guestFullName).and_return guest_name
-  allow(vm).to receive_message_chain(:summary, :runtime, :host, :name).and_return host_name
-  allow(vm).to receive_message_chain(:summary, :storage, :committed).and_return committed_storage
-  allow(vm).to receive_message_chain(:summary, :storage, :uncommitted).and_return uncommitted_storage
-  allow(vm).to receive_message_chain(:summary, :quickStats, :overallCpuUsage).and_return cpu_usage
-  allow(vm).to receive_message_chain(:summary, :config, :cpuReservation).and_return cpu_reservation
-  allow(vm).to receive_message_chain(:summary, :quickStats, :guestMemoryUsage).and_return guest_memory_usage
-  allow(vm).to receive_message_chain(:summary, :config, :memorySizeMB).and_return memory_size
-  allow(vm).to receive_message_chain(:summary, :config, :numCpu).and_return cpu_number
-  allow(vm).to receive(:macs).and_return macs
-
+  allow(vm).to receive(:guestHeartbeatStatus).and_return guest_heartbeat_status
+  allow(vm).to receive(:summary).and_return vim_vm_summary_mock
+  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   vm
 end
-# rubocop:enable Metrics/AbcSize Metrics/ParameterLists
+# rubocop:enable Metrics/AbcSize
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24)
+def v_sphere_vm_mock(
+    name,
+    power_state: 'poweredOn',
+    vm_ware_tools: 'toolsNotInstalled',
+    boot_time: 'Yesterday',
+    guest_heartbeat_status: 'green'
+  )
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
-                                          boot_time: boot_time)
+                                          boot_time: boot_time,
+                                          guest_heartbeat_status: guest_heartbeat_status)
 end
 
 def vim_host_mock(name)
@@ -95,7 +116,8 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize
+def vim_cluster_mock(name, hosts)
   hosts = extract_vim_objects hosts
   cluster = double
   allow(cluster).to receive(:is_a?).and_return false
@@ -104,12 +126,19 @@ def vim_cluster_mock(name, hosts) # rubocop:disable Metrics/AbcSize
   allow(cluster).to receive(:name).and_return name
   cluster
 end
+# rubocop:enable Metrics/AbcSize
 
 def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
 end
 
-def v_sphere_connection_mock(normal_vms, archived_vms, pending_archivation_vms, pending_revivings_vms, clusters)
+def v_sphere_connection_mock(
+    normal_vms,
+    archived_vms,
+    pending_archivation_vms,
+    pending_revivings_vms,
+    clusters
+  )
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
   pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms

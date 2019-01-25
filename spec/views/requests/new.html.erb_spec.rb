@@ -21,8 +21,8 @@ RSpec.describe 'requests/new', type: :view do
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
+      ram_gb: 1,
+      storage_gb: 2,
       operating_system: 'CentOS 7'
     )])
     render
@@ -42,7 +42,7 @@ RSpec.describe 'requests/new', type: :view do
     context 'when a new template is generated' do
       it 'has a list with this pre-generated template' do
         expect(rendered).to have_css('.template')
-        expect(rendered).to have_text('MyTemplate: 2 CPU-Cores, 1000 MB RAM, 2000 MB Storage, CentOS 7')
+        expect(rendered).to have_text('MyTemplate: 2 CPU cores, 1 GB RAM, 2 GB Storage, CentOS 7')
       end
     end
   end
