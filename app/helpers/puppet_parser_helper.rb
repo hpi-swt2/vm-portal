@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+
+
+
 module PuppetParserHelper
-  def self.read_node_file(vm_name, repository_path = 'puppet_scripts')
+  def self.read_node_file(vm_name, repository_path = puppet_script_folder)
     path = File.join(Rails.root, repository_path, 'Node', 'node-' + vm_name + '.pp')
     contents = File.open(path).read
     contents.start_with?('class node_')
@@ -24,5 +27,13 @@ module PuppetParserHelper
     values['admins'] = admins
     values['users'] = users
     values
+  end
+
+  def self.puppet_script_folder
+    'puppet_scripts'
+  end
+
+  def self.puppet_script_path
+    File.join(Rails.root, puppet_script_folder)
   end
 end

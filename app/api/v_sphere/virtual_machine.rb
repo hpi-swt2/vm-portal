@@ -24,8 +24,17 @@ module VSphere
     end
 
     def self.user_vms(user)
-      requests = user.requests.accepted
-      requests.map { |request| find_by_name(request.name) }.compact
+      vms = []
+      files = Dir.entries(PuppetParserHelper.puppet_script_path)
+      files.map! { |file| file[(6..file.length - 4)] }
+      files.each do |vm_name|
+        users = PuppetParserHelper.read_node_file(vm_name)
+        users = users['admins'] + users['users'] | []
+        if users.include? user
+          vms += find_by_name(vm_name)
+        end
+      end
+      vms
     end
 
     def initialize(rbvmomi_vm)
@@ -114,12 +123,13 @@ module VSphere
     end
 
     def users
-      request = Request.accepted.find { |each| name == each.name }
-      if request
-        request.users
-      else
-        []
-      end
+      users = PuppetParserHelper.read_node_file(name)
+      users['admins'] + users['users'] | []
+    end
+
+    def sudo_users
+      users = PuppetParserHelper.read_node_file(name)
+      users['admins']
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
