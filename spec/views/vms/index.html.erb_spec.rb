@@ -22,6 +22,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   before do
     assign(:vms, mock_vms)
@@ -111,6 +112,26 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
+
+    it 'shows correct power on / off button' do
+      expect(rendered).to have_button('Start', count: 1)
+    end
+
+    it 'demands confirmation on shutdown' do
+      expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
+    end
+
+    context 'when vmwaretools are not installed' do
+      before do
+        assign(:vms, mock_vms_without_tools)
+        assign(:parameters, param)
+        render
+      end
+
+      it 'shows no power buttons when vmwaretools are not installed' do
+        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
+      end
+    end
 
     it 'links to new vm page' do
       expect(rendered).to have_button('New Request')

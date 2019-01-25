@@ -45,7 +45,7 @@
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if vm.sudo_users.include?(current_user) %>
+        <% if vm.sudo_users.include?(current_user) || current_user.admin? %>
           <% if vm.vm_ware_tools? %>
             <%= link_to '',
               {controller: :vms, action: 'change_power_state', id: vm.name},
