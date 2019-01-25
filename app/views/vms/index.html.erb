@@ -85,7 +85,7 @@
           <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
         </div>
         <%if current_user.admin? %>
-          <% if allowed_to_be_archived?(vm) %>
+          <% if vm.archivable? %>
             <div class="col-xs-1">
               <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
             </div>

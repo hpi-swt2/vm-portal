@@ -3,15 +3,6 @@
 require 'vmapi.rb'
 
 module VmsHelper
-  def allowed_to_be_archived?(vm)
-    request = ArchivationRequest.find_by_name vm.name
-    if request
-      request.can_be_executed?
-    else
-      true
-    end
-  end
-
   def button_style_for(vm)
     case vm.status
     when :archived

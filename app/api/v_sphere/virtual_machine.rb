@@ -144,6 +144,15 @@ module VSphere
       ArchivationRequest.new(name: name).save
     end
 
+    def archiveable?
+      request = ArchivationRequest.find_by_name vm.name
+      if request
+        request.can_be_executed?
+      else
+        true
+      end
+    end
+
     def set_archived
       if vm_ware_tools?
         shutdown_guest_os
