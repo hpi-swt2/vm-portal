@@ -5,7 +5,7 @@ class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
-  before_action :authenticate_admin, only: %i[archive_vm]
+  before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show]
   before_action :authenticate_root_user, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
@@ -24,12 +24,26 @@ class VmsController < ApplicationController
     redirect_to action: :index
   end
 
-  def new
-    @request = !params[:request].nil? ? Request.find(params[:request]) : default_render
-  end
-
   def show
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  end
+
+  def edit_config
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.ensure_config
+  end
+
+  def update_config
+    @config = VirtualMachineConfig.find_by_name params[:id]
+    if @config
+      if @config.update(config_params)
+        redirect_to requests_path, notice: 'Successfully updated configuration'
+      else
+        redirect_to requests_path, notice: 'Could not update the configuration'
+      end
+    else
+      redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!'
+    end
   end
 
   def request_vm_archivation
@@ -145,16 +159,20 @@ class VmsController < ApplicationController
   end
 
   def authorize_vm_access
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !@vm.users.include?(current_user)
+    redirect_to vms_path unless current_user.admin? || @vm.users.include?(current_user)
+  end
+
+  def config_params
+    params.require(:virtual_machine_config).permit(:ip, :dns)
   end
 
   def authenticate_root_user
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm
 
-    redirect_to vms_path unless @vm.root_users.include?(current_user) || current_user.admin?
+    redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
   end
 end

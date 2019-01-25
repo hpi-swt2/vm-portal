@@ -3,9 +3,12 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
-  patch 'requests/request_change_state', to: 'requests#request_change_state', as: 'request_change_state'
+
   resources :request_templates, path: '/vms/request_templates', except: :show
+
+  patch '/vms/requests/reject', to: 'requests#reject', as: 'reject'
   resources :requests, path: '/vms/requests'
+
   resources :notifications, only: %i[index new create destroy] do
     get :mark_as_read, on: :member
     get :has_any, on: :collection, to: 'notifications#any?'
@@ -15,6 +18,10 @@ Rails.application.routes.draw do
   root to: 'landing#index'
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
+
+  get '/vms/configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }
+  patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }
+
   post '/vms/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
   post '/vms/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
   post '/vms/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
@@ -36,7 +43,8 @@ Rails.application.routes.draw do
                omniauth_callbacks: 'users/omniauth_callbacks'
              }
 
-  resources :vms, :hosts, :servers
+  resources :vms, except: :new
+  resources :hosts, :servers
   resources :users do
     member do
       patch :update_role
