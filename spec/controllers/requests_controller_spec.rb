@@ -35,8 +35,8 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: 'MyVM',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
+      ram_mb: 1,
+      storage_mb: 2,
       operating_system: 'MyOS',
       description: 'Description',
       comment: 'Comment',
