@@ -12,6 +12,12 @@
 
 ActiveRecord::Schema.define(version: 2019_01_24_151713) do
 
+  create_table "archivation_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
     t.string "title"

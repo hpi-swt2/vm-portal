@@ -40,7 +40,7 @@
       <td class="table-active"><%= 'ipsum' %></td>
       <td class="table-active align-middle">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
-          <div class="round 
+          <div class="round
             <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>">
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
@@ -95,22 +95,23 @@
       <td class="table-active"><%= 'ipsum' %></td>
       <td class="table-active">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
-          <div class="round 
+          <div class="round
             <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>">
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if current_user.admin? %>
-          <%= link_to '',
-            {controller: :vms, action: 'archive_vm', id: vm.name}, 
-            method: :post,
-            class: "btn-manage float-right checkmark" %>
-          <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name},
-            method: :post,
-            class: "btn-manage float-right cross" %>
-        
-        <% end %>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-around">
+          <div class="col-xs-1">
+            <%= button_to "Stop Archiving", {controller: :vms, action: 'stop_archiving', id: vm.name }, method: :post, class: "btn btn-danger" %>
+          </div>
+          <%if current_user.admin? %>
+            <% if vm.archivable? %>
+              <div class="col-xs-1">
+                <%= button_to "Confirm archiving", {controller: :vms, action: 'archive_vm', id: vm.name }, method: :post, class: "btn btn-danger" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </td>
     </tr>
   <% end %>
@@ -142,10 +143,10 @@
       <td class="table-active"><%= 'ipsum' %>
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name}, 
+            {controller: :vms, action: 'revive_vm', id: vm.name},
             method: :post,
             class: "btn-manage float-right checkmark" %>
-        
+
         <% end %>
       </td>
     </tr>
