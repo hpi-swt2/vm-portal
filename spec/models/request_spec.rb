@@ -154,5 +154,41 @@ RSpec.describe Request, type: :model do
         expect(@request.users_assigned_to_requests.select { |assignment| assignment.user_id == @user.id && assignment.sudo == false }).to be_empty
       end
     end
+
+    context 'when having multiple users assigned as sudo and change the list of users assigned' do
+      before do
+        @sudoers_before = FactoryBot.create_list(:employee, 4)
+        @sudoers_after = FactoryBot.create_list(:employee, 2).append(@sudoers_before[0]).append(@sudoers_before[1])
+
+        @sudoers_before.each do |user|
+          @request.users_assigned_to_requests.create(sudo: true, user_id: user.id)
+        end
+
+        @request.change_sudo_user_list_to @sudoers_after.map{|user| user.id}
+      end
+
+      it 'old assignments disappear and new assignments are saved' do
+        new_sudoers = @request.sudo_user_assignments.map {|assignment| assignment.user}
+        expect(new_sudoers).to match_array @sudoers_after
+      end
+    end
+
+    context 'when having multiple users assigned as sudo and change the list of users assigned' do
+      before do
+        @non_sudoers_before = FactoryBot.create_list(:employee, 4)
+        @non_sudoers_after = FactoryBot.create_list(:employee, 2).append(@non_sudoers_before[0]).append(@non_sudoers_after)
+
+        @non_sudoers_before.each do |user|
+          @request.users_assigned_to_requests.create(sudo: false, user_id: user.id)
+        end
+
+        @request.change_sudo_user_list_to @sudoers_after.map{|user| user.id}
+      end
+
+      it 'old assignments disappear and new assignments are saved' do
+        new_non_sudoers = @request.non_sudo_user_assignments.map {|assignment| assignment.user}
+        expect(new_non_sudoers).to match_array @non_sudoers_after
+      end
+    end
   end
 end
