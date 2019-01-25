@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_23_102046) do
+ActiveRecord::Schema.define(version: 2019_01_24_151713) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -35,8 +35,8 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
 
   create_table "request_templates", force: :cascade do |t|
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "operating_system"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -56,15 +56,9 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
-    t.integer "user_id"
     t.text "description"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
-  end
-
-  create_table "requests_responsible_users", id: false, force: :cascade do |t|
-    t.integer "request_id", null: false
-    t.integer "user_id", null: false
-    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
   end
 
   create_table "responsible_users", force: :cascade do |t|
@@ -123,10 +117,10 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.string "ssh_key"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -137,8 +131,6 @@ ActiveRecord::Schema.define(version: 2019_01_23_102046) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "virtual_machine_configs", force: :cascade do |t|
