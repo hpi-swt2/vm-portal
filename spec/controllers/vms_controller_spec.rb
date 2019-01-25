@@ -33,28 +33,6 @@ RSpec.describe VmsController, type: :controller do
     sign_in current_user
   end
 
-<<<<<<< HEAD
-  let(:vm1) do
-    vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
-  end
-
-  let(:vm2) do
-    # associate vm2 with the user
-    request = FactoryBot.create :accepted_request
-    request.users << current_user
-    v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
-  end
-
-  before do
-    allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
-  end
-=======
-  describe 'GET #index' do
-    before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
-    end
->>>>>>> origin/dev
-
   describe 'GET #index' do
     context 'when the current user is a user' do
       it 'returns http success' do
