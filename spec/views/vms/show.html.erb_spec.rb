@@ -55,22 +55,14 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to include vm_on.ip
   end
 
-  it 'has a link to delete VM' do
-    expect(rendered).to have_link 'Delete'
-  end
-
   it 'shows CPU usage' do
-    expect(rendered).to include(
-      (vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s
-    )
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s)
   end
 
   it 'shows HDD usage' do
     expect(rendered).to include((vm_on.summary.storage.committed / 1024**3).to_s)
     expect(rendered).to include((vm_on.summary.storage.uncommitted / 1024**3).to_s)
-    expect(rendered).to include(
-      (vm_on.summary.storage.committed / (vm_on.summary.storage.committed + vm_on.summary.storage.uncommitted).round).to_s
-    )
+    expect(rendered).to include((vm_on.summary.storage.committed / (vm_on.summary.storage.committed + vm_on.summary.storage.uncommitted).round).to_s)
   end
 
   it 'shows RAM usage' do
@@ -106,6 +98,10 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       request = FactoryBot.create :accepted_request, name: vm_on.name
       FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
       render
+    end
+
+    it 'has a link to delete VM' do
+      expect(rendered).to have_link 'Delete VM'
     end
 
     context 'when powered on' do

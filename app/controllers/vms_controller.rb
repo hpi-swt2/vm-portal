@@ -188,6 +188,6 @@ class VmsController < ApplicationController
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm
 
-    redirect_to vms_path unless @vm.root_users.include?(current_user)
+    redirect_to vms_path unless @vm.root_users.include?(current_user) || current_user.admin?
   end
 end

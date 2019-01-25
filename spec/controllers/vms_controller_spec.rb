@@ -7,11 +7,6 @@ require './spec/api/v_sphere_api_mocker'
 RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
 
-  before do
-    @request.env['devise.mapping'] = Devise.mappings[:user]
-    sign_in current_user
-  end
-
   let(:vm1) do
     vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
   end
@@ -26,6 +21,10 @@ RSpec.describe VmsController, type: :controller do
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
   let(:old_path) { 'old_path' }
 
+  before do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+    sign_in current_user
+  end
   before do
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
@@ -164,26 +163,26 @@ RSpec.describe VmsController, type: :controller do
         context 'when user is not associated to vm' do
           it 'redirects' do
           get :show, params: { id: vm1.name }
-            expect(response).to have_http_status :redirect
+          expect(response).to have_http_status :redirect
           end
         end
       end
 
-    context 'when current user is admin' do
-      let(:current_user) { FactoryBot.create :admin }
-
-      context 'when user is associated to vm' do
-        it 'renders show page' do
-          expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
+      context 'when current user is admin' do
+        let(:current_user) { FactoryBot.create :admin }
+  
+        context 'when user is associated to vm' do
+          it 'renders show page' do
+            expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
+          end
         end
-      end
-
+  
         context 'when user is not associated to vm' do
           it 'renders show page' do
           expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
-      end
+        end
     end
 
     context 'when no vm found' do
@@ -193,7 +192,7 @@ RSpec.describe VmsController, type: :controller do
 
       it 'returns http status not found when no vm found' do
         get :show, params: { id: 5 }
-      expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:not_found)
     end
 
       it 'renders not found page when no vm found' do

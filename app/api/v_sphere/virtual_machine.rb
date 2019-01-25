@@ -34,11 +34,11 @@ module VSphere
 
     def self.rest
       to_exclude = []
-      pending_archivation.each { | each | to_exclude << each.name }
-      archived.each { | each | to_exclude << each.name }
-      pending_revivings.each { | each | to_exclude << each.name }
+      pending_archivation.each { |each| to_exclude << each.name }
+      archived.each { |each| to_exclude << each.name }
+      pending_revivings.each { |each| to_exclude << each.name }
 
-      all.select { | each | !to_exclude.include? each.name }
+      all.reject { |each| to_exclude.include? each.name }
     end
 
     def self.pending_archivation
@@ -68,18 +68,6 @@ module VSphere
 
     def name
       @vm.name
-    end
-
-    def summary
-      @vm.summary
-    end
-
-    def host
-      @vm.summary.runtime.host.name
-    end
-
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
     end
 
     # Guest OS communication
@@ -129,6 +117,14 @@ module VSphere
 
     def power_off
       @vm.PowerOffVM_Task.wait_for_completion unless powered_off?
+    end
+
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
     end
 
     # Archiving
@@ -196,7 +192,7 @@ module VSphere
       @vm.summary
     end
 
-    def guestHeartbeatStatus
+    def guest_heartbeat_status
       @vm.guestHeartbeatStatus
     end
 
@@ -236,7 +232,7 @@ module VSphere
     def root_users
       request = Request.accepted.find { |each| name == each.name }
       if request
-        Request.first.users_assigned_to_requests.select(&:sudo).map(&:user)
+        request.users_assigned_to_requests.select(&:sudo).map(&:user)
       else
         []
       end

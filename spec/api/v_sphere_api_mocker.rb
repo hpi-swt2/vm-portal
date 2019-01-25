@@ -60,6 +60,7 @@ def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalle
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
+  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive_message_chain(:summary, :config, :guestId).and_return guest_id
   allow(vm).to receive_message_chain(:summary, :config, :guestFullName).and_return guest_name
   allow(vm).to receive_message_chain(:summary, :runtime, :host, :name).and_return host_name
@@ -79,8 +80,7 @@ def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotIns
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
-                                          boot_time: boot_time,
-                                          guest_heartbeat_status: guest_heartbeat_status)
+                                          boot_time: boot_time)
 end
 
 def vim_host_mock(name)
