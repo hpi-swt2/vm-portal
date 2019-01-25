@@ -97,7 +97,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   context 'when the current user is an admin' do
     let(:current_user) { admin }
 
-
     context 'when powered on' do
       it 'has power off links' do
         expect(rendered).to have_link 'Suspend VM'

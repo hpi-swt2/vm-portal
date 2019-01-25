@@ -215,7 +215,6 @@ RSpec.describe VmsController, type: :controller do
       end
     end
 
-
     context 'when the current_user is not a root_user' do
       before do
         post :change_power_state, params: { id: vm1.name }
