@@ -144,8 +144,8 @@ module VSphere
       ArchivationRequest.new(name: name).save
     end
 
-    def archiveable?
-      request = ArchivationRequest.find_by_name vm.name
+    def archivable?
+      request = ArchivationRequest.find_by_name name
       if request
         request.can_be_executed?
       else
