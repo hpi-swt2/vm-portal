@@ -12,7 +12,6 @@ class VmsController < ApplicationController
   def index
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-    @parameters = determine_params
   end
 
   def destroy
@@ -132,10 +131,10 @@ class VmsController < ApplicationController
   private
 
   def initialize_vm_categories
-    @vms = filter VSphere::VirtualMachine.rest
-    @archived_vms = filter VSphere::VirtualMachine.archived
-    @pending_archivation_vms = filter VSphere::VirtualMachine.pending_archivation
-    @pending_reviving_vms = filter VSphere::VirtualMachine.pending_revivings
+    @vms = VSphere::VirtualMachine.rest
+    @archived_vms = VSphere::VirtualMachine.archived
+    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
   end
 
   def filter_vm_categories(user)
@@ -143,38 +142,6 @@ class VmsController < ApplicationController
     @archived_vms = @archived_vms.select { |each| each.belongs_to user }
     @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
     @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
-  end
-
-  def filter(list)
-    if no_params_set?
-      list
-    else
-      result = []
-      vm_filter.keys.each do |key|
-        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
-      end
-      result
-    end
-  end
-
-  def determine_params
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    if no_params_set?
-      all_parameters
-    else
-      all_parameters - (all_parameters - actual_params)
-    end
-  end
-
-  def no_params_set?
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    (all_parameters - actual_params).size == all_parameters.size
-  end
-
-  def vm_filter
-    { up_vms: proc(&:powered_on?), down_vms: proc(&:powered_off?) }
   end
 
   def authorize_vm_access

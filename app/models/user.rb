@@ -17,6 +17,7 @@ class User < ApplicationRecord
 
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
+  has_many :servers
   validates :first_name, presence: true
   validates :last_name, presence: true
   validate :valid_ssh_key
