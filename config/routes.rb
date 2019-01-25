@@ -5,9 +5,10 @@ Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
 
   resources :request_templates, path: '/vms/request_templates', except: :show
-
   patch '/vms/requests/reject', to: 'requests#reject', as: 'reject'
-  resources :requests, path: '/vms/requests'
+  resources :requests, path: '/vms/requests' do
+    post :push_to_git, on: :member
+  end
 
   resources :notifications, only: %i[index new create destroy] do
     get :mark_as_read, on: :member

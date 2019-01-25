@@ -218,4 +218,20 @@ RSpec.describe RequestsController, type: :controller do
       expect(response).to redirect_to(requests_url)
     end
   end
+
+  describe 'POST #push_to_git' do
+    before do
+      request = Request.create! valid_attributes
+      allow(request).to receive(:push_to_git).and_return(notice: 'Successfully pushed to git.')
+      request_class = class_double('Request')
+                      .as_stubbed_const(transfer_nested_constants: true)
+
+      expect(request_class).to receive(:find) { request }
+    end
+
+    it 'redirects with a success message' do
+      post :push_to_git, params: { id: request.to_param }
+      expect(response).to redirect_to(requests_url)
+    end
+  end
 end

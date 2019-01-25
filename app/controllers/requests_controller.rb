@@ -3,7 +3,7 @@
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   include RequestsHelper
-  before_action :set_request, only: %i[show edit update destroy request_state_change]
+  before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
@@ -100,6 +100,12 @@ class RequestsController < ApplicationController
     end
   end
 
+  # Creates puppet files for request and pushes the created files into a git repository
+  def push_to_git
+    response = @request.push_to_git
+    redirect_to requests_path, response
+  end
+
   private
 
   def host_url
@@ -158,4 +164,14 @@ class RequestsController < ApplicationController
   def rejection_params
     params.require(:request).permit(:rejection_information)
   end
+
+  def puppet_node_script(request)
+    request.generate_puppet_node_script
+  end
+  helper_method :puppet_node_script
+
+  def puppet_name_script(request)
+    request.generate_puppet_name_script
+  end
+  helper_method :puppet_name_script
 end

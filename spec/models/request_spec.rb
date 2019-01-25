@@ -155,4 +155,142 @@ RSpec.describe Request, type: :model do
       end
     end
   end
+
+  describe 'puppet script helper methods' do
+    before do
+      @request = FactoryBot.create(:request_with_users)
+    end
+
+    it 'returns correct declaration script for a given request' do
+      script = @request.generate_puppet_name_script
+      expected_string = <<~NAME_SCRIPT
+        node \'$MyVM\'{
+
+            if defined( node_$MyVM) {
+                        class { node_$MyVM: }
+            }
+        }
+      NAME_SCRIPT
+      expect(script).to eq(expected_string)
+    end
+
+    it 'returns correct initialization script for a given request' do
+      script = @request.generate_puppet_node_script
+      expected_string = <<~NODE_SCRIPT
+        class node_$MyVM {
+                $admins = []
+                $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
+
+                realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+                realize(Accounts::Virtual[$users])
+        }
+      NODE_SCRIPT
+      expect(script).to eq(expected_string)
+    end
+  end
+
+  describe 'push to git' do
+    let(:request) { FactoryBot.build :request }
+
+    before do
+      @git = double
+      @status = double
+      allow(@git).to receive(:config).with('user.name', 'test_user_name')
+      allow(@git).to receive(:config).with('user.email', 'test_user_email')
+      allow(@git).to receive(:status) { @status }
+      allow(@git).to receive(:add)
+      allow(@git).to receive(:commit_all)
+      allow(@git).to receive(:push)
+
+      @path = File.join Rails.root, 'public', 'puppet_script_temp', ENV['GIT_REPOSITORY_NAME']
+      node_path = File.join @path, 'Node'
+      name_path = File.join @path, 'Name'
+
+      git_class = class_double('Git')
+                  .as_stubbed_const(transfer_nested_constants: true)
+
+      allow(git_class).to receive(:clone) do
+        FileUtils.mkdir_p(@path) unless File.exist?(@path)
+        FileUtils.mkdir_p(node_path) unless File.exist?(node_path)
+        FileUtils.mkdir_p(name_path) unless File.exist?(name_path)
+        @git
+      end
+    end
+
+    after do
+      FileUtils.rm_rf(@path) if File.exist?(@path)
+    end
+
+    context 'with a new puppet script' do
+      before do
+        allow(@status).to receive(:changed).and_return([])
+        allow(@status).to receive(:added).and_return(['added_file'])
+      end
+
+      it 'correctly calls git' do
+        expect(@git).to receive(:config).with('user.name', 'test_user_name')
+        expect(@git).to receive(:config).with('user.email', 'test_user_email')
+        expect(@git).to(receive(:status).once) { @status }
+        expect(@status).to receive(:added).once
+        expect(@status).not_to receive(:changed)
+
+        expect(@git).to receive(:add)
+        expect(@git).to receive(:commit_all)
+        expect(@git).to receive(:push)
+        request.push_to_git
+      end
+
+      it 'returns a success message' do
+        expect(request.push_to_git).to eq(notice: 'Added file and pushed to git.')
+      end
+    end
+
+    context 'with a changed puppet script' do
+      before do
+        allow(@status).to receive(:changed).and_return(['changed_file'])
+        allow(@status).to receive(:added).and_return([])
+      end
+
+      it 'correctly calls git' do
+        expect(@git).to receive(:config).with('user.name', 'test_user_name')
+        expect(@git).to receive(:config).with('user.email', 'test_user_email')
+        expect(@git).to(receive(:status).twice) { @status }
+        expect(@status).to receive(:added).once
+        expect(@status).to receive(:changed).once
+
+        expect(@git).to receive(:add)
+        expect(@git).to receive(:commit_all)
+        expect(@git).to receive(:push)
+        request.push_to_git
+      end
+
+      it 'returns a success message' do
+        expect(request.push_to_git).to eq(notice: 'Changed file and pushed to git.')
+      end
+    end
+
+    context 'without any changes' do
+      before do
+        allow(@status).to receive(:changed).and_return([])
+        allow(@status).to receive(:added).and_return([])
+      end
+
+      it 'correctly calls git' do
+        expect(@git).to receive(:config).with('user.name', 'test_user_name')
+        expect(@git).to receive(:config).with('user.email', 'test_user_email')
+        expect(@git).to(receive(:status).twice) { @status }
+        expect(@status).to receive(:added).once
+        expect(@status).to receive(:changed).once
+
+        expect(@git).to receive(:add)
+        expect(@git).not_to receive(:commit_all)
+        expect(@git).not_to receive(:push)
+        request.push_to_git
+      end
+
+      it 'returns a success message' do
+        expect(request.push_to_git).to eq(notice: 'Already up to date.')
+      end
+    end
+  end
 end
