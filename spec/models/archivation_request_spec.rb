@@ -12,7 +12,8 @@ RSpec.describe ArchivationRequest, type: :model do
   end
 
   it 'can be executed after 3 days' do
-    archivation_request.created_at -= 60 * 60 * 24 * 3
+    three_days = 60 * 60 * 24 * 3
+    archivation_request.created_at -= three_days
     expect(archivation_request.can_be_executed?).to eq true
   end
 end

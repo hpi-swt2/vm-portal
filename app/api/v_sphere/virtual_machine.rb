@@ -241,7 +241,7 @@ module VSphere
     def root_users
       request = Request.accepted.find { |each| name == each.name }
       if request
-        request.users_assigned_to_requests.select(&:sudo).map(&:user)
+        request.sudo_user_assignments.map(&:user)
       else
         []
       end
