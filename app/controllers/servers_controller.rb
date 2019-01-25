@@ -8,14 +8,11 @@ class ServersController < ApplicationController
   # GET /servers.json
   def index
     @servers = Server.all
-    puts @servers
   end
 
   # GET /servers/1
   # GET /servers/1.json
-  def show
-    @user_is_admin = current_user.admin?
-  end
+  def show; end
 
   # GET /servers/new
   def new
@@ -51,6 +48,7 @@ class ServersController < ApplicationController
       :installed_software,
       :vendor,
       :model,
+      :responsible_id,
       :description
     )
 
@@ -81,7 +79,8 @@ class ServersController < ApplicationController
       installed_software: server_params[:installed_software],
       vendor: server_params[:vendor],
       model: server_params[:model],
-      description: server_params[:description]
+      description: server_params[:description],
+      responsible_id: server_params[:responsible]
     )
   end
 
@@ -101,7 +100,8 @@ class ServersController < ApplicationController
                           :installed_software,
                           :model,
                           :vendor,
-                          :description
+                          :description,
+                          :responsible_id
                         ))
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }

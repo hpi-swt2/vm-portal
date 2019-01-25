@@ -1,30 +1,35 @@
-<p id="notice"><%= notice %></p>
+<div class="clearfix">
+  <h1 class="float-left">Servers</h1>
+  <% if current_user.admin? %>
+    <%= link_to(fa_icon('plus'), new_server_path,
+      method: :get, class: "btn btn-primary float-right mt-3") %>
+  <% end %>
+</div>
 
-<h1>Servers</h1>
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter" onkeyup="filter_table('filter', 'servers', document)" placeholder="Search">
 
-<table class="table-bar">
+<table data-toggle="table" class="table" id="servers">
+  <thead>
+  <tr>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Vendor</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Model</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
+  </tr>
+  </thead>
   <tbody>
+  <% @servers.each do |server| %>
     <tr>
-      <td>
-        <%=link_to(fa_icon('plus'),
-        {controller: :servers, action: 'new'},
-        method: :get, class: 'btn btn-primary') %>
-      </td>
+      <td class="table-active"><%= link_to server.name, server, class: "btn btn-link" %></td>
+      <td class="table-active"><%= server.vendor %></td>
+      <td class="table-active"><%= server.model %></td>
+      <td class="table-active"><%= server.responsible&.name %></td>
     </tr>
+  <% end %>
   </tbody>
 </table>
 
-  <tbody>
-    <% @servers.each do |server| %>
-      <tr>
-        <td><%= link_to 'Show', server %></td>
-        <td><%= link_to 'Edit', edit_server_path(server) %></td>
-        <td><%= link_to 'Destroy', server, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<% if @servers.length == 0 %>
-<p class="empty-table-label">No servers created yet</p>
-<% end %>
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

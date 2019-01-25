@@ -20,6 +20,16 @@
     <%= form.text_field :description, class: 'form-control' %>
   </div>
 
+  <div class="field form-group">
+    <%= form.label :responsible, "Responsible" %>
+    <%= form.select 'responsible',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email),
+                    {},
+                    { multiple: false, class: "selecttwo", data: { placeholder: 'choose more wisely' }, style: 'width: 50%' } %>
+  </div>
+
   <div class="field">
     <h5>Hardware Information</h5>
   </div>

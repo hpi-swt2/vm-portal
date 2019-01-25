@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Server < ApplicationRecord
-  validates :name, :cpu_cores, :ram_gb, :storage_gb, :mac_address, :fqdn, presence: true
+  belongs_to :responsible, class_name: :User
+  validates :name, :cpu_cores, :ram_gb, :storage_gb, :mac_address, :fqdn, :responsible_id, presence: true
   validates :ipv4_address, presence: { unless: :ipv6_address? }
   validates :ipv6_address, presence: { unless: :ipv4_address? }
   serialize :installed_software, Array

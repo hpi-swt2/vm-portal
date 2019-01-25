@@ -83,6 +83,8 @@ ActiveRecord::Schema.define(version: 2019_01_24_151713) do
     t.string "model"
     t.string "vendor"
     t.string "description"
+    t.integer "responsible_id"
+    t.index ["responsible_id"], name: "index_servers_on_responsible_id"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -120,6 +122,7 @@ ActiveRecord::Schema.define(version: 2019_01_24_151713) do
     t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
