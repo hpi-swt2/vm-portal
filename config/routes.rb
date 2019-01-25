@@ -3,9 +3,12 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
-  patch 'requests/request_change_state', to: 'requests#request_change_state', as: 'request_change_state'
+
   resources :request_templates, path: '/vms/request_templates', except: :show
+
+  patch '/vms/requests/reject', to: 'requests#reject', as: 'reject'
   resources :requests, path: '/vms/requests'
+
   resources :notifications, only: %i[index new create destroy] do
     get :mark_as_read, on: :member
     get :has_any, on: :collection, to: 'notifications#any?'

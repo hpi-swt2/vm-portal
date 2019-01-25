@@ -33,11 +33,11 @@ module VSphere
 
     def self.rest
       to_exclude = []
-      pending_archivation.each { | each | to_exclude << each.name }
-      archived.each { | each | to_exclude << each.name }
-      pending_revivings.each { | each | to_exclude << each.name }
+      pending_archivation.each { |each| to_exclude << each.name }
+      archived.each { |each| to_exclude << each.name }
+      pending_revivings.each { |each| to_exclude << each.name }
 
-      all.select { | each | !to_exclude.include? each.name }
+      all.reject { |each| to_exclude.include? each.name }
     end
 
     def self.pending_archivation

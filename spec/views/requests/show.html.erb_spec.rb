@@ -53,8 +53,9 @@ RSpec.describe 'requests/show', type: :view do
   context 'when the current user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
 
-    it 'does show the accept and reject part' do
-      expect(rendered).to have_selector 'div#acceptAndReject'
+    # this has been moved to the edit action
+    it 'does not show the accept and reject part' do
+      expect(rendered).not_to have_selector 'div#acceptAndReject'
     end
   end
 end

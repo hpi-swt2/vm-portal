@@ -27,9 +27,6 @@ RSpec.describe VmsController, type: :controller do
   end
 
   describe 'GET #index' do
-
-
-
     context 'when the current user is a user' do
       it 'returns http success' do
         get :index

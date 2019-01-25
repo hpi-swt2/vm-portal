@@ -42,12 +42,10 @@ class VmsController < ApplicationController
     redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!' unless @config
 
     if @config.update(config_params)
-      flash[:success] = 'Successfully updated configuration'
+      redirect_to requests_path, notice: 'Successfully updated configuration'
     else
-      flash[:alert] = 'Could not update the configuration'
+      redirect_to requests_path, notice: 'Could not update the configuration'
     end
-
-    redirect_to controller: :vms, action: 'show', id: params[:id]
   end
 
   def request_vm_archivation

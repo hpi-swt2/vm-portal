@@ -7,13 +7,6 @@
 <table class="table-bar">
   <tbody>
     <tr>
-      <% if current_user.employee_or_admin? %>
-      <td>
-        <%=link_to(fa_icon('plus'),
-        {controller: :vms, action: 'new'},
-        method: :get, class: 'btn btn-primary', id: 'createNewVMButton') %>
-      </td>
-      <% end %>
       <td>
         <div class="dropdown">
           <button class="fa fa-filter btn btn-primary" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">

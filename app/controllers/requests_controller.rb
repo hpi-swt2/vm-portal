@@ -16,6 +16,7 @@ class RequestsController < ApplicationController
   # GET /requests/1
   # GET /requests/1.json
   def show
+    redirect_to edit_request_path(@request) if current_user.admin? && @request.pending?
     @request_templates = RequestTemplate.all
   end
 
@@ -27,11 +28,11 @@ class RequestsController < ApplicationController
 
   # GET /requests/1/edit
   def edit
-    @request_templates = RequestTemplate.all
+    redirect_to @request unless @request.pending?
   end
 
   def notify_users(title, message)
-    User.all.each do |each|
+    ([@request.user] + @request.users + User.admin).each do |each|
       each.notify(title, message)
     end
   end
@@ -56,13 +57,35 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1.json
   def update
     respond_to do |format|
-      params[:request][:name] = replace_whitespaces(params[:request][:name])
+      params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request] && params[:request][:name]
       if @request.update(request_params)
+        @request.accept!
+        @request.save
         notify_request_update
-        format.html { redirect_to @request, notice: 'Request was successfully updated.' }
-        format.json { render :show, status: :ok, location: @request }
+        vm = @request.create_vm
+        if vm
+          format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created')) }
+          format.json { render status: :ok }
+        else
+          format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
+        end
       else
-        unsuccessful_action(format, :edit)
+        unsuccessful_action format, :edit
+      end
+    end
+  end
+
+  def reject
+    @request = Request.find params[:id]
+    respond_to do |format|
+      if @request&.update(rejection_params)
+        @request.reject!
+        @request.save
+        notify_request_update
+        format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
+        format.json { render status: :ok, action: :index }
+      else
+        unsuccessful_action format, :edit
       end
     end
   end
@@ -74,20 +97,6 @@ class RequestsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to requests_url, notice: 'Request was successfully destroyed.' }
       format.json { head :no_content }
-    end
-  end
-
-  def request_change_state
-    if @request.update(request_params)
-      if @request.accepted?
-        vm = @request.create_vm
-        redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created'))
-      else
-        notify_request_update
-        redirect_to requests_path, notice: I18n.t('request.successfully_updated')
-      end
-    else
-      redirect_to @request, alert: @request.errors
     end
   end
 
@@ -136,6 +145,10 @@ class RequestsController < ApplicationController
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, user_ids: [], sudo_user_ids: [])
+  end
+
+  def rejection_params
+    params.require(:request).permit(:rejection_information)
   end
 end

@@ -10,7 +10,7 @@ RSpec.describe 'vms/edit_config.html.erb', type: :view do
 
   before do
     assign(:vm, vm_on)
-    allow(vm_on).to receive(:macs).and_return(vm_on.macs)
+    vm_on.ensure_config
     render
   end
 
@@ -19,7 +19,7 @@ RSpec.describe 'vms/edit_config.html.erb', type: :view do
   end
 
   it 'shows vm Mac address' do
-    expect(rendered).to include vm_on.macs.first
+    expect(rendered).to include vm_on.macs.first.second
   end
 
   it 'shows vm IP address' do

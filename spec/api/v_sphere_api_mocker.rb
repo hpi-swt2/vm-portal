@@ -50,9 +50,10 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60*60*24, hearteat_status: 'green',
+# rubocop:disable Metrics/AbcSize Metrics/ParameterLists
+def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24, hearteat_status: 'green',
                 guest_id: 'Win10', guest_name: 'Win10 EE', host_name: 'ibmesx13.eaalab.hpi.uni-potsdam.de', committed_storage: 100, uncommitted_storage: 100,
-                cpu_usage: 50, cpu_reservation: 100, guest_memory_usage: 1024, memory_size: 2024, cpu_number: 1) # rubocop:disable Metrics/AbcSize
+                cpu_usage: 50, cpu_reservation: 100, guest_memory_usage: 1024, memory_size: 2024, cpu_number: 1, macs: [['Network Adapter 1', '00-14-22-01-23-45']])
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:guestHeartbeatStatus).and_return(hearteat_status)
@@ -71,11 +72,13 @@ def vim_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalle
   allow(vm).to receive_message_chain(:summary, :quickStats, :guestMemoryUsage).and_return guest_memory_usage
   allow(vm).to receive_message_chain(:summary, :config, :memorySizeMB).and_return memory_size
   allow(vm).to receive_message_chain(:summary, :config, :numCpu).and_return cpu_number
+  allow(vm).to receive(:macs).and_return macs
 
   vm
 end
+# rubocop:enable Metrics/AbcSize Metrics/ParameterLists
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60*60*24)
+def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24)
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,

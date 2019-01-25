@@ -34,6 +34,10 @@ class Request < ApplicationRecord
     self.status = 'accepted'
   end
 
+  def reject!
+    self.status = 'rejected'
+  end
+
   def assign_sudo_users(sudo_user_ids)
     sudo_user_ids&.each do |id|
       assignment = users_assigned_to_requests.find { |an_assignment| an_assignment.user_id == id.to_i }
@@ -56,7 +60,7 @@ class Request < ApplicationRecord
   def create_vm
     folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first)
+    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) if clusters.first
   end
 
   private
