@@ -8,7 +8,7 @@ RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
 
   let(:vm1) do
-    vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm2) do
@@ -24,15 +24,10 @@ RSpec.describe VmsController, type: :controller do
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
-  end
-  before do
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
 
   describe 'GET #index' do
-
-
-
     context 'when the current user is a user' do
       it 'returns http success' do
         get :index
@@ -104,17 +99,6 @@ RSpec.describe VmsController, type: :controller do
     end
   end
 
-  describe 'GET #new' do
-    it 'returns http success' do
-      get :new
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'renders new page' do
-      expect(get(:new)).to render_template('vms/new')
-    end
-  end
-
   describe 'GET #show' do
     context 'when vm is found' do
       before do
@@ -174,7 +158,7 @@ RSpec.describe VmsController, type: :controller do
   end
 
   def set_old_path
-    request.env['HTTP_REFERER'] = 'old_path' unless request.nil? || request.env.nil?
+    request.env['HTTP_REFERER'] = old_path unless request.nil? || request.env.nil?
   end
 
   describe 'POST #change_power_state' do
@@ -183,7 +167,7 @@ RSpec.describe VmsController, type: :controller do
       set_old_path
     end
 
-    context 'when the current_user is a root_user' do
+    context 'when the current_user is a sudo_user' do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true

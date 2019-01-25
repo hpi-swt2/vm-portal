@@ -235,7 +235,6 @@ module VSphere
     end
 
     def users
-      request = Request.accepted.find { |each| name == each.name }
       if request
         request.users
       else
@@ -243,10 +242,9 @@ module VSphere
       end
     end
 
-    def root_users
-      request = Request.accepted.find { |each| name == each.name }
+    def sudo_users
       if request
-        Request.first.users_assigned_to_requests.select(&:sudo).map(&:user)
+        request.sudo_users
       else
         []
       end
@@ -273,6 +271,10 @@ module VSphere
     end
 
     private
+
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
 
     def managed_folder_entry
       @vm

@@ -24,10 +24,6 @@ class VmsController < ApplicationController
     redirect_to action: :index
   end
 
-  def new
-    @request = !params[:request].nil? ? Request.find(params[:request]) : default_render
-  end
-
   def show
     render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
@@ -166,7 +162,7 @@ class VmsController < ApplicationController
     @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !@vm.users.include?(current_user)
+    redirect_to vms_path unless current_user.admin? || @vm.users.include?(current_user)
   end
 
   def config_params
@@ -177,7 +173,6 @@ class VmsController < ApplicationController
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm
 
-    redirect_to vms_path unless @vm.root_users.include?(current_user)
-
+    redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
   end
 end
