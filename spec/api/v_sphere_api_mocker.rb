@@ -80,7 +80,7 @@ def vim_vm_mock(
   )
   vm = double
   allow(vm).to receive(:name).and_return(name)
-  allow(vm).to receive(:guestHeartbeatStatus).and_return(hearteat_status)
+  allow(vm).to receive(:guestHeartbeatStatus).and_return(guest_heartbeat_status)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
