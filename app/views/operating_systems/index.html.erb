@@ -1,5 +1,15 @@
 <h1>Operating Systems</h1>
 
+<table class="table-bar">
+  <tbody>
+    <tr>
+      <td>
+        <%=link_to(fa_icon('plus'),
+        {controller: :operating_systems, action: 'new'},
+        method: :get, class: 'btn btn-primary', id: 'createNewProjectButton') %>
+      </td>
+    </tr></tbody></table>
+
 <table class="table">
   <thead>
     <tr>
@@ -18,7 +28,3 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Operating System', new_operating_system_path, class: 'btn btn-primary' %>

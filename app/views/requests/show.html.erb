@@ -4,131 +4,73 @@
   <tbody>
     <tr>
       <th style="width: 300px">VM Name</td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'vm_name', nil, class: 'form-control', value: @request.name %></td>
-      <% else %>
-        <td><%= @request.name %></td>
-      <% end %>
+      <td><%= @request.name %></td>
     </tr>
 
     <tr>
-      <td><strong>Cpu Cores</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= number_field_tag 'cpu_cores', nil, class: 'form-control', value: @request.cpu_cores %></td>
-      <% else %>
-        <td><%= @request.cpu_cores %></td>
-      <% end %>
+      <td><strong>CPU Cores</strong></td>
+      <td><%= @request.cpu_cores %></td>
     </tr>
 
     <tr>
       <td><strong>MB RAM</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= number_field_tag 'ram_mb', nil, class: 'form-control', value: @request.ram_mb %></td>
-      <% else %>
-        <td><%= @request.ram_mb %></td>
-      <% end %>
+      <td><%= @request.ram_mb %></td>
     </tr>
 
     <tr>
       <td><strong>MB Storage</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= number_field_tag 'storage_mb', nil, class: 'form-control', value: @request.storage_mb %></td>
-      <% else %>
-        <td><%= @request.storage_mb %></td>
-      <% end %>
+      <td><%= @request.storage_mb %></td>
     </tr>
 
     <tr>
       <td><strong>Operating System</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= select_tag 'operating_system', options_for_select( operating_system_options, @request.operating_system) %></td>
-      <% else %>
-        <td><%= @request.operating_system %></td>
-      <% end %>
+      <td><%= @request.operating_system %></td>
     </tr>
 
     <tr>
       <td><strong>Port</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= number_field_tag 'port', nil, class: 'form-control', value: @request.port %></td>
-      <% else %>
-        <td><%= @request.port %></td>
-      <% end %>
+      <td><%= @request.port %></td>
     </tr>
 
     <tr>
       <td><strong>Application Name</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td><%= text_field_tag 'application_name', nil, class: 'form-control', value: @request.application_name %></td>
-      <% else %>
-        <td><%= @request.application_name %></td>
-      <% end %>
+      <td><%= @request.application_name %></td>
     </tr>
 
     <tr>
       <td><strong>Description:</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td class="col-md-4"><%= text_field_tag 'description', nil, class: 'form-control', value: @request.description %></td>
-      <% else %>
-        <td class="col-md-4"><%= @request.description %></td>
-      <% end %>
+      <td class="col-md-4"><%= @request.description %></td>
     </tr>
 
     <tr>
       <td><strong>Comment:</strong></td>
-      <% if current_user.admin? && @request.pending? %>
-        <td class="col-md-4"><%= text_field_tag 'comment', nil, class: 'form-control', value: @request.comment %></td>
-      <% else %>
-        <td class="col-md-4"><%= @request.comment %></td>
-      <% end %>
+      <td class="col-md-4"><%= @request.comment %></td>
     </tr>
 
     <tr>
       <td><strong>Status</strong></td>
       <td><%= @request.status %></td>
     </tr>
+
+    <tr>
+      <td><strong>Users</strong></td>
+      <td>
+        <% @request.users.each do |user| %>
+          <p><%= user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Users with sudo rights</strong></td>
+      <td>
+        <% @request.users_assigned_to_requests.each do |userAtRequest| %>
+          <p><%= userAtRequest.user.email %></p>
+        <% end %>
+      </td>
+    </tr>  
   </tbody>
 </table>
-
-<p>
-  <strong>Users with sudo rights</strong>
-  <ul>
-    <% if current_user.admin? && @request.pending? %>
-      <%= select_tag 'sudo_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email, 
-                                                     @request.sudo_user_assignments.collect {|sudo_user| sudo_user.user_id}),
-                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
-    <% else %>
-      <% @request.sudo_user_assignments.each do |assignment| %>
-        <p>
-          <li><%= assignment.user.email %></li>
-        </p>
-    <% end %>
-  <% end %>
-  </ul>
-</p>
-
-<p>
-  <strong>Users</strong>
-  <ul>
-    <% if current_user.admin? && @request.pending? %>
-      <%= select_tag 'user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email,
-                                                       @request.non_sudo_user_assignments.collect {|sudo_user| sudo_user.user_id}),
-                    { multiple: true, class: "selecttwo", data: { placeholder: @request.non_sudo_user_assignments }, style: 'width: 50%' } %>
-    <% else %>
-      <% @request.non_sudo_user_assignments.each do |assignment| %>
-          <p>
-            <li><%= assignment.user.email %></li>
-          </p>
-      <% end %>
-    <% end %>
-  </ul>
-</p>
 
 <% if @request.rejected? %>
   <p>
@@ -142,7 +84,7 @@
     <%= form_with(model: @request, url:{action: 'request_change_state', id: @request}, local: true) do |form| %>
       <div class="actions">
         <%= form.hidden_field :status, value: 'accepted' %>
-        <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
+        <%= form.submit 'Accept & Continue', id: 'acceptButton', class: "btn btn-success" %>
       </div>
     <% end %>
 
@@ -159,5 +101,3 @@
     <% end %>
   </div>
 <% end %>
-
-<%= link_to 'Back', requests_path %>
