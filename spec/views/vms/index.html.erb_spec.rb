@@ -25,8 +25,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   let(:admin) { FactoryBot.create :admin }
 
   before do
+    sign_in current_user
     assign(:vms, mock_vms)
-    allow(view).to receive(:current_user).and_return(current_user)
     assign(:archived_vms, [])
     assign(:pending_archivation_vms, [])
     render
@@ -114,21 +114,20 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :admin }
 
     it 'shows correct power on / off button' do
-      expect(rendered).to have_button('Start', count: 1)
+      expect(rendered).to have_css('a.btn-manage.play')
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_selector('input[value="Shutdown"][data-confirm="Are you sure?"]')
+      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
     end
 
     context 'when vmwaretools are not installed' do
       before do
         assign(:vms, mock_vms_without_tools)
-        assign(:parameters, param)
         render
       end
 
-      it 'shows no power buttons when vmwaretools are not installed' do
+      it 'shows no power buttons' do
         expect(rendered).to have_text('VMWare tools are not installed', count: 2)
       end
     end
