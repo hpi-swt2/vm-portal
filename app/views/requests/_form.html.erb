@@ -10,25 +10,6 @@
     </div>
   <% end %>
 
-  <fieldset class="form-group">
-    <div class="row bottom-buffer">
-      <legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>
-      <div class="col-sm-10">
-        <ul>
-          <input type="radio" class="template" name="template" id="template" value="none" checked/>
-          <%= "None" %>
-        </ul>
-        <% @request_templates.each_with_index do |request_template, index| %>
-          <ul>
-             <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_gb, request_template.storage_gb, request_template.operating_system] %>"/>
-            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}"
-            %>
-          </ul>
-        <% end %>
-      </div>
-    </div>
-  </fieldset>
-
   <div class="field form-group">
     <%= form.label :name, "VM Name" %>
     <%= form.text_field :name, class: 'form-control' %>
@@ -53,8 +34,9 @@
     <p>Users with sudo rights</p>
     <%= form.select 'sudo_user_ids',
                     options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email),
+                                                     :id,
+                                                     :email,
+                                                     @request.sudo_user_assignments.collect(&:user_id)),
                     {},
                     { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
   </div>
@@ -64,7 +46,8 @@
     <%= form.select 'user_ids',
                     options_from_collection_for_select(User.all,
                                                        :id,
-                                                       :email),
+                                                       :email,
+                                                       @request.non_sudo_user_assignments.collect(&:user_id)),
                     {},
                     { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
   </div>
@@ -94,9 +77,29 @@
     <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
   </div>
 
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
-  </div>
+  <% if locals[:updating] %>
+    <div id="acceptAndReject">
+      <div class="actions">
+        <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="actions">
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>
+
+<% if locals[:updating] %>
+  <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
+    <div class="field form-group">
+      <%= rejection_form.label :rejection_information %>
+      <%= rejection_form.text_field :rejection_information, class: 'form-control' %>
+    </div>
+    <div class="actions">
+      <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
+    </div>
+  <% end %>
 <% end %>
 
 <%= javascript_include_tag('request') %>

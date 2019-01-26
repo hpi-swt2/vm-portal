@@ -7,33 +7,15 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/show.html.erb', type: :view do
   let(:vm_on) do
-    v_sphere_vm_mock(
-      'VM',
-      power_state: 'poweredOn',
-      boot_time: Time.current,
-      guest_heartbeat_status: 'green',
-      vm_ware_tools: 'toolsInstalled'
-    )
+    v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm_on_without_tools) do
-    v_sphere_vm_mock(
-      'VM',
-      power_state: 'poweredOn',
-      boot_time: Time.current,
-      guest_heartbeat_status: 'green',
-      vm_ware_tools: 'toolsNotInstalled'
-    )
+    v_sphere_vm_mock 'VM'
   end
 
   let(:vm_off) do
-    v_sphere_vm_mock(
-      'VM',
-      power_state: 'poweredOff',
-      boot_time: Time.current,
-      guest_heartbeat_status: 'green',
-      vm_ware_tools: 'toolsInstalled'
-    )
+    v_sphere_vm_mock 'VM', power_state: 'powerOff'
   end
 
   let(:current_user) { FactoryBot.create :user }
@@ -41,6 +23,8 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   before do
     sign_in current_user
     assign(:vm, vm_on)
+    connection = v_sphere_connection_mock [vm_on, vm_on_without_tools, vm_off], [], [], [], []
+    allow(VSphere::Connection).to receive(:instance).and_return connection
     render
   end
 
@@ -68,21 +52,17 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows vm IP address' do
-    expect(rendered).to include vm_on.summary.guest.ipAddress
+    expect(rendered).to include vm_on.ip
   end
 
   it 'shows CPU usage' do
-    expect(rendered).to include(
-      (vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s
-    )
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s)
   end
 
   it 'shows HDD usage' do
     expect(rendered).to include((vm_on.summary.storage.committed / 1024**3).to_s)
     expect(rendered).to include((vm_on.summary.storage.uncommitted / 1024**3).to_s)
-    expect(rendered).to include(
-      (vm_on.summary.storage.committed / (vm_on.summary.storage.committed + vm_on.summary.storage.uncommitted).round).to_s
-    )
+    expect(rendered).to include((vm_on.summary.storage.committed / (vm_on.summary.storage.committed + vm_on.summary.storage.uncommitted).round).to_s)
   end
 
   it 'shows RAM usage' do
@@ -118,6 +98,10 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       request = FactoryBot.create :accepted_request, name: vm_on.name
       FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
       render
+    end
+
+    it 'has a link to delete VM' do
+      expect(rendered).to have_link 'Delete VM'
     end
 
     context 'when powered on' do

@@ -29,14 +29,5 @@ RSpec.describe 'operating_system selection for request', type: :feature do
       select(@operating_system.name, from: 'operating_system')
       expect(find_by_id('operating_system').value).to eq(@operating_system.name)
     end
-
-    it 'changes request operating_system value' do
-      request = FactoryBot.create(:request)
-      visit edit_request_path(request)
-      select(@operating_system.name, from: 'operating_system')
-      find_button('Update Request').click
-      request.reload
-      expect(request.operating_system).to eq(@operating_system.name)
-    end
   end
 end

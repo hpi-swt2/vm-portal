@@ -30,6 +30,7 @@
       <th>Application Name</th>
       <th>Comment</th>
       <th>Status </th>
+      <th>Puppet Script</th>
     </tr>
   </thead>
 
@@ -50,10 +51,39 @@
                       class: 'btn btn-primary'
           %>
         </td>
+        <%if request.accepted? %>
+          <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= '#puppet-script-' + request.name %>>
+            show script
+          </button></td>
+          <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <pre>
+                    <%= debug puppet_node_script(request) %>
+                    <%= debug puppet_name_script(request) %>
+                    </pre>
+                </div>
+                <div class="modal-footer">
+                  <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <%else %>
+          <td></td>
+        <%end %>
       </tr>
-    <% end %>
+    <%end %>
   </tbody>
 </table>
 <% if @requests.length == 0 %>
-<p class="empty-table-label">No requests created yet</p>
+  <p class="empty-table-label">No requests created yet</p>
 <% end %>

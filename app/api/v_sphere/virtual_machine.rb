@@ -33,7 +33,12 @@ module VSphere
     end
 
     def self.rest
-      all - pending_archivation - archived - pending_revivings
+      to_exclude = []
+      pending_archivation.each { |each| to_exclude << each.name }
+      archived.each { |each| to_exclude << each.name }
+      pending_revivings.each { |each| to_exclude << each.name }
+
+      all.reject { |each| to_exclude.include? each.name }
     end
 
     def self.pending_archivation
@@ -63,18 +68,6 @@ module VSphere
 
     def name
       @vm.name
-    end
-
-    def summary
-      @vm.summary
-    end
-
-    def host
-      @vm.summary.runtime.host.name
-    end
-
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
     end
 
     # Guest OS communication
@@ -109,14 +102,6 @@ module VSphere
       @vm.runtime.powerState == 'poweredOff'
     end
 
-    def change_power_state
-      if powered_on?
-        power_off
-      else
-        power_on
-      end
-    end
-
     # Power state
     def power_on
       @vm.PowerOnVM_Task.wait_for_completion unless powered_on?
@@ -124,6 +109,14 @@ module VSphere
 
     def power_off
       @vm.PowerOffVM_Task.wait_for_completion unless powered_off?
+    end
+
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
     end
 
     # Archiving
@@ -140,6 +133,16 @@ module VSphere
 
     def set_pending_archivation
       move_into pending_archivation_folder
+      ArchivationRequest.new(name: name).save
+    end
+
+    def archivable?
+      request = ArchivationRequest.find_by_name name
+      if request
+        request.can_be_executed?
+      else
+        true
+      end
     end
 
     def set_archived
@@ -150,6 +153,7 @@ module VSphere
       end
 
       move_into archived_folder
+      archivation_request&.delete
     end
 
     # Reviving
@@ -163,10 +167,24 @@ module VSphere
 
     def set_revived
       move_into root_folder
+      archivation_request&.delete
     end
 
     # Config methods
     # All the properties that HART saves internally
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
+
+    def ensure_config
+      unless config
+        @config = VirtualMachineConfig.new
+        @config.name = name
+        @config.save
+      end
+      @config
+    end
+
     def ip
       config&.ip || ''
     end
@@ -184,8 +202,43 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def summary
+      @vm.summary
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
+    end
+
+    def vmwaretools_installed?
+      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    end
+
+    def host_name
+      @vm.summary.runtime.host.name
+    end
+
+    def active?
+      !archived? && !pending_archivation? && !pending_reviving?
+    end
+
+    def status
+      if archived?
+        return :archived
+      elsif pending_archivation?
+        return :pending_archivation
+      elsif pending_reviving?
+        return :pending_reviving
+      end
+
+      if powered_on?
+        :online
+      else
+        :offline
+      end
+    end
+
     def users
-      request = Request.accepted.find { |each| name == each.name }
       if request
         request.users
       else
@@ -193,10 +246,9 @@ module VSphere
       end
     end
 
-    def root_users
-      request = Request.accepted.find { |each| name == each.name }
+    def sudo_users
       if request
-        Request.first.users_assigned_to_requests.select(&:sudo).map(&:user)
+        request.sudo_users
       else
         []
       end
@@ -218,10 +270,18 @@ module VSphere
       equal? other
     end
 
+    def macs
+      @vm.macs
+    end
+
     private
 
-    def config
-      @config ||= VirtualMachineConfig.find_by_name name
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
+
+    def archivation_request
+      ArchivationRequest.find_by_name(name)
     end
 
     def managed_folder_entry
