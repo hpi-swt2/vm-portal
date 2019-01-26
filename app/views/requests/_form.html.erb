@@ -15,7 +15,7 @@
       <legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>
       <div class="col-sm-10">
         <ul>
-          <input type="radio" class="template" name="template" id="template" value="none"/>
+          <input type="radio" class="template" name="template" id="template" value="none" checked/>
           <%= "None" %>
         </ul>
         <% @request_templates.each_with_index do |request_template, index| %>
@@ -56,7 +56,7 @@
                                                        :id,
                                                        :email),
                     {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
   </div>
 
   <div class="field form-group">
@@ -66,11 +66,11 @@
                                                        :id,
                                                        :email),
                     {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose more wisely' }, style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
   </div>
 
   <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %>
+    <%= form.label :operating_system, "Operating System" %> <br>
     <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system' %>
   </div>
 
