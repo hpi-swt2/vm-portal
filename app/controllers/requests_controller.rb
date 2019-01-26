@@ -3,7 +3,7 @@
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   include RequestsHelper
-  before_action :set_request, only: %i[show edit update destroy request_state_change]
+  before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
@@ -15,7 +15,10 @@ class RequestsController < ApplicationController
 
   # GET /requests/1
   # GET /requests/1.json
-  def show; end
+  def show
+    redirect_to edit_request_path(@request) if current_user.admin? && @request.pending?
+    @request_templates = RequestTemplate.all
+  end
 
   # GET /requests/new
   def new
@@ -25,11 +28,11 @@ class RequestsController < ApplicationController
 
   # GET /requests/1/edit
   def edit
-    @request_templates = RequestTemplate.all
+    redirect_to @request unless @request.pending?
   end
 
   def notify_users(title, message)
-    User.all.each do |each|
+    ([@request.user] + @request.users + User.admin).each do |each|
       each.notify(title, message)
     end
   end
@@ -54,13 +57,35 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1.json
   def update
     respond_to do |format|
-      params[:request][:name] = replace_whitespaces(params[:request][:name])
+      prepare_params
       if @request.update(request_params)
+        @request.accept!
+        @request.save
         notify_request_update
-        format.html { redirect_to @request, notice: 'Request was successfully updated.' }
-        format.json { render :show, status: :ok, location: @request }
+        vm = @request.create_vm
+        if vm
+          format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created')) }
+          format.json { render status: :ok }
+        else
+          format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
+        end
       else
-        unsuccessful_action(format, :edit)
+        unsuccessful_action format, :edit
+      end
+    end
+  end
+
+  def reject
+    @request = Request.find params[:id]
+    respond_to do |format|
+      if @request&.update(rejection_params)
+        @request.reject!
+        @request.save
+        notify_request_update
+        format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
+        format.json { render status: :ok, action: :index }
+      else
+        unsuccessful_action format, :edit
       end
     end
   end
@@ -75,13 +100,10 @@ class RequestsController < ApplicationController
     end
   end
 
-  def request_change_state
-    if @request.update(request_params)
-      notify_request_update
-      redirect_to requests_path, notice: I18n.t('request.successfully_updated')
-    else
-      redirect_to @request, alert: @request.errors
-    end
+  # Creates puppet files for request and pushes the created files into a git repository
+  def push_to_git
+    response = @request.push_to_git
+    redirect_to requests_path, response
   end
 
   private
@@ -98,7 +120,7 @@ class RequestsController < ApplicationController
   def authenticate_state_change
     @request = Request.find(params[:id])
     authenticate_admin
-    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user
+    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user && !current_user.admin?
   end
 
   def notify_request_update
@@ -136,6 +158,20 @@ class RequestsController < ApplicationController
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, :status, user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, user_ids: [], sudo_user_ids: [])
   end
+
+  def rejection_params
+    params.require(:request).permit(:rejection_information)
+  end
+
+  def puppet_node_script(request)
+    request.generate_puppet_node_script
+  end
+  helper_method :puppet_node_script
+
+  def puppet_name_script(request)
+    request.generate_puppet_name_script
+  end
+  helper_method :puppet_name_script
 end
