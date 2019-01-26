@@ -7,7 +7,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  after_create :set_user_id
+  after_create :set_user_id, :update_repository
   after_initialize :set_default_role, if: :new_record?
 
   devise :database_authenticatable, :registerable,
@@ -96,6 +96,23 @@ class User < ApplicationRecord
                      end
       save
     end
+  end
+
+  def update_repository
+    path = File.join Rails.root, 'public', 'puppet_script_temp'
+
+    begin
+      message = GitHelper.write_to_repository(path, name) do |git_writer|
+        git_writer.write_file('init.pp', generate_puppet_init_script)
+      end
+      { notice: message }
+    rescue Git::GitExecuteError
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+    end
+  end
+
+  def generate_puppet_init_script
+    Puppetscript.init_scrit(User.all)
   end
 
   def valid_ssh_key?
