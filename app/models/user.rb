@@ -102,12 +102,15 @@ class User < ApplicationRecord
     path = File.join Rails.root, 'public', 'puppet_script_temp'
 
     begin
-      message = GitHelper.write_to_repository(path, name) do |git_writer|
+      GitHelper.write_to_repository(path) do |git_writer|
         git_writer.write_file('init.pp', generate_puppet_init_script)
+        if git_writer.added?
+          message = 'Create init.pp'
+        else
+          message = "Add #{name}"
+        end
+        git_writer.save(message)
       end
-      { notice: message }
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 

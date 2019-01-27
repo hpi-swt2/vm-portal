@@ -1,22 +1,19 @@
 # frozen_string_literal: true
 
 module GitHelper
-  def self.write_to_repository(path, name)
+  def self.write_to_repository(path)
     FileUtils.mkdir_p(path) unless File.exist?(path)
-    git_writer = GitWriter.new(path, name)
+    git_writer = GitWriter.new(path)
     begin
       yield git_writer
-      message = git_writer.save
-      message
     ensure
       FileUtils.rm_rf(path) if File.exist?(path)
     end
   end
 
   class GitWriter
-    def initialize(path, name)
+    def initialize(path)
       @path = path
-      @name = name
       @git = setup_git(path)
     end
 
@@ -35,15 +32,9 @@ module GitHelper
       @git.status.changed.any?
     end
 
-    def save
-      if added?
-        commit_and_push('Add ' + @name)
-        'Added file and pushed to git.'
-      elsif updated?
-        commit_and_push('Update ' + @name)
-        'Changed file and pushed to git.'
-      else
-        'Already up to date.'
+    def save(message)
+      if added? or updated?
+        commit_and_push(message)
       end
     end
 

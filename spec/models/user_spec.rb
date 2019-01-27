@@ -81,10 +81,11 @@ RSpec.describe User, type: :model do
       end
 
       it 'adds the users to puppet_script init' do
-        expect(@git_stub.git).to(receive(:status).twice)
-        expect(@git_stub.status).to receive(:added).once
-        expect(@git_stub.status).to receive(:changed).once
+        allow(@git_stub.status).to receive(:changed).and_return(['init.pp'])
+        allow(@git_stub.status).to receive(:added).and_return([])
+
         user
+        expect(@git_stub.git).to have_received(:commit_all).with('Add First Last')
       end
     end
 

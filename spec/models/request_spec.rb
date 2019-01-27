@@ -213,10 +213,8 @@ RSpec.describe Request, type: :model do
       end
 
       it 'correctly calls git' do
-        expect(@git_stub.git).to(receive(:status).twice)
-        expect(@git_stub.status).to receive(:added).twice
-        expect(@git_stub.status).not_to receive(:changed)
         request.push_to_git
+        expect(@git_stub.git).to have_received(:commit_all).with('Add MyVM')
       end
 
       it 'returns a success message' do
@@ -231,9 +229,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'correctly calls git' do
-        expect(@git_stub.git).to(receive(:status).exactly(4).times)
-        expect(@git_stub.status).to receive(:added).twice
-        expect(@git_stub.status).to receive(:changed).twice
+        expect(@git_stub.git).to receive(:commit_all).with('Update MyVM')
         request.push_to_git
       end
 
@@ -249,9 +245,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'correctly calls git' do
-        expect(@git_stub.git).to(receive(:status).exactly(4).times)
-        expect(@git_stub.status).to receive(:added).twice
-        expect(@git_stub.status).to receive(:changed).twice
+        expect(@git_stub.git).not_to receive(:commit_all)
         request.push_to_git
       end
 
