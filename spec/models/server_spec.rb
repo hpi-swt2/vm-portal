@@ -17,12 +17,17 @@ RSpec.describe Server, type: :model do
     end
 
     it 'is invalid with no ram specifiation' do
-      server.ram_mb = nil
+      server.ram_gb = nil
       expect(server).to be_invalid
     end
 
     it 'is invalid with no storage specifiation' do
-      server.storage_mb = nil
+      server.storage_gb = nil
+      expect(server).to be_invalid
+    end
+
+    it 'is invalid with no responsible person' do
+      server.responsible = nil
       expect(server).to be_invalid
     end
 
@@ -32,12 +37,12 @@ RSpec.describe Server, type: :model do
     end
 
     it 'is invalid with negative ram specifiation' do
-      server.ram_mb = -1
+      server.ram_gb = -1
       expect(server).to be_invalid
     end
 
     it 'is invalid with negative storage specifiation' do
-      server.storage_mb = -1
+      server.storage_gb = -1
       expect(server).to be_invalid
     end
 

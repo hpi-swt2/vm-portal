@@ -7,13 +7,14 @@ RSpec.describe ServersController, type: :controller do
     {
       name: 'SpecServer',
       cpu_cores: 4,
-      ram_mb: 1024,
-      storage_mb: 4096,
+      ram_gb: 1024,
+      storage_gb: 4096,
       mac_address: 'C0:FF:EE:C4:11:42',
       fqdn: 'arrrr.speck.de',
       ipv4_address: '8.8.8.8',
       ipv6_address: '::1',
-      installed_software: ['SpeckTester']
+      installed_software: ['SpeckTester'],
+      responsible: FactoryBot.create(:user)
     }
   end
 
@@ -21,13 +22,14 @@ RSpec.describe ServersController, type: :controller do
     {
       name: 'SpecServer',
       cpu_cores: '',
-      ram_mb: 1024,
-      storage_mb: 4096,
+      ram_gb: 1024,
+      storage_gb: 4096,
       mac_address: 'EE:C4:11:42',
       fqdn: 'arrrr.speck.de',
       ipv4_address: 'c8.a8.d8.b8',
       ipv6_address: 42,
-      installed_software: ['SpeckTester']
+      installed_software: ['SpeckTester'],
+      responsible: 'Hans Würtschen'
     }
   end
 
@@ -51,6 +53,11 @@ RSpec.describe ServersController, type: :controller do
       server = Server.create! valid_attributes
       get :show, params: { id: server.to_param }, session: valid_session
       expect(response).to be_successful
+    end
+
+    it 'returns 404 when id is not valid' do
+      get :show, params: { id: 'invalid_id' }, session: valid_session
+      expect(response.status).to eq(404)
     end
   end
 
@@ -95,13 +102,14 @@ RSpec.describe ServersController, type: :controller do
         {
           name: 'SpeckServer',
           cpu_cores: 2,
-          ram_mb: 1024,
-          storage_mb: 4096,
+          ram_gb: 1024,
+          storage_gb: 4096,
           mac_address: 'C0:FF:EE:C4:11:42',
           fqdn: 'arrrr.speck.de',
           ipv4_address: '8.8.8.8',
           ipv6_address: '::1',
-          installed_software: ['SpeckTester']
+          installed_software: ['SpeckTester'],
+          responsible: FactoryBot.create(:admin)
         }
       end
 

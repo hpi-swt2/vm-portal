@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class Server < ApplicationRecord
-  validates :name, :cpu_cores, :ram_mb, :storage_mb, :mac_address, :fqdn, presence: true
+  belongs_to :responsible, class_name: :User
+  validates :name, :cpu_cores, :ram_gb, :storage_gb, :mac_address, :fqdn, :responsible_id, presence: true
   validates :ipv4_address, presence: { unless: :ipv6_address? }
   validates :ipv6_address, presence: { unless: :ipv4_address? }
   serialize :installed_software, Array
 
   validates :cpu_cores, numericality: { greater_than: 0 }
-  validates :ram_mb, numericality: { greater_than: 0 }
-  validates :storage_mb, numericality: { greater_than: 0 }
+  validates :ram_gb, numericality: { greater_than: 0 }
+  validates :storage_gb, numericality: { greater_than: 0 }
 
   validates :ipv4_address, format: {
     with: /(^$)|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/,

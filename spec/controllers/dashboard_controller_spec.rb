@@ -11,7 +11,6 @@ RSpec.describe DashboardController, type: :controller do
       end
 
       it 'returns http success' do
-        skip 'Find solution for timeout when loading dashboard'
         get :index
         expect(response).to have_http_status(:success)
       end

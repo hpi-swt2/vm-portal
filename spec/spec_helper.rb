@@ -39,16 +39,12 @@ end
 # Load FactoryBot config
 require 'support/factory_bot'
 
-require './app/api/vmapi'
+require './app/api/v_sphere/connection'
+require './spec/api/v_sphere_api_mocker'
 
 RSpec.configure do |config|
-  config.before(:suite) do
-    puts '------------------------------------------------'
-    puts 'Replacing VmApi with a few mock methods!'
-    puts '------------------------------------------------'
-
-    VmApi.instance.define_singleton_method(:all_vm_infos) { [] }
-    VmApi.instance.define_singleton_method(:all_hosts) { [] }
+  config.before do
+    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
   end
 
   # rspec-expectations config goes here. You can use an alternate

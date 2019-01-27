@@ -26,4 +26,14 @@ RSpec.describe RequestsHelper, type: :helper do
     teststring = 'TestString'
     expect(replace_whitespaces(teststring)).to eq(teststring)
   end
+
+  it 'converts mb to gb correctly' do
+    megabyte = 9_000
+    expect(mb_to_gb(megabyte)).to eq(9)
+  end
+
+  it 'converts gb to mb correctly' do
+    gigabyte = 9
+    expect(gb_to_mb(gigabyte)).to eq(9000)
+  end
 end

@@ -2,12 +2,12 @@
 
 class ServersController < ApplicationController
   before_action :set_server, only: %i[show edit update destroy]
+  before_action :authenticate_employee, only: %i[show]
   before_action :authenticate_admin, only: %i[new create edit update destroy]
   # GET /servers
   # GET /servers.json
   def index
     @servers = Server.all
-    puts @servers
   end
 
   # GET /servers/1
@@ -35,10 +35,22 @@ class ServersController < ApplicationController
 
     # merge server_params [and software information
     server_params[:installed_software] = software
-    puts server_params[:installed_software]
 
-    server_params.permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software)
-    # server_params.permit!
+    server_params.permit(
+      :name,
+      :cpu_cores,
+      :ram_gb,
+      :storage_gb,
+      :ipv4_address,
+      :ipv6_address,
+      :mac_address,
+      :fqdn,
+      :installed_software,
+      :vendor,
+      :model,
+      :responsible_id,
+      :description
+    )
 
     # create new Server object
     setNewServerObject
@@ -58,13 +70,17 @@ class ServersController < ApplicationController
     @server = Server.new(
       name: server_params[:name],
       cpu_cores: server_params[:cpu_cores],
-      ram_mb: server_params[:ram_mb],
-      storage_mb: server_params[:storage_mb],
+      ram_gb: server_params[:ram_gb],
+      storage_gb: server_params[:storage_gb],
       mac_address: server_params[:mac_address],
       fqdn: server_params[:fqdn],
       ipv4_address: server_params[:ipv4_address],
       ipv6_address: server_params[:ipv6_address],
-      installed_software: server_params[:installed_software]
+      installed_software: server_params[:installed_software],
+      vendor: server_params[:vendor],
+      model: server_params[:model],
+      description: server_params[:description],
+      responsible_id: server_params[:responsible]
     )
   end
 
@@ -73,7 +89,19 @@ class ServersController < ApplicationController
   def update
     respond_to do |format|
       if @server.update(server_params.permit(
-                          :name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address, :mac_address, :fqdn, :installed_software
+                          :name,
+                          :cpu_cores,
+                          :ram_gb,
+                          :storage_gb,
+                          :ipv4_address,
+                          :ipv6_address,
+                          :mac_address,
+                          :fqdn,
+                          :installed_software,
+                          :model,
+                          :vendor,
+                          :description,
+                          :responsible_id
                         ))
         format.html { redirect_to @server, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @server }
@@ -103,9 +131,6 @@ class ServersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def server_params
-    # params.require(:server).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :ipv4_address, :ipv6_address,
-    #                              :mac_address, :fqdn)
-
     params.fetch(:server, {})
   end
 end

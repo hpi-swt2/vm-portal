@@ -5,23 +5,18 @@ class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
-  before_action :authenticate_admin, only: %i[archive_vm]
+  before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show]
+  before_action :authenticate_root_user, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
   def index
-    @vms = if current_user.admin?
-             filter VmApi.instance.all_vm_infos
-           else
-             filter current_user.vm_infos
-           end
-    @archived_vms = all_archived_vms
-    @parameters = determine_params
-    @pending_archivation_vms = all_pending_archived_vms
+    initialize_vm_categories
+    filter_vm_categories current_user unless current_user.admin?
   end
 
   def destroy
     # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    # VmApi.instance.delete_vm(params[:id])
+    # VSphere::VirtualMachine.delete_vm(params[:id])
   end
 
   def create
@@ -29,72 +24,117 @@ class VmsController < ApplicationController
     redirect_to action: :index
   end
 
-  def new
-    @request = !params[:request].nil? ? Request.find(params[:request]) : default_render
+  def show
+    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
   end
 
-  def show
-    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  def edit_config
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.ensure_config
+  end
+
+  def update_config
+    @config = VirtualMachineConfig.find_by_name params[:id]
+    if @config
+      if @config.update(config_params)
+        redirect_to requests_path, notice: 'Successfully updated configuration'
+      else
+        redirect_to requests_path, notice: 'Could not update the configuration'
+      end
+    else
+      redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!'
+    end
   end
 
   def request_vm_archivation
-    @vm = VmApi.instance.get_vm(params[:id])
-    return if archived?(@vm) || pending_archivation?(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived? || @vm.pending_archivation?
 
-    VmApi.instance.change_power_state(@vm.name, false)
     User.admin.each do |each|
       each.notify("VM #{@vm.name} has been requested to be archived",
                   "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
     end
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and will soon be archived.\nPlease inform your administrator in the case of any objections\n" +
+                  "The VM has been shut down and will soon be archived.\nYou can raise an objection to this on the vms overview site\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
-    set_pending_archivation(@vm)
+    @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
   end
 
+  def request_vm_revive
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    return if !@vm || @vm.pending_reviving?
+
+    User.admin.each do |each|
+      each.notify("VM #{@vm.name} has been requested to be revived",
+                  "The VM has to be revived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
+    end
+
+    @vm.set_pending_reviving
+    redirect_to controller: :vms, action: 'show', id: @vm.name
+  end
+
+  def stop_archiving
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    @vm.set_revived
+  end
+
   def archive_vm
-    @vm = VmApi.instance.get_vm(params[:id])
-    set_archived(@vm)
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
+    return if !@vm || @vm.archived?
+
+    @vm.set_archived
 
     # inform users
-    VmApi.instance.vm_users(@vm).each do |each|
+    @vm.users.each do |each|
       each.notify("VM #{@vm.name} has been archived", url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
     redirect_to controller: :vms, action: 'index', id: @vm.name
   end
 
+  def revive_vm
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.set_revived
+    @vm.power_on
+
+    @vm.users.each do |each|
+      each.notify("VM #{@vm.name} has been revived", url_for(controller: :vms, action: 'show', id: @vm.name))
+    end
+
+    redirect_to controller: :vms, action: 'index', id: @vm.name
+  end
+
   def change_power_state
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.change_power_state(@vm[:name], !@vm[:state])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.change_power_state
     redirect_back(fallback_location: root_path)
   end
 
   def suspend_vm
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.suspend_vm(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.suspend_vm
     redirect_back(fallback_location: root_path)
   end
 
   def shutdown_guest_os
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.shutdown_guest_os(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.shutdown_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reboot_guest_os
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.reboot_guest_os(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.reboot_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reset_vm
-    @vm = VmApi.instance.get_vm_info(params[:id])
-    VmApi.instance.reset_vm(@vm[:name])
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    @vm.reset_vm
     redirect_back(fallback_location: root_path)
   end
 
@@ -104,42 +144,35 @@ class VmsController < ApplicationController
 
   private
 
-  def filter(list)
-    if no_params_set?
-      list
-    else
-      result = []
-      vm_filter.keys.each do |key|
-        result += list.select { |object| vm_filter[key].call(object) } if params[key].present?
-      end
-      result
-    end
+  def initialize_vm_categories
+    @vms = VSphere::VirtualMachine.rest
+    @archived_vms = VSphere::VirtualMachine.archived
+    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @pending_reviving_vms = VSphere::VirtualMachine.pending_revivings
   end
 
-  def determine_params
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    if no_params_set?
-      all_parameters
-    else
-      all_parameters - (all_parameters - actual_params)
-    end
-  end
-
-  def no_params_set?
-    all_parameters = vm_filter.keys.map(&:to_s)
-    actual_params = params.keys.map(&:to_s)
-    (all_parameters - actual_params).size == all_parameters.size
-  end
-
-  def vm_filter
-    { up_vms: proc { |vm| vm[:state] }, down_vms: proc { |vm| !vm[:state] } }
+  def filter_vm_categories(user)
+    @vms = @vms.select { |each| each.belongs_to user }
+    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
+    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
   end
 
   def authorize_vm_access
-    @vm = VmApi.instance.get_vm_info(params[:id])
+    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return unless @vm
 
-    redirect_to vms_path if current_user.user? && !current_user.vm_infos.include?(@vm)
+    redirect_to vms_path unless current_user.admin? || @vm.users.include?(current_user)
+  end
+
+  def config_params
+    params.require(:virtual_machine_config).permit(:ip, :dns)
+  end
+
+  def authenticate_root_user
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    return unless @vm
+
+    redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
   end
 end
