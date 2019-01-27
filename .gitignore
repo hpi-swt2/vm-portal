@@ -45,3 +45,7 @@ coverage
 # Ignore locks
 .lock*
 
+config/credentials.yml.enc
+
+# Ignore environment variables
+/config/environment_variables.yml

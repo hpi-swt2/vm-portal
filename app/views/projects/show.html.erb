@@ -3,17 +3,17 @@
 <table class="table">
   <tbody>
     <tr>
-      <td><%= Project.human_attribute_name('name') %></td>
+      <th><%= Project.human_attribute_name('name') %></th>
       <td><%= @project.name %></td>
     </tr>
     <tr>
-      <td><%= Project.human_attribute_name('description') %></td>
+      <th><%= Project.human_attribute_name('description') %></th>
       <td><%= @project.description %></td>
     </tr>
     <tr>
-      <td><%= Project.human_attribute_name('responsible_users') %></td>
+      <th><%= Project.human_attribute_name('responsible_users') %></th>
       <td>
-        <ul>
+        <ul class="bulletless pl-1">
           <% @project.responsible_users.each do |user| %>
             <li><%= user.name %></li>
           <% end %>

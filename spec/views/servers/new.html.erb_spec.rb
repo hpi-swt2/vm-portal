@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/new', type: :view do
-  before(:each) do
+  before do
     assign(:server, Server.new(
                       name: 'SpecServer',
                       cpu_cores: 4,
@@ -13,7 +13,8 @@ RSpec.describe 'servers/new', type: :view do
                       fqdn: 'arrrr.speck.de',
                       ipv4_address: '8.8.8.8',
                       ipv6_address: '::1',
-                      installed_software: ['SpeckTester']
+                      installed_software: ['SpeckTester'],
+                      responsible: FactoryBot.create(:admin)
                     ))
   end
 
@@ -36,6 +37,8 @@ RSpec.describe 'servers/new', type: :view do
       assert_select 'input[name=?]', 'server[ipv4_address]'
 
       assert_select 'input[name=?]', 'server[ipv6_address]'
+
+      assert_select 'select[name=?]', 'server[responsible]'
 
       expect(rendered).to have_button 'Add Software'
     end

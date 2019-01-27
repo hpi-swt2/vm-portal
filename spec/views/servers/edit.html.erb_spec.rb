@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/edit', type: :view do
-  before(:each) do
+  before do
     @server = assign(:server1, Server.create!(
                                  name: 'SpecServer',
                                  cpu_cores: 4,
@@ -13,7 +13,8 @@ RSpec.describe 'servers/edit', type: :view do
                                  fqdn: 'arrrr.speck.de',
                                  ipv4_address: '8.8.8.8',
                                  ipv6_address: '::1',
-                                 installed_software: ['SpeckTester']
+                                 installed_software: ['SpeckTester'],
+                                 responsible: FactoryBot.create(:user)
                                ))
   end
 

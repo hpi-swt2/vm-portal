@@ -7,7 +7,7 @@ RSpec.describe 'application/_footer.html.erb', type: :view do
   end
 
   it 'links to HPI EPIC Website' do
-    expect(rendered).to have_link('HPI EPIC', href: 'https://hpi.de/plattner/home.html')
+    expect(rendered).to have_link('HPI Enterprise Platform and Integration Concepts', href: 'https://hpi.de/plattner/home.html')
   end
 
   it 'links to HPI Imprint' do

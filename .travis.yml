@@ -21,3 +21,6 @@ script:
 after_success:
  # https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
  - curl --data "commit=$TRAVIS_COMMIT" --data "branch=$TRAVIS_BRANCH" --data "eventtype=$TRAVIS_EVENT_TYPE" http://hart-deploy.epic-hpi.de/
+
+env:
+ - GIT_REPOSITORY_URL=test_repository_url GIT_REPOSITORY_NAME=test_repository_name GITHUB_USER_NAME=test_user_name GITHUB_USER_EMAIL=test_user_email

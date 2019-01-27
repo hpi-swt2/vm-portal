@@ -17,6 +17,7 @@ class User < ApplicationRecord
 
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
+  has_many :servers
   has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -70,10 +71,6 @@ class User < ApplicationRecord
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
     end
-  end
-
-  def vm_infos
-    VmApi.instance.user_vms(self)
   end
 
   def vms
