@@ -33,9 +33,7 @@ module GitHelper
     end
 
     def save(message)
-      if added? or updated?
-        commit_and_push(message)
-      end
+      commit_and_push(message) if added? || updated?
     end
 
     private

@@ -51,7 +51,6 @@ RSpec.describe User, type: :model do
     end
 
     context 'when the user does not exist' do
-
       before do
         @git_stub = create_git_stub
       end

@@ -86,13 +86,14 @@ class Request < ApplicationRecord
 
   def commit_and_notice_message(git_writer)
     if git_writer.added?
-      ['Add ' + name,  'Added file and pushed to git.']
+      ['Add ' + name, 'Added file and pushed to git.']
     elsif git_writer.updated?
       ['Update ' + name, 'Changed file and pushed to git.']
     else
       ['', 'Already up to date.']
     end
   end
+
   def generate_puppet_node_script
     admin_users = users_assigned_to_requests.select(&:sudo).to_a
     admin_users.map!(&:user)

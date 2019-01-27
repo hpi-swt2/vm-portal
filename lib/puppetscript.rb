@@ -32,7 +32,7 @@ module Puppetscript
 
   def self.user_script(user)
     <<-USER_SCRIPT
-    
+
   @accounts::virtual { '#{user.first_name}.#{user.last_name}':
     uid             =>  #{user.user_id},
     realname        =>  '#{user.first_name} #{user.last_name}',
