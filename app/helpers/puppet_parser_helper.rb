@@ -12,7 +12,7 @@ module PuppetParserHelper
     result &&=  contents.lines[2].start_with?('        $users = [')
     result &&=  contents.lines[4].chomp.eql?('        realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])')
     result &&=  contents.lines[5].chomp.eql?('        realize(Accounts::Virtual[$users])')
-    result &&= "" contents.lines[6].chomp.eql?('}')
+    result &&=  contents.lines[6].chomp.eql?('}')
     result
   end
 

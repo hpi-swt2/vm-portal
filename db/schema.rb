@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_11_104519) do
+ActiveRecord::Schema.define(version: 2019_01_24_151713) do
+
+  create_table "archivation_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -35,8 +41,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
 
   create_table "request_templates", force: :cascade do |t|
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "operating_system"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -71,8 +77,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
   create_table "servers", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "mac_address"
     t.string "fqdn"
     t.string "ipv4_address"
@@ -80,6 +86,11 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.string "installed_software", default: "--- []\n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "model"
+    t.string "vendor"
+    t.string "description"
+    t.integer "responsible_id"
+    t.index ["responsible_id"], name: "index_servers_on_responsible_id"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -106,17 +117,17 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.string "first_name"
-    t.string "last_name"
+    t.integer "role"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -128,8 +139,14 @@ ActiveRecord::Schema.define(version: 2019_01_11_104519) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  end
+
+  create_table "virtual_machine_configs", force: :cascade do |t|
+    t.string "name"
+    t.string "ip"
+    t.string "dns"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
