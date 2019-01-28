@@ -1,9 +1,9 @@
-<h1>Edit VM information of <%= @vm[:name] %></h1>
+<h1>Edit VM information of <%= @vm.name %></h1>
 
-<%= form_with(url: vm_path(@vm[:name]), local: true, method: :put) do |form| %>
+<%= form_with(url: vm_path(@vm.name), local: true, method: :put) do |form| %>
 
 <div class="field">
-    <label for="sudo_user_ids">Users with sudo rights:</label>
+    <label for="sudo_user_ids">Users with sudo rights:</label><br>
     <%= form.select 'sudo_user_ids',
                     options_from_collection_for_select(User.all,
                                                      :id,
@@ -11,7 +11,8 @@
                                                      @sudoer_ids),
                     {},
                     { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
-    <label for="non_sudo_user_ids">Users without sudo rights:</label>
+    <br>
+    <label for="non_sudo_user_ids">Users without sudo rights:</label><br>
     <%= form.select 'non_sudo_user_ids',
                     options_from_collection_for_select(User.all,
                                                      :id,
