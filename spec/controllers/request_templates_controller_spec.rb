@@ -37,8 +37,8 @@ RSpec.describe RequestTemplatesController, type: :controller do
     {
       name: 'MyVM',
       cpu_cores: 2,
-      ram_mb: 1024,
-      storage_mb: 1024,
+      ram_gb: 1,
+      storage_gb: 1,
       operating_system: 'CentOS'
     }
   end
@@ -47,8 +47,8 @@ RSpec.describe RequestTemplatesController, type: :controller do
     {
       name: '',
       cpu_cores: 1024,
-      ram_mb: 1024,
-      storage_mb: 1024,
+      ram_gb: 1024,
+      storage_gb: 1024,
       operating_system: 'CentOS'
     }
   end
@@ -160,6 +160,7 @@ RSpec.describe RequestTemplatesController, type: :controller do
 
   context 'when the current_user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
+
     describe 'GET #new' do
       it 'returns a success response' do
         get :new, params: {}, session: valid_session

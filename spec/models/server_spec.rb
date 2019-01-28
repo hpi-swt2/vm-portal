@@ -26,6 +26,11 @@ RSpec.describe Server, type: :model do
       expect(server).to be_invalid
     end
 
+    it 'is invalid with no responsible person' do
+      server.responsible = nil
+      expect(server).to be_invalid
+    end
+
     it 'is invalid with negative cpu_cores specifiation' do
       server.cpu_cores = -1
       expect(server).to be_invalid

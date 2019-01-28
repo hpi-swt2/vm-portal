@@ -1,25 +1,25 @@
 <h1>Request Information</h1>
 
-<table class="table table-fixed-columns table-striped">
+<table class="table table-fixed-columns table-flex-width">
   <tbody>
     <tr>
-      <th>VM Name:</td>
+      <th style="width: 300px">VM Name:</td>
       <td><%= @request.name %></td>
     </tr>
 
     <tr>
-      <td><strong>Cpu-Cores:</strong></td>
+      <td><strong>CPU cores:</strong></td>
       <td><%= @request.cpu_cores %></td>
     </tr>
 
     <tr>
-      <td><strong>MB RAM:</strong></td>
-      <td><%= @request.ram_mb %></td>
+      <td><strong>RAM in GB:</strong></td>
+      <td><%= mb_to_gb(@request.ram_mb) %></td>
     </tr>
 
     <tr>
-      <td><strong>MB Storage:</strong></td>
-      <td><%= @request.storage_mb %></td>
+      <td><strong>Storage in GB:</strong></td>
+      <td><%= mb_to_gb(@request.storage_mb) %></td>
     </tr>
 
     <tr>
@@ -51,59 +51,33 @@
       <td><strong>Status:</strong></td>
       <td><%= @request.status %></td>
     </tr>
+
+    <tr>
+      <td><strong>Users with sudo rights:</strong></td>
+      <td>
+        <% @request.sudo_user_assignments.each do |assignment| %>
+          <p><%= assignment.user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Users:</strong></td>
+      <td>
+        <% @request.non_sudo_user_assignments.each do |assignment| %>
+          <p><%= assignment.user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
   </tbody>
 </table>
-
-<p>
-  <strong>Users with sudo rights:</strong>
-  <ul>
-    <% @request.sudo_user_assignments.each do |assignment| %>
-      <p>
-        <li><%= assignment.user.email %></li>
-      </p>
-  <% end %>
-  </ul>
-</p>
-
-<p>
-  <strong>Users:</strong>
-  <ul>
-    <% @request.non_sudo_user_assignments.each do |assignment| %>
-        <p>
-          <li><%= assignment.user.email %></li>
-        </p>
-    <% end %>
-  </ul>
-</p>
 
 <% if @request.rejected? %>
   <p>
     <strong>Rejection Information:</strong>
     <%= @request.rejection_information %>
   </p>
-<% end %>
-
-<% if @request.pending? && current_user.admin? %>
-  <div id="acceptAndReject">
-    <%= form_with(model: @request, url:{action: 'request_change_state', id: @request}, local: true) do |form| %>
-      <div class="actions">
-        <%= form.hidden_field :status, value: 'accepted' %>
-        <%= form.submit 'Accept & Continue', id: 'acceptButton', class: "btn btn-success" %>
-      </div>
-    <% end %>
-
-    <%= form_with(model: @request, url:{action: 'request_change_state', id: @request}, local: true) do |form| %>
-      <div class="field">
-        <%= form.label :rejection_information %>
-        <%= form.text_field :rejection_information, class: 'form-control' %>
-      </div>
-
-      <div class="actions">
-        <%= form.hidden_field :status, value: 'rejected' %>
-        <%= form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-      </div>
-    <% end %>
-  </div>
 <% end %>
 
 <%= link_to 'Back', requests_path %>

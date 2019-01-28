@@ -15,3 +15,5 @@ set :branch, 'dev'
 set :slack_username, 'Development System' # displayed as name of message sender
 set :slack_emoji, ':development:' # will be used as the avatar for the message
 set :slack_stage, 'dev'
+
+set :base_url, 'https://hart-dev.epic-hpi.de'

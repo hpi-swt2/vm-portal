@@ -3,24 +3,58 @@
 require 'rbvmomi'
 require_relative 'connection'
 
+def root_folder
+  VSphere::Connection.instance.root_folder
+end
+
+def ensure_root_subfolder(name)
+  root_folder.ensure_subfolder(name)
+end
+
+def archived_folder
+  ensure_root_subfolder('Archived VMs')
+end
+
+def pending_archivation_folder
+  ensure_root_subfolder('Pending archivings')
+end
+
+def pending_revivings_folder
+  ensure_root_subfolder('Pending revivings')
+end
+
 # This class wraps a rbvmomi Virtual Machine and provides easy access to important information
 module VSphere
+  # rubocop:disable Metrics/ClassLength
   class VirtualMachine
     # instance creation
     def self.all
-      VSphere::Connection.instance.root_folder.vms(recursive: true)
+      root_folder.vms
+    end
+
+    def self.rest
+      to_exclude = []
+      pending_archivation.each { |each| to_exclude << each.name }
+      archived.each { |each| to_exclude << each.name }
+      pending_revivings.each { |each| to_exclude << each.name }
+
+      all.reject { |each| to_exclude.include? each.name }
     end
 
     def self.pending_archivation
-      VSphere::VirtualMachine.all.select(&:pending_archivation?)
+      pending_archivation_folder.vms
     end
 
     def self.archived
-      VSphere::VirtualMachine.all.select(&:archived?)
+      archived_folder.vms
+    end
+
+    def self.pending_revivings
+      pending_revivings_folder.vms
     end
 
     def self.find_by_name(name)
-      VSphere::Connection.instance.root_folder.find_vm(name)
+      root_folder.find_vm(name)
     end
 
     def self.user_vms(user)
@@ -29,7 +63,6 @@ module VSphere
     end
 
     def initialize(rbvmomi_vm)
-      @v_sphere = VSphere::Connection.instance
       @vm = rbvmomi_vm
     end
 
@@ -78,6 +111,14 @@ module VSphere
       @vm.PowerOffVM_Task.wait_for_completion unless powered_off?
     end
 
+    def change_power_state
+      if powered_on?
+        power_off
+      else
+        power_on
+      end
+    end
+
     # Archiving
     # The archiving process actually just moves the VM into different folders to communicate their state
     # Therefore we can check those folders to receive the current VM state
@@ -92,6 +133,16 @@ module VSphere
 
     def set_pending_archivation
       move_into pending_archivation_folder
+      ArchivationRequest.new(name: name).save
+    end
+
+    def archivable?
+      request = ArchivationRequest.find_by_name name
+      if request
+        request.can_be_executed?
+      else
+        true
+      end
     end
 
     def set_archived
@@ -102,6 +153,44 @@ module VSphere
       end
 
       move_into archived_folder
+      archivation_request&.delete
+    end
+
+    # Reviving
+    def pending_reviving?
+      pending_revivings_folder.vms.any? { |vm| vm.equal? self }
+    end
+
+    def set_pending_reviving
+      move_into pending_revivings_folder
+    end
+
+    def set_revived
+      move_into root_folder
+      archivation_request&.delete
+    end
+
+    # Config methods
+    # All the properties that HART saves internally
+    def config
+      @config ||= VirtualMachineConfig.find_by_name name
+    end
+
+    def ensure_config
+      unless config
+        @config = VirtualMachineConfig.new
+        @config.name = name
+        @config.save
+      end
+      @config
+    end
+
+    def ip
+      config&.ip || ''
+    end
+
+    def dns
+      config&.dns || ''
     end
 
     # Utilities
@@ -113,13 +202,60 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    def summary
+      @vm.summary
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
+    end
+
+    def vmwaretools_installed?
+      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    end
+
+    def host_name
+      @vm.summary.runtime.host.name
+    end
+
+    def active?
+      !archived? && !pending_archivation? && !pending_reviving?
+    end
+
+    def status
+      if archived?
+        return :archived
+      elsif pending_archivation?
+        return :pending_archivation
+      elsif pending_reviving?
+        return :pending_reviving
+      end
+
+      if powered_on?
+        :online
+      else
+        :offline
+      end
+    end
+
     def users
-      request = Request.accepted.find { |each| name == each.name }
       if request
         request.users
       else
         []
       end
+    end
+
+    def sudo_users
+      if request
+        request.sudo_users
+      else
+        []
+      end
+    end
+
+    def belongs_to(user)
+      users.include? user
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
@@ -134,18 +270,23 @@ module VSphere
       equal? other
     end
 
+    def macs
+      @vm.macs
+    end
+
     private
+
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
+
+    def archivation_request
+      ArchivationRequest.find_by_name(name)
+    end
 
     def managed_folder_entry
       @vm
     end
-
-    def archived_folder
-      @v_sphere.root_folder.ensure_subfolder('Archived VMs')
-    end
-
-    def pending_archivation_folder
-      @v_sphere.root_folder.ensure_subfolder('Pending archivings')
-    end
   end
+  # rubocop:enable Metrics/ClassLength
 end
