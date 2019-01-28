@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'accepting and rejecting requests', type: :feature do
+RSpec.describe 'requests/show.html.erb', type: :feature do
   let(:request) { FactoryBot.create :request }
   let(:admin) { FactoryBot.create :admin }
 
