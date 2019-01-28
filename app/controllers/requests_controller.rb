@@ -42,10 +42,10 @@ class RequestsController < ApplicationController
   def create
     prepare_params
     @request = Request.new(request_params.merge(user: current_user))
+    @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
 
     respond_to do |format|
       if @request.save
-        @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
         successful_save(format)
       else
         unsuccessful_action(format, :new)
@@ -150,6 +150,8 @@ class RequestsController < ApplicationController
 
   # Storage and RAM are displayed in GB but internally stored in MB.
   def prepare_params
+    return unless params[:request]
+
     params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request][:name]
     params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i) if params[:request][:ram_mb]
     params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i) if params[:request][:storage_mb]

@@ -27,10 +27,9 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
-
   let(:sudo_user) { FactoryBot.create :user }
-
   let(:sudo_user2) { FactoryBot.create :admin }
+
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -61,7 +60,7 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      sudo_user_ids: ['', sudo_user.id.to_s] # the first parameter is for some reason always empty
     }
   end
 
@@ -120,9 +119,22 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     context 'with invalid params' do
-      it 'returns a success response (i.e. to display the "new" template)' do
+      before do
         post :create, params: { request: invalid_attributes }
+      end
+
+      it 'returns a success response (i.e. to display the "new" template)' do
         expect(response).to be_successful
+      end
+
+      # regression test for #320
+      it 'assigns the sudo users to the request' do
+        expect(assigns(:request).sudo_users).to match_array([sudo_user])
+      end
+
+      # regression test for #320
+      it 'does not persist the sudo users' do
+        expect(assigns(:request).users_assigned_to_requests).to all(be_changed)
       end
     end
   end
