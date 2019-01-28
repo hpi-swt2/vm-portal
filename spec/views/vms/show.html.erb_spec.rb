@@ -53,10 +53,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     expect(rendered).to include vm_on.ip
   end
 
-  it 'has a button to edit information' do
-    expect(rendered).to have_link 'Edit'
-  end
-
   it 'shows CPU usage' do
     expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s)
   end
@@ -104,6 +100,10 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
     it 'has a link to delete VM' do
       expect(rendered).to have_link 'Delete VM'
+    end
+
+    it 'has a link to edit information' do
+      expect(rendered).to have_link 'Edit'
     end
 
     context 'when powered on' do
