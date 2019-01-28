@@ -2,20 +2,20 @@
 
 FactoryBot.define do
   factory :request do
-    name { 'MyVM' }
-    cpu_cores { 2 }
-    ram_mb { 1000 }
-    storage_mb { 2000 }
+    name { Faker::Name.first_name }
+    cpu_cores { Faker::Number.between(1, 10) }
+    ram_mb { Faker::Number.between(1, 10) }
+    storage_mb { Faker::Number.between(1, 10) }
     operating_system { 'MyOS' }
-    description { 'Description' }
-    comment { 'Comment' }
+    description { Faker::HarryPotter.quote }
+    comment { Faker::Hobbit.quote }
     status { 'pending' }
     user { FactoryBot.create :admin }
   end
 
   factory :rejected_request, parent: :request do
     status { 'rejected' }
-    rejection_information { 'Info' }
+    rejection_information { Faker::FamousLastWords.last_words }
   end
 
   factory :accepted_request, parent: :request do
