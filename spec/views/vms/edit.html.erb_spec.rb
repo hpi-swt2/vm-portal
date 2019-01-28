@@ -3,9 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'vms/edit.html.erb', type: :view do
+  let(:request) { FactoryBot.build :accepted_request }
+
   let(:vm) do
     { id: 1,
-      name: 'VM',
+      name: request.name,
       state: true,
       boot_time: Time.current,
       host: 'aHost',
@@ -15,6 +17,7 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
 
   before do
     assign(:vm, vm)
+    assign(:request, request)
     render
   end
 
