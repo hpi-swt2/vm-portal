@@ -7,7 +7,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  after_create :set_user_id
+  after_create :set_user_id, :update_repository
   after_initialize :set_default_role, if: :new_record?
 
   devise :database_authenticatable, :registerable,
@@ -106,6 +106,26 @@ class User < ApplicationRecord
                      end
       save
     end
+  end
+
+  def update_repository
+    path = PuppetParserHelper.puppet_script_path
+
+    begin
+      GitHelper.write_to_repository(path) do |git_writer|
+        git_writer.write_file('init.pp', generate_puppet_init_script)
+        message = if git_writer.added?
+                    'Create init.pp'
+                  else
+                    "Add #{name}"
+                  end
+        git_writer.save(message)
+      end
+    end
+  end
+
+  def generate_puppet_init_script
+    Puppetscript.init_scrit(User.all)
   end
 
   def valid_ssh_key?

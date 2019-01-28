@@ -1,27 +1,28 @@
 # frozen_string_literal: true
 
 module GitHelper
-  def self.write_to_repository(path, name)
+  def self.write_to_repository(path)
     FileUtils.mkdir_p(path) unless File.exist?(path)
-    git_writer = GitWriter.new(path, name)
-    yield git_writer
-    git_writer.save
+    git_writer = GitWriter.new(path)
+    begin
+      yield git_writer
+    ensure
+      FileUtils.rm_rf(path) if File.exist?(path)
+    end
   end
 
   def self.pull(path)
-    git_writer = GitWriter.new(path, '')
-    git_writer
+    GitWriter.new(path)
   end
 
   class GitWriter
-    def initialize(path, name)
+    def initialize(path)
       @path = path
-      @name = name
       @git = setup_git(path)
     end
 
     def write_file(file_name, file_content)
-      path = File.join @path, ENV['GIT_REPOSITORY_NAME'], file_name
+      path = File.join @path, file_name
       File.delete(path) if File.exist?(path)
       File.open(path, 'w') { |f| f.write(file_content) }
       @git.add(path)
@@ -35,16 +36,8 @@ module GitHelper
       @git.status.changed.any?
     end
 
-    def save
-      if added?
-        commit_and_push('Add ' + @name)
-        'Added file and pushed to git.'
-      elsif updated?
-        commit_and_push('Update ' + @name)
-        'Changed file and pushed to git.'
-      else
-        'Already up to date.'
-      end
+    def save(message)
+      commit_and_push(message) if added? || updated?
     end
 
     private
@@ -54,14 +47,9 @@ module GitHelper
       uri = ENV['GIT_REPOSITORY_URL']
       name = ENV['GIT_REPOSITORY_NAME']
 
-      if File.exist?(path)
-        git = Git.open(path)
-        repository.pull
-      else
-        git = Git.clone(uri, name, path: path)
-        git.config('user.name', ENV['GITHUB_USER_NAME'])
-        git.config('user.email', ENV['GITHUB_USER_EMAIL'])
-      end
+      git = Git.clone(uri, name, path: path)
+      git.config('user.name', ENV['GITHUB_USER_NAME'])
+      git.config('user.email', ENV['GITHUB_USER_EMAIL'])
       git
     end
 

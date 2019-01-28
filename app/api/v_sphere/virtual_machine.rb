@@ -252,9 +252,17 @@ module VSphere
       users['admins'] + users['users'] | []
     end
 
+    def set_users(ids)
+      # TODO save changed users to git
+    end
+
     def sudo_users
       users = PuppetParserHelper.read_node_file(name)
       users['admins']
+    end
+
+    def set_sudo_users(ids)
+      # TODO save changed sudo_users to git
     end
 
     def belongs_to(user)

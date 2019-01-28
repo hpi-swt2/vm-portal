@@ -109,7 +109,7 @@ describe VSphere do
     end
 
     it 'VirtualMachine.all finds all vms that not have a special status' do
-      vms = (mock_root_folder_vms).map { |each| VSphere::VirtualMachine.new each }
+      vms = mock_root_folder_vms.map { |each| VSphere::VirtualMachine.new each }
       expect(VSphere::VirtualMachine.rest).to match_array vms
     end
 

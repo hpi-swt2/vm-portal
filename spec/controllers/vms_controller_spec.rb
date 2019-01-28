@@ -25,6 +25,7 @@ RSpec.describe VmsController, type: :controller do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
   end
+
   before do
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
@@ -132,21 +133,21 @@ RSpec.describe VmsController, type: :controller do
 
       context 'when current user is admin' do
         let(:current_user) { FactoryBot.create :admin }
-  
+
         context 'when user is associated to vm' do
           it 'renders show page' do
             skip('user management needs to be reworked')
             expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
           end
         end
-  
+
         context 'when user is not associated to vm' do
           it 'renders show page' do
             skip('user management needs to be reworked')
             expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
-        end
+      end
     end
 
     context 'when no vm found' do
@@ -157,7 +158,7 @@ RSpec.describe VmsController, type: :controller do
       it 'returns http status not found when no vm found' do
         get :show, params: { id: 5 }
         expect(response).to have_http_status(:not_found)
-    end
+      end
 
       it 'renders not found page when no vm found' do
         expect(get(:show, params: { id: vm1.name })).to render_template('errors/not_found')
