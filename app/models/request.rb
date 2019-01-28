@@ -44,7 +44,7 @@ class Request < ApplicationRecord
       if !assignment.nil?
         assignment.update_attribute(:sudo, true)
       else
-        users_assigned_to_requests.create(sudo: true, user_id: id)
+        users_assigned_to_requests.new(sudo: true, user_id: id)
       end
     end
   end

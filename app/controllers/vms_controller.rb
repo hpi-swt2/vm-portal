@@ -42,7 +42,8 @@ class VmsController < ApplicationController
         redirect_to requests_path, notice: 'Could not update the configuration'
       end
     else
-      redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!'
+      flash[:alert] = 'Configuration could not be found!'
+      redirect_to controller: :vms, action: 'index'
     end
   end
 
