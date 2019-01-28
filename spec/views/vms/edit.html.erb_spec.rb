@@ -6,13 +6,7 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
   let(:request) { FactoryBot.build :accepted_request }
 
   let(:vm) do
-    { id: 1,
-      name: request.name,
-      state: true,
-      boot_time: Time.current,
-      host: 'aHost',
-      guestHeartbeatStatus: 'green',
-      vmwaretools: true }
+    v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
   end
 
   before do
@@ -22,7 +16,7 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
   end
 
   it 'shows vm name' do
-    expect(rendered).to have_text vm[:name]
+    expect(rendered).to have_text vm.name
   end
 
   it 'says edit' do
