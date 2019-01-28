@@ -134,7 +134,6 @@ RSpec.describe Request, type: :model do
           request.assign_sudo_users([user.id])
           expect(request.sudo_users).to match_array([user])
         end
-
       end
 
       context 'if a user should be upgraded' do

@@ -30,7 +30,6 @@ RSpec.describe RequestsController, type: :controller do
   let(:sudo_user) { FactoryBot.create :user }
   let(:sudo_user2) { FactoryBot.create :admin }
 
-
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
