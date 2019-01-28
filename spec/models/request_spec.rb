@@ -111,18 +111,18 @@ RSpec.describe Request, type: :model do
 
       it 'does not persist new assignments' do
         request.assign_sudo_users([user.id])
-        request.users_assigned_to_requests.each do |each|
-          expect(each).not_to be_persisted
-        end
+        expect(request.sudo_user_assignments).to all(be_changed)
       end
 
       it 'persists new assignments when saved' do
         request.assign_sudo_users [user.id]
         request.save!
-        expect(request.sudo_user_assignments).to all(be_persisted)
+        request.sudo_user_assignments.each do |each|
+          expect(each).not_to be_changed
+        end
       end
 
-      context 'with pre-existing assignmnets' do
+      context 'with pre-existing sudo assignmnets' do
         let(:user2) { FactoryBot.create :user }
 
         before do
@@ -133,6 +133,29 @@ RSpec.describe Request, type: :model do
         it 'can remove assignments' do
           request.assign_sudo_users([user.id])
           expect(request.sudo_users).to match_array([user])
+        end
+
+      end
+
+      context 'if a user should be upgraded' do
+        before do
+          request.update! users: [user]
+          request.assign_sudo_users [user.id]
+        end
+
+        it 'can upgrade users' do
+          expect(request.sudo_users).to match_array([user])
+        end
+
+        it 'does not save upgraded user assignments' do
+          expect(request.sudo_user_assignments).to all(be_changed)
+        end
+
+        it 'saves upgraded user assignments when saved' do
+          request.save!
+          request.sudo_user_assignments.each do |each|
+            expect(each).not_to be_changed
+          end
         end
       end
     end
