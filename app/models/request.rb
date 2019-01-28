@@ -49,6 +49,10 @@ class Request < ApplicationRecord
     end
   end
 
+  def users
+    users_assigned_to_requests.map(&:user)
+  end
+
   def sudo_user_assignments
     users_assigned_to_requests.select(&:sudo)
   end

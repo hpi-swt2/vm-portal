@@ -111,6 +111,15 @@ end %>
         <tr>
           <th colspan="2" ><h4 class="mb-0">Users</h4></th>
         </tr>
+        <tr>
+          <td>
+            <ul>
+              <% @vm.users.each do |user| %>
+                <li><%= user.name %></li>
+              <% end %>
+            </ul>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
