@@ -10,7 +10,6 @@ class RequestsController < ApplicationController
   # GET /requests
   # GET /requests.json
   def index
-    @requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
     requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
     split_requests(requests)
   end
