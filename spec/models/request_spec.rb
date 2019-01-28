@@ -164,7 +164,7 @@ RSpec.describe Request, type: :model do
           @request.users_assigned_to_requests.create(sudo: true, user_id: user.id)
         end
 
-        @request.change_sudo_user_list_to @sudoers_after.map{|user| user.id}
+        @request.change_sudo_user_list_to(@sudoers_after.map(&:id)
       end
 
       it 'old assignments disappear and new assignments are saved' do
@@ -182,7 +182,7 @@ RSpec.describe Request, type: :model do
           @request.users_assigned_to_requests.create(sudo: false, user_id: user.id)
         end
 
-        @request.change_non_sudo_user_list_to @non_sudoers_after.map{|user| user.id}
+        @request.change_non_sudo_user_list_to(@non_sudoers_after.map(&:id))
       end
 
       it 'old assignments disappear and new assignments are saved' do
