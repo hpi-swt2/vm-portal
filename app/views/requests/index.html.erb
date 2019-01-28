@@ -29,7 +29,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @requests&.each do |request| %>
+  <% @pending_requests&.each do |request| %>
     <tr>
       <td class="table-active">
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
@@ -65,7 +65,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @requests&.each do |request| %>
+  <% @resolved_requests&.each do |request| %>
     <tr>
       <td class="table-active">
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
@@ -78,13 +78,12 @@
       <td class="table-active"><%= request.application_name %></td>
       <td class="table-active"><%= request.comment %></td>
       <td class="table-active">
-          <div class="round
-            <%= request.accepted? ? 'bg-success' : 'bg-danger mt-1'  %>">
+          <div class="round mt-2
+            <%= request.accepted? ? 'bg-success' : 'bg-danger'  %>">
           </div>
-          <%if request.accepted? %>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= '#puppet-script-' + request.name %>>
-              show script
-            </button>
+          <% if request.accepted? %>
+            <a class="btn-manage script-doc float-right" data-toggle="modal" data-target=<%= '#puppet-script-' + request.name %>>
+            </a>
             <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">

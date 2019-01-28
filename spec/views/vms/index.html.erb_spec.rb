@@ -15,8 +15,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   let(:mock_vms_without_tools) do
-    [v_sphere_vm_mock('My insanely cool vm'),
-     v_sphere_vm_mock('Another VM',
+    [v_sphere_vm_mock('Yet another VM'),
+     v_sphere_vm_mock('Ant the best VM there is',
                       power_state: 'poweredOff',
                       boot_time: 'Friday')]
   end
@@ -68,11 +68,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     context 'when vmwaretools are not installed' do
       before do
         assign(:vms, mock_vms_without_tools)
-        render
       end
 
-      it 'shows no power buttons when vmwaretools are not installed' do
-        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
+      it 'shows no power buttons' do
+        rendered = render
+        expect(rendered).not_to have_css('a.btn-manage.play')
+        expect(rendered).not_to have_css('a.btn-manage.stop')
       end
     end
   end
@@ -81,7 +82,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     it 'does not show any manage buttons' do
       expect(rendered).not_to have_css('a.btn-manage.play')
       expect(rendered).not_to have_css('a.btn-manage.stop')
-      expect(rendered).not_to have_text('VMWare tools are not installed')
     end
   end
 
