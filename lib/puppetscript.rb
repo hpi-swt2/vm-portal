@@ -15,7 +15,7 @@ module Puppetscript
 
   def self.generic_node_script
     <<~NODE_SCRIPT
-      class node_$%s {
+      class node_%s {
               $admins = [%s]
               $users = [%s]
 
@@ -27,10 +27,10 @@ module Puppetscript
 
   def self.generic_name_script
     <<~NAME_SCRIPT
-      node \'$%s\'{
+      node \'%s\'{
 
-          if defined( node_$%s) {
-                      class { node_$%s: }
+          if defined( node_%s) {
+                      class { node_%s: }
           }
       }
     NAME_SCRIPT
