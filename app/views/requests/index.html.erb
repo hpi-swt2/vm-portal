@@ -8,8 +8,8 @@
   <%= button_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary float-right mt-3 mr-3' %>
 </div>
 
-<%= link_to "Pending requests (#{@requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
-<%= link_to "Resolved requests (#{@requests&.size}) <small>&#x25bc;</small>".html_safe, '#resolved' %><br />
+<%= link_to "Pending requests (#{@pending_requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
+<%= link_to "Resolved requests (#{@resolved_requests&.size}) <small>&#x25bc;</small>".html_safe, '#resolved' %><br />
 
 <h2 id="pending">Pending requests</h2>
 
