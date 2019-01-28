@@ -42,10 +42,10 @@ class RequestsController < ApplicationController
   def create
     prepare_params
     @request = Request.new(request_params.merge(user: current_user))
+    @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
 
     respond_to do |format|
       if @request.save
-        @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
         successful_save(format)
       else
         unsuccessful_action(format, :new)
