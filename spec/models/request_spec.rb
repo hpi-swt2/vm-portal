@@ -176,13 +176,13 @@ RSpec.describe Request, type: :model do
     context 'when having multiple users assigned as sudo and change the list of users assigned' do
       before do
         @non_sudoers_before = FactoryBot.create_list(:employee, 4)
-        @non_sudoers_after = FactoryBot.create_list(:employee, 2).append(@non_sudoers_before[0]).append(@non_sudoers_after)
+        @non_sudoers_after = FactoryBot.create_list(:employee, 2).append(@non_sudoers_before[0]).append(@non_sudoers_before[1])
 
         @non_sudoers_before.each do |user|
           @request.users_assigned_to_requests.create(sudo: false, user_id: user.id)
         end
 
-        @request.change_sudo_user_list_to @sudoers_after.map{|user| user.id}
+        @request.change_non_sudo_user_list_to @non_sudoers_after.map{|user| user.id}
       end
 
       it 'old assignments disappear and new assignments are saved' do

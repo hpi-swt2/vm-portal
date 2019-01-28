@@ -49,6 +49,23 @@ class Request < ApplicationRecord
     end
   end
 
+  def change_sudo_user_list_to(sudo_user_ids)
+    # find users who aren't sudo users any more
+    old_assignments = sudo_user_assignments.select {|assigned_user| not sudo_user_ids.include? assigned_user.user_id}
+    old_assignments.each do |assignment|
+      users_assigned_to_requests.delete(assignment)
+    end
+
+    # find new sudo users who haven't been sudo before
+    to_be_assigned = sudo_user_ids.select do |user_id|
+      user = sudo_user_assignments.find {|assignment| assignment.user_id == user_id}
+      user.nil?
+    end
+    to_be_assigned.each do |user_id|
+      users_assigned_to_requests.create(sudo: true, user_id: user_id)
+    end
+  end
+
   def sudo_user_assignments
     users_assigned_to_requests.select(&:sudo)
   end
