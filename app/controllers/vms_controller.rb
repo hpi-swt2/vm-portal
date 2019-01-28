@@ -52,8 +52,8 @@ class VmsController < ApplicationController
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
 
     @request = Request.where(status: 'accepted', name: @vm.name).first
-    @sudoer_ids = @request.sudo_user_assignments.map { |user| user.id }
-    @non_sudoer_ids = @request.non_sudo_user_assignments.map { |user| user.id}
+    @sudoer_ids = @request.sudo_user_assignments.map(&:user_id)
+    @non_sudoer_ids = @request.non_sudo_user_assignments.map(&:user_id)
   end
 
   def update

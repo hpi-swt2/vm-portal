@@ -168,7 +168,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'old assignments disappear and new assignments are saved' do
-        new_sudoers = @request.sudo_user_assignments.map {|assignment| assignment.user}
+        new_sudoers = @request.sudo_user_assignments.map(&:user)
         expect(new_sudoers).to match_array @sudoers_after
       end
     end
@@ -186,7 +186,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'old assignments disappear and new assignments are saved' do
-        new_non_sudoers = @request.non_sudo_user_assignments.map {|assignment| assignment.user}
+        new_non_sudoers = @request.non_sudo_user_assignments.map(&:user)
         expect(new_non_sudoers).to match_array @non_sudoers_after
       end
     end
