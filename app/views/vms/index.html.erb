@@ -45,7 +45,7 @@
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if vm.sudo_users.include?(current_user) %>
+        <% if vm.sudo_users.include?(current_user) || current_user.admin? %>
           <% if vm.vm_ware_tools? %>
             <%= link_to '',
               {controller: :vms, action: 'change_power_state', id: vm.name},
@@ -59,8 +59,6 @@
                 data: { confirm: 'Are you sure?' },
                 class: "btn-manage float-right replay" %>
             <% end %>
-          <% else %>
-            <p class="text-muted">VMWare tools are not installed</p>
           <% end %>
         <% end %>
       </td>
@@ -125,7 +123,7 @@
   <tr>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
   </tr>
   </thead>
   <tbody>
@@ -196,3 +194,55 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
       xmlns="http://www.w3.org/1999/html">
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+<script>
+document.addEventListener("turbolinks:before-visit", function (event) {
+    var origin = window.location.href;
+    var destination = event.data.url;
+    if (origin.match(/#/) === null) {
+        if (origin[origin.length - 1] === "/") {
+            origin = origin.substring(0, origin.length - 1);
+        }
+    }
+    else {
+        var hashIndex = origin.indexOf('#');
+        if (hashIndex > 0 && origin[hashIndex - 1] === "/")
+            origin = "" + origin.substring(0, (hashIndex - 1)) + origin.substring(hashIndex);
+    }
+    if (destination.match(/#/) === null) {
+        if (destination[destination.length - 1] === "/") {
+            destination = destination.substring(0, destination.length - 1);
+        }
+    }
+    else {
+        var hashIndex = destination.indexOf('#');
+        if (hashIndex > 0 && destination[hashIndex - 1] === "/")
+            destination = "" + destination.substring(0, (hashIndex - 1)) + destination.substring(hashIndex);
+    }
+
+    if (origin === destination)
+        return;
+
+    var shorterLength = Math.min(origin.length, destination.length);
+    if (((origin.match(/#/) !== null) && (destination.match(/#/) !== null)) &&
+        (origin.indexOf("#") === destination.indexOf("#"))) {
+        shorterLength = Math.min(origin.indexOf("#"), destination.indexOf("#"));
+    }
+    if (origin.substring(0, shorterLength) !== destination.substring(0, shorterLength)) {
+        return;
+    }
+    if (destination.length > shorterLength && destination[shorterLength] === "#") {
+        event.preventDefault();
+        var urlHashMinusHash = destination.substring(destination.indexOf('#')).substring(1);
+        var elem = document.getElementById(urlHashMinusHash);
+        if (elem != null)
+            elem.scrollIntoView();
+        return;
+    }
+
+    if (origin.length > shorterLength && origin[shorterLength] === "#") {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return;
+    }
+  });
+</script>
