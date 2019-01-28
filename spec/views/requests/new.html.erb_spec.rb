@@ -22,7 +22,7 @@ RSpec.describe 'requests/new', type: :view do
   end
 
   before do
-    @user = user
+    assign(:user, user)
     assign(:request, request)
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
