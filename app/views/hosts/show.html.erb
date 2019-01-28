@@ -13,9 +13,9 @@ end %>
   <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil?
      state =  @host[:connectionState] == 'connected' %>
   <div class="<%= state ? 'bg-success text-black' : 'bg-danger text-white' -%> float-left pb-1 px-4 mr-2">
-    <%= state ? 'online' : 'offline' -%>
+    <%= state ? 'online' : 'offline' %>
   </div>
-  <%= " for #{up_time}" if state -%>
+  <%= " for #{up_time}" if state %>
 </div>
 
 <%
