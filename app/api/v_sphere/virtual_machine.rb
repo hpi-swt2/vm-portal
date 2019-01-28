@@ -177,12 +177,7 @@ module VSphere
     end
 
     def ensure_config
-      unless config
-        @config = VirtualMachineConfig.new
-        @config.name = name
-        @config.save
-      end
-      @config
+      @config ||= VirtualMachineConfig.create(name: name)
     end
 
     def ip
@@ -223,13 +218,9 @@ module VSphere
     end
 
     def status
-      if archived?
-        return :archived
-      elsif pending_archivation?
-        return :pending_archivation
-      elsif pending_reviving?
-        return :pending_reviving
-      end
+      return :archived if archived?
+      return :pending_archivation if pending_archivation?
+      return :pending_reviving if pending_reviving?
 
       if powered_on?
         :online
