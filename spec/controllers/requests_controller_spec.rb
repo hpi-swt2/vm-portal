@@ -123,7 +123,6 @@ RSpec.describe RequestsController, type: :controller do
       end
 
       it 'returns a success response (i.e. to display the "new" template)' do
-        post :create, params: { request: invalid_attributes }
         expect(response).to be_successful
       end
 
@@ -132,6 +131,7 @@ RSpec.describe RequestsController, type: :controller do
         expect(assigns(:request).sudo_users).to match_array([sudo_user])
       end
 
+      # regression test for #320
       it 'does not persist the sudo users' do
         assigns(:request).users_assigned_to_requests.each do |each|
           expect(each).not_to be_persisted
