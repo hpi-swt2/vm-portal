@@ -3,21 +3,27 @@
 require 'rails_helper'
 
 RSpec.describe 'requests/new', type: :view do
+  let(:user) { FactoryBot.create :user }
+
+  let(:request) do
+    Request.new(
+      name: 'MyVM',
+      cpu_cores: 2,
+      ram_mb: 1000,
+      storage_mb: 2000,
+      operating_system: 'MyOS',
+      port: '4000',
+      application_name: 'MyName',
+      description: 'Description',
+      comment: 'Comment',
+      status: 'pending',
+      user: FactoryBot.create(:employee)
+    )
+  end
+
   before do
-    @user = FactoryBot.create(:user)
-    assign(:request, Request.new(
-                       name: 'MyVM',
-                       cpu_cores: 2,
-                       ram_mb: 1000,
-                       storage_mb: 2000,
-                       operating_system: 'MyOS',
-                       port: '4000',
-                       application_name: 'MyName',
-                       description: 'Description',
-                       comment: 'Comment',
-                       status: 'pending',
-                       user: FactoryBot.create(:employee)
-                     ))
+    @user = user
+    assign(:request, request)
     assign(:request_templates, [RequestTemplate.new(
       name: 'MyTemplate',
       cpu_cores: 2,
@@ -29,19 +35,20 @@ RSpec.describe 'requests/new', type: :view do
   end
 
   context 'when a template should be selected' do
-    it 'has a list of templates' do
-      expect(rendered).to have_text('Request templates')
+    it 'has the correct css' do
       expect(rendered).to have_css('.template')
     end
 
+    it 'has a list of templates' do
+      expect(rendered).to have_text('Request templates')
+    end
+
     it 'has a list with \"none\" template' do
-      expect(rendered).to have_css('.template')
       expect(rendered).to have_text('None')
     end
 
     context 'when a new template is generated' do
       it 'has a list with this pre-generated template' do
-        expect(rendered).to have_css('.template')
         expect(rendered).to have_text('MyTemplate: 2 CPU cores, 1 GB RAM, 2 GB Storage, CentOS 7')
       end
     end
@@ -68,6 +75,21 @@ RSpec.describe 'requests/new', type: :view do
       assert_select 'textarea[name=?]', 'request[comment]'
     end
 
-    expect(rendered).to match(@user.email)
+    expect(rendered).to match(user.email)
+  end
+
+  # regression test for #320
+  context 'when request is not persisted' do
+    it 'is not persisted' do
+      expect(request).not_to be_persisted
+    end
+
+    it 'renders ram_mb as gb' do
+      assert_select 'input[id=ram][value=?]', (request.ram_mb / 1000).to_s
+    end
+
+    it 'renders storage_mb as gb' do
+      assert_select 'input[id=storage][value=?]', (request.storage_mb / 1000).to_s
+    end
   end
 end
