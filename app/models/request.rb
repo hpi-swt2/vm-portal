@@ -105,13 +105,26 @@ class Request < ApplicationRecord
     path = File.join Rails.root, 'public', 'puppet_script_temp'
 
     begin
-      message = GitHelper.write_to_repository(path, name) do |git_writer|
+      notice = ''
+      GitHelper.write_to_repository(path) do |git_writer|
         git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
         git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
+        message, notice = commit_and_notice_message(git_writer)
+        git_writer.save(message)
       end
-      { notice: message }
+      { notice: notice }
     rescue Git::GitExecuteError
       { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+    end
+  end
+
+  def commit_and_notice_message(git_writer)
+    if git_writer.added?
+      ['Add ' + name, 'Added file and pushed to git.']
+    elsif git_writer.updated?
+      ['Update ' + name, 'Changed file and pushed to git.']
+    else
+      ['', 'Already up to date.']
     end
   end
 

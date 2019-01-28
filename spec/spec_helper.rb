@@ -45,6 +45,11 @@ require './spec/api/v_sphere_api_mocker'
 RSpec.configure do |config|
   config.before do
     allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
+    @git_stub = create_git_stub
+  end
+
+  config.after do
+    @git_stub.delete
   end
 
   # rspec-expectations config goes here. You can use an alternate
