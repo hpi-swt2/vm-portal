@@ -109,9 +109,9 @@ RSpec.describe Request, type: :model do
         expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id }).size).to eq(1)
       end
 
-      it 'does not persisted new assignments' do
+      it 'does not persist new assignments' do
         request.assign_sudo_users([user.id])
-        request.sudo_user_assignments.each do |each|
+        request.users_assigned_to_requests.each do |each|
           expect(each).not_to be_persisted
         end
       end
