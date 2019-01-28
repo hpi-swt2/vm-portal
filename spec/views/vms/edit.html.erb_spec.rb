@@ -22,5 +22,4 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
   it 'says edit' do
     expect(rendered).to have_text 'Edit'
   end
-
 end
