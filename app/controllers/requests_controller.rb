@@ -58,6 +58,7 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       prepare_params
+      @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
       if @request.update(request_params)
         @request.accept!
         @request.save

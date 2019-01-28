@@ -93,76 +93,100 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'method tests' do
-    before do
-      @request = FactoryBot.create :request
-      @user = FactoryBot.build :user
-    end
+    let(:request) { FactoryBot.create :request }
+    let(:user) { FactoryBot.create :user }
 
     context 'when accepting a request' do
       it 'changes status to accepted' do
-        @request.accept!
-        expect(@request.status).to eq('accepted')
+        request.accept!
+        expect(request.status).to eq('accepted')
       end
     end
 
-    context 'given a request and an user' do
+    describe 'assign_sudo_users' do
       it 'creates sudo user assignments correctly' do
-        @request.assign_sudo_users([@user.id])
-        expect((@request.sudo_user_assignments.select { |assignment| assignment.user_id == @user.id }).size).to eq(1)
+        request.assign_sudo_users([user.id])
+        expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id }).size).to eq(1)
+      end
+
+      it 'does not persisted new assignments' do
+        request.assign_sudo_users([user.id])
+        request.sudo_user_assignments.each do |each|
+          expect(each).not_to be_persisted
+        end
+      end
+
+      it 'persists new assignments when saved' do
+        request.assign_sudo_users [user.id]
+        request.save!
+        expect(request.sudo_user_assignments).to all(be_persisted)
+      end
+
+      context 'with pre-existing assignmnets' do
+        let(:user2) { FactoryBot.create :user }
+
+        before do
+          request.assign_sudo_users([user.id, user2.id])
+          request.save!
+        end
+
+        it 'can remove assignments' do
+          request.assign_sudo_users([user.id])
+          expect(request.sudo_users).to match_array([user])
+        end
       end
     end
 
     context 'when having a non sudo user' do
       before do
-        @assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: false)
+        @assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: false)
       end
 
       it 'does not return a sudo user' do
-        expect(@request.sudo_user_assignments.include?(@assignment)).to be false
+        expect(request.sudo_user_assignments.include?(@assignment)).to be false
       end
 
       it 'does return a non sudo user' do
-        expect(@request.non_sudo_user_assignments.include?(@assignment)).to be true
+        expect(request.non_sudo_user_assignments.include?(@assignment)).to be true
       end
     end
 
     context 'when having a sudo user' do
       before do
-        @sudo_assignment = @request.users_assigned_to_requests.build(user_id: @user.id, sudo: true)
+        @sudo_assignment = request.users_assigned_to_requests.build(user_id: user.id, sudo: true)
       end
 
       it 'does return a sudo user' do
-        expect(@request.sudo_user_assignments.include?(@sudo_assignment)).to be true
+        expect(request.sudo_user_assignments.include?(@sudo_assignment)).to be true
       end
 
       it 'does not return a non sudo user' do
-        expect(@request.non_sudo_user_assignments.include?(@sudo_assignment)).to be false
+        expect(request.non_sudo_user_assignments.include?(@sudo_assignment)).to be false
       end
     end
 
     context 'when having a user being assigned as user and sudo user' do
+      let(:request) { FactoryBot.create(:request, name: 'MyVM1', user_ids: [user.id]) }
+
       before do
-        @request = FactoryBot.create(:request, name: 'MyVM1', user_ids: [@user.id])
-        @request.assign_sudo_users([@user.id])
+        request.assign_sudo_users([user.id])
       end
 
       it 'creates a sudo user assignment' do
-        expect((@request.sudo_user_assignments.select { |assignment| assignment.user_id == @user.id && assignment.sudo == true }).size).to eq(1)
+        expect((request.sudo_user_assignments.select { |assignment| assignment.user_id == user.id && assignment.sudo == true }).size).to eq(1)
       end
 
       it 'does not create a user assignment' do
-        expect(@request.users_assigned_to_requests.select { |assignment| assignment.user_id == @user.id && assignment.sudo == false }).to be_empty
+        expect(request.users_assigned_to_requests.select { |assignment| assignment.user_id == user.id && assignment.sudo == false }).to be_empty
       end
     end
   end
 
   describe 'puppet script helper methods' do
-    before do
-      @request = FactoryBot.create(:request_with_users)
-    end
+    let(:request) { FactoryBot.create(:request_with_users) }
 
     it 'returns correct declaration script for a given request' do
-      script = @request.generate_puppet_name_script
+      script = request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
         node \'MyVM\'{
 
@@ -175,7 +199,7 @@ RSpec.describe Request, type: :model do
     end
 
     it 'returns correct initialization script for a given request' do
-      script = @request.generate_puppet_node_script
+      script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_MyVM {
                 $admins = []
