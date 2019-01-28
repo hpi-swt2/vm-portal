@@ -68,7 +68,7 @@ class Request < ApplicationRecord
   end
 
   def push_to_git
-    path = File.join Rails.root, 'public', 'puppet_script_temp'
+    path = PuppetParserHelper.puppet_script_path
 
     begin
       message = GitHelper.write_to_repository(path, name) do |git_writer|

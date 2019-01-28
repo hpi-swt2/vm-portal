@@ -59,6 +59,7 @@ module VSphere
 
     def self.user_vms(user)
       vms = []
+      GitHelper.pull PuppetParserHelper.puppet_script_path
       files = Dir.entries(PuppetParserHelper.puppet_script_path)
       files.map! { |file| file[(6..file.length - 4)] }
       files.each do |vm_name|
@@ -246,6 +247,7 @@ module VSphere
     end
 
     def users
+      GitHelper.pull PuppetParserHelper.puppet_script_path
       users = PuppetParserHelper.read_node_file(name)
       users['admins'] + users['users'] | []
     end

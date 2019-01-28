@@ -34,7 +34,7 @@ module PuppetParserHelper
   end
 
   def self.puppet_script_folder
-    'puppet_scripts'
+    ENV['GIT_REPOSITORY_NAME']
   end
 
   def self.puppet_script_path
