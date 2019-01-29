@@ -128,7 +128,9 @@ RSpec.describe 'vms/index.html.erb', type: :view do
       end
 
       it 'shows no power buttons' do
-        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
+        rendered = render
+        expect(rendered).not_to have_css('a.btn-manage.play')
+        expect(rendered).not_to have_css('a.btn-manage.stop')
       end
     end
 
