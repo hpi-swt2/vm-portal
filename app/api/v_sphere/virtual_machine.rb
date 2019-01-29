@@ -204,7 +204,7 @@ module VSphere
     def users
       request&.users || []
     end
-    
+
     def summary
       @vm.summary
     end
@@ -269,10 +269,6 @@ module VSphere
 
     def request
       Request.accepted.find { |each| name == each.name }
-    end
-
-    def managed_folder_entry
-      @vm
     end
 
     def archivation_request
