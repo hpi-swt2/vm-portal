@@ -67,12 +67,6 @@ ActiveRecord::Schema.define(version: 2019_01_24_151713) do
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
-  create_table "requests_responsible_users", id: false, force: :cascade do |t|
-    t.integer "request_id", null: false
-    t.integer "user_id", null: false
-    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
-  end
-
   create_table "responsible_users", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "project_id", null: false
@@ -129,11 +123,11 @@ ActiveRecord::Schema.define(version: 2019_01_24_151713) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "ssh_key"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -145,8 +139,6 @@ ActiveRecord::Schema.define(version: 2019_01_24_151713) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "virtual_machine_configs", force: :cascade do |t|

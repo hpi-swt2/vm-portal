@@ -41,6 +41,8 @@ class User < ApplicationRecord
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
 
+    NotificationMailer.with(user: self, text: "*#{title}*\n#{message}").notify_email.deliver_now
+
     notification = Notification.new title: title, message: message
     notification.user_id = id
     notification.read = false
