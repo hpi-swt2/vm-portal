@@ -6,8 +6,8 @@
 <div class="row">
   <div class="col-8">
     <div class="card mb-4">
-      <%= link_to vms_path, method: :get do %>
-        <div class="card-header">
+      <%= link_to vms_path, method: :get, class: "dashboard-header-link" do %>
+        <div class="card-header bg-primary text-white">
           <div class="btn-group">
             <h3><i class="fa fa-desktop fa-fw"></i> VMs</h3>
           </div>
@@ -22,13 +22,13 @@
           <tbody>
           <% @vms.each do |vm| %>
             <tr>
-              <td><%= vm[:name] %></td>
-              <td><%= vm[:boot_time] %></td>
+              <td><%= vm.name %></td>
+              <td><%= vm.boot_time %></td>
               <td><%= button_to "Details",
-                                {controller: :vms, action: 'show', id: vm[:name]},
-                                method: :get, class: "btn btn-info" %></td>
+                                {controller: :vms, action: 'show', id: vm.name},
+                                method: :get, class: "btn btn-success" %></td>
               <td><%= button_to "Delete",
-                                {controller: :vms, action: 'destroy', id: vm[:name]},
+                                {controller: :vms, action: 'destroy', id: vm.name},
                                 method: :delete, class: "btn btn-danger" %></td>
             <tr>
           <% end %>
@@ -39,8 +39,8 @@
     </div>
 
     <div class="card">
-      <%= link_to hosts_path, method: :get do %>
-        <div class="card-header">
+      <%= link_to hosts_path, method: :get, class: "dashboard-header-link" do %>
+        <div class="card-header bg-primary text-white">
           <div class="btn-group">
             <!-- Add server list instead of host list -->
             <h3><i class="fa fa-users"></i> Hosts</h3>
@@ -55,17 +55,22 @@
           <tbody>
           <% @hosts.each do |host| %>
             <tr>
-              <td><%= link_to host[:name],
-                              {controller: :hosts, action: 'show', id: host[:name]},
+              <td><%= link_to host.name,
+                              {controller: :hosts, action: 'show', id: host.name},
                               method: :get, class: "btn btn-link" %></td>
-              <td><%= host[:connectionState] %></td>
+              <td><%= host.connection_state %></td>
               <td>
-                <ul>
-                  <% if not host[:vm_names].nil?
-                       host[:vm_names].each do |vm_name| %>
-                      <li> <%= vm_name %></li>
-                    <% end
-                       end %>
+                <ul class="bulletless pl-1">
+                  <% if not host.vms.nil?
+                      vms = host.vms.take(3)
+                      vms.each do |vm| %>
+                        <li><%= vm.name -%></li>
+                      <% end %>
+                  <% end %>
+
+                  <% if host.vms.length>3 %>
+                      ... (<%=host.vms.length%>)
+                  <% end %>
                 </ul>
               </td>
             </tr>
@@ -79,8 +84,8 @@
 
   <div class="col-4">
     <div class="card mb-4">
-      <%= link_to notifications_path, method: :get do %>
-        <div class="card-header">
+      <%= link_to notifications_path, method: :get, class: "dashboard-header-link" do %>
+        <div class="card-header bg-primary text-white">
           <div class="btn-group">
             <h3><i class="fa fa-bell"></i> Notifications</h3>
           </div>

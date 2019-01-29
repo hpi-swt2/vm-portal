@@ -43,3 +43,9 @@ en:
     unauthorized: "You do not have the necessary rights to perform this action."
   user:
     no_ssh_key: "No SSH-Key"
+  request:
+    unauthorized_state_change: "You can not change the status of your own requests."
+    successfully_updated: "Request was successfully updated."
+    successfully_updated_and_vm_created: "Request was successfully updated and the vm was successfully created."
+  project:
+    title: "Project Overview"

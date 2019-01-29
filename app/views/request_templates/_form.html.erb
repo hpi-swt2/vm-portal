@@ -11,31 +11,32 @@
     </div>
   <% end %>
 
-  <div class="field form-group">
-    <%= form.label 'Template name' %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
+  <div class="create-form">
+    <div class="field form-group">
+      <%= form.label 'Template name' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :cpu_cores, "CPU cores" %>
-    <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :cpu_cores, "CPU cores" %>
+      <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :ram_mb, "RAM in MB" %>
-    <%= form.number_field :ram_mb, min: 0, class: 'form-control' %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :ram_mb, "RAM in GB" %>
+      <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :storage_mb, "Storage in MB" %>
-    <%= form.number_field :storage_mb, min: 0, class: 'form-control' %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :storage_mb, "Storage in GB" %>
+      <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, {}, {class: 'form-control'}%>
+    <div class="field form-group">
+      <%= form.label :operating_system, "Operating System" %>
+      <%= form.select :operating_system, operating_system_options, {}, {class: 'form-control'}%>
+    </div>
   </div>
-
   <div class="actions">
     <%= form.submit class: "btn btn-primary" %>
   </div>

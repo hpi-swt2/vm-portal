@@ -6,13 +6,13 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= favicon_link_tag 'logo.svg' %>
+    <%= favicon_link_tag 'favicon.ico' %>
   </head>
 
   <body>
     <div id="content">
       <%= render "navbar" %>
-      <div class="container" style="margin-top: 50px">
+      <div class="container-fluid page-container">
         <%= render('layouts/flash_message') %>
         <div class="col-lg-12">
           <%= yield %>

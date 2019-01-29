@@ -26,8 +26,7 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestsController, type: :controller do
-  # Authenticate an user
-  login_employee
+  let(:user) { FactoryBot.create :employee }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -36,11 +35,14 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: 'MyVM',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
+      ram_mb: 1,
+      storage_mb: 2,
       operating_system: 'MyOS',
+      description: 'Description',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      user: user,
+      sudo_user_ids: ['']
     }
   end
 
@@ -51,9 +53,17 @@ RSpec.describe RequestsController, type: :controller do
       ram_mb: 1000,
       storage_mb: -2000,
       operating_system: '',
+      description: '',
       comment: 'Comment',
-      status: 'pending'
+      status: 'pending',
+      user: user,
+      sudo_user_ids: ['']
     }
+  end
+
+  # Authenticate an user
+  before do
+    sign_in user
   end
 
   # This should return the minimal set of values that should be in the session
@@ -99,15 +109,9 @@ RSpec.describe RequestsController, type: :controller do
         end.to change(Request, :count).by(1)
       end
 
-      it 'redirects to the dashboard if user is not an admin' do
+      it 'redirects to the request page index page' do
         post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(dashboard_url)
-      end
-
-      it 'redirects to the accept/reject request page if user is an admin' do
-        sign_in FactoryBot.create(:user, role: :admin)
-        post :create, params: { request: valid_attributes }
-        expect(response).to redirect_to(Request.last)
+        expect(response).to redirect_to(requests_path)
       end
     end
 
@@ -119,38 +123,82 @@ RSpec.describe RequestsController, type: :controller do
     end
   end
 
-  describe 'PUT #update' do
+  describe 'PATCH #reject' do
+    let(:rejection_information) do
+      'I do not want this request'
+    end
+
+    let(:rejection_attributes) do
+      { rejection_information: rejection_information }
+    end
+
+    let(:the_request) do
+      Request.create! valid_attributes
+    end
+
+    it 'rejects the request' do
+      patch :reject, params: { id: the_request.to_param, request: rejection_attributes }
+      the_request.reload
+      expect(the_request).to be_rejected
+    end
+
+    it 'updates the rejection information' do
+      patch :reject, params: { id: the_request.to_param, request: rejection_attributes }
+      the_request.reload
+      expect(the_request.rejection_information).to eql(rejection_information)
+    end
+
+    it 'redirects to requests page' do
+      patch :reject, params: { id: the_request.to_param, request: rejection_attributes }
+      expect(response).to redirect_to(requests_path)
+    end
+  end
+
+  describe 'PATCH #update' do
     context 'with valid params' do
       let(:new_attributes) do
         {
           name: 'MyNewVM',
           cpu_cores: 3,
-          ram_mb: 2000,
-          storage_mb: 3000,
+          ram_mb: 2,
+          storage_mb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
-          status: 'pending'
+          status: 'pending',
+          user: user
         }
       end
 
-      it 'updates the requested request' do
-        request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: new_attributes }
-        request.reload
-        expect(request.name).to eq('MyNewVM')
+      # this variable may not be called request, because it would then override an internal RSpec variable
+      let(:the_request) do
+        Request.create! valid_attributes
       end
 
-      it 'redirects to the request' do
-        request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: valid_attributes }
-        expect(response).to redirect_to(request)
+      it 'updates the requested request' do
+        patch :update, params: { id: the_request.to_param, request: new_attributes }
+        the_request.reload
+        expect(the_request.name).to eq('MyNewVM')
+      end
+
+      it 'redirects to the requests index page, as there is no cluster available' do
+        patch :update, params: { id: the_request.to_param, request: valid_attributes }
+        expect(response).to redirect_to(requests_path)
+      end
+
+      it 'accepts the request' do
+        patch :update, params: { id: the_request.to_param, request: valid_attributes }
+        the_request.reload
+        expect(the_request).to be_accepted
       end
     end
 
     context 'with invalid params' do
-      it 'returns a success response (i.e. to display the "edit" template)' do
-        request = Request.create! valid_attributes
-        put :update, params: { id: request.to_param, request: invalid_attributes }
+      let(:the_request) do
+        Request.create! valid_attributes
+      end
+
+      it 'returns a success respond (i.e. to display the "edit" template)' do
+        patch :update, params: { id: the_request.to_param, request: invalid_attributes }
         expect(response).to be_successful
       end
     end

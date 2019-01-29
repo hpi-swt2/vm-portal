@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RequestTemplatesController < ApplicationController
+  before_action :authenticate_admin, only: %i[new edit create update destroy]
   before_action :set_request_template, only: %i[show edit update destroy]
 
   # GET /request_templates
@@ -68,6 +69,6 @@ class RequestTemplatesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_template_params
-    params.require(:request_template).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system)
+    params.require(:request_template).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system)
   end
 end

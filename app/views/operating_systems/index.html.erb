@@ -1,6 +1,14 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Operating Systems</h1>
+
+<table class="table-bar">
+  <tbody>
+    <tr>
+      <td>
+        <%=link_to(fa_icon('plus'),
+        {controller: :operating_systems, action: 'new'},
+        method: :get, class: 'btn btn-primary', id: 'createNewProjectButton') %>
+      </td>
+    </tr></tbody></table>
 
 <table class="table">
   <thead>
@@ -14,13 +22,9 @@
     <% @operating_systems.each do |operating_system| %>
       <tr>
         <td><%= operating_system.name %></td>
-        <td><%= link_to 'Edit', edit_operating_system_path(operating_system) %></td>
-        <td><%= link_to 'Destroy', operating_system, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_operating_system_path(operating_system), class: "btn btn-primary" %></td>
+        <td><%= link_to 'Delete', operating_system, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Operating System', new_operating_system_path %>

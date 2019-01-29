@@ -1,0 +1,33 @@
+<h1>Editing configuration of VM '<%= @vm.name %>'</h1>
+
+<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config }, local: true) do |form| %>
+  <div class="field">
+    <p>Network Adapters</p>
+    <table class="table">
+      <tr>
+        <th>Adapter</th>
+        <th>MAC Address</th>
+      </tr>
+      <% @vm.macs.each do |each| %>
+        <tr>
+          <td><%= each.first %></td>
+          <td><%= each.second %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <div class="field">
+    <%= form.label :ip, "IP" %>
+    <%= form.text_field :ip, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :dns, "DNS" %>
+    <%= form.text_field :dns, class: 'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Update Configuration', class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_16_161526) do
+ActiveRecord::Schema.define(version: 2019_01_24_151713) do
+
+  create_table "archivation_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
@@ -28,10 +34,15 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description", null: false
+  end
+
   create_table "request_templates", force: :cascade do |t|
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "operating_system"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -51,6 +62,41 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "updated_at", null: false
     t.integer "port"
     t.string "application_name"
+    t.text "description"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_requests_on_user_id"
+  end
+
+  create_table "requests_responsible_users", id: false, force: :cascade do |t|
+    t.integer "request_id", null: false
+    t.integer "user_id", null: false
+    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
+  end
+
+  create_table "responsible_users", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "project_id", null: false
+    t.index ["project_id", "user_id"], name: "index_responsible_users_on_project_id_and_user_id"
+    t.index ["user_id", "project_id"], name: "index_responsible_users_on_user_id_and_project_id"
+  end
+
+  create_table "servers", force: :cascade do |t|
+    t.string "name"
+    t.integer "cpu_cores"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
+    t.string "mac_address"
+    t.string "fqdn"
+    t.string "ipv4_address"
+    t.string "ipv6_address"
+    t.string "installed_software", default: "--- []\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "model"
+    t.string "vendor"
+    t.string "description"
+    t.integer "responsible_id"
+    t.index ["responsible_id"], name: "index_servers_on_responsible_id"
   end
 
   create_table "slack_auth_requests", force: :cascade do |t|
@@ -77,12 +123,12 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.integer "role"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
@@ -101,6 +147,14 @@ ActiveRecord::Schema.define(version: 2018_12_16_161526) do
     t.datetime "updated_at", null: false
     t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
     t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  end
+
+  create_table "virtual_machine_configs", force: :cascade do |t|
+    t.string "name"
+    t.string "ip"
+    t.string "dns"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

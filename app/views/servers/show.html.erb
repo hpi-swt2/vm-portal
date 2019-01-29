@@ -1,0 +1,61 @@
+
+<div class="container mb-3 pl-0 pr-0 clearfix">
+  <h1 class="mb-0"><%= @server.name %></h1>
+</div>
+
+<% if current_user.admin? then %>
+<div class="container mb-3 pb-3 lead align-middle pl-0 pr-0 clearfix" style="width: 100%;">
+  <div class="text-right float-right" style="width: 20%">
+    <div class="dropdown border text-right">
+      <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+        Manage
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+         <%= link_to 'Edit',
+                      {controller: :servers, action: 'edit', id: @server.id}, method: :get, class: 'dropdown-item' %>
+
+        <%= link_to 'Delete',
+                      {controller: :servers, action: 'destroy', id: @server.id}, method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
+  Responsible: <%= @server.responsible&.name %>
+</div>
+<div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
+  Description: <%= @server.description %>
+</div>
+
+<%
+  @hardware = {'Vendor' => @server.vendor,
+               'Model' => @server.model,
+               'IP Address' =>  sanitize([ @server.ipv4_address, @server.ipv6_address ].reject(&:blank?).join('<br />')),
+               'MAC Address' => @server.mac_address,
+               'CPU Cores' => @server.cpu_cores,
+               'RAM' => "#{@server.ram_gb} GB",
+               'HDD' => "#{@server.storage_gb} GB",
+               'FQDN' => @server.fqdn}         
+  %>
+
+<div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
+  <div class="column float-left mr-3 half-screen-box">
+    <%= render 'templates/hardware_table', hardware: @hardware %>
+  </div>
+  <div class="column float-right half-screen-box">
+    <table class="table table-borderless" style="width: 100%">
+      <tbody class="table-active">
+        <tr>
+          <th colspan="2"><h4 class="mb-0">Software</h4></th>
+        </tr>
+        <% @server.installed_software&.each do |software| %>
+        <tr>
+            <td><%= software %></td> 
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

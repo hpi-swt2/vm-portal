@@ -50,8 +50,8 @@ describe 'users/edit.html.erb', type: :feature do
       visit edit_user_path(other_user)
     end
 
-    it 'redirects to the requested users page' do
-      expect(page).to have_current_path user_path(other_user)
+    it 'redirects to the dashboard' do
+      expect(page).to have_current_path dashboard_path
     end
   end
 end

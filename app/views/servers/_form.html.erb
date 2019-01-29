@@ -1,0 +1,120 @@
+<%= form_with(model: server, local: true) do |form| %>
+  <% if server.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(server.errors.count, "error") %> prohibited this server from being saved:</h2>
+
+      <ul>
+      <% server.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :description, "Description" %>
+    <%= form.text_field :description, class: 'form-control' %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :responsible, "Responsible" %>
+    <%= form.select 'responsible',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email),
+                    {},
+                    { multiple: false, class: "selecttwo", data: { placeholder: 'choose more wisely' }, style: 'width: 50%' } %>
+  </div>
+
+  <div class="field">
+    <h5>Hardware Information</h5>
+  </div>
+      <div class="field">
+        <%= form.label :vendor, "Vendor" %>
+        <%= form.text_field :vendor, class: 'form-control' %>
+      </div>
+      <div class="field">
+        <%= form.label :model, "Model" %>
+        <%= form.text_field :model, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :cpu_cores, "CPU cores" %>
+        <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :ram_gb, "RAM in GB" %>
+        <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :storage_gb, "Storage in GB" %>
+        <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
+      </div>
+
+  <div class="field">
+    <h5>Network Information</h5>
+  </div>
+
+      <div class="field">
+        <%= form.label :ipv4_address, "IPv4 Address" %>
+        <%= form.text_field :ipv4_address, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :ipv6_address, "IPv6 Address" %>
+        <%= form.text_field :ipv6_address, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :mac_address, "Mac Address" %>
+        <%= form.text_field :mac_address, class: 'form-control' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :fqdn, "Fully Qualified Domain Name (FQDN)" %>
+        <%= form.text_field :fqdn, class: 'form-control' %>
+      </div>
+
+  <div class="field">
+    <h5>Software Information</h5>
+  </div>
+
+<span id="response"></span>
+<script>
+var countBox = 1;
+var boxName = 0;
+
+function addInput()
+{
+  var boxName="software" + countBox;
+  var input = document.createElement("div");
+  input.setAttribute("class", "field");
+
+  var inputKind = document.createElement("INPUT");
+  inputKind.setAttribute("type", "text");
+  inputKind.setAttribute("placeholder", "Software " + countBox);
+  inputKind.setAttribute("class", "form-control");
+  inputKind.setAttribute("name", boxName);
+  inputKind.setAttribute("id", boxName);
+
+  input.appendChild(inputKind);
+  document.getElementById('response').appendChild(input);
+
+  countBox += 1;
+}
+</script>
+
+  <div class="field">
+    <input type="button" onclick="addInput()" value="Add Software" />
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

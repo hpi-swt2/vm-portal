@@ -3,14 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'request_templates/show', type: :view do
+  let(:current_user) { FactoryBot.create :user }
+
   before do
-    sign_in FactoryBot.create :user
+    sign_in current_user
 
     @request_template = assign(:request_template, RequestTemplate.create!(
                                                     name: 'string',
                                                     cpu_cores: 2,
-                                                    ram_mb: 3,
-                                                    storage_mb: 4,
+                                                    ram_gb: 3,
+                                                    storage_gb: 4,
                                                     operating_system: 'Operating System'
                                                   ))
   end

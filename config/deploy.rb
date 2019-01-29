@@ -29,8 +29,8 @@ set :identity_file, '/home/hrmtadm/.ssh/id_rsa'
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
 
 set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/sockets', 'public/uploads')
-set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb', 'config/master.key')
-set :rvm_use_path, '/usr/local/rvmsscripts/rvm'
+set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb', 'config/master.key', 'config/credentials.yml.enc')
+set :rvm_use_path, '/usr/local/rvm/scripts/rvm'
 # set :linked_files, %w{config/master.key}
 
 # Settings for Slack Integration
@@ -61,6 +61,8 @@ task :deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     comment "Deploying #{fetch(:repository)} (#{fetch(:branch)}) to #{fetch(:domain)}"
+    comment "Base URL is #{fetch(:base_url)}"
+    command "export BASE_URL=#{fetch(:base_url)}"
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     # invoke :'rvm:load_env_vars'

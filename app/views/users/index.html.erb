@@ -1,4 +1,5 @@
 <h1>Users</h1>
+<small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
 <table class="table">
   <thead>
@@ -17,10 +18,16 @@
         <td><%= user.email %></td>
         <% if current_user.admin? %>
           <td>
-            <div class="btn-group" role="group">
+            <div class="btn-group
+                        border
+                        border-<%= if last_admin?(user) && current_user?(user) then 'secondary' else 'primary' end%>
+                        rounded"
+                 role="group">
               <% User.roles.map(&:first).each do |role| %>
                 <% if last_admin?(user) && current_user?(user) %>
-                  <button class="btn btn-secondary disabled <%= 'active' if user.role == role %>"
+                  <button class="btn
+                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
+                                 disabled"
                           id= "btn-<%= role %>-<%= user.id %>",
                   >
                     <%= role.capitalize %>
@@ -30,7 +37,8 @@
                               update_role_user_path(user, role: role),
                               method: :patch,
                               id: "btn-#{role}-#{user.id}",
-                              class: "btn btn-primary #{'active' if user.role == role}"
+                              class: "btn
+                                      btn-#{if user.role == role then 'primary' else 'light' end}"
                   %>
                 <% end %>
               <% end %>

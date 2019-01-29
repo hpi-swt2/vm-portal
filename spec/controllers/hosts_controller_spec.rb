@@ -9,11 +9,7 @@ RSpec.describe HostsController, type: :controller do
 
   describe 'GET #index' do
     before do
-      double_api = double
-      allow(double_api).to receive(:all_hosts).and_return [{ name: 'someHostMachine', connectionState: 'connected' },
-                                                           { name: 'anotherHost', connectionState: 'not connected' }]
-
-      allow(VmApi).to receive(:instance).and_return double_api
+      allow(VSphere::Host).to receive(:all).and_return nil
     end
 
     it 'returns http success' do
@@ -23,29 +19,6 @@ RSpec.describe HostsController, type: :controller do
 
     it 'renders index page' do
       expect(get(:index)).to render_template('hosts/index')
-    end
-
-    it 'returns all hosts per default' do
-      controller = HostsController.new
-      controller.params = {}
-      controller.index
-      expect(controller.hosts.size).to be VmApi.instance.all_hosts.size
-    end
-
-    it 'returns online hosts if requested' do
-      controller = HostsController.new
-      controller.params = { up_hosts: 'true' }
-      controller.index
-      expect(controller.hosts).to satisfy('include online hosts') { |hosts| hosts.any? { |host| host[:connectionState] == 'connected' } }
-      expect(controller.hosts).not_to satisfy('include offline hosts') { |hosts| hosts.any? { |host| host[:connectionState] != 'connected' } }
-    end
-
-    it 'returns offline hosts if requested' do
-      controller = HostsController.new
-      controller.params = { down_hosts: 'true' }
-      controller.index
-      expect(controller.hosts).to satisfy('include offline hosts') { |hosts| hosts.any? { |host| host[:connectionState] != 'connected' } }
-      expect(controller.hosts).not_to satisfy('include online hosts') { |hosts| hosts.any? { |host| host[:connectionState] == 'connected' } }
     end
   end
 

@@ -1,18 +1,34 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Requests</h1>
+
+<table class="table-bar">
+  <tbody>
+    <tr>
+      <td>
+        <%=link_to(fa_icon('plus'),
+        {controller: :requests, action: 'new'},
+        method: :get, class: 'btn btn-primary') %>
+      </td>
+      <td>
+        <%= link_to 'Templates', request_templates_path, class: 'btn btn-primary' %>
+      </td>
+      <td>
+        <%= link_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <table class="table table-fixed-columns">
   <thead>
     <tr>
       <th>VM Name</th>
-      <th style="width: 80px">Cpu-Cores</th>
-      <th style="width: 80px">MB RAM</th>
-      <th style="width: 90px">MB Storage</th>
+      <th>CPU cores</th>
+      <th>RAM in GB</th>
+      <th>Storage in GB</th>
       <th>Operating System</th>
-      <th style="width: 80px">Port</th>
+      <th>Port</th>
       <th>Application Name</th>
-      <th class="w-25">Comment</th>
+      <th>Comment</th>
       <th>Status </th>
     </tr>
   </thead>
@@ -20,10 +36,10 @@
   <tbody>
     <% @requests.each do |request| %>
       <tr>
-        <td><%= request.name %></td>
+        <td><%= link_to request.name, request_path(request) %></td>
         <td><%= request.cpu_cores %></td>
-        <td><%= request.ram_mb %></td>
-        <td><%= request.storage_mb %></td>
+        <td><%= mb_to_gb(request.ram_mb) %></td>
+        <td><%= mb_to_gb(request.storage_mb) %></td>
         <td><%= request.operating_system %></td>
         <td><%= request.port %></td>
         <td><%= request.application_name %></td>
@@ -38,8 +54,6 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Request', new_request_path, class: 'btn btn-primary' %>
-<%= link_to 'Manage templates', request_templates_path, class: 'btn btn-secondary' %>
+<% if @requests.length == 0 %>
+<p class="empty-table-label">No requests created yet</p>
+<% end %>
