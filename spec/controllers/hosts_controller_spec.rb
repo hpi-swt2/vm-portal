@@ -27,6 +27,10 @@ RSpec.describe HostsController, type: :controller do
     context 'current user is not an admin' do
       let(:current_user) { FactoryBot.create :user }
 
+      before :each do
+        get(:index)
+      end
+
       it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
       end
@@ -73,6 +77,10 @@ RSpec.describe HostsController, type: :controller do
 
     context 'current user is not an admin' do
       let(:current_user) { FactoryBot.create :user }
+
+      before :each do
+        get(:show, params: { id: 1 })
+      end
 
       it 'returns http redirect' do
         expect(response).to have_http_status(:redirect)
