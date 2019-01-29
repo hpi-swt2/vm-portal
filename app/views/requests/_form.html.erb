@@ -32,12 +32,12 @@
 
   <div class="field form-group">
     <%= form.label :ram_mb, "RAM in GB" %>
-    <%= form.number_field :ram_mb, value: @request.persisted? ? mb_to_gb(@request.ram_mb) : nil, min: 0, class: 'form-control', id: 'ram' %>
+    <%= form.number_field :ram_mb, value: (@request && !@request&.ram_mb.nil?) ? mb_to_gb(@request.ram_mb) : nil, min: 0, class: 'form-control', id: 'ram' %>
   </div>
 
   <div class="field form-group">
     <%= form.label :storage_mb, "Storage in GB" %>
-    <%= form.number_field :storage_mb, value: @request.persisted? ? mb_to_gb(@request.storage_mb) : nil, min: 0, class: 'form-control', id: 'storage' %>
+    <%= form.number_field :storage_mb, value: (@request && !@request&.storage_mb.nil?) ? mb_to_gb(@request.storage_mb) : nil, min: 0, class: 'form-control', id: 'storage' %>
   </div>
 
   <div class="field form-group">
@@ -101,6 +101,7 @@
 <% end %>
 
 <% if locals[:updating] %>
+  <hr/>
   <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
     <div class="field form-group">
       <%= rejection_form.label :rejection_information %>
