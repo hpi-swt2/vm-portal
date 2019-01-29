@@ -7,7 +7,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  after_create :set_user_id, :update_repository
+  after_create :set_user_id#, :update_repository
   after_initialize :set_default_role, if: :new_record?
 
   devise :database_authenticatable, :registerable,
