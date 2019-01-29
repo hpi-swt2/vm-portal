@@ -3,7 +3,8 @@ class NotificationMailer < ApplicationMailer
  
   def notify_email()
     @user = params[:user]
-    @message = params[:text]
-    mail(to: @user.email, subject: 'You shall be notified')
+    @message = params[:message]
+    @title = params[:title]
+    mail(to: @user.email, subject: @title)
   end
 end

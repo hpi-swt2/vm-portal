@@ -37,6 +37,19 @@
                 id: 'editUserButton')
     %>
   </div>
+  <br /><br />
+
+  <%= form_for @user do |form| %>
+    <div class="float-left">
+      <%= form.label "Would you like to receive email notifications?"  %>
+      <%= form.label :email_notifications, "Yes" %>
+      <%= form.radio_button :email_notifications, true, checked: @user.email_notifications %>
+      <%= form.label :email_notifications, "No" %>
+      <%= form.radio_button :email_notifications, false, checked: !@user.email_notifications %>
+      <%= form.submit 'Save', id: 'saveButton', class: 'btn btn-success' %>
+    </div>
+  <% end %>
+
 <% end %>
 <br /><br />
 <h2>Projects</h2>

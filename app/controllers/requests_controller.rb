@@ -47,7 +47,7 @@ class RequestsController < ApplicationController
       if @request.save
         @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
         successful_save(format)
-        current_user.notify("Your request #{@request.name} has been successfully successfully created", "May the portal be with you")
+        current_user.notify("TEST ONLY: Your request #{@request.name} has been successfully created", "May the portal be with you")
       else
         unsuccessful_action(format, :new)
       end
