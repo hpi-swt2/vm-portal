@@ -75,10 +75,10 @@ end %>
 </div>
 
 <%
-  committed = (@vm.summary&.storage&.committed&.to_f / 1024**3).round(2) || 0
-  uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3).round(2) || 0
-  
-  hdd_usage = committed
+  committed = (@vm.summary&.storage&.committed&.to_f / 1024**3) || 0
+  uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3) || 0
+
+  hdd_usage = committed.round(2)
   hdd_allocation = (committed + uncommitted).round(2)
   cpu_usage = @vm.summary.quickStats&.overallCpuUsage || 0
   cpu_allocation = @vm.summary.config&.cpuReservation || 0

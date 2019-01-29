@@ -19,7 +19,7 @@ end %>
 </div>
 
 <%
-  hdd_free_space = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3).round(2) || 0
+  hdd_free_space = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3) || 0
   hdd_allocation = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.capacity }.to_f / 1024**3).round(2) || 0
   hdd_usage = (hdd_allocation - hdd_free_space).round(2)
   cpu_usage = @host[:summary].quickStats&.overallCpuUsage || 0
