@@ -6,6 +6,7 @@ require './spec/api/v_sphere_api_mocker'
 # rubocop:disable RSpec/NestedGroups
 RSpec.describe VmsController, type: :controller do
   let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   let(:vm1) do
     vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
@@ -25,14 +26,12 @@ RSpec.describe VmsController, type: :controller do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
   end
+
   before do
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
 
   describe 'GET #index' do
-
-
-
     context 'when the current user is a user' do
       it 'returns http success' do
         get :index
@@ -123,27 +122,27 @@ RSpec.describe VmsController, type: :controller do
 
         context 'when user is not associated to vm' do
           it 'redirects' do
-          get :show, params: { id: vm1.name }
-          expect(response).to have_http_status :redirect
+            get :show, params: { id: vm1.name }
+            expect(response).to have_http_status :redirect
           end
         end
       end
 
       context 'when current user is admin' do
         let(:current_user) { FactoryBot.create :admin }
-  
+
         context 'when user is associated to vm' do
           it 'renders show page' do
             expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
           end
         end
-  
+
         context 'when user is not associated to vm' do
           it 'renders show page' do
-          expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
-        end
+      end
     end
 
     context 'when no vm found' do
@@ -154,7 +153,7 @@ RSpec.describe VmsController, type: :controller do
       it 'returns http status not found when no vm found' do
         get :show, params: { id: 5 }
         expect(response).to have_http_status(:not_found)
-    end
+      end
 
       it 'renders not found page when no vm found' do
         expect(get(:show, params: { id: vm1.name })).to render_template('errors/not_found')
@@ -193,9 +192,30 @@ RSpec.describe VmsController, type: :controller do
       end
     end
 
+    context 'when the current_user is an admin' do
+      let(:current_user) { admin }
+
+      before do
+        allow(vm1).to receive(:change_power_state)
+        post :change_power_state, params: { id: vm1.name }
+      end
+
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:change_power_state)
+      end
+
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
     context 'when the current_user is not a root_user' do
       before do
-        post :reset_vm, params: { id: vm1.name }
+        post :change_power_state, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -235,9 +255,30 @@ RSpec.describe VmsController, type: :controller do
       end
     end
 
+    context 'when the current_user is an admin' do
+      let(:current_user) { admin }
+
+      before do
+        allow(vm1).to receive(:suspend_vm)
+        post :suspend_vm, params: { id: vm1.name }
+      end
+
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:suspend_vm)
+      end
+
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
     context 'when the current_user is not a root_user' do
       before do
-        post :reset_vm, params: { id: vm1.name }
+        post :suspend_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -277,9 +318,30 @@ RSpec.describe VmsController, type: :controller do
       end
     end
 
+    context 'when the current_user is an admin' do
+      let(:current_user) { admin }
+
+      before do
+        allow(vm1).to receive(:shutdown_guest_os)
+        post :shutdown_guest_os, params: { id: vm1.name }
+      end
+
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:shutdown_guest_os)
+      end
+
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
     context 'when the current_user is not a root_user' do
       before do
-        post :reset_vm, params: { id: vm1.name }
+        post :shutdown_guest_os, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -319,9 +381,30 @@ RSpec.describe VmsController, type: :controller do
       end
     end
 
+    context 'when the current_user is an admin' do
+      let(:current_user) { admin }
+
+      before do
+        allow(vm1).to receive(:reboot_guest_os)
+        post :reboot_guest_os, params: { id: vm1.name }
+      end
+
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:reboot_guest_os)
+      end
+
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
     context 'when the current_user is not a root_user' do
       before do
-        post :reset_vm, params: { id: vm1.name }
+        post :reboot_guest_os, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -344,6 +427,27 @@ RSpec.describe VmsController, type: :controller do
       before do
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        allow(vm1).to receive(:reset_vm)
+        post :reset_vm, params: { id: vm1.name }
+      end
+
+      it 'calls the vms action' do
+        expect(vm1).to have_received(:reset_vm)
+      end
+
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects to the path the user came from' do
+        expect(response).to redirect_to(old_path)
+      end
+    end
+
+    context 'when the current_user is an admin' do
+      let(:current_user) { admin }
+
+      before do
         allow(vm1).to receive(:reset_vm)
         post :reset_vm, params: { id: vm1.name }
       end
