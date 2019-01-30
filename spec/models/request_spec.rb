@@ -164,10 +164,10 @@ RSpec.describe Request, type: :model do
     it 'returns correct declaration script for a given request' do
       script = @request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
-        node \'MyVM\'{
+        node \'myvm\'{
 
-            if defined( node_MyVM) {
-                        class { node_MyVM: }
+            if defined( node_myvm) {
+                        class { node_myvm: }
             }
         }
       NAME_SCRIPT
@@ -177,7 +177,7 @@ RSpec.describe Request, type: :model do
     it 'returns correct initialization script for a given request' do
       script = @request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
-        class node_MyVM {
+        class node_myvm {
                 $admins = []
                 $users = ["Max.Mustermann", "Max.Mustermann", "Max.Mustermann", "Max.Mustermann"]
 
@@ -214,7 +214,7 @@ RSpec.describe Request, type: :model do
 
       it 'correctly calls git' do
         request.push_to_git
-        expect(@git_stub.git).to have_received(:commit_all).with('Add MyVM')
+        expect(@git_stub.git).to have_received(:commit_all).with('Add myvm')
       end
 
       it 'returns a success message' do
@@ -229,7 +229,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'correctly calls git' do
-        expect(@git_stub.git).to receive(:commit_all).with('Update MyVM')
+        expect(@git_stub.git).to receive(:commit_all).with('Update myvm')
         request.push_to_git
       end
 
