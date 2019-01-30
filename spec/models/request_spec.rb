@@ -47,7 +47,7 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
-      it 'is invalid with to many cpu_cores ' do
+      it 'is invalid with too many cpu_cores ' do
         request.cpu_cores = Request::MAX_CPU_CORES + 1
         expect(request).to be_invalid
       end
@@ -78,15 +78,15 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid if the name already exists' do
-        FactoryBot.create(:request, name: 'DoubledName')
-        request = FactoryBot.build(:request, name: 'DoubledName')
+        FactoryBot.create(:request, name: 'doubledname')
+        request = FactoryBot.build(:request, name: 'doubledname')
         expect(request).to be_invalid
       end
     end
 
     context 'when request is valid' do
       it 'is valid with valid attributes' do
-        request = FactoryBot.build(:request, name: 'TestVM')
+        request = FactoryBot.build(:request, name: 'testvm')
         expect(request).to be_valid
       end
     end
