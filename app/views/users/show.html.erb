@@ -26,6 +26,18 @@
 </table><br>
 
 <% if @user == current_user %>
+  <%= form_for @user do |form| %>
+    <div class="float-left">
+      <%= form.label "Would you like to receive email notifications?"  %>
+      &nbsp;
+      <%= form.label :email_notifications, "Yes" %>
+      <%= form.radio_button :email_notifications, true, checked: @user.email_notifications, onclick: "this.form.submit();" %>
+      &nbsp;
+      <%= form.label :email_notifications, "No" %>
+      <%= form.radio_button :email_notifications, false, checked: !@user.email_notifications, onclick: "this.form.submit();" %>
+    </div>
+  <% end %>
+  <br /><br />
   <div class="float-left">
     <a href="<%= new_slack_path %>">
       <img alt="Add to Slack"  src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
