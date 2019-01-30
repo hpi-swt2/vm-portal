@@ -31,12 +31,12 @@
     <tbody>
       <tr>
         <td><strong>Operating System:</strong></td>
-        <td><%= Request.accepted.find { |each| @vm.name == each.name }.operating_system %></td>
+        <td><%= request_for(@vm).operating_system %></td>
       </tr>
 
       <tr>
         <td><strong>Comment:</strong></td>
-        <td class="col-md-4"><%= Request.accepted.find { |each| @vm.name == each.name }.comment %></td>
+        <td class="col-md-4"><%= request_for(@vm).comment %></td>
       </tr>
     </tbody>
   </table>
