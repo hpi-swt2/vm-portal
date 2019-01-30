@@ -29,8 +29,10 @@
   <%= form_for @user do |form| %>
     <div class="float-left">
       <%= form.label "Would you like to receive email notifications?"  %>
+      &nbsp;
       <%= form.label :email_notifications, "Yes" %>
       <%= form.radio_button :email_notifications, true, checked: @user.email_notifications, onclick: "this.form.submit();" %>
+      &nbsp;
       <%= form.label :email_notifications, "No" %>
       <%= form.radio_button :email_notifications, false, checked: !@user.email_notifications, onclick: "this.form.submit();" %>
     </div>

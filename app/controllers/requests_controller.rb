@@ -47,7 +47,6 @@ class RequestsController < ApplicationController
     respond_to do |format|
       if @request.save
         successful_save(format)
-        current_user.notify("TEST ONLY: Your request #{@request.name} has been successfully created", 'May the portal be with you')
       else
         unsuccessful_action(format, :new)
       end
