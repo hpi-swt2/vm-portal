@@ -27,6 +27,11 @@
     <%= form.text_field :dns, class: 'form-control' %>
   </div>
 
+  <p>
+    <strong>Operating System:</strong>
+    <%= Request.accepted.find { |each| @vm.name == each.name }.operating_system %>
+  </p>
+
   <div class="actions">
     <%= form.submit 'Update Configuration', class: "btn btn-primary" %>
   </div>

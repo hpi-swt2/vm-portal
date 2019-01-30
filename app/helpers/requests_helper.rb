@@ -2,7 +2,7 @@
 
 module RequestsHelper
   def replace_whitespaces(name)
-    name.parameterize(preserve_case: true)
+    name.parameterize
   end
 
   def mb_to_gb(megabytes)
