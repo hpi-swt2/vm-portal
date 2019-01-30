@@ -36,4 +36,8 @@ RSpec.describe 'vms/edit_config.html.erb', type: :view do
   it 'shows vm operating system' do
     expect(rendered).to include request.operating_system
   end
+
+  it 'shows vm comment' do
+    expect(rendered).to include request.comment
+  end
 end
