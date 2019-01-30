@@ -52,7 +52,6 @@ end %>
           <% if @vm.active? %>
             <%= link_to 'Archive VM',
                         {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
-            <div class="dropdown-divider"></div>
           <% end %>
           <% if @vm.archived? %>
 
