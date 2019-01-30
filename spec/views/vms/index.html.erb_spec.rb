@@ -16,7 +16,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   let(:mock_vms_without_tools) do
     [v_sphere_vm_mock('Yet another VM'),
-     v_sphere_vm_mock('Ant the best VM there is',
+     v_sphere_vm_mock('And the best VM there is',
                       power_state: 'poweredOff',
                       boot_time: 'Friday')]
   end

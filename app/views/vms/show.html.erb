@@ -60,9 +60,6 @@ end %>
                         {controller: :vms, action: 'request_vm_revive', id: @vm.name}, method: :post, class: 'dropdown-item'%>
             <div class="dropdown-divider"></div>
           <% end %>
-          <%= link_to 'Delete VM',
-                        {controller: :vms, action: 'destroy', id: @vm.name},
-                        method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
         </div>
       </div>
     </div>
