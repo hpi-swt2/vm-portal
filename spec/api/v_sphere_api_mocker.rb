@@ -59,7 +59,7 @@ def vim_vm_summary_mock
   allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
   allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
   allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
-  allow(summary_double).to receive_message_chain(:runtime, :maxCpuUsage).and_return(100)
+  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuDemand).and_return(100)
   allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
   allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
   allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)

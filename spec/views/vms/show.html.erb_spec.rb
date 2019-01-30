@@ -57,7 +57,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows CPU usage' do
-    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.runtime.maxCpuUsage).round.to_s)
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.quickStats.overallCpuDemand).round.to_s)
   end
 
   it 'shows HDD usage' do

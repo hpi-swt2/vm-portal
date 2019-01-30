@@ -81,7 +81,7 @@ end %>
   hdd_usage = committed.round(2)
   hdd_allocation = (committed + uncommitted).round(2)
   cpu_usage = @vm.summary.quickStats&.overallCpuUsage || 0
-  cpu_allocation = @vm.summary.runtime&.maxCpuUsage || 0
+  cpu_allocation = @vm.summary.quickStats&.overallCpuDemand || 0
   ram_usage = (@vm.summary.quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
   ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 0
   cpu_cores = @vm.summary.config&.numCpu  || 1
