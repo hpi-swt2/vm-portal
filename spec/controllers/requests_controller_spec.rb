@@ -35,7 +35,7 @@ RSpec.describe RequestsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: 'MyVM',
+      name: 'myvm',
       cpu_cores: 2,
       ram_mb: 1,
       storage_mb: 2,
@@ -175,7 +175,7 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       let(:new_attributes) do
         {
-          name: 'MyNewVM',
+          name: 'mynewvm',
           cpu_cores: 3,
           ram_mb: 2,
           storage_mb: 3,
@@ -194,7 +194,7 @@ RSpec.describe RequestsController, type: :controller do
       it 'updates the requested request' do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
-        expect(the_request.name).to eq('MyNewVM')
+        expect(the_request.name).to eq('mynewvm')
       end
 
       it 'redirects to the requests index page, as there is no cluster available' do
