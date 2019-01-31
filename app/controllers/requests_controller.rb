@@ -10,7 +10,8 @@ class RequestsController < ApplicationController
   # GET /requests
   # GET /requests.json
   def index
-    @requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
+    requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
+    split_requests(requests)
   end
 
   # GET /requests/1
@@ -175,5 +176,11 @@ class RequestsController < ApplicationController
   def puppet_name_script(request)
     request.generate_puppet_name_script
   end
+
   helper_method :puppet_name_script
+
+  def split_requests(requests)
+    @pending_requests = requests.select(&:pending?)
+    @resolved_requests = requests.reject(&:pending?)
+  end
 end

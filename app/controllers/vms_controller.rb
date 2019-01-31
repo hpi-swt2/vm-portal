@@ -14,11 +14,6 @@ class VmsController < ApplicationController
     filter_vm_categories current_user unless current_user.admin?
   end
 
-  def destroy
-    # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    # VSphere::VirtualMachine.delete_vm(params[:id])
-  end
-
   def create
     VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
     redirect_to action: :index

@@ -57,7 +57,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows CPU usage' do
-    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s)
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.quickStats.overallCpuDemand).round.to_s)
   end
 
   it 'shows HDD usage' do
@@ -126,10 +126,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       render
     end
 
-    it 'has a link to delete VM' do
-      expect(rendered).to have_link 'Delete VM'
-    end
-
     context 'when powered on' do
       it 'has power off links' do
         expect(rendered).to have_link 'Suspend VM'
@@ -151,7 +147,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on.name)}'][data-confirm='Are you sure?']"
         )
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on.name)}'][data-confirm='Are you sure?']")
       end
 
       it 'has no power on link' do
@@ -204,9 +199,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
         )
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-        )
       end
     end
 
@@ -218,10 +210,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_link 'Reset'
         expect(rendered).to have_link 'Power Off'
       end
-    end
-
-    it 'has a link to delete VM' do
-      expect(rendered).to have_link 'Delete'
     end
   end
 end
