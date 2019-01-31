@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_01_31_083251) do
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
+    t.boolean "email_notifications", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
