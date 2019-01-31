@@ -27,8 +27,8 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
-
   let(:sudo_user) { FactoryBot.create :user }
+  let(:sudo_user2) { FactoryBot.create :admin }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -44,7 +44,7 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s]
     }
   end
 
@@ -133,9 +133,7 @@ RSpec.describe RequestsController, type: :controller do
 
       # regression test for #320
       it 'does not persist the sudo users' do
-        assigns(:request).users_assigned_to_requests.each do |each|
-          expect(each).not_to be_persisted
-        end
+        expect(assigns(:request).users_assigned_to_requests).to all(be_changed)
       end
     end
   end
@@ -182,16 +180,20 @@ RSpec.describe RequestsController, type: :controller do
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',
-          user: user
+          user: user,
+          sudo_user_ids: ['', sudo_user.id.to_s]
         }
       end
 
       # this variable may not be called request, because it would then override an internal RSpec variable
       let(:the_request) do
-        Request.create! valid_attributes
+        request = Request.create! valid_attributes
+        request.assign_sudo_users valid_attributes[:sudo_user_ids][1..-1]
+        request.save!
+        request
       end
 
-      it 'updates the requested request' do
+      it 'updates the request' do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
         expect(the_request.name).to eq('mynewvm')
@@ -206,6 +208,12 @@ RSpec.describe RequestsController, type: :controller do
         patch :update, params: { id: the_request.to_param, request: valid_attributes }
         the_request.reload
         expect(the_request).to be_accepted
+      end
+
+      it 'correctly updates the sudo users' do
+        patch :update, params: { id: the_request.to_param, request: new_attributes }
+        the_request.reload
+        expect(the_request.sudo_users).to match_array([sudo_user])
       end
     end
 
