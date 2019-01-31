@@ -85,11 +85,11 @@ RSpec.describe 'requests/new', type: :view do
     end
 
     it 'renders ram_mb as gb' do
-      assert_select 'input[id=ram][value=?]', (request.ram_gb).to_s
+      assert_select 'input[id=ram][value=?]', request.ram_gb.to_s
     end
 
     it 'renders storage_mb as gb' do
-      assert_select 'input[id=storage][value=?]', (request.storage_gb).to_s
+      assert_select 'input[id=storage][value=?]', request.storage_gb.to_s
     end
   end
 end

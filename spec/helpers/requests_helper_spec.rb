@@ -17,7 +17,7 @@ RSpec.describe RequestsHelper, type: :helper do
   it 'replaces whitespaces correctly' do
     expect(replace_whitespaces('Testing String')).to eq('testing-string')
   end
-request.ram_mb
+
   it 'replaces special characters correctly' do
     expect(replace_whitespaces('Testing Test#! String')).to eq('testing-test-string')
   end
