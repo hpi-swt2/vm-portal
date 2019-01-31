@@ -38,7 +38,7 @@
                                                      :email,
                                                      @request.sudo_user_assignments.collect(&:user_id)),
                     {},
-                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
   </div>
 
   <div class="field form-group">
@@ -49,12 +49,12 @@
                                                        :email,
                                                        @request.non_sudo_user_assignments.collect(&:user_id)),
                     {},
-                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
   </div>
 
   <div class="field form-group">
     <%= form.label :operating_system, "Operating System" %> <br>
-    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system' %>
+    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', style: 'width: 100%' %>
   </div>
 
     <div class="field form-group">

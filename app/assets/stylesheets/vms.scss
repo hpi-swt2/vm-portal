@@ -78,6 +78,10 @@ h2{
   content: "\25A0 ";
 }
 
+.script-doc::before {
+  content: "\1F5CE";
+}
+
 .btn-manage {
   font-size: 1.25rem;
   margin-left: 0.5rem;

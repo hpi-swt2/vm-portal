@@ -50,8 +50,4 @@ RSpec.describe 'hosts/show.html.erb', type: :view do
       expect(rendered).to include name.to_s
     end
   end
-
-  it 'has reserve link' do
-    expect(rendered).to have_link 'Reserve Timeslot'
-  end
 end

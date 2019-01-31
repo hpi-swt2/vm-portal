@@ -13,23 +13,13 @@ end %>
   <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil?
      state =  @host[:connectionState] == 'connected' %>
   <div class="<%= state ? 'bg-success text-black' : 'bg-danger text-white' -%> float-left pb-1 px-4 mr-2">
-    <%= state ? 'online' : 'offline' -%>
+    <%= state ? 'online' : 'offline' %>
   </div>
-  <%= " for #{up_time}" if state -%>
-  <div class="text-right float-right">
-    <div class="dropdown border text-center w-auto">
-      <a class="dropdown-toggle text-muted ml-0 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
-        Manage
-      </a>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="#">Reserve Timeslot</a>
-      </div>
-    </div>
-  </div>
+  <%= " for #{up_time}" if state %>
 </div>
 
 <%
-  hdd_free_space = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3).round(2) || 0
+  hdd_free_space = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3) || 0
   hdd_allocation = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.capacity }.to_f / 1024**3).round(2) || 0
   hdd_usage = (hdd_allocation - hdd_free_space).round(2)
   cpu_usage = @host[:summary].quickStats&.overallCpuUsage || 0
