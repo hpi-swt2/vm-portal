@@ -54,7 +54,7 @@ class VmsController < ApplicationController
 
     @sudo_user_ids = @vm.sudo_users.map(&:id)
     @non_sudo_user_ids = @vm.users.map(&:id)
-    @description = @vm.config.description
+    @description = @vm.ensure_config.description
   end
 
   def update
@@ -64,9 +64,7 @@ class VmsController < ApplicationController
     @vm.set_sudo_users params[:sudo_user_ids]
     @vm.set_non_sudo_users params[:non_sudo_user_ids]
     @vm.config.description = params[:description]
-    unless @vm.config.save
-      flash[:error] = 'Description couldn\'t be saved.'
-    end
+    flash[:error] = 'Description couldn\'t be saved.' unless @vm.config.save
 
     redirect_to vm_path(@vm.name)
   end
