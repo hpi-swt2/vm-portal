@@ -15,15 +15,15 @@ require 'rails_helper'
 
 RSpec.describe RequestsHelper, type: :helper do
   it 'replaces whitespaces correctly' do
-    expect(replace_whitespaces('Testing String')).to eq('Testing-String')
+    expect(replace_whitespaces('Testing String')).to eq('testing-string')
   end
 
   it 'replaces special characters correctly' do
-    expect(replace_whitespaces('Testing Test#! String')).to eq('Testing-Test-String')
+    expect(replace_whitespaces('Testing Test#! String')).to eq('testing-test-string')
   end
 
   it 'does not modify a string without whitespaces' do
-    teststring = 'TestString'
+    teststring = 'teststring'
     expect(replace_whitespaces(teststring)).to eq(teststring)
   end
 

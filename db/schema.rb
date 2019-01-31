@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_01_31_083251) do
+=======
+ActiveRecord::Schema.define(version: 2019_01_29_184200) do
+>>>>>>> 1e2b243fa73f11984f9e53076b526131edca9624
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -129,6 +133,7 @@ ActiveRecord::Schema.define(version: 2019_01_31_083251) do
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
+    t.boolean "email_notifications", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

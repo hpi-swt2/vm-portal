@@ -53,4 +53,8 @@ module VmsHelper
       User.find(user_id).notify('User rights granted', "You have been made user on VM '#{vm_name}'")
     end
   end
+
+  def request_for(vm)
+    Request.accepted.find { |each| vm.name == each.name }
+  end
 end
