@@ -43,7 +43,7 @@ class RequestsController < ApplicationController
   def create
     prepare_params
     @request = Request.new(request_params.merge(user: current_user))
-    @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+    @request.assign_sudo_users(request_params[:sudo_user_ids])
 
     respond_to do |format|
       if @request.save
@@ -59,7 +59,7 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       prepare_params
-      @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+      @request.assign_sudo_users(request_params[:sudo_user_ids])
       @request.accept!
       if @request.update(request_params)
         notify_request_update
@@ -154,12 +154,15 @@ class RequestsController < ApplicationController
   end
 
   # Storage and RAM are displayed in GB but internally stored in MB.
+  # sudo_user_ids always contain one empty element which must be removed
   def prepare_params
-    return unless params[:request]
+    request_parameters = params[:request]
+    return unless request_parameters
 
-    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request][:name]
-    params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i) if params[:request][:ram_mb]
-    params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i) if params[:request][:storage_mb]
+    request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
+    request_parameters[:ram_mb] &&= gb_to_mb(request_parameters[:ram_mb].to_i)
+    request_parameters[:storage_mb] &&= gb_to_mb(request_parameters[:storage_mb].to_i)
+    request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
