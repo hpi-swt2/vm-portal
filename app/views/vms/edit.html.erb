@@ -1,6 +1,6 @@
 <h1>Edit VM information of <span style="font-style: italic;"><%= @vm.name %></span></h1>
 
-<%= form_with(url: { :controller => "vms", :action => "update", id: @vm.config.name }, local: true) do |form| %>
+<%= form_with(url: { :controller => "vms", :action => "update", id: @vm.name }, local: true) do |form| %>
   <div class="field">
     <%= form.label :sudo_user_ids, "Users with sudo rights" %>
     <%= form.select :sudo_user_ids,
