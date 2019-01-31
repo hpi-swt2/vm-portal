@@ -7,7 +7,7 @@ RSpec.describe 'requests/new', type: :view do
 
   let(:request) do
     Request.new(
-      name: 'MyVM',
+      name: 'myvm',
       cpu_cores: 2,
       ram_mb: 1000,
       storage_mb: 2000,

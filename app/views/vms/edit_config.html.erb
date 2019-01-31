@@ -27,6 +27,20 @@
     <%= form.text_field :dns, class: 'form-control' %>
   </div>
 
+  <table class="table table-fixed-columns table-flex-width">
+    <tbody>
+      <tr>
+        <td><strong>Operating System:</strong></td>
+        <td><%= request_for(@vm).operating_system %></td>
+      </tr>
+
+      <tr>
+        <td><strong>Comment:</strong></td>
+        <td class="col-md-4"><%= request_for(@vm).comment %></td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="actions">
     <%= form.submit 'Update Configuration', class: "btn btn-primary" %>
   </div>
