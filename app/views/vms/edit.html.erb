@@ -1,30 +1,28 @@
-<h1>Edit VM information of <%= @vm.name %></h1>
+<h1>Edit VM information of <span style="font-style: italic;"><%= @vm.name %></span></h1>
 
-<%= form_with(url: vm_path(@vm.name), local: true, method: :put) do |form| %>
+<%= form_with(url: { :controller => "vms", :action => "update", id: @vm.config.name }, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :sudo_user_ids, "Users with sudo rights" %>
+    <%= form.select :sudo_user_ids,
+        options_from_collection_for_select(User.all, :id, :email, @sudo_user_ids),
+        {},
+        { multiple: true, class: 'selecttwo form-control'} %>
+  </div>
 
-<div class="field">
-    <label for="sudo_user_ids">Users with sudo rights:</label><br>
-    <%= form.select 'sudo_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email, 
-                                                     @sudoer_ids),
-                    {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
-    <br>
-    <label for="non_sudo_user_ids">Users without sudo rights:</label><br>
-    <%= form.select 'non_sudo_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email, 
-                                                     @non_sudoer_ids),
-                    {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'choose wisely' }, style: 'width: 50%' } %>
+  <div class="field">
+    <%= form.label :non_sudo_user_ids, "Users without sudo rights" %>
+    <%= form.select :non_sudo_user_ids,
+        options_from_collection_for_select(User.all, :id, :email, @non_sudo_user_ids),
+        {},
+        { multiple: true, class: 'selecttwo form-control'} %>
+  </div>
 
-    <div class="field">
-        <%= form.label 'description' %>
-        <%= form.text_area 'description', cols: "40", rows: "4", class: 'form-control', value: @request.description %>
-    </div>
-    <%= form.submit 'save', class: 'btn btn-primary' %>
-</div>
+  <div class="field">
+      <%= form.label :description, 'Description' %>
+      <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control', value: @request.description %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Update VM information', class: "btn btn-primary" %>
+  </div>
 <% end %>

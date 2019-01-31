@@ -52,17 +52,21 @@ class VmsController < ApplicationController
   def edit
     return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
 
-    @request = Request.where(status: 'accepted', name: @vm.name).first
-    @sudoer_ids = @request.sudo_user_assignments.map(&:user_id)
-    @non_sudoer_ids = @request.non_sudo_user_assignments.map(&:user_id)
+    @sudo_user_ids = @vm.sudo_users.map(&:id)
+    @non_sudo_user_ids = @vm.users.map(&:id)
+    @description = @vm.config.description
   end
 
   def update
-    request = Request.where(status: 'accepted', name: @vm.name).first
-    request.description = params[:description]
-    request.change_sudo_user_list_to params[:sudo_user_ids] # TODO: notifying changed users
-    request.change_non_sudo_user_list_to params[:non_sudo_user_ids] # TODO: notifying changed users
-    request.save!
+    notify_changed_sudo_users(@vm.sudo_users.map(&:id), params[:sudo_user_ids], @vm.name)
+    notify_changed_users(@vm.users.map(&:id), params[:non_sudo_user_ids], @vm.name)
+
+    @vm.set_sudo_users params[:sudo_user_ids]
+    @vm.set_non_sudo_users params[:non_sudo_user_ids]
+    @vm.config.description = params[:description]
+    unless @vm.config.save
+      flash[:error] = 'Description couldn\'t be saved.'
+    end
 
     redirect_to vm_path(@vm.name)
   end

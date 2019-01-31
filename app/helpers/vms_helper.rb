@@ -32,4 +32,25 @@ module VmsHelper
       'offline'
     end
   end
+
+  def notify_changed_sudo_users(old_list, new_list, vm_name)
+    removed_users = old_list - new_list
+    removed_users.each do |user_id|
+      User.find(user_id).notify('Sudo rights revoked', "Your sudo rights on VM '#{vm_name}' have been revoked.")
+    end
+    added_users = new_list - old_list
+    added_users.each do |user_id|
+      User.find(user_id).notify('Sudo rights granted', "You have been made sudo user on VM '#{vm_name}'")
+    end
+  end
+  def notify_changed_users(old_list, new_list, vm_name)
+    removed_users = old_list - new_list
+    removed_users.each do |user_id|
+      User.find(user_id).notify('User rights revoked', "Your user rights on VM '#{vm_name}' have been revoked.")
+    end
+    added_users = new_list - old_list
+    added_users.each do |user_id|
+      User.find(user_id).notify('User rights granted', "You have been made user on VM '#{vm_name}'")
+    end
+  end
 end

@@ -64,7 +64,10 @@ class Request < ApplicationRecord
   def create_vm
     folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) if clusters.first
+    vm = folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) if clusters.first
+    config = vm.ensure_config
+    config.description = self.description
+    config.save
   end
 
   def push_to_git
