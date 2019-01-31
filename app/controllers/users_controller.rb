@@ -32,7 +32,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:ssh_key)
+    params.require(:user).permit(:ssh_key, :email_notifications)
   end
 
   def authenticate_current_user

@@ -9,7 +9,7 @@ class VmsController < ApplicationController
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show edit update]
-  before_action :authenticate_root_user, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
+  before_action :authenticate_root_user_or_admin, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
   def index
     initialize_vm_categories
@@ -194,7 +194,7 @@ class VmsController < ApplicationController
     params.require(:virtual_machine_config).permit(:ip, :dns)
   end
 
-  def authenticate_root_user
+  def authenticate_root_user_or_admin
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm
 

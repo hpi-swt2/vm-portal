@@ -17,6 +17,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   before do
     sign_in current_user
@@ -88,6 +89,31 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     it 'does not have any links to manage power state' do
       expect(rendered).not_to have_link 'Power On'
       expect(rendered).not_to have_link 'Power Off'
+    end
+  end
+
+  context 'when the current user is an admin' do
+    let(:current_user) { admin }
+
+    context 'when powered on' do
+      it 'has power off links' do
+        expect(rendered).to have_link 'Suspend VM'
+        expect(rendered).to have_link 'Shutdown Guest OS'
+        expect(rendered).to have_link 'Restart Guest OS'
+        expect(rendered).to have_link 'Reset'
+        expect(rendered).to have_link 'Power Off'
+      end
+    end
+
+    context 'when powered off' do
+      before do
+        assign(:vm, vm_off)
+        render
+      end
+
+      it 'has power on link' do
+        expect(rendered).to have_link('Power On')
+      end
     end
   end
 

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :request do
-    name { 'MyVM' }
+    name { 'myvm' }
     cpu_cores { 2 }
     ram_mb { 1000 }
     storage_mb { 2000 }
