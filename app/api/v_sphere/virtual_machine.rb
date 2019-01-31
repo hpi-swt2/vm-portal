@@ -247,9 +247,10 @@ module VSphere
     end
 
     def users
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path
-      users = PuppetParserHelper.read_node_file(name)
-      users['admins'] + users['users'] | []
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        users = PuppetParserHelper.read_node_file(name)
+        users['admins'] + users['users'] | []
+      end
     end
 
     def commit_message(git_writer)
@@ -263,30 +264,42 @@ module VSphere
     end
 
     def set_users(ids)
-      writer = GitHelper.open_repository(PuppetParserHelper.puppet_script_path)
-      all_users = PuppetParserHelper.read_node_file(name)
-      sudo_users = all_users['admins']
-      new_users = User.find_all_by_id(ids)
-      puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
-      writer.write_file(name, puppetscript)
-      message = commit_message(writer)
-      writer.save(message)
+      begin
+        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+          all_users = PuppetParserHelper.read_node_file(name)
+          sudo_users = all_users['admins']
+          new_users = User.find_all_by_id(ids)
+          puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
+          git_writer.write_file(name, puppetscript)
+          message = commit_message(git_writer)
+          git_writer.save(message)
+        end
+      rescue Git::GitExecuteError
+        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
     end
 
     def sudo_users
-      users = PuppetParserHelper.read_node_file(name)
-      users['admins']
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        users = PuppetParserHelper.read_node_file(name)
+        users['admins']
+      end
     end
 
     def set_sudo_users(ids)
-      writer = GitHelper.open_repository(PuppetParserHelper.puppet_script_path)
-      all_users = PuppetParserHelper.read_node_file(name)
-      users = all_users['users']
-      new_sudo_users = User.find_all_by_id(ids)
-      puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
-      writer.write_file(name, puppetscript)
-      message = commit_message(writer)
-      writer.save(message)
+      begin
+        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+          all_users = PuppetParserHelper.read_node_file(name)
+          users = all_users['users']
+          new_sudo_users = User.find_all_by_id(ids)
+          puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
+          git_writer.write_file(name, puppetscript)
+          message = commit_message(git_writer)
+          git_writer.save(message)
+        end
+      rescue Git::GitExecuteError
+          { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
     end
 
     def belongs_to(user)
