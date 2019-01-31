@@ -93,6 +93,7 @@ h2{
 .btn-manage:hover {
   text-decoration: none;
   color: black;
+  filter: drop-shadow(2px 2px 1px $secondary);
 }
 
 .filter-box {
