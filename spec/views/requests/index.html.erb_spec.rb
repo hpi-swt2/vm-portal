@@ -6,7 +6,7 @@ RSpec.describe 'requests/index', type: :view do
   let(:requests) do
     [
       Request.create!(
-        name: 'MyVM',
+        name: 'myvm',
         cpu_cores: 3,
         ram_mb: 1000,
         storage_mb: 2000,
@@ -20,7 +20,7 @@ RSpec.describe 'requests/index', type: :view do
         responsible_users: [FactoryBot.create(:user)]
       ),
       Request.create!(
-        name: 'MyVM1',
+        name: 'myvm1',
         cpu_cores: 3,
         ram_mb: 1000,
         storage_mb: 2000,
@@ -42,8 +42,8 @@ RSpec.describe 'requests/index', type: :view do
   end
 
   it 'renders a list of requests' do
-    assert_select 'tr>td', text: 'MyVM'.to_s, count: 1
-    assert_select 'tr>td', text: 'MyVM1'.to_s, count: 1
+    assert_select 'tr>td', text: 'myvm'.to_s, count: 1
+    assert_select 'tr>td', text: 'myvm1'.to_s, count: 1
     assert_select 'tr>td', text: 3.to_s, count: 2
     assert_select 'tr>td', text: 1.to_s, count: 2
     assert_select 'tr>td', text: 2.to_s, count: 2

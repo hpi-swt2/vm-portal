@@ -9,7 +9,7 @@ RSpec.describe 'requests/show', type: :view do
     @user = FactoryBot.create(:user)
     @second_user = FactoryBot.create(:user, email: 'test@test.de')
     @request = assign(:request, Request.create!(
-                                  name: 'MyVM',
+                                  name: 'myvm',
                                   cpu_cores: 3,
                                   ram_mb: 1000,
                                   storage_mb: 2000,
@@ -29,7 +29,7 @@ RSpec.describe 'requests/show', type: :view do
   end
 
   it 'renders attributes in <p>' do
-    expect(rendered).to match(/MyVM/)
+    expect(rendered).to match(/myvm/)
     expect(rendered).to match(/3/)
     expect(rendered).to match(/1/)
     expect(rendered).to match(/2/)
