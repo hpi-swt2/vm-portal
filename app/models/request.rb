@@ -13,18 +13,18 @@ class Request < ApplicationRecord
 
   MAX_NAME_LENGTH = 20
   MAX_CPU_CORES = 64
-  MAX_RAM_MB = 256_000
-  MAX_STORAGE_MB = 1_000_000
+  MAX_RAM_GB = 256
+  MAX_STORAGE_GB = 1_000
 
   enum status: %i[pending accepted rejected]
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
-  validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
+  validates :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
-  validates :ram_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
-  validates :storage_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
+  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
+  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
@@ -69,7 +69,7 @@ class Request < ApplicationRecord
   def create_vm
     folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) if clusters.first
+    folder.create_vm(cpu_cores, ram_gb * 1_000, storage_gb * 1_000_000, name, clusters.first) if clusters.first
   end
 
   def push_to_git
