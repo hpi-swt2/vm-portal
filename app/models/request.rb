@@ -71,13 +71,11 @@ class Request < ApplicationRecord
     path = PuppetParserHelper.puppet_script_path
 
     begin
-      notice = ''
-      GitHelper.write_to_repository(path) do |git_writer|
-        git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
-        git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
-        message, notice = commit_and_notice_message(git_writer)
-        git_writer.save(message)
-      end
+      git_writer = GitHelper.open_repository(path)
+      git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
+      git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
+      message, notice = commit_and_notice_message(git_writer)
+      git_writer.save(message)
       { notice: notice }
     rescue Git::GitExecuteError
       { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }

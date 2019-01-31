@@ -59,7 +59,7 @@ module VSphere
 
     def self.user_vms(user)
       vms = []
-      GitHelper.pull PuppetParserHelper.puppet_script_path
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path
       files = Dir.entries(PuppetParserHelper.puppet_script_path)
       files.map! { |file| file[(6..file.length - 4)] }
       files.each do |vm_name|
@@ -247,13 +247,30 @@ module VSphere
     end
 
     def users
-      GitHelper.pull PuppetParserHelper.puppet_script_path
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path
       users = PuppetParserHelper.read_node_file(name)
       users['admins'] + users['users'] | []
     end
 
+    def commit_message(git_writer)
+      if git_writer.added?
+        'Add ' + name
+      elsif git_writer.updated?
+        'Update ' + name
+      else
+        ''
+      end
+    end
+
     def set_users(ids)
-      # TODO save changed users to git
+      writer = GitHelper.open_repository(PuppetParserHelper.puppet_script_path)
+      all_users = PuppetParserHelper.read_node_file(name)
+      sudo_users = all_users['admins']
+      new_users = User.find_all_by_id(ids)
+      puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
+      writer.write_file(name, puppetscript)
+      message = commit_message(writer)
+      writer.save(message)
     end
 
     def sudo_users
@@ -262,7 +279,14 @@ module VSphere
     end
 
     def set_sudo_users(ids)
-      # TODO save changed sudo_users to git
+      writer = GitHelper.open_repository(PuppetParserHelper.puppet_script_path)
+      all_users = PuppetParserHelper.read_node_file(name)
+      users = all_users['users']
+      new_sudo_users = User.find_all_by_id(ids)
+      puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
+      writer.write_file(name, puppetscript)
+      message = commit_message(writer)
+      writer.save(message)
     end
 
     def belongs_to(user)

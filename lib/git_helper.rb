@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 module GitHelper
-  def self.write_to_repository(path)
+  def self.open_repository(path)
     FileUtils.mkdir_p(path) unless File.exist?(path)
     git_writer = GitWriter.new(path)
     begin
       yield git_writer
     ensure
-      FileUtils.rm_rf(path) if File.exist?(path)
+      FileUtils.rm_rf(path)
     end
-  end
-
-  def self.pull(path)
-    GitWriter.new(path)
   end
 
   class GitWriter
@@ -39,7 +35,6 @@ module GitHelper
     def save(message)
       commit_and_push(message) if added? || updated?
     end
-
     private
 
     def setup_git(path)
