@@ -60,6 +60,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def human_readable_identifier
+    email.split(/@/).first
+  end
+
   def valid_ssh_key
     errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
   end

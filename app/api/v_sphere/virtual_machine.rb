@@ -188,13 +188,30 @@ module VSphere
       config&.dns || ''
     end
 
-    # Utilities
+    # Folder Utilities
     def move_into(folder)
       folder.move_here self
     end
 
-    def boot_time
-      @vm.runtime.bootTime
+    def parent
+      VSphere::Folder.new @vm.parent
+    end
+
+    def target_subfolder
+      path = [] << case status
+                   when :archived then archived_folder.name
+                   when :pending_reviving then pending_archivation_folder.name
+                   when :pending_archivation then pending_revivings_folder.name
+                   else
+                     'Active VMs'
+                   end
+      path << responsible_users.first.human_readable_identifier if responsible_users.first
+      VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
+    end
+
+    def move_into_correct_subfolder
+      target = target_subfolder
+      move_into target unless target.vms(recursive: false).include? self
     end
 
     # Users
@@ -202,6 +219,7 @@ module VSphere
       config&.responsible_users || []
     end
 
+    # this method should return all users, including the sudo users
     def users
       request&.users || []
     end
@@ -216,6 +234,11 @@ module VSphere
 
     def belongs_to(user)
       users.include? user
+    end
+
+    # Information about the vm
+    def boot_time
+      @vm.runtime.bootTime
     end
 
     def summary
