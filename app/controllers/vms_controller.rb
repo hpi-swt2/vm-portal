@@ -53,8 +53,10 @@ class VmsController < ApplicationController
   end
 
   def update
-    notify_changed_sudo_users(@vm.sudo_users.map(&:id), params[:sudo_user_ids], @vm.name)
-    notify_changed_users(@vm.users.map(&:id), params[:non_sudo_user_ids], @vm.name)
+    sudo_lists = true
+    notify_changed_users(@vm.sudo_users.map(&:id), params[:sudo_user_ids], sudo_lists, @vm.name)
+    sudo_lists = false
+    notify_changed_users(@vm.users.map(&:id), params[:non_sudo_user_ids], sudo_lists, @vm.name)
 
     @vm.set_sudo_users params[:sudo_user_ids]
     @vm.set_non_sudo_users params[:non_sudo_user_ids]
