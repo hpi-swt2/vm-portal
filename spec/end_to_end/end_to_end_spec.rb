@@ -80,6 +80,7 @@ RSpec.describe 'End to End testing', type: :feature do
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
+    select(@admin.email, from: 'request_responsible_user_ids')
     select(@admin.email, from: 'request_sudo_user_ids')
     select(@user.email, from: 'request_user_ids')
     select('none', from: 'operating_system')
