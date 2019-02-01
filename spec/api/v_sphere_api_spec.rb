@@ -52,7 +52,10 @@ describe VSphere do
   let(:active_vms_folder) { v_sphere_folder_mock('Active VMs', subfolders: [user_folder_mock]) }
 
   let(:mock_folder) do
-    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder, mock_pending_revivings_folder, active_vms_folder], mock_root_folder_vms, [])
+    vim_folder_mock('vm',
+                    [mock_archived_vms_folder, mock_pending_archivings_folder, mock_pending_revivings_folder, active_vms_folder],
+                    mock_root_folder_vms,
+                    [])
   end
 
   let(:root_folder) { VSphere::Folder.new(mock_folder) }
