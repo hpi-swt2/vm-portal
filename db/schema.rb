@@ -52,8 +52,8 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "operating_system"
     t.text "comment"
     t.text "rejection_information"
@@ -129,12 +129,12 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
     t.string "provider"
     t.string "uid"
-    t.integer "user_id"
     t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "user_id"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
