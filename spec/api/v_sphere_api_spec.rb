@@ -47,8 +47,12 @@ describe VSphere do
     end
   end
 
+  let(:user_folder_mock) { vim_folder_mock('user', [], [], []) }
+
+  let(:active_vms_folder) { v_sphere_folder_mock('Active VMs', subfolders: [user_folder_mock]) }
+
   let(:mock_folder) do
-    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder, mock_pending_revivings_folder], mock_root_folder_vms, [])
+    vim_folder_mock('vm', [mock_archived_vms_folder, mock_pending_archivings_folder, mock_pending_revivings_folder, active_vms_folder], mock_root_folder_vms, [])
   end
 
   let(:root_folder) { VSphere::Folder.new(mock_folder) }
@@ -130,6 +134,14 @@ describe VSphere do
 
     it 'VirtualMachine.find_by_name finds all vms' do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2')).not_to be_nil
+    end
+
+    it 'can move into the responsible users subfolder' do
+      config = FactoryBot.create :virtual_machine_config
+      config.responsible_users = [FactoryBot.create(:user, email: 'user@user.de')]
+      config.save!
+      v_sphere_vm_mock(config.name).move_into_correct_subfolder
+      expect(user_folder_mock).to have_received(:MoveIntoFolder_Task)
     end
 
     it 'does not have users if there is no fitting request' do
