@@ -30,13 +30,12 @@ class ProjectsController < ApplicationController
       render :new
     end
     # nil-check is necessary because 3 tests fails without check
-    unless @project.id.nil? {
+    unless @project.id.nil?
       @project.responsible_users.each do |each|
         each.notify('Project created',
                     'The project with you as the responsable has been created: ' +
                     url_for(controller: :projects, action: 'show', id: @project.id))
       end
-    }
     end
   end
 
