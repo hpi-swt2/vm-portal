@@ -29,6 +29,10 @@ class ProjectsController < ApplicationController
       @selected_user_ids = project_params[:responsible_user_ids]
       render :new
     end
+    (@project.responsible_users).each do |each|
+      each.notify("Project created", "The project with you as the responsable has been created: " + "#{url_for(controller: :projects, action: 'show', id: @project.id
+)}")
+    end
   end
 
   def edit
