@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get '/vms/configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
   patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
 
+  # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
   post '/vms/vm/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
   post '/vms/vm/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
   post '/vms/vm/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
