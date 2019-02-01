@@ -31,7 +31,7 @@ class ProjectsController < ApplicationController
     end
     # nil-check is necessary because 3 tests fails without check
     return if @project.id.nil?
-    
+
     @project.responsible_users.each do |each|
       each.notify('Project created',
                   'The project with you as the responsable has been created: ' +
