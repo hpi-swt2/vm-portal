@@ -3,15 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'vms/edit.html.erb', type: :view do
-  let(:request) { FactoryBot.build :accepted_request }
-
   let(:vm) do
     v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
   end
 
   before do
     assign(:vm, vm)
-    assign(:request, request)
     render
   end
 
@@ -21,5 +18,9 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
 
   it 'says edit' do
     expect(rendered).to have_text 'Edit'
+  end
+
+  it 'has a button to save' do
+    expect(rendered).to have_button 'Update VM information'
   end
 end

@@ -59,7 +59,10 @@ class VmsController < ApplicationController
     @vm.set_sudo_users params[:sudo_user_ids]
     @vm.set_non_sudo_users params[:non_sudo_user_ids]
     @vm.config.description = params[:description]
-    flash[:error] = 'Description couldn\'t be saved.' unless @vm.config.save
+    unless @vm.config.save
+      flash[:error] = 'Description couldn\'t be saved.'
+      redirect_to edit_vm_path(@vm.name)
+    end
 
     redirect_to vm_path(@vm.name)
   end
