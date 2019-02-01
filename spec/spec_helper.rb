@@ -47,10 +47,22 @@ ENV['GIT_REPOSITORY_NAME'] ||= 'test_repository_name'
 ENV['GITHUB_USER_NAME'] ||= 'test_user_name'
 ENV['GITHUB_USER_EMAIL'] ||= 'test_user_email'
 
+def associate_users_with_vms(users: [], admins: [], vms: [])
+  users.each do |user|
+    allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)
+  end
+  admins.each do |user|
+    allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)
+  end
+  vms.each do |vm|
+    allow(PuppetParserHelper).to receive(:read_node_file).with(vm.name).and_return('admins' => admins, 'users' => users)
+  end
+end
+
 RSpec.configure do |config|
   config.before do
     allow(VSphere::VirtualMachine).to receive(:user_vms).and_return []
-    allow(PuppetParserHelper).to receive(:read_node_file).and_return({ 'admins' => [], 'users' => [] })
+    allow(PuppetParserHelper).to receive(:read_node_file).and_return('admins' => [], 'users' => [])
     allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
     @git_stub = create_git_stub
   end

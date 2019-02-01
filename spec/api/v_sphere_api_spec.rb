@@ -135,25 +135,6 @@ describe VSphere do
     context 'when accessing  Puppet scripts' do
       let(:path) { File.join('spec', 'helpers') }
       let(:puppet_file) { PuppetParserHelper.read_node_file('example', path) }
-
-      it 'raises an error when there is no fitting puppet script' do
-        pending 'fix to check for file not found error'
-        expect(VSphere::VirtualMachine.find_by_name('Archived VM2').users).to raise_error
-      end
-
-      it 'has users if a fitting puppet script exists' do
-        pending 'test correct creation of a puppet script'
-        expect { PuppetParserHelper.read_node_file('example', path) }.to raise_error 'Unsupported Format'
-        request = FactoryBot.create :accepted_request
-        request.users << FactoryBot.create(:puppet_user)
-        vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
-        expect(vm.users).not_to be_empty
-      end
-
-      it 'finds all vms for a user' do
-        pending 'implement'
-        raise 'doesnt work'
-      end
     end
 
     it 'does not have an IP if the fitting config does not exist' do
