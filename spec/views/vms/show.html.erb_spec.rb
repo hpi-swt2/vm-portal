@@ -126,10 +126,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       render
     end
 
-    it 'has a link to delete VM' do
-      expect(rendered).to have_link 'Delete VM'
-    end
-
     context 'when powered on' do
       it 'has power off links' do
         expect(rendered).to have_link 'Suspend VM'

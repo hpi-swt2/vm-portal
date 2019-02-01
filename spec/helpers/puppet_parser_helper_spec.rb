@@ -5,6 +5,10 @@ require 'rails_helper'
 RSpec.describe PuppetParserHelper, type: :helper do
   let(:path) { File.join('spec', 'helpers') }
 
+  before do
+    allow(PuppetParserHelper).to receive(:read_node_file).and_call_original
+  end
+
   describe 'read valid node file' do
     let(:user) { FactoryBot.create :puppet_user }
     let(:admin1) { FactoryBot.create :puppet_admin }
