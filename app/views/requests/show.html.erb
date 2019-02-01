@@ -3,12 +3,12 @@
 <table class="table table-fixed-columns table-flex-width">
   <tbody>
     <tr>
-      <th style="width: 300px">VM Name:</td>
+      <th style="width: 300px">VM Name</td>
       <td><%= @request.name %></td>
     </tr>
 
     <tr>
-      <td><strong>CPU cores:</strong></td>
+      <td><strong>CPU cores</strong></td>
       <td><%= @request.cpu_cores %></td>
     </tr>
 
@@ -23,37 +23,46 @@
     </tr>
 
     <tr>
-      <td><strong>Operating System:</strong></td>
+      <td><strong>Operating System</strong></td>
       <td><%= @request.operating_system %></td>
     </tr>
 
     <tr>
-      <td><strong>Port:</strong></td>
+      <td><strong>Port</strong></td>
       <td><%= @request.port %></td>
     </tr>
 
     <tr>
-      <td><strong>Application Name:</strong></td>
+      <td><strong>Application Name</strong></td>
       <td><%= @request.application_name %></td>
     </tr>
 
     <tr>
-      <td><strong>Description:</strong></td>
+      <td><strong>Description</strong></td>
       <td class="col-md-4"><%= @request.description %></td>
     </tr>
 
     <tr>
-      <td><strong>Comment:</strong></td>
+      <td><strong>Comment</strong></td>
       <td class="col-md-4"><%= @request.comment %></td>
     </tr>
 
     <tr>
-      <td><strong>Status:</strong></td>
+      <td><strong>Status</strong></td>
       <td><%= @request.status %></td>
     </tr>
 
     <tr>
-      <td><strong>Users with sudo rights:</strong></td>
+      <td><strong>Responsible users</strong></td>
+      <td>
+        <% @request.responsible_users.each do |user| %>
+          <p><%= user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Users with sudo rights</strong></td>
       <td>
         <% @request.sudo_user_assignments.each do |assignment| %>
           <p><%= assignment.user.email %></p>
@@ -62,7 +71,7 @@
     </tr>
 
     <tr>
-      <td><strong>Users:</strong></td>
+      <td><strong>Users</strong></td>
       <td>
         <% @request.non_sudo_user_assignments.each do |assignment| %>
           <p><%= assignment.user.email %></p>

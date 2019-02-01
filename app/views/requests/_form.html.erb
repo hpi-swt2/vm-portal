@@ -16,6 +16,17 @@
   </div>
 
   <div class="field form-group">
+    <p>Responsible Users</p>
+    <%= form.select 'responsible_user_ids',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email,
+                                                       @request.responsible_users.collect(&:id)),
+                    {},
+                    { multiple: true, class: "selecttwo", data: { placeholder: 'Who is responsible for this VM?' }, style: 'width: 100%' } %>
+  </div>
+
+  <div class="field form-group">
     <%= form.label :cpu_cores, "CPU cores" %>
     <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
   </div>
@@ -53,7 +64,7 @@
   </div>
 
   <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %> <br>
+    <%= form.label :operating_system, "Operating System" %>
     <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', style: 'width: 100%' %>
   </div>
 

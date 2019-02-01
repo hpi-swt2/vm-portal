@@ -4,6 +4,7 @@ class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
+  has_and_belongs_to_many :responsible_users, class_name: 'User', join_table: 'requests_responsible_users'
 
   before_save do
     users_assigned_to_requests.each(&:save)
@@ -21,14 +22,14 @@ class Request < ApplicationRecord
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
-  validates :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
+  validates :responsible_users, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
   validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
-    description += "- Responsible: TBD\n"
+    description += "- Responsible: #{responsible_users.first.name}\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
     description += url(host_name) + "\n"
     description
@@ -68,9 +69,17 @@ class Request < ApplicationRecord
   end
 
   def create_vm
-    folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, clusters.first) if clusters.first
+    return nil unless clusters.first
+
+    create_vm_in_cluster(clusters.first)
+  end
+
+  def create_vm_in_cluster(cluster)
+    vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
+    vm.ensure_config.responsible_users = responsible_users
+    vm.move_into_correct_subfolder
+    vm
   end
 
   def push_to_git

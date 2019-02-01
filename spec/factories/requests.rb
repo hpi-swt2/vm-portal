@@ -11,6 +11,7 @@ FactoryBot.define do
     comment { 'Comment' }
     status { 'pending' }
     user { FactoryBot.create :admin }
+    responsible_users { [FactoryBot.create(:user)] }
   end
 
   factory :rejected_request, parent: :request do

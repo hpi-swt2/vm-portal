@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_31_115425) do
+ActiveRecord::Schema.define(version: 2019_02_01_091109) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -65,6 +65,12 @@ ActiveRecord::Schema.define(version: 2019_01_31_115425) do
     t.text "description"
     t.integer "user_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
+  end
+
+  create_table "requests_responsible_users", id: false, force: :cascade do |t|
+    t.integer "request_id", null: false
+    t.integer "user_id", null: false
+    t.index ["request_id", "user_id"], name: "index_requests_responsible_users_on_request_id_and_user_id"
   end
 
   create_table "responsible_users", force: :cascade do |t|
@@ -140,6 +146,15 @@ ActiveRecord::Schema.define(version: 2019_01_31_115425) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  end
+
+  create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
+    t.integer "virtual_machine_config_id", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "virtual_machine_config_id"], name: "index_responsible_users_virtual_machine_configs"
+    t.index ["virtual_machine_config_id", "user_id"], name: "index_virtual_machine_configs_responsible_users"
   end
 
   create_table "virtual_machine_configs", force: :cascade do |t|

@@ -167,7 +167,7 @@ class RequestsController < ApplicationController
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
   end
 
   def rejection_params
