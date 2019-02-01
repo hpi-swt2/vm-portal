@@ -205,7 +205,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'create_vm' do
-    let(:request) {FactoryBot.create(:request)}
+    let(:request) { FactoryBot.create(:request) }
 
     it 'saves the responsible users in the VM' do
       request.responsible_users = [FactoryBot.create(:admin)]

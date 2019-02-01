@@ -197,12 +197,25 @@ module VSphere
       @vm.runtime.bootTime
     end
 
+    # Users
     def responsible_users
-      request&.responsible_users || []
+      config&.responsible_users || []
     end
 
     def users
       request&.users || []
+    end
+
+    def sudo_users
+      if request
+        request.sudo_users
+      else
+        []
+      end
+    end
+
+    def belongs_to(user)
+      users.include? user
     end
 
     def summary
@@ -235,18 +248,6 @@ module VSphere
       else
         :offline
       end
-    end
-
-    def sudo_users
-      if request
-        request.sudo_users
-      else
-        []
-      end
-    end
-
-    def belongs_to(user)
-      users.include? user
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
