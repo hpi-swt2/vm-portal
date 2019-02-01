@@ -29,7 +29,7 @@ class Request < ApplicationRecord
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
-    description += "- Responsible: TBD\n"
+    description += "- Responsible: #{responsible_users.first.name}\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
     description += url(host_name) + "\n"
     description
