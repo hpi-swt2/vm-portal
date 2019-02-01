@@ -7,8 +7,8 @@ RSpec.describe 'requests/edit', type: :view do
     @request = assign(:request, Request.create!(
                                   name: 'myvm',
                                   cpu_cores: 2,
-                                  ram_mb: 1000,
-                                  storage_mb: 1000,
+                                  ram_gb: 1,
+                                  storage_gb: 2,
                                   operating_system: 'MyOS',
                                   port: '4000',
                                   application_name: 'MyName',
@@ -35,9 +35,9 @@ RSpec.describe 'requests/edit', type: :view do
 
       assert_select 'input[name=?]', 'request[cpu_cores]'
 
-      assert_select 'input[name=?]', 'request[ram_mb]'
+      assert_select 'input[name=?]', 'request[ram_gb]'
 
-      assert_select 'input[name=?]', 'request[storage_mb]'
+      assert_select 'input[name=?]', 'request[storage_gb]'
 
       assert_select 'select[name=?]', 'request[operating_system]'
 

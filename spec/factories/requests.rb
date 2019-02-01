@@ -4,8 +4,8 @@ FactoryBot.define do
   factory :request do
     name { 'myvm' }
     cpu_cores { 2 }
-    ram_mb { 1000 }
-    storage_mb { 2000 }
+    ram_gb { 1 }
+    storage_gb { 3 }
     operating_system { 'MyOS' }
     description { 'Description' }
     comment { 'Comment' }

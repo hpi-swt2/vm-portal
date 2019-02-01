@@ -35,8 +35,8 @@
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= mb_to_gb(request.ram_mb) %> GB</td>
-      <td class="table-active"><%= mb_to_gb(request.storage_mb) %> GB</td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
       <td class="table-active"><%= request.operating_system %></td>
       <td class="table-active"><%= request.port %></td>
       <td class="table-active"><%= request.application_name %></td>
@@ -71,8 +71,8 @@
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= mb_to_gb(request.ram_mb) %> GB</td>
-      <td class="table-active"><%= mb_to_gb(request.storage_mb) %> GB</td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
       <td class="table-active"><%= request.operating_system %></td>
       <td class="table-active"><%= request.port %></td>
       <td class="table-active"><%= request.application_name %></td>

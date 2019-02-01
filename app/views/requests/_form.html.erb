@@ -32,13 +32,13 @@
   </div>
 
   <div class="field form-group">
-    <%= form.label :ram_mb, "RAM in GB" %>
-    <%= form.number_field :ram_mb, value: (@request && !@request&.ram_mb.nil?) ? mb_to_gb(@request.ram_mb) : nil, min: 0, class: 'form-control', id: 'ram' %>
+    <%= form.label :ram_gb, "RAM in GB" %>
+    <%= form.number_field :ram_gb, min: 0, class: 'form-control', id: 'ram' %>
   </div>
 
   <div class="field form-group">
-    <%= form.label :storage_mb, "Storage in GB" %>
-    <%= form.number_field :storage_mb, value: (@request && !@request&.storage_mb.nil?) ? mb_to_gb(@request.storage_mb) : nil, min: 0, class: 'form-control', id: 'storage' %>
+    <%= form.label :storage_gb, "Storage in GB" %>
+    <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
   </div>
 
   <div class="field form-group">

@@ -281,6 +281,10 @@ module VSphere
       @vm.macs
     end
 
+    def request
+      Request.accepted.find { |each| name == each.name }
+    end
+
     private
 
     def target_subfolder
@@ -293,10 +297,6 @@ module VSphere
                    end
       path << responsible_users.first.human_readable_identifier if responsible_users.first
       VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
-    end
-
-    def request
-      Request.accepted.find { |each| name == each.name }
     end
 
     def archivation_request

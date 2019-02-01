@@ -28,12 +28,12 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with no ram specifiation' do
-        request.ram_mb = nil
+        request.ram_gb = nil
         expect(request).to be_invalid
       end
 
       it 'is invalid with no storage specifiation' do
-        request.storage_mb = nil
+        request.storage_gb = nil
         expect(request).to be_invalid
       end
 
@@ -53,22 +53,22 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with negative ram specifiation' do
-        request.ram_mb = -1
+        request.ram_gb = -1
         expect(request).to be_invalid
       end
 
       it 'is invalid with to much ram' do
-        request.ram_mb = Request::MAX_RAM_MB + 1
+        request.ram_gb = Request::MAX_RAM_GB + 1
         expect(request).to be_invalid
       end
 
       it 'is invalid with negative storage specifiation' do
-        request.storage_mb = -1
+        request.storage_gb = -1
         expect(request).to be_invalid
       end
 
       it 'is invalid with to much storage' do
-        request.storage_mb = Request::MAX_STORAGE_MB + 1
+        request.storage_gb = Request::MAX_STORAGE_GB + 1
         expect(request).to be_invalid
       end
 
@@ -266,6 +266,12 @@ RSpec.describe Request, type: :model do
       before do
         allow(@git_stub.status).to receive(:changed).and_return([])
         allow(@git_stub.status).to receive(:added).and_return(['added_file'])
+      end
+
+      it 'pushes to git when a request is accepted' do
+        expect(@git_stub.git).to receive(:commit_all)
+        expect(@git_stub.git).to receive(:push)
+        request.accept!
       end
 
       it 'correctly calls git' do
