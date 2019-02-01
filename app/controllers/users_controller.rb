@@ -27,8 +27,9 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     role = @user.role
     @user.update(role: params[:role])
-    time = Time.zone.now.strftime("%d/%m/%Y")
-    @user.notify("Changed role", "Your role has changed from #{role} to #{@user.role} on #{time}")
+    time = Time.zone.now.strftime('%d/%m/%Y')
+    @user.notify("Changed role", 
+                 "Your role has changed from #{role} to #{@user.role} on #{time}")
     redirect_to users_path
   end
 
