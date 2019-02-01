@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe VirtualMachineConfig, type: :model do
-
   let(:config) { FactoryBot.create(:virtual_machine_config) }
 
   it 'can save responsible users' do
