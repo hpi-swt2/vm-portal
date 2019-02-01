@@ -71,7 +71,10 @@ class Request < ApplicationRecord
     folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
     vm = clusters.first ? folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first) : nil
-    vm.ensure_config.responsible_users = responsible_users if vm
+    if vm
+      vm.ensure_config.responsible_users = responsible_users
+      vm.move_into_correct_subfolder
+    end
     vm
   end
 
