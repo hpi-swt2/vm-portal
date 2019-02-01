@@ -10,8 +10,8 @@ class RenameRequestMbToGb < ActiveRecord::Migration[5.2]
   def update_requests
     Request.all.each do |request|
       unless request.nil?
-        request.ram_mb = request.ram_mb / 1000
-        request.storage_mb = request.storage_mb / 1000
+        request.ram_mb = (request.ram_mb / 1000).to_f.ceil
+        request.storage_mb = (request.storage_mb / 1000).to_f.ceil
       end
       request.save
     end
