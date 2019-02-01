@@ -80,7 +80,7 @@ describe VSphere do
 
   describe VSphere::Cluster do
     before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], [], clusters_mock)
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock(clusters: clusters_mock)
     end
 
     it 'Cluster.all finds all clusters' do
@@ -90,7 +90,7 @@ describe VSphere do
 
   describe VSphere::Host do
     before do
-      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([], [], [], [], clusters_mock)
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock(clusters: clusters_mock)
     end
 
     it 'Host.all finds all hosts' do

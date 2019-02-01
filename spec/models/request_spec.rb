@@ -204,6 +204,16 @@ RSpec.describe Request, type: :model do
     end
   end
 
+  describe 'create_vm' do
+    let(:request) {FactoryBot.create(:request)}
+
+    it 'saves the responsible users in the VM' do
+      request.responsible_users = [FactoryBot.create(:admin)]
+      vm = request.create_vm
+      expect(vm.responsible_users).to match_array(request.responsible_users)
+    end
+  end
+
   describe 'puppet script helper methods' do
     let(:request) { FactoryBot.create(:request_with_users) }
 

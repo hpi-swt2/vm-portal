@@ -199,26 +199,24 @@ RSpec.describe RequestsController, type: :controller do
         request
       end
 
-      it 'updates the request' do
+      before do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
+      end
+
+      it 'updates the request' do
         expect(the_request.name).to eq('mynewvm')
       end
 
-      it 'redirects to the requests index page, as there is no cluster available' do
-        patch :update, params: { id: the_request.to_param, request: valid_attributes }
-        expect(response).to redirect_to(requests_path)
+      it 'redirects to the new VMS config' do
+        expect(response).to redirect_to(edit_config_path(the_request.name))
       end
 
       it 'accepts the request' do
-        patch :update, params: { id: the_request.to_param, request: valid_attributes }
-        the_request.reload
         expect(the_request).to be_accepted
       end
 
       it 'correctly updates the sudo users' do
-        patch :update, params: { id: the_request.to_param, request: new_attributes }
-        the_request.reload
         expect(the_request.sudo_users).to match_array([sudo_user])
       end
     end
