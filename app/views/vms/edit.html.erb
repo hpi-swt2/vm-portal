@@ -5,7 +5,7 @@
     <%= form.label :sudo_user_ids, "Users with sudo rights" %>
     <%= form.select :sudo_user_ids,
         options_from_collection_for_select(User.all, :id, :email, @sudo_user_ids),
-        {},
+        { include_hidden: false},
         { multiple: true, class: 'selecttwo form-control'} %>
   </div>
 
@@ -13,7 +13,7 @@
     <%= form.label :non_sudo_user_ids, "Users without sudo rights" %>
     <%= form.select :non_sudo_user_ids,
         options_from_collection_for_select(User.all, :id, :email, @non_sudo_user_ids),
-        {},
+        { include_hidden: false },
         { multiple: true, class: 'selecttwo form-control'} %>
   </div>
 
