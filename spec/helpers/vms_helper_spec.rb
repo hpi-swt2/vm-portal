@@ -18,21 +18,21 @@ RSpec.describe VmsHelper, type: :helper do
       users_after = [@added_users[0], @added_users[1], users_before[0], users_before[2]]
 
       sudo_list = false
-      vm_name = "MyTestVm"
+      vm_name = 'MyTestVm'
       notify_changed_users(users_before.map(&:id), users_after.map(&:id), sudo_list, vm_name)
     end
 
     it 'notifies removed users about their removal' do
       @removed_users.each do |user|
         notification = Notification.where(user: user)[0]
-        expect(notification.title).to eq("User rights revoked")
+        expect(notification.title).to eq('User rights revoked')
       end
     end
 
     it 'notifies added users about their addition' do
       @added_users.each do |user|
         notification = Notification.where(user: user)[0]
-        expect(notification.title).to eq("User rights granted")
+        expect(notification.title).to eq('User rights granted')
       end
     end
 
