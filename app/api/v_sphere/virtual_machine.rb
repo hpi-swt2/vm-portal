@@ -197,10 +197,6 @@ module VSphere
       folder.move_here self
     end
 
-    def parent
-      VSphere::Folder.new @vm.parent
-    end
-
     def move_into_correct_subfolder
       target = target_subfolder
       move_into target unless target.vms(recursive: false).include? self
