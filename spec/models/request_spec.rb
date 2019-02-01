@@ -252,8 +252,6 @@ RSpec.describe Request, type: :model do
       request.push_to_git
     end
 
-
-
     context 'with a new puppet script' do
       before do
         allow(@git_stub.status).to receive(:changed).and_return([])
