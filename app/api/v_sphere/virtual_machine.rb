@@ -286,8 +286,8 @@ module VSphere
     def target_subfolder
       path = [] << case status
                    when :archived then archived_folder.name
-                   when :pending_reviving then pending_archivation_folder.name
-                   when :pending_archivation then pending_revivings_folder.name
+                   when :pending_reviving then pending_revivings_folder.name
+                   when :pending_archivation then pending_archivation_folder.name
                    else
                      'Active VMs'
                    end
