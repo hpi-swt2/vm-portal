@@ -9,14 +9,15 @@ RSpec.describe VmsController, type: :controller do
   let(:admin) { FactoryBot.create :admin }
 
   let(:vm1) do
-    vm1 = v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm2) do
     # associate vm2 with the user
-    request = FactoryBot.create :accepted_request
-    request.users << current_user
-    v_sphere_vm_mock request.name, power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
+    vm = v_sphere_vm_mock 'myVM', power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
+    allow(VSphere::VirtualMachine).to receive(:user_vms).with(current_user).and_return([vm])
+    allow(PuppetParserHelper).to receive(:read_node_file).with(vm.name).and_return({ 'admins' => [], 'users' => [current_user] })
+    vm
   end
 
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
@@ -25,9 +26,6 @@ RSpec.describe VmsController, type: :controller do
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
-  end
-
-  before do
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
   end
 
@@ -43,8 +41,8 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns only vms associated to current user' do
-        skip('user management needs to be reworked')
         get :index
+        puts subject.vms
         expect(subject.vms.size).to be 1
       end
     end
@@ -62,7 +60,7 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns only vms associated to current user' do
-        skip('user management needs to be reworked')
+
         get :index
         expect(subject.vms.size).to be 1
       end
@@ -118,14 +116,14 @@ RSpec.describe VmsController, type: :controller do
           end
 
           it 'renders show page' do
-            skip('user management needs to be reworked')
+
             expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
 
         context 'when user is not associated to vm' do
           it 'redirects' do
-            skip('user management needs to be reworked')
+
             get :show, params: { id: vm1.name }
             expect(response).to have_http_status :redirect
           end
@@ -137,14 +135,14 @@ RSpec.describe VmsController, type: :controller do
 
         context 'when user is associated to vm' do
           it 'renders show page' do
-            skip('user management needs to be reworked')
+
             expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
           end
         end
 
         context 'when user is not associated to vm' do
           it 'renders show page' do
-            skip('user management needs to be reworked')
+
             expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
@@ -179,7 +177,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        skip('user management needs to be reworked')
+
         vm_request = FactoryBot.create :accepted_request, name: vm1.name
         FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
         allow(vm1).to receive(:change_power_state)
@@ -187,17 +185,17 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'calls the vms action' do
-        skip('user management needs to be reworked')
+
         expect(vm1).to have_received(:change_power_state)
       end
 
       it 'returns http redirect' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to the path the user came from' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(old_path)
       end
     end
@@ -229,12 +227,12 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns http redirect and redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -255,17 +253,17 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'calls the vms action' do
-        skip('user management needs to be reworked')
+
         expect(vm1).to have_received(:suspend_vm)
       end
 
       it 'returns http redirect' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to the path the user came from' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(old_path)
       end
     end
@@ -297,12 +295,12 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns http redirect and redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -323,17 +321,17 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'calls the vms action' do
-        skip('user management needs to be reworked')
+
         expect(vm1).to have_received(:shutdown_guest_os)
       end
 
       it 'returns http redirect' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to the path the user came from' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(old_path)
       end
     end
@@ -365,12 +363,12 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns http redirect and redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -391,17 +389,17 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'calls the vms action' do
-        skip('user management needs to be reworked')
+
         expect(vm1).to have_received(:reboot_guest_os)
       end
 
       it 'returns http redirect' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to the path the user came from' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(old_path)
       end
     end
@@ -433,12 +431,12 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns http redirect and redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(vms_path)
       end
     end
@@ -459,17 +457,17 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'calls the vms action' do
-        skip('user management needs to be reworked')
+
         expect(vm1).to have_received(:reset_vm)
       end
 
       it 'returns http redirect' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to the path the user came from' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(old_path)
       end
     end
@@ -501,12 +499,12 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'returns http redirect and redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to have_http_status(:redirect)
       end
 
       it 'redirects to vms_path' do
-        skip('user management needs to be reworked')
+
         expect(response).to redirect_to(vms_path)
       end
     end

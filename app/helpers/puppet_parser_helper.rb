@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-
-
-
 module PuppetParserHelper
 
   def self.node_file_correct?(vm_name, contents)

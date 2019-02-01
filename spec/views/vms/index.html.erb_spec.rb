@@ -59,12 +59,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'shows correct power on / off button' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_css('a.btn-manage.play')
     end
 
     it 'demands confirmation on shutdown' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
     end
 
@@ -83,7 +83,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is not a root user for the vms' do
     it 'does not show any manage buttons' do
-      skip('user management needs to be reworked')
+
       expect(rendered).not_to have_css('a.btn-manage.play')
       expect(rendered).not_to have_css('a.btn-manage.stop')
     end
@@ -93,12 +93,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :user }
 
     it 'does not link to new vm page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).not_to have_button('New Request')
     end
 
     it 'does not link to requests overview page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).not_to have_button('All Requests')
     end
   end
@@ -107,12 +107,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_button('New Request')
     end
 
     it 'links to requests overview page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_button('All Requests')
     end
   end
@@ -142,12 +142,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'links to new vm page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_button('New Request')
     end
 
     it 'links to requests overview page' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_button('All Requests')
     end
   end

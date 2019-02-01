@@ -89,7 +89,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
   context 'when the current user is not a root user' do
     it 'does not have any links to manage power state' do
-      skip('user management needs to be reworked')
+
       expect(rendered).not_to have_link 'Power On'
       expect(rendered).not_to have_link 'Power Off'
     end
@@ -128,13 +128,13 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     end
 
     it 'has a link to delete VM' do
-      skip('user management needs to be reworked')
+
       expect(rendered).to have_link 'Delete VM'
     end
 
     context 'when powered on' do
       it 'has power off links' do
-        skip('user management needs to be reworked')
+
         expect(rendered).to have_link 'Suspend VM'
         expect(rendered).to have_link 'Shutdown Guest OS'
         expect(rendered).to have_link 'Restart Guest OS'
@@ -143,7 +143,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'demands confirmation on critical actions' do
-        skip('user management needs to be reworked')
+
         expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on.name)}'][data-confirm='Are you sure?']")
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'shutdown_guest_os', id: vm_on.name)}'][data-confirm='Are you sure?']"
@@ -158,7 +158,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'has no power on link' do
-        skip('user management needs to be reworked')
+
         expect(rendered).not_to have_link 'Power On'
       end
     end
@@ -170,12 +170,12 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'has power on link' do
-        skip('user management needs to be reworked')
+
         expect(rendered).to have_link('Power On')
       end
 
       it 'has no power off links' do
-        skip('user management needs to be reworked')
+
         rendered = render
         expect(rendered).not_to have_link 'Suspend VM'
         expect(rendered).not_to have_link 'Shutdown Guest OS'
@@ -192,7 +192,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'displays info that they are not installed' do
-        skip('user management needs to be reworked')
+
         rendered = render
         expect(rendered).not_to have_link 'Shutdown Guest OS'
         expect(rendered).not_to have_link 'Restart Guest OS'
@@ -202,7 +202,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'demands confirmation on critical actions' do
-        skip('user management needs to be reworked')
+
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
         )
@@ -217,7 +217,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
     context 'when vm_are_tools are installed' do
       it 'displays info' do
-        skip('user management needs to be reworked')
+
         expect(rendered).to have_link 'Suspend VM'
         expect(rendered).to have_link 'Shutdown Guest OS'
         expect(rendered).to have_link 'Restart Guest OS'

@@ -49,6 +49,8 @@ ENV['GITHUB_USER_EMAIL'] ||= 'test_user_email'
 
 RSpec.configure do |config|
   config.before do
+    allow(VSphere::VirtualMachine).to receive(:user_vms).and_return []
+    allow(PuppetParserHelper).to receive(:read_node_file).and_return({ 'admins' => [], 'users' => [] })
     allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
     @git_stub = create_git_stub
   end

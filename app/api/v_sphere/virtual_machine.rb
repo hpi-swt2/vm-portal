@@ -240,7 +240,7 @@ module VSphere
     def users
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
         users = PuppetParserHelper.read_node_file(name)
-        users['admins'] + users['users'] | []
+        (users['admins'] + users['users']).uniq
       end
     end
 
