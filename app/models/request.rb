@@ -36,6 +36,7 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
+    push_to_git
   end
 
   def reject!

@@ -252,10 +252,18 @@ RSpec.describe Request, type: :model do
       request.push_to_git
     end
 
+
+
     context 'with a new puppet script' do
       before do
         allow(@git_stub.status).to receive(:changed).and_return([])
         allow(@git_stub.status).to receive(:added).and_return(['added_file'])
+      end
+
+      it 'pushes to git when a request is accepted' do
+        expect(@git_stub.git).to receive(:commit_all)
+        expect(@git_stub.git).to receive(:push)
+        request.accept!
       end
 
       it 'correctly calls git' do
