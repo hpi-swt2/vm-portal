@@ -2,6 +2,8 @@
 
 require 'vmapi.rb'
 class VmsController < ApplicationController
+  rescue_from RbVmomi::Fault, :with => :not_enough_resources
+
   attr_reader :vms
 
   include VmsHelper
@@ -110,7 +112,7 @@ class VmsController < ApplicationController
 
   def change_power_state
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
-    @vm.change_power_state
+    @vm.change_power_state    
     redirect_back(fallback_location: root_path)
   end
 
@@ -174,5 +176,15 @@ class VmsController < ApplicationController
     return unless @vm
 
     redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
+  end
+
+  def not_enough_resources(exception)
+    redirect_back(fallback_location: root_path)
+    flash[:alert] = exception.message
+    # @vm.errors[:base] << exception.message
+    # respond_to do |type|
+    #   format.html { redirect_back }
+    #   format.json { render json: @vm.errors, status: :unprocessable_entity }
+    # end
   end
 end

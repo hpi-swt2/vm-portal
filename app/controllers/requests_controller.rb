@@ -45,16 +45,16 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
-      if enough_resources
+      #if enough_resources
         if @request.save
           @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
           successful_save(format)
         else
           unsuccessful_action(format, :new)
         end
-      else
-        unsuccessful_action(format, :new)
-      end
+     # else
+     #   unsuccessful_action(format, :new)
+      #end
     end
   end
 
@@ -85,6 +85,12 @@ class RequestsController < ApplicationController
       host_num_cpu = get_num_cpu(host)
       host_ram = get_ram_gb(host)
       host_free_hdd = get_storage_gb(host)
+      puts host_num_cpu
+      puts host_ram
+      puts host_free_hdd
+      puts request_params[:cpu_cores].to_i
+      puts request_params[:ram_mb].to_i
+      puts request_params[:storage_mb].to_i
       
       if request_params[:cpu_cores].to_i <= host_num_cpu and request_params[:ram_mb].to_i <= host_ram and request_params[:storage_mb].to_i <= host_free_hdd
         return true
