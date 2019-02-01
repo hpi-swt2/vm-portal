@@ -134,6 +134,7 @@ module VSphere
     def set_pending_archivation
       move_into pending_archivation_folder
       ArchivationRequest.new(name: name).save
+      move_into_correct_subfolder
     end
 
     def archivable?
@@ -154,6 +155,7 @@ module VSphere
 
       move_into archived_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Reviving
@@ -163,11 +165,13 @@ module VSphere
 
     def set_pending_reviving
       move_into pending_revivings_folder
+      move_into_correct_subfolder
     end
 
     def set_revived
       move_into root_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Config methods
@@ -195,18 +199,6 @@ module VSphere
 
     def parent
       VSphere::Folder.new @vm.parent
-    end
-
-    def target_subfolder
-      path = [] << case status
-                   when :archived then archived_folder.name
-                   when :pending_reviving then pending_archivation_folder.name
-                   when :pending_archivation then pending_revivings_folder.name
-                   else
-                     'Active VMs'
-                   end
-      path << responsible_users.first.human_readable_identifier if responsible_users.first
-      VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
     end
 
     def move_into_correct_subfolder
@@ -290,6 +282,18 @@ module VSphere
     end
 
     private
+
+    def target_subfolder
+      path = [] << case status
+                   when :archived then archived_folder.name
+                   when :pending_reviving then pending_archivation_folder.name
+                   when :pending_archivation then pending_revivings_folder.name
+                   else
+                     'Active VMs'
+                   end
+      path << responsible_users.first.human_readable_identifier if responsible_users.first
+      VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
+    end
 
     def request
       Request.accepted.find { |each| name == each.name }

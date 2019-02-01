@@ -68,7 +68,9 @@ module VSphere
     def create_vm(cpu, ram, capacity, name, cluster)
       vm_config = creation_config(cpu, ram, capacity, name)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
-      VSphere::VirtualMachine.new vm
+      vm = VSphere::VirtualMachine.new vm
+      vm.move_into_correct_subfolder
+      vm
     end
 
     private
