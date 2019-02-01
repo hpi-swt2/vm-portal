@@ -37,8 +37,8 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: 'myvm',
       cpu_cores: 2,
-      ram_mb: 1,
-      storage_mb: 2,
+      ram_gb: 1,
+      storage_gb: 2,
       operating_system: 'MyOS',
       description: 'Description',
       comment: 'Comment',
@@ -52,8 +52,8 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: '',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: -2000,
+      ram_gb: 1000,
+      storage_gb: -2000,
       operating_system: '',
       description: '',
       comment: 'Comment',
@@ -175,8 +175,8 @@ RSpec.describe RequestsController, type: :controller do
         {
           name: 'mynewvm',
           cpu_cores: 3,
-          ram_mb: 2,
-          storage_mb: 3,
+          ram_gb: 2,
+          storage_gb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',

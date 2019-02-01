@@ -32,8 +32,4 @@ module VmsHelper
       'offline'
     end
   end
-
-  def request_for(vm)
-    Request.accepted.find { |each| vm.name == each.name }
-  end
 end

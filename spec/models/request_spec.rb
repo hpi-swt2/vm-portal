@@ -28,12 +28,12 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with no ram specifiation' do
-        request.ram_mb = nil
+        request.ram_gb = nil
         expect(request).to be_invalid
       end
 
       it 'is invalid with no storage specifiation' do
-        request.storage_mb = nil
+        request.storage_gb = nil
         expect(request).to be_invalid
       end
 
@@ -53,22 +53,22 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with negative ram specifiation' do
-        request.ram_mb = -1
+        request.ram_gb = -1
         expect(request).to be_invalid
       end
 
       it 'is invalid with to much ram' do
-        request.ram_mb = Request::MAX_RAM_MB + 1
+        request.ram_gb = Request::MAX_RAM_GB + 1
         expect(request).to be_invalid
       end
 
       it 'is invalid with negative storage specifiation' do
-        request.storage_mb = -1
+        request.storage_gb = -1
         expect(request).to be_invalid
       end
 
       it 'is invalid with to much storage' do
-        request.storage_mb = Request::MAX_STORAGE_MB + 1
+        request.storage_gb = Request::MAX_STORAGE_GB + 1
         expect(request).to be_invalid
       end
 

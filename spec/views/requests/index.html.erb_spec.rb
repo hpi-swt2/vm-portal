@@ -8,8 +8,8 @@ RSpec.describe 'requests/index', type: :view do
       Request.create!(
         name: 'myvm',
         cpu_cores: 3,
-        ram_mb: 1000,
-        storage_mb: 2000,
+        ram_gb: 1,
+        storage_gb: 2,
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',
@@ -21,8 +21,8 @@ RSpec.describe 'requests/index', type: :view do
       Request.create!(
         name: 'myvm1',
         cpu_cores: 3,
-        ram_mb: 1000,
-        storage_mb: 2000,
+        ram_gb: 1,
+        storage_gb: 2,
         operating_system: 'MyOS',
         port: '4000',
         application_name: 'MyName',

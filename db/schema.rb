@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_29_184200) do
+ActiveRecord::Schema.define(version: 2019_01_31_115425) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -52,8 +52,8 @@ ActiveRecord::Schema.define(version: 2019_01_29_184200) do
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
-    t.integer "ram_mb"
-    t.integer "storage_mb"
+    t.integer "ram_gb"
+    t.integer "storage_gb"
     t.string "operating_system"
     t.text "comment"
     t.text "rejection_information"

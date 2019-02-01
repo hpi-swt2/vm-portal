@@ -265,11 +265,11 @@ module VSphere
       @vm.macs
     end
 
-    private
-
     def request
       Request.accepted.find { |each| name == each.name }
     end
+
+    private
 
     def archivation_request
       ArchivationRequest.find_by_name(name)
