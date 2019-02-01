@@ -4,9 +4,8 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Hello <%= @user.name %>,</h1>
-    <h2>
-      <%= simple_format @message %>
-    </h2>
+  	<font size="6">Hello <%= @user.name %>,</font>
+  	<font size="6">we have some HART news for you!</font>
+	<font size="5"><%= simple_format(@message).gsub(/(?:https?|ftp|mailto):\/\/[^\s|<]+/, '<a href="\0">\0</a>').html_safe %></font>
   </body>
 </html>
