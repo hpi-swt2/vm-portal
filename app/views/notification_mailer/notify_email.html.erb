@@ -5,8 +5,8 @@
   </head>
   <body>
     <h1>Hello <%= @user.name %>,</h1>
-    <p>
-      <%= @message %><br>
-    </p>
+    <h2>
+      <%= simple_format @message %>
+    </h2>
   </body>
 </html>
