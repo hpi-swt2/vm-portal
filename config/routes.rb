@@ -20,19 +20,19 @@ Rails.application.routes.draw do
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
-  get '/vms/configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }
-  patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }
+  get '/vms/configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
+  patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
 
-  post '/vms/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
-  post '/vms/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
-  post '/vms/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
-  post '/vms/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
-  post '/vms/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
-  post '/vms/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
-  post '/vms/:id/archive_vm' => 'vms#archive_vm', constraints: { id: /.*/ }
-  post '/vms/:id/request_vm_revive' => 'vms#request_vm_revive', constraints: { id: /.*/ }
-  post '/vms/:id/revive_vm' => 'vms#revive_vm', constraints: { id: /.*/ }
-  post '/vms/:id/stop_archiving' => 'vms#stop_archiving', constraints: { id: /.*/ }
+  post '/vms/vm/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
+  post '/vms/vm/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
+  post '/vms/vm/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
+  post '/vms/vm/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
+  post '/vms/vm/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
+  post '/vms/vm/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
+  post '/vms/vm/:id/archive_vm' => 'vms#archive_vm', constraints: { id: /.*/ }
+  post '/vms/vm/:id/request_vm_revive' => 'vms#request_vm_revive', constraints: { id: /.*/ }
+  post '/vms/vm/:id/revive_vm' => 'vms#revive_vm', constraints: { id: /.*/ }
+  post '/vms/vm/:id/stop_archiving' => 'vms#stop_archiving', constraints: { id: /.*/ }
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
