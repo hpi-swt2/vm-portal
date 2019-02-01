@@ -84,11 +84,11 @@ RSpec.describe 'requests/new', type: :view do
       expect(request).not_to be_persisted
     end
 
-    it 'renders ram_mb as gb' do
+    it 'renders ram_gb' do
       assert_select 'input[id=ram][value=?]', request.ram_gb.to_s
     end
 
-    it 'renders storage_mb as gb' do
+    it 'renders storage_gb' do
       assert_select 'input[id=storage][value=?]', request.storage_gb.to_s
     end
   end
