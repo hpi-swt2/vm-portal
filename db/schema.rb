@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_29_184200) do
+ActiveRecord::Schema.define(version: 2019_02_01_091109) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -129,12 +129,12 @@ ActiveRecord::Schema.define(version: 2019_01_29_184200) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "provider"
-    t.string "uid"
-    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+    t.string "provider"
+    t.string "uid"
     t.integer "user_id"
+    t.string "ssh_key"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -148,6 +148,13 @@ ActiveRecord::Schema.define(version: 2019_01_29_184200) do
     t.datetime "updated_at", null: false
     t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
     t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
+  end
+
+  create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
+    t.integer "virtual_machine_config_id", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "virtual_machine_config_id"], name: "index_responsible_users_virtual_machine_configs"
+    t.index ["virtual_machine_config_id", "user_id"], name: "index_virtual_machine_configs_responsible_users"
   end
 
   create_table "virtual_machine_configs", force: :cascade do |t|
