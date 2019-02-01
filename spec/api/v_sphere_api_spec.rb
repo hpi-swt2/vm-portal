@@ -143,15 +143,15 @@ describe VSphere do
       expect(vm.users).to match_array(request.users)
     end
 
-    it 'does not have responsible users if there is no fitting request' do
+    it 'does not have responsible users if there is no fitting config' do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2').responsible_users).to be_empty
     end
 
-    it 'has responsible users if a fitting request exists' do
-      request = FactoryBot.create :accepted_request
-      request.responsible_users << FactoryBot.create(:user)
-      vm = v_sphere_vm_mock request.name
-      expect(vm.responsible_users).to match_array(request.responsible_users)
+    it 'has responsible users if a fitting config exists' do
+      config = FactoryBot.create :virtual_machine_config
+      config.responsible_users << FactoryBot.create(:user)
+      vm = v_sphere_vm_mock config.name
+      expect(vm.responsible_users).to match_array(config.responsible_users)
     end
 
     it 'does not have an IP if the fitting config does not exist' do
