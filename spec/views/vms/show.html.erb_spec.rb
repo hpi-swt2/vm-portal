@@ -127,14 +127,11 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       render
     end
 
-<<<<<<< HEAD
     it 'has a link to delete VM' do
       skip('user management needs to be reworked')
       expect(rendered).to have_link 'Delete VM'
     end
 
-=======
->>>>>>> dev
     context 'when powered on' do
       it 'has power off links' do
         skip('user management needs to be reworked')
