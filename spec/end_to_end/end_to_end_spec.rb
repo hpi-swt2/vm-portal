@@ -52,7 +52,9 @@ RSpec.describe "End to End testing", type: :feature do
             fill_in('Description', :with => 'test')
             click_on 'Create Request'
             click_on @requestname
-            expect(page).to have_link('acceptButton')
+            expect(page).to have_button('acceptButton')
+            expect(page).to have_button('rejectButton')
+            
             
             # click_on 'acceptButton'
             # expect(page).to have_text('Request was successfully updated and the vm was successfully created.')
