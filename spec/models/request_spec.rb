@@ -258,6 +258,12 @@ RSpec.describe Request, type: :model do
         allow(@git_stub.status).to receive(:added).and_return(['added_file'])
       end
 
+      it 'pushes to git when a request is accepted' do
+        expect(@git_stub.git).to receive(:commit_all)
+        expect(@git_stub.git).to receive(:push)
+        request.accept!
+      end
+
       it 'correctly calls git' do
         request.push_to_git
         expect(@git_stub.git).to have_received(:commit_all).with('Add myvm')
