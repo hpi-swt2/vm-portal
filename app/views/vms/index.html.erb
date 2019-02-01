@@ -45,7 +45,7 @@
           </div>
           <%= vm.boot_time.to_s.strip if vm.powered_on? %>
         </div>
-        <% if vm.sudo_users.include?(current_user) %>
+        <% if vm.sudo_users.include?(current_user) || current_user.admin? %>
           <% if vm.vm_ware_tools? %>
             <%= link_to '',
               {controller: :vms, action: 'change_power_state', id: vm.name},
@@ -59,8 +59,6 @@
                 data: { confirm: 'Are you sure?' },
                 class: "btn-manage float-right replay" %>
             <% end %>
-          <% else %>
-            <p class="text-muted">VMWare tools are not installed</p>
           <% end %>
         <% end %>
       </td>
@@ -125,7 +123,7 @@
   <tr>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
   </tr>
   </thead>
   <tbody>

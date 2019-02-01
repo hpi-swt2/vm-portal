@@ -3,6 +3,7 @@
 require 'vmapi.rb'
 class HostsController < ApplicationController
   attr_reader :hosts
+  before_action :authenticate_admin
 
   def index
     @hosts = VSphere::Host.all

@@ -27,13 +27,15 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
+  let(:sudo_user) { FactoryBot.create :user }
+  let(:sudo_user2) { FactoryBot.create :admin }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: 'MyVM',
+      name: 'myvm',
       cpu_cores: 2,
       ram_mb: 1,
       storage_mb: 2,
@@ -42,7 +44,7 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s]
     }
   end
 
@@ -57,7 +59,7 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      sudo_user_ids: ['', sudo_user.id.to_s] # the first parameter is for some reason always empty
     }
   end
 
@@ -116,9 +118,22 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     context 'with invalid params' do
-      it 'returns a success response (i.e. to display the "new" template)' do
+      before do
         post :create, params: { request: invalid_attributes }
+      end
+
+      it 'returns a success response (i.e. to display the "new" template)' do
         expect(response).to be_successful
+      end
+
+      # regression test for #320
+      it 'assigns the sudo users to the request' do
+        expect(assigns(:request).sudo_users).to match_array([sudo_user])
+      end
+
+      # regression test for #320
+      it 'does not persist the sudo users' do
+        expect(assigns(:request).users_assigned_to_requests).to all(be_changed)
       end
     end
   end
@@ -158,26 +173,30 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       let(:new_attributes) do
         {
-          name: 'MyNewVM',
+          name: 'mynewvm',
           cpu_cores: 3,
           ram_mb: 2,
           storage_mb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',
-          user: user
+          user: user,
+          sudo_user_ids: ['', sudo_user.id.to_s]
         }
       end
 
       # this variable may not be called request, because it would then override an internal RSpec variable
       let(:the_request) do
-        Request.create! valid_attributes
+        request = Request.create! valid_attributes
+        request.assign_sudo_users valid_attributes[:sudo_user_ids][1..-1]
+        request.save!
+        request
       end
 
-      it 'updates the requested request' do
+      it 'updates the request' do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
-        expect(the_request.name).to eq('MyNewVM')
+        expect(the_request.name).to eq('mynewvm')
       end
 
       it 'redirects to the requests index page, as there is no cluster available' do
@@ -189,6 +208,12 @@ RSpec.describe RequestsController, type: :controller do
         patch :update, params: { id: the_request.to_param, request: valid_attributes }
         the_request.reload
         expect(the_request).to be_accepted
+      end
+
+      it 'correctly updates the sudo users' do
+        patch :update, params: { id: the_request.to_param, request: new_attributes }
+        the_request.reload
+        expect(the_request.sudo_users).to match_array([sudo_user])
       end
     end
 

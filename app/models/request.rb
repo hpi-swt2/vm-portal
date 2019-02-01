@@ -5,6 +5,10 @@ class Request < ApplicationRecord
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
 
+  before_save do
+    users_assigned_to_requests.each(&:save)
+  end
+
   attr_accessor :sudo_user_ids
 
   MAX_NAME_LENGTH = 20
@@ -39,12 +43,13 @@ class Request < ApplicationRecord
   end
 
   def assign_sudo_users(sudo_user_ids)
+    assign_attributes(users_assigned_to_requests: users_assigned_to_requests - sudo_user_assignments)
     sudo_user_ids&.each do |id|
       assignment = users_assigned_to_requests.find { |an_assignment| an_assignment.user_id == id.to_i }
-      if !assignment.nil?
-        assignment.update_attribute(:sudo, true)
+      if assignment.nil?
+        users_assigned_to_requests.new(sudo: true, user_id: id)
       else
-        users_assigned_to_requests.create(sudo: true, user_id: id)
+        assignment.assign_attributes(sudo: true)
       end
     end
   end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'requests/edit', type: :view do
   before do
     @request = assign(:request, Request.create!(
-                                  name: 'MyVM',
+                                  name: 'myvm',
                                   cpu_cores: 2,
                                   ram_mb: 1000,
                                   storage_mb: 1000,
