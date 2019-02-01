@@ -69,16 +69,17 @@ class Request < ApplicationRecord
   end
 
   def create_vm
-    folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    if clusters.first
-      vm = folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, clusters.first)
-      vm.ensure_config.responsible_users = responsible_users
-      vm.move_into_correct_subfolder
-      vm
-    else
-      nil
-    end
+    return nil unless clusters.first
+
+    create_vm_in_cluster(clusters.first)
+  end
+
+  def create_vm_in_cluster(cluster)
+    vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
+    vm.ensure_config.responsible_users = responsible_users
+    vm.move_into_correct_subfolder
+    vm
   end
 
   def push_to_git
