@@ -181,10 +181,5 @@ class VmsController < ApplicationController
   def not_enough_resources(exception)
     redirect_back(fallback_location: root_path)
     flash[:alert] = exception.message
-    # @vm.errors[:base] << exception.message
-    # respond_to do |type|
-    #   format.html { redirect_back }
-    #   format.json { render json: @vm.errors, status: :unprocessable_entity }
-    # end
   end
 end

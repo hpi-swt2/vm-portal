@@ -45,16 +45,16 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
 
     respond_to do |format|
-      #if enough_resources
+      if enough_resources
         if @request.save
           @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
           successful_save(format)
         else
           unsuccessful_action(format, :new)
         end
-     # else
-     #   unsuccessful_action(format, :new)
-      #end
+      else
+        unsuccessful_action(format, :new)
+      end
     end
   end
 
@@ -65,13 +65,12 @@ class RequestsController < ApplicationController
     end
 
     def get_ram_gb (host)
-      host[:summary].hardware.memorySize.to_i / 1024**3
+      host[:summary].hardware.memorySize.to_i / 1024**2
     end
 
     def get_storage_gb (host)
-      host[:summary].host.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_i / 1024**3
+      host[:summary].host.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_i / 1024**2
     end
-
 
     hosts = VmApi.instance.all_hosts
 
@@ -85,12 +84,6 @@ class RequestsController < ApplicationController
       host_num_cpu = get_num_cpu(host)
       host_ram = get_ram_gb(host)
       host_free_hdd = get_storage_gb(host)
-      puts host_num_cpu
-      puts host_ram
-      puts host_free_hdd
-      puts request_params[:cpu_cores].to_i
-      puts request_params[:ram_mb].to_i
-      puts request_params[:storage_mb].to_i
       
       if request_params[:cpu_cores].to_i <= host_num_cpu and request_params[:ram_mb].to_i <= host_ram and request_params[:storage_mb].to_i <= host_free_hdd
         return true
@@ -110,9 +103,9 @@ class RequestsController < ApplicationController
       end
     end
 
-    max_cpu_host_msg = "cores: #{get_num_cpu(max_cpu_host)}, ram: #{get_ram_gb(max_cpu_host)}GB, hdd: #{get_storage_gb(max_cpu_host)}GB"
-    max_ram_host_msg = "cores: #{get_num_cpu(max_ram_host)}, ram: #{get_ram_gb(max_ram_host)}GB, hdd: #{get_storage_gb(max_ram_host)}GB"
-    max_storage_host_msg = "cores: #{get_num_cpu(max_storage_host)}, ram: #{get_ram_gb(max_storage_host)}GB, hdd: #{get_storage_gb(max_storage_host)}GB"
+    max_cpu_host_msg = "cores: #{get_num_cpu(max_cpu_host)}, ram: #{get_ram_gb(max_cpu_host)/1024}GB, hdd: #{get_storage_gb(max_cpu_host)/1024}GB"
+    max_ram_host_msg = "cores: #{get_num_cpu(max_ram_host)}, ram: #{get_ram_gb(max_ram_host)/1024}GB, hdd: #{get_storage_gb(max_ram_host)/1024}GB"
+    max_storage_host_msg = "cores: #{get_num_cpu(max_storage_host)}, ram: #{get_ram_gb(max_storage_host)/1024}GB, hdd: #{get_storage_gb(max_storage_host)/1024}GB"
 
     error_message = "Requested VM resources are too high! Most Powerful Hosts are: Max Core Host(#{max_cpu_host_msg}) Max RAM Host(#{max_ram_host_msg}) Max HDD Host(#{max_storage_host_msg}) "
     @request.errors[:base] << error_message
