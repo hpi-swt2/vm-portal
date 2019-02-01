@@ -58,9 +58,9 @@ class VmsController < ApplicationController
     sudo_lists = false
     notify_changed_users(@vm.users.map(&:id), params[:non_sudo_user_ids], sudo_lists, @vm.name)
 
-    @vm.set_sudo_users params[:sudo_user_ids]
-    @vm.set_non_sudo_users params[:non_sudo_user_ids]
-    @vm.config.description = params[:description]
+    @vm.set_sudo_users params[:vm_info][:sudo_user_ids]
+    @vm.set_non_sudo_users params[:vm_info][:non_sudo_user_ids]
+    @vm.config.description = params[:vm_info][:description]
     unless @vm.config.save
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
