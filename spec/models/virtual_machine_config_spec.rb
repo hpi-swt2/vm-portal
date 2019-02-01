@@ -12,4 +12,9 @@ RSpec.describe VirtualMachineConfig, type: :model do
     config.save!
     expect(config.responsible_users).to match_array(responsible_users)
   end
+
+  it 'can save without responsible users' do
+    config.responsible_users = []
+    expect(config).to be_valid
+  end
 end
