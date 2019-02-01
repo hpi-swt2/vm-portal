@@ -51,10 +51,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is a root user for the vms' do
     before do
-      request = FactoryBot.create :accepted_request, name: mock_vms[0].name
-      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
-      request = FactoryBot.create :accepted_request, name: mock_vms[1].name
-      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
+      associate_users_with_vms(admins: [current_user], vms: mock_vms)
       render
     end
 

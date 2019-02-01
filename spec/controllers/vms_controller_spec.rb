@@ -111,6 +111,7 @@ RSpec.describe VmsController, type: :controller do
         context 'when user is associated to vm' do
           before do
             FactoryBot.create :accepted_request, name: vm1.name, users: [current_user]
+            associate_users_with_vms(users: [current_user], vms: [vm1])
           end
 
           it 'renders show page' do
@@ -171,9 +172,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        #vm_request = FactoryBot.create :accepted_request, name: vm1.name
-        #FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
-
+        associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:change_power_state)
         post :change_power_state, params: { id: vm1.name }
       end
@@ -235,8 +234,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        vm_request = FactoryBot.create :accepted_request, name: vm1.name
-        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:suspend_vm)
         post :suspend_vm, params: { id: vm1.name }
       end
@@ -298,8 +296,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        vm_request = FactoryBot.create :accepted_request, name: vm1.name
-        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:shutdown_guest_os)
         post :shutdown_guest_os, params: { id: vm1.name }
       end
@@ -361,8 +358,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        vm_request = FactoryBot.create :accepted_request, name: vm1.name
-        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:reboot_guest_os)
         post :reboot_guest_os, params: { id: vm1.name }
       end
@@ -424,8 +420,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is a root_user' do
       before do
-        vm_request = FactoryBot.create :accepted_request, name: vm1.name
-        FactoryBot.create :users_assigned_to_request, request: vm_request, user: current_user, sudo: true
+        associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:reset_vm)
         post :reset_vm, params: { id: vm1.name }
       end

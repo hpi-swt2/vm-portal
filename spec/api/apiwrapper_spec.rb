@@ -348,22 +348,15 @@ RSpec.describe VmApi do
 
     let(:user) { FactoryBot.create(:user) }
 
-    it 'returns empty list if no matching request exists' do
+    it 'returns empty list if no matching puppet script exists' do
       expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
 
-    it 'returns the users associated to the request' do
-      skip('user management reworked')
-      FactoryBot.create :accepted_request, name: vm_name, users: [user]
+    it 'returns the users associated to the puppet script' do
+      skip('to be deleted, git is not being tested')
+      associate_users_with_vms(admins: [current_user], vms: [vm1])
 
       expect(described_class.instance.vm_users(vm_mock)).to include(user)
-    end
-
-    it 'returns an empty list no the matching request is not accepted' do
-      skip('user management reworked')
-      FactoryBot.create :rejected_request, name: vm_name, users: [user]
-
-      expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
   end
 end
