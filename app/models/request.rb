@@ -85,8 +85,6 @@ class Request < ApplicationRecord
         git_writer.save(message)
       end
       { notice: notice }
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 
