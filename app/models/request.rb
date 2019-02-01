@@ -69,7 +69,7 @@ class Request < ApplicationRecord
   def create_vm
     folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    folder.create_vm(cpu_cores, ram_gb * 1_000, storage_gb * 1_000_000, name, clusters.first) if clusters.first
+    folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, clusters.first) if clusters.first
   end
 
   def push_to_git
@@ -113,5 +113,13 @@ class Request < ApplicationRecord
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
+  end
+
+  def gibi_to_mibi(gibi)
+    gibi * 1024
+  end
+
+  def gibi_to_kibi(gibi)
+    gibi * 1024**2
   end
 end
