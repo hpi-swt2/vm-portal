@@ -88,6 +88,7 @@ def vim_vm_mock(
   allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive(:macs).and_return macs
   allow(vm).to receive(:summary).and_return vim_vm_summary_mock
+  allow(vm).to receive(:boot_time). and_return 0
 
   vm
 end

@@ -351,12 +351,5 @@ RSpec.describe VmApi do
     it 'returns empty list if no matching puppet script exists' do
       expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
-
-    it 'returns the users associated to the puppet script' do
-      skip('to be deleted, git is not being tested')
-      associate_users_with_vms(admins: [current_user], vms: [vm1])
-
-      expect(described_class.instance.vm_users(vm_mock)).to include(user)
-    end
   end
 end
