@@ -9,12 +9,12 @@ RSpec.describe HostsController, type: :controller do
   end
 
   let(:host) do
-    v_sphere_host_mock("someHost")
+    v_sphere_host_mock('someHost')
   end
 
   let(:cluster) do
     # associate vm2 with the user
-    v_sphere_cluster_mock("someCluster", [:host])
+    v_sphere_cluster_mock('someCluster', [:host])
   end
 
   describe 'GET #index' do
@@ -55,7 +55,7 @@ RSpec.describe HostsController, type: :controller do
 
       context 'when there is an host' do
         before do
-          get :show, params: { id:  host.name }
+          get :show, params: { id: host.name }
         end
 
         it 'returns http success or timeout or not found' do

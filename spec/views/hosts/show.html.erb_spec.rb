@@ -3,7 +3,7 @@
 require 'rails_helper'
 RSpec.describe 'hosts/show.html.erb', type: :view do
   let(:host) do
-    v_sphere_host_mock("lol")
+    v_sphere_host_mock('lol')
   end
 
   before do
