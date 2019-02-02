@@ -134,6 +134,7 @@ module VSphere
     def set_pending_archivation
       move_into pending_archivation_folder
       ArchivationRequest.new(name: name).save
+      move_into_correct_subfolder
     end
 
     def archivable?
@@ -154,6 +155,7 @@ module VSphere
 
       move_into archived_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Reviving
@@ -163,11 +165,13 @@ module VSphere
 
     def set_pending_reviving
       move_into pending_revivings_folder
+      move_into_correct_subfolder
     end
 
     def set_revived
       move_into root_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Config methods
@@ -177,12 +181,7 @@ module VSphere
     end
 
     def ensure_config
-      unless config
-        @config = VirtualMachineConfig.new
-        @config.name = name
-        @config.save
-      end
-      @config
+      @config ||= VirtualMachineConfig.create(name: name)
     end
 
     def ip
@@ -193,11 +192,39 @@ module VSphere
       config&.dns || ''
     end
 
-    # Utilities
+    # Folder Utilities
     def move_into(folder)
       folder.move_here self
     end
 
+    def move_into_correct_subfolder
+      target = target_subfolder
+      move_into target unless target.vms(recursive: false).include? self
+    end
+
+    # Users
+    def responsible_users
+      config&.responsible_users || []
+    end
+
+    # this method should return all users, including the sudo users
+    def users
+      request&.users || []
+    end
+
+    def sudo_users
+      if request
+        request.sudo_users
+      else
+        []
+      end
+    end
+
+    def belongs_to(user)
+      users.include? user
+    end
+
+    # Information about the vm
     def boot_time
       @vm.runtime.bootTime
     end
@@ -223,39 +250,15 @@ module VSphere
     end
 
     def status
-      if archived?
-        return :archived
-      elsif pending_archivation?
-        return :pending_archivation
-      elsif pending_reviving?
-        return :pending_reviving
-      end
+      return :archived if archived?
+      return :pending_archivation if pending_archivation?
+      return :pending_reviving if pending_reviving?
 
       if powered_on?
         :online
       else
         :offline
       end
-    end
-
-    def users
-      if request
-        request.users
-      else
-        []
-      end
-    end
-
-    def sudo_users
-      if request
-        request.sudo_users
-      else
-        []
-      end
-    end
-
-    def belongs_to(user)
-      users.include? user
     end
 
     # We cannot use Object identity to check if to Virtual Machine objects are equal
@@ -274,10 +277,22 @@ module VSphere
       @vm.macs
     end
 
-    private
-
     def request
       Request.accepted.find { |each| name == each.name }
+    end
+
+    private
+
+    def target_subfolder
+      path = [] << case status
+                   when :archived then archived_folder.name
+                   when :pending_reviving then pending_revivings_folder.name
+                   when :pending_archivation then pending_archivation_folder.name
+                   else
+                     'Active VMs'
+                   end
+      path << responsible_users.first.human_readable_identifier if responsible_users.first
+      VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
     end
 
     def archivation_request

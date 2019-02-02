@@ -42,9 +42,15 @@ require 'support/factory_bot'
 require './app/api/v_sphere/connection'
 require './spec/api/v_sphere_api_mocker'
 
+ENV['GIT_REPOSITORY_URL'] ||= 'test_repository_url'
+ENV['GIT_REPOSITORY_NAME'] ||= 'test_repository_name'
+ENV['GITHUB_USER_NAME'] ||= 'test_user_name'
+ENV['GITHUB_USER_EMAIL'] ||= 'test_user_email'
+
 RSpec.configure do |config|
   config.before do
-    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
+    cluster_mock = vim_cluster_mock('MockCluster', [])
+    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock(clusters: [cluster_mock]))
     @git_stub = create_git_stub
   end
 

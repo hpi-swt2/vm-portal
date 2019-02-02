@@ -9,9 +9,9 @@ describe 'Dashboard', type: :feature do
   end
 
   it 'does render a list of all available vms for a signed in user' do
+    skip('user is not yet connected to his vms')
     visit(:dashboard)
     expect(page).to(have_text('VMs'))
-    skip('user is not yet connected to his vms')
   end
 
   it 'does render an empty list if a user does not have access to a vm' do
@@ -30,7 +30,6 @@ describe 'Dashboard', type: :feature do
   it 'does render a list of servers for a signed user' do
     visit(:dashboard)
     expect(page).to(have_text('Hosts'))
-    skip('user is not yet connected to his hosts')
   end
 
   context 'with notifications' do

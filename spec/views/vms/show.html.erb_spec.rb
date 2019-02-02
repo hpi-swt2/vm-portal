@@ -19,11 +19,12 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   before do
     sign_in current_user
     assign(:vm, vm_on)
-    connection = v_sphere_connection_mock [vm_on, vm_on_without_tools, vm_off], [], [], [], []
+    connection = v_sphere_connection_mock normal_vms: [vm_on, vm_on_without_tools, vm_off]
     allow(VSphere::Connection).to receive(:instance).and_return connection
     render
   end
@@ -56,7 +57,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows CPU usage' do
-    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.config.cpuReservation).round.to_s)
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.quickStats.overallCpuDemand).round.to_s)
   end
 
   it 'shows HDD usage' do
@@ -93,15 +94,36 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     end
   end
 
+  context 'when the current user is an admin' do
+    let(:current_user) { admin }
+
+    context 'when powered on' do
+      it 'has power off links' do
+        expect(rendered).to have_link 'Suspend VM'
+        expect(rendered).to have_link 'Shutdown Guest OS'
+        expect(rendered).to have_link 'Restart Guest OS'
+        expect(rendered).to have_link 'Reset'
+        expect(rendered).to have_link 'Power Off'
+      end
+    end
+
+    context 'when powered off' do
+      before do
+        assign(:vm, vm_off)
+        render
+      end
+
+      it 'has power on link' do
+        expect(rendered).to have_link('Power On')
+      end
+    end
+  end
+
   context 'when the current user is a root user' do
     before do
       request = FactoryBot.create :accepted_request, name: vm_on.name
       FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
       render
-    end
-
-    it 'has a link to delete VM' do
-      expect(rendered).to have_link 'Delete VM'
     end
 
     context 'when powered on' do
@@ -125,7 +147,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on.name)}'][data-confirm='Are you sure?']"
         )
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on.name)}'][data-confirm='Are you sure?']")
       end
 
       it 'has no power on link' do
@@ -178,9 +199,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_selector(
           "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
         )
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'destroy', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-        )
       end
     end
 
@@ -192,10 +210,6 @@ RSpec.describe 'vms/show.html.erb', type: :view do
         expect(rendered).to have_link 'Reset'
         expect(rendered).to have_link 'Power Off'
       end
-    end
-
-    it 'has a link to delete VM' do
-      expect(rendered).to have_link 'Delete'
     end
   end
 end

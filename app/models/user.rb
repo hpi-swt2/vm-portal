@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
   has_many :servers
+  has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
   validate :valid_ssh_key
@@ -41,6 +42,8 @@ class User < ApplicationRecord
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
 
+    NotificationMailer.with(user: self, title: title.to_s, message: message.to_s).notify_email.deliver_now if email_notifications
+
     notification = Notification.new title: title, message: message
     notification.user_id = id
     notification.read = false
@@ -55,6 +58,10 @@ class User < ApplicationRecord
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def human_readable_identifier
+    email.split(/@/).first
   end
 
   def valid_ssh_key

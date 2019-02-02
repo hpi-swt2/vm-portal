@@ -43,6 +43,22 @@ def vim_folder_mock(name, subfolders, vms, clusters) # rubocop:disable Metrics/A
   allow(folder).to receive(:children).and_return(children)
   allow(folder).to receive(:is_a?).and_return false
   allow(folder).to receive(:is_a?).with(RbVmomi::VIM::Folder).and_return true
+  allow(folder).to receive_message_chain(:MoveIntoFolder_Task, :wait_for_completion)
+  allow(folder).to receive(:CreateVM_Task) do |*args|
+    task = double
+    allow(task).to receive(:wait_for_completion) do
+      vm = vim_vm_mock(args.first[:config][:name])
+      children << vm
+      vm
+    end
+    task
+  end
+
+  allow(folder).to receive(:CreateFolder) do |subfolder_name|
+    folder = vim_folder_mock(subfolder_name, [], [], [])
+    children << folder
+    folder
+  end
   folder
 end
 
@@ -59,7 +75,7 @@ def vim_vm_summary_mock
   allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
   allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
   allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
-  allow(summary_double).to receive_message_chain(:config, :cpuReservation).and_return(100)
+  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuDemand).and_return(100)
   allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
   allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
   allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
@@ -118,6 +134,7 @@ def vim_cluster_mock(name, hosts)
   allow(cluster).to receive(:is_a?).with(RbVmomi::VIM::ComputeResource).and_return true
   allow(cluster).to receive(:host).and_return hosts
   allow(cluster).to receive(:name).and_return name
+  allow(cluster).to receive(:resourcePool).and_return nil
   cluster
 end
 # rubocop:enable Metrics/AbcSize
@@ -127,17 +144,18 @@ def v_sphere_cluster_mock(name, hosts)
 end
 
 def v_sphere_connection_mock(
-    normal_vms,
-    archived_vms,
-    pending_archivation_vms,
-    pending_revivings_vms,
-    clusters
+    normal_vms: [],
+    archived_vms: [],
+    pending_archivation_vms: [],
+    pending_revivings_vms: [],
+    clusters: []
   )
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
   pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms
+  active_vms_folder = v_sphere_folder_mock 'Active VMs', vms: normal_vms
   root_folder = v_sphere_folder_mock 'root', subfolders: [archived_vms_folder, pending_archivation_vms_folder,
-                                                          pending_reviving_vms_folder], vms: normal_vms
+                                                          pending_reviving_vms_folder, active_vms_folder]
   clusters_folder = v_sphere_folder_mock 'clusters', clusters: clusters
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder

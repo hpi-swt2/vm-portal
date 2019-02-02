@@ -15,17 +15,18 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   end
 
   let(:mock_vms_without_tools) do
-    [v_sphere_vm_mock('My insanely cool vm'),
-     v_sphere_vm_mock('Another VM',
+    [v_sphere_vm_mock('Yet another VM'),
+     v_sphere_vm_mock('And the best VM there is',
                       power_state: 'poweredOff',
                       boot_time: 'Friday')]
   end
 
   let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   before do
+    sign_in current_user
     assign(:vms, mock_vms)
-    allow(view).to receive(:current_user).and_return(current_user)
     assign(:archived_vms, [])
     assign(:pending_archivation_vms, [])
     render
@@ -68,11 +69,12 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     context 'when vmwaretools are not installed' do
       before do
         assign(:vms, mock_vms_without_tools)
-        render
       end
 
-      it 'shows no power buttons when vmwaretools are not installed' do
-        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
+      it 'shows no power buttons' do
+        rendered = render
+        expect(rendered).not_to have_css('a.btn-manage.play')
+        expect(rendered).not_to have_css('a.btn-manage.stop')
       end
     end
   end
@@ -81,7 +83,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     it 'does not show any manage buttons' do
       expect(rendered).not_to have_css('a.btn-manage.play')
       expect(rendered).not_to have_css('a.btn-manage.stop')
-      expect(rendered).not_to have_text('VMWare tools are not installed')
     end
   end
 
@@ -111,6 +112,27 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
+
+    it 'shows correct power on / off button' do
+      expect(rendered).to have_css('a.btn-manage.play')
+    end
+
+    it 'demands confirmation on shutdown' do
+      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
+    end
+
+    context 'when vmwaretools are not installed' do
+      before do
+        assign(:vms, mock_vms_without_tools)
+        render
+      end
+
+      it 'shows no power buttons' do
+        rendered = render
+        expect(rendered).not_to have_css('a.btn-manage.play')
+        expect(rendered).not_to have_css('a.btn-manage.stop')
+      end
+    end
 
     it 'links to new vm page' do
       expect(rendered).to have_button('New Request')
