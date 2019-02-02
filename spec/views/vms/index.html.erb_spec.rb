@@ -5,18 +5,18 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/index.html.erb', type: :view do
   let(:mock_vms) do
-    [v_sphere_vm_mock('My insanely cool vm',
+    [v_sphere_vm_mock('my-insanely-cool-vm',
                       power_state: 'poweredOn',
                       vm_ware_tools: 'toolsInstalled'),
-     v_sphere_vm_mock('Another VM',
+     v_sphere_vm_mock('another-vm',
                       power_state: 'poweredOff',
                       boot_time: 'Friday',
                       vm_ware_tools: 'toolsInstalled')]
   end
 
   let(:mock_vms_without_tools) do
-    [v_sphere_vm_mock('Yet another VM'),
-     v_sphere_vm_mock('And the best VM there is',
+    [v_sphere_vm_mock('yet-another-vm'),
+     v_sphere_vm_mock('and-the-best-vm-there-is',
                       power_state: 'poweredOff',
                       boot_time: 'Friday')]
   end
