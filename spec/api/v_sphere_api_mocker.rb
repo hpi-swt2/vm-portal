@@ -67,7 +67,7 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def vim_vm_summary_mock
+def vim_vm_summary_mock(power_state: 'poweredOn')
   summary_double = double
   allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
   allow(summary_double).to receive_message_chain(:storage, :uncommitted).and_return(100)
@@ -79,7 +79,7 @@ def vim_vm_summary_mock
   allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
   allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
   allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
-  allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return('poweredOn')
+  allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return(power_state)
   allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
   summary_double
 end
@@ -103,7 +103,7 @@ def vim_vm_mock(
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
   allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
   allow(vm).to receive(:macs).and_return macs
-  allow(vm).to receive(:summary).and_return vim_vm_summary_mock
+  allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: power_state)
 
   vm
 end
@@ -118,7 +118,46 @@ end
 
 def vim_host_mock(name)
   host = double
+  summary = double
+  datastore = double
   allow(host).to receive(:name).and_return name
+  allow(host).to receive(:summary).and_return summary
+  allow(host).to receive_message_chain(:runtime, :bootTime)
+  allow(host).to receive(:connection_state).and_return('connected')
+  allow(host).to receive(:vendor).and_return("someVendor")
+  allow(host).to receive(:model).and_return('someModel')
+  allow(host).to receive(:boot_time).and_return('someRuntime')
+  allow(host).to receive_message_chain(:runtime, :powerState)
+  allow(host).to receive_message_chain(:runtime, :connectionState)
+  allow(host).to receive_message_chain(:config, :product, :osType)
+  allow(host).to receive_message_chain(:config, :product, :fullName)
+  allow(host).to receive_message_chain(:hardware, :cpuModel)
+  allow(host).to receive_message_chain(:hardware, :numCpuCores).and_return(0)
+  allow(host).to receive_message_chain(:hardware, :numCpuThreads).and_return(0)
+  allow(host).to receive_message_chain(:hardware, :cpuMhz).and_return(0)
+  allow(host).to receive_message_chain(:hardware, :memorySize).and_return(0)
+  allow(host).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
+  allow(host).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
+  allow(host).to receive_message_chain(:host, :datastore).and_return([datastore])
+  allow(host).to receive_message_chain(:hardware, :systemInfo, :vendor).and_return("someVendor")
+  allow(host).to receive_message_chain(:hardware, :systemInfo, :model).and_return(name)
+  allow(host).to receive(:vm).and_return([v_sphere_vm_mock('My insanely cool vm',
+                                                           power_state: 'poweredOn',
+                                                           vm_ware_tools: 'toolsInstalled')])
+  allow(summary).to receive_message_chain(:runtime, :powerState)
+  allow(summary).to receive_message_chain(:runtime, :connectionState)
+  allow(summary).to receive_message_chain(:config, :product, :osType).and_return("someOS")
+  allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(["someProduct"])
+  allow(summary).to receive_message_chain(:hardware, :cpuModel).and_return("someModel")
+  allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(0)
+  allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(0)
+  allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(0)
+  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(0)
+  allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
+  allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
+  allow(summary).to receive_message_chain(:host, :datastore).and_return([datastore])
+  allow(datastore).to receive_message_chain(:summary, :capacity).and_return(0)
+  allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(0)
   host
 end
 
