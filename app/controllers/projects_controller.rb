@@ -25,17 +25,14 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     if @project.save
       redirect_to action: :index
+      @project.responsible_users.each do |each|
+        each.notify('Project created',
+                    'The project with you as the responsible has been created: ' +
+                    url_for(controller: :projects, action: 'show', id: @project.id))
+      end
     else
       @selected_user_ids = project_params[:responsible_user_ids]
       render :new
-    end
-    # nil-check is necessary because 3 tests fails without check
-    return if @project.id.nil?
-
-    @project.responsible_users.each do |each|
-      each.notify('Project created',
-                  'The project with you as the responsable has been created: ' +
-                  url_for(controller: :projects, action: 'show', id: @project.id))
     end
   end
 
