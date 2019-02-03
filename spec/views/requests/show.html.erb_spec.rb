@@ -11,8 +11,8 @@ RSpec.describe 'requests/show', type: :view do
     @request = assign(:request, Request.create!(
                                   name: 'myvm',
                                   cpu_cores: 3,
-                                  ram_mb: 1000,
-                                  storage_mb: 2000,
+                                  ram_gb: 1,
+                                  storage_gb: 2,
                                   operating_system: 'MyOS',
                                   port: '4000',
                                   application_name: 'MyName',
@@ -20,7 +20,8 @@ RSpec.describe 'requests/show', type: :view do
                                   comment: 'Comment',
                                   status: 'pending',
                                   user_ids: [@user.id],
-                                  user: FactoryBot.create(:employee)
+                                  user: FactoryBot.create(:employee),
+                                  responsible_users: [FactoryBot.create(:user)]
                                 ))
     @request.assign_sudo_users([@second_user.id])
     allow(view).to receive(:current_user).and_return(current_user)

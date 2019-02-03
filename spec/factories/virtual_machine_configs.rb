@@ -5,5 +5,6 @@ FactoryBot.define do
     name { 'My VM' }
     ip { '127.0.0.1' }
     dns { 'my-vm.epic-hpi.de' }
+    responsible_users { [FactoryBot.create(:user)] }
   end
 end

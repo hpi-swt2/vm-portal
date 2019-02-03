@@ -9,8 +9,8 @@ RSpec.describe 'requests/new', type: :view do
     Request.new(
       name: 'myvm',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: 2000,
+      ram_gb: 1,
+      storage_gb: 2,
       operating_system: 'MyOS',
       port: '4000',
       application_name: 'MyName',
@@ -60,9 +60,9 @@ RSpec.describe 'requests/new', type: :view do
 
       assert_select 'input[name=?][min=?]', 'request[cpu_cores]', '0'
 
-      assert_select 'input[name=?][min=?]', 'request[ram_mb]', '0'
+      assert_select 'input[name=?][min=?]', 'request[ram_gb]', '0'
 
-      assert_select 'input[name=?][min=?]', 'request[storage_mb]', '0'
+      assert_select 'input[name=?][min=?]', 'request[storage_gb]', '0'
 
       assert_select 'select[name=?]', 'request[operating_system]'
 
@@ -84,12 +84,12 @@ RSpec.describe 'requests/new', type: :view do
       expect(request).not_to be_persisted
     end
 
-    it 'renders ram_mb as gb' do
-      assert_select 'input[id=ram][value=?]', (request.ram_mb / 1000).to_s
+    it 'renders ram_gb' do
+      assert_select 'input[id=ram][value=?]', request.ram_gb.to_s
     end
 
-    it 'renders storage_mb as gb' do
-      assert_select 'input[id=storage][value=?]', (request.storage_mb / 1000).to_s
+    it 'renders storage_gb' do
+      assert_select 'input[id=storage][value=?]', request.storage_gb.to_s
     end
   end
 end

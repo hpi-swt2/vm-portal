@@ -160,16 +160,14 @@ class RequestsController < ApplicationController
     return unless request_parameters
 
     request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
-    request_parameters[:ram_mb] &&= gb_to_mb(request_parameters[:ram_mb].to_i)
-    request_parameters[:storage_mb] &&= gb_to_mb(request_parameters[:storage_mb].to_i)
     request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
+    params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment,
-                                    :rejection_information, user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
   end
 
   def rejection_params

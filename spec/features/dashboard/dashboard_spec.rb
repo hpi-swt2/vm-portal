@@ -30,7 +30,6 @@ describe 'Dashboard', type: :feature do
   it 'does render a list of servers for a signed user' do
     visit(:dashboard)
     expect(page).to(have_text('Hosts'))
-    skip('user is not yet connected to his hosts')
   end
 
   context 'with notifications' do
