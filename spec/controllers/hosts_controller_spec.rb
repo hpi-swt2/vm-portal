@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require './spec/api/v_sphere_api_mocker'
 RSpec.describe HostsController, type: :controller do
   # Authenticate an user
   before do
     sign_in current_user
+  end
+
+  let(:host) do
+    v_sphere_host_mock('someHost')
+  end
+
+  let(:cluster) do
+    # associate vm2 with the user
+    v_sphere_cluster_mock('someCluster', [:host])
   end
 
   describe 'GET #index' do
@@ -35,12 +45,9 @@ RSpec.describe HostsController, type: :controller do
   end
 
   describe 'get #show' do
-    let(:double_api) do
-      double
-    end
-
     before do
-      allow(VmApi).to receive(:instance).and_return double_api
+      allow(VSphere::Host).to receive(:all).and_return [host]
+      allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock(clusters: [:cluster])
     end
 
     context 'when the current user is an admin' do
@@ -48,8 +55,7 @@ RSpec.describe HostsController, type: :controller do
 
       context 'when there is an host' do
         before do
-          allow(double_api).to receive(:get_host).and_return({})
-          get :show, params: { id: 1 }
+          get :show, params: { id: host.name }
         end
 
         it 'returns http success or timeout or not found' do
@@ -63,8 +69,7 @@ RSpec.describe HostsController, type: :controller do
 
       context 'when there is no host' do
         before do
-          allow(double_api).to receive(:get_host).and_return(nil)
-          get :show, params: { id: 1 }
+          get :show, params: { id: 'someHostNotThere' }
         end
 
         it 'returns http status not found when no host found' do
@@ -81,7 +86,7 @@ RSpec.describe HostsController, type: :controller do
       let(:current_user) { FactoryBot.create :user }
 
       before do
-        get(:show, params: { id: 1 })
+        get(:show, params: { id: host.name })
       end
 
       it 'returns http redirect' do
