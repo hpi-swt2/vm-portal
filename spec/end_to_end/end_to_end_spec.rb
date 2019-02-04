@@ -20,7 +20,7 @@ RSpec.describe 'End to End testing', type: :feature do
   describe 'Request Process'
   it 'is possible to request a new VM' do
     sign_in @employee
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     expect(page).to have_current_path('/vms/requests/new')
     fill_in('VM Name', with: @requestname)
