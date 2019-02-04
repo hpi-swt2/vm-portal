@@ -165,6 +165,10 @@ class RequestsController < ApplicationController
 
     request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
     request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
+
+    # the user_ids must contain the ids of ALL users, sudo or not
+    request_parameters[:user_ids] ||= []
+    request_parameters[:user_ids] += request_parameters[:sudo_user_ids] if request_parameters[:sudo_user_ids]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
