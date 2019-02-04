@@ -217,21 +217,6 @@ module VSphere
     end
 
     # this method should return all users, including the sudo users
-    def users
-      request&.users || []
-    end
-
-    def sudo_users
-      if request
-        request.sudo_users
-      else
-        []
-      end
-    end
-
-    def belongs_to(user)
-      users.include? user
-    end
 
     # Information about the vm
     def boot_time
@@ -269,7 +254,7 @@ module VSphere
         :offline
       end
     end
-
+    # this method should return all users, including the sudo users
     def users
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
         users = PuppetParserHelper.read_node_file(name)
@@ -288,19 +273,17 @@ module VSphere
     end
 
     def set_users(ids)
-      begin
-        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-          all_users = PuppetParserHelper.read_node_file(name)
-          sudo_users = all_users['admins']
-          new_users = User.find_all_by_id(ids)
-          puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
-          git_writer.write_file(name, puppetscript)
-          message = commit_message(git_writer)
-          git_writer.save(message)
-        end
-      rescue Git::GitExecuteError
-        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        all_users = PuppetParserHelper.read_node_file(name)
+        sudo_users = all_users['admins']
+        new_users = User.find_all_by_id(ids)
+        puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
+        git_writer.write_file(name, puppetscript)
+        message = commit_message(git_writer)
+        git_writer.save(message)
       end
+    rescue Git::GitExecuteError
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
 
     def sudo_users
@@ -311,19 +294,17 @@ module VSphere
     end
 
     def set_sudo_users(ids)
-      begin
-        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-          all_users = PuppetParserHelper.read_node_file(name)
-          users = all_users['users']
-          new_sudo_users = User.find_all_by_id(ids)
-          puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
-          git_writer.write_file(name, puppetscript)
-          message = commit_message(git_writer)
-          git_writer.save(message)
-        end
-      rescue Git::GitExecuteError
-          { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        all_users = PuppetParserHelper.read_node_file(name)
+        users = all_users['users']
+        new_sudo_users = User.find_all_by_id(ids)
+        puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
+        git_writer.write_file(name, puppetscript)
+        message = commit_message(git_writer)
+        git_writer.save(message)
       end
+    rescue Git::GitExecuteError
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
 
     def belongs_to(user)

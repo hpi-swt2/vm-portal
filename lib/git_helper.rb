@@ -35,6 +35,7 @@ module GitHelper
     def save(message)
       commit_and_push(message) if added? || updated?
     end
+
     private
 
     def setup_git(path)
