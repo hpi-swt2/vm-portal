@@ -41,7 +41,7 @@ RSpec.describe 'End to End testing', type: :feature do
 
   it 'is possible to accept a VM request' do
     sign_in @admin
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     fill_in('VM Name', with: @requestname)
     fill_in('cpu', with: 4)
@@ -74,7 +74,7 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to turn on a VM' do
     skip
     sign_in @admin
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     fill_in('VM Name', with: @requestname)
     fill_in('cpu', with: 4)
@@ -93,7 +93,7 @@ RSpec.describe 'End to End testing', type: :feature do
     fill_in('virtual_machine_config_dns', with: 'www.example.com')
     click_on 'Update Configuration'
     click_on @requestname
-    visit "/vms/#{@requestname}"
+    visit "/vms/vm/#{@requestname}"
     expect(page).to have_text('offline')
     select('Power On', from: 'navbarDropdown')
     expect(page).to have_text('online')
