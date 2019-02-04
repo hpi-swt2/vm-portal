@@ -129,11 +129,11 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "provider"
-    t.string "uid"
-    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+    t.string "ssh_key"
+    t.string "provider"
+    t.string "uid"
     t.integer "user_id"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true

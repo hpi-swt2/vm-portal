@@ -38,6 +38,16 @@ class User < ApplicationRecord
     end
   end
 
+  def self.search(term, role)
+    if term
+      users = where('first_name LIKE ? or last_name LIKE ?', "%#{term}%", "%#{term}%")
+      users = users.where(role: role) if role && role != ''
+      users
+    else
+      all
+    end
+  end
+
   # notifications
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
