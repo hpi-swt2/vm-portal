@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'End to End testing', type: :feature do
-
   let(:host) do
     v_sphere_host_mock('someHost')
   end
