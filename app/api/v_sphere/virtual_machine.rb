@@ -215,11 +215,7 @@ module VSphere
     end
 
     def sudo_users
-      if request
-        request.sudo_users
-      else
-        []
-      end
+      request&.sudo_users || []
     end
 
     def belongs_to(user)
@@ -284,7 +280,7 @@ module VSphere
     end
 
     def request
-      Request.accepted.find { |each| name == each.name }
+      @request ||= Request.accepted.find_by name: name
     end
 
     private
