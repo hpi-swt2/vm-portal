@@ -182,7 +182,8 @@ module VSphere
     end
 
     def ensure_config
-      @config ||= VirtualMachineConfig.create(name: name)
+      @config = VirtualMachineConfig.create!(name: name) unless config
+      config
     end
 
     def ip
