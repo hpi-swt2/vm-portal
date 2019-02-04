@@ -7,7 +7,7 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/show.html.erb', type: :view do
   let(:vm_on) do
-    v_sphere_vm_mock 'vm', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'vm', vm_ware_tools: 'toolsOk'
   end
 
   let(:vm_on_without_tools) do
@@ -57,7 +57,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows CPU usage' do
-    expect(rendered).to include((vm_on.summary.quickStats.overallCpuUsage / vm_on.summary.quickStats.overallCpuDemand).round.to_s)
+    expect(rendered).to include((vm_on.summary.quickStats.overallCpuDemand / vm_on.summary.runtime.maxCpuUsage).round.to_s)
   end
 
   it 'shows HDD usage' do

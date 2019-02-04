@@ -70,9 +70,6 @@ end %>
 </div>
 
 <%
-  committed = (@vm.summary&.storage&.committed&.to_f / 1024**3) || 0
-  uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3) || 0
-
   hdd_allocation = (@vm.disks.map(&:capacityInKB).inject(0, &:+).to_f / 1024**2).round(2)
   guest_disks = @vm&.guest&.disk || []
   hdd_usage = guest_disks.empty? ? 0 : (hdd_allocation - guest_disks.map(&:freeSpace).inject(0, &:+).to_f / 1024**3).round(2)
