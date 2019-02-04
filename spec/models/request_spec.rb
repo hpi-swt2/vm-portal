@@ -18,7 +18,17 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid when it contains special signs besides -' do
-        request.name = 'IsThisValid?!'
+        request.name = 'isthisvalid?!'
+        expect(request).to be_invalid
+      end
+
+      it 'is invalid when it contains upper case letters' do
+        request.name = 'IsThisValid'
+        expect(request).to be_invalid
+      end
+
+      it 'is invalid when it contains whitespaces' do
+        request.name = 'is this valid'
         expect(request).to be_invalid
       end
 
@@ -57,7 +67,7 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
-      it 'is invalid with to much ram' do
+      it 'is invalid with too much ram' do
         request.ram_gb = Request::MAX_RAM_GB + 1
         expect(request).to be_invalid
       end
@@ -67,7 +77,7 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
-      it 'is invalid with to much storage' do
+      it 'is invalid with too much storage' do
         request.storage_gb = Request::MAX_STORAGE_GB + 1
         expect(request).to be_invalid
       end
@@ -86,7 +96,7 @@ RSpec.describe Request, type: :model do
 
     context 'when request is valid' do
       it 'is valid with valid attributes' do
-        request = FactoryBot.build(:request, name: 'testvm')
+        request = FactoryBot.build(:request, name: 'test-vm')
         expect(request).to be_valid
       end
     end
@@ -188,7 +198,7 @@ RSpec.describe Request, type: :model do
     end
 
     context 'when having a user being assigned as user and sudo user' do
-      let(:request) { FactoryBot.create(:request, name: 'MyVM1', user_ids: [user.id]) }
+      let(:request) { FactoryBot.create(:request, name: 'myvm1', user_ids: [user.id]) }
 
       before do
         request.assign_sudo_users([user.id])

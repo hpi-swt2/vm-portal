@@ -95,11 +95,11 @@ module VSphere
     # We do not provide a power_state? method which just returns a boolean, because vSphere can internally handle
     # more than just two power states and we might later need to respond to more states than just two
     def powered_on?
-      @vm.runtime.powerState == 'poweredOn'
+      @vm.summary.runtime.powerState == 'poweredOn'
     end
 
     def powered_off?
-      @vm.runtime.powerState == 'poweredOff'
+      @vm.summary.runtime.powerState == 'poweredOff'
     end
 
     # Power state

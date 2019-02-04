@@ -54,7 +54,7 @@ class VmsController < ApplicationController
     end
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and will soon be archived.\nYou can raise an objection to this on the vms overview site\n" +
+                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within three days.\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation

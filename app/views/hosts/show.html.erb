@@ -5,13 +5,12 @@
       result
     }
 end %>
-
 <div class="container mb-3 pl-0 pr-0 clearfix" >
-  <h1 class="mb-0"><%= @host[:name] unless @host.nil? %></h1>
+  <h1 class="mb-0"><%= @host.name unless @host.nil? %></h1>
 </div>
 <div class="container mb-3 lead pl-0 pr-0 clearfix" >
-  <% up_time = seconds_to_units(Time.current - @host[:bootTime]) unless @host[:bootTime].nil?
-     state =  @host[:connectionState] == 'connected' %>
+  <% up_time = seconds_to_units(Time.current - @host.boot_time) unless @host.boot_time.nil?
+     state =  @host.connection_state == 'connected' %>
   <div class="<%= state ? 'bg-success text-black' : 'bg-danger text-white' -%> float-left pb-1 px-4 mr-2">
     <%= state ? 'online' : 'offline' %>
   </div>
@@ -19,15 +18,15 @@ end %>
 </div>
 
 <%
-  hdd_free_space = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3) || 0
-  hdd_allocation = (@host[:summary]&.host&.datastore.sum{ |datastore|  datastore.summary.capacity }.to_f / 1024**3).round(2) || 0
+  hdd_free_space = (@host.summary&.host&.datastore.sum{ |datastore|  datastore.summary.freeSpace }.to_f / 1024**3) || 0
+  hdd_allocation = (@host.summary&.host&.datastore.sum{ |datastore|  datastore.summary.capacity }.to_f / 1024**3).round(2) || 0
   hdd_usage = (hdd_allocation - hdd_free_space).round(2)
-  cpu_usage = @host[:summary].quickStats&.overallCpuUsage || 0
-  cpu_cores = @host[:summary]&.hardware&.numCpuCores || 1
-  cpu_mhz = @host[:summary]&.hardware&.cpuMhz || 0
+  cpu_usage = @host.summary.quickStats&.overallCpuUsage || 0
+  cpu_cores = @host.summary&.hardware&.numCpuCores || 1
+  cpu_mhz = @host.summary&.hardware&.cpuMhz || 0
   cpu_allocation = cpu_cores * cpu_mhz
-  ram_usage = (@host[:summary].quickStats&.overallMemoryUsage.to_f / 1024).round(2) || 0
-  ram_allocation = (@host[:summary]&.hardware&.memorySize.to_f / 1024**3).round(2) || 0
+  ram_usage = (@host.summary.quickStats&.overallMemoryUsage.to_f / 1024).round(2) || 0
+  ram_allocation = (@host.summary.hardware&.memorySize.to_f / 1024**3).round(2) || 0
 
   @values = {cpu_allocation: cpu_allocation,
              cpu_usage: cpu_usage,
@@ -37,11 +36,11 @@ end %>
              hdd_allocation: hdd_allocation,
              cpu_cores: cpu_cores }
 
-  @hardware = {'Vendor' => @host[:vendor],
-               'Model' => @host[:model],
-               'Power State' => @host[:summary].runtime.powerState,
-               'OS' => "#{@host[:summary].config&.product&.osType} (#{@host[:summary]&.config&.product&.fullName})",
-               'CPU Model' => @host[:summary]&.hardware&.cpuModel }
+  @hardware = {'Vendor' => @host.vendor,
+               'Model' => @host.model,
+               'Power State' => @host.summary.runtime.powerState,
+               'OS' => "#{@host.summary.config&.product&.osType} (#{@host.summary&.config&.product&.fullName})",
+               'CPU Model' => @host.summary&.hardware&.cpuModel }
   %>
 
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
@@ -58,12 +57,12 @@ end %>
         <tr>
           <th colspan="2"><h4 class="mb-0">Virtual Machines</h4></th>
         </tr>
-        <% @host[:vms].each do |name, state| %>
+        <% @host.vms.each do |vm| %>
         <tr>
           <td>
-            <%= link_to name, controller: "vms", action: "show", id: name %>
-            <div class="<%= state ? 'badge-success' : 'badge-danger' %> text-white badge">
-              <%= state ? 'online' : 'offline' %>
+            <%= link_to vm.name, controller: "vms", action: "show", id: vm.name %>
+            <div class="<%= button_style_for vm %> text-white badge">
+              <%= status_for vm %>
             </div>
           </td>
         </tr>
