@@ -45,7 +45,7 @@ class RequestsController < ApplicationController
 
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
-
+    #byebug
     respond_to do |format|
       if enough_resources
         if @request.save
@@ -188,7 +188,7 @@ class RequestsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
-                                    :port, :application_name, :description, :comment,
+                                    :port, :application_name, :description, :comment, :project_ids,
                                     :rejection_information, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
   end
 

@@ -1,9 +1,9 @@
-$('input:radio').click(function (){
+$('#request_template_selection').click(function (){
     cpus = document.getElementById('cpu');
     ram = document.getElementById('ram');
     storage = document.getElementById('storage');
     os = document.getElementById('operating_system');
-
+ 
     if(this.value === 'none') {
         cpus.value = "";
         ram.value = "";
@@ -24,4 +24,4 @@ $('input:radio').click(function (){
         storage.value = storage_mb;
         os.value = operating_system_clean;
     }
-});
+ });

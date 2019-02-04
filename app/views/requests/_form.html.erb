@@ -39,13 +39,14 @@
         </div>
 
         <div class="field form-group">
-          <p>Responsible Employee:</p>
-          <%= form.select 'user_ids',
-                          options_from_collection_for_select(User.employee,
-                                                             :id,
-                                                             :email),
-                          { :include_blank => true},
-                          { class: 'form-control'} %>
+          <p>Responsible User:</p>
+          <%= form.select 'responsible_user_ids',
+                          options_from_collection_for_select(User.all,
+                                                      :id,
+                                                      :email,
+                                                      @request.responsible_users.collect(&:id)),
+                          {},
+                          { multiple: true, class: "form-control selecttwo"} %>
         </div>
       </div>
     </div>
@@ -55,45 +56,40 @@
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </div>
       <div class="col">
-        <div class="row-fluid">
-          <div class="field form-group">
-            <p>Predefined Template:</p>
-            <%= form.select :request_form_template,
-                            options_from_collection_for_select(RequestTemplate.all,
-                                                               :id,
-                                                               :name),
-                            { :include_blank => true},
-                            { class: 'form-control', id: 'request_form_template'} %>
+        <div class="row-fluid pb-4 mb-2 border-bottom">
+          <%= form.label "Template" %>
+          <select id="request_template_selection" class='form-control'>
+            <option value="none">None</option>
+            <% unless @request_templates.nil? %>
+              <% @request_templates.each_with_index do |request_template, index| %>
+                <option name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_gb, request_template.storage_gb, request_template.operating_system] %>">
+                  <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}"
+                  %>
+                </option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+        <div class="row pt-3">
+          <div class="col">              
+            <%= form.label :cpu_cores, "CPU cores" %>
+            <%= form.number_field :cpu_cores, value: @request.persisted? ? @request.cpu_cores : nil, min: 0, class: 'form-control', id: 'cpu' %>              
+          </div>
+          <div class="col">
+            <%= form.label :ram_gb, "RAM in GB" %>
+            <%= form.number_field :ram_gb, value: @request.persisted? ? @request.ram_gb : nil, min: 0, class: 'form-control', id: 'ram' %>
+          </div>
+          <div class="col">
+            <%= form.label :storage_gb, "Storage in GB" %>
+            <%= form.number_field :storage_gb, value: @request.persisted? ? @request.storage_gb : nil, min: 0, class: 'form-control', id: 'storage' %>
           </div>
         </div>
-
-        <div class="row">
+        <div class="row pt-3">
           <div class="col">
-            CPU Cores
-            <%= form.text_field :cpu_cores, class: 'form-control', id:'cpu_cores' %>
-          </div>
-          <div class="col">
-            RAM in GB
-            <%= form.text_field :description, class: 'form-control' %>
-          </div>
+            <%= form.label :operating_system, "Operating System" %> <br>
+            <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>  
+          </div>        
         </div>
-
-        <div class="row">
-          <div class="col">
-            Operating System
-            <%= form.select 'project_ids',
-                            options_from_collection_for_select(OperatingSystem.all,
-                                                               :id,
-                                                               :name),
-                            { :include_blank => true},
-                            { class: 'form-control'} %>
-          </div>
-          <div class="col">
-            Storage in GB
-            <%= form.text_field :name, class: 'form-control' %>
-          </div>
-        </div>
-
       </div>
     </div>
     <div class="row border-bottom mb-4 pb-4">
@@ -102,25 +98,25 @@
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.
       </div>
       <div class="col">
-          <div class="form-group">
-            Users with sudo rights
-            <%= form.select 'sudo_user_ids',
-                            options_from_collection_for_select(User.all,
-                                                             :id,
-                                                             :email),
-                            { },
-                            { class: 'form-control selecttwo', multiple: true} %>
-          </div>
-          <div class="form-group">
-            Regular users
-            <%= form.select 'user_ids',
-                            options_from_collection_for_select(User.all,
-                                                               :id,
-                                                               :email),
-                            { },
-                            { class: 'form-control selecttwo', multiple: true} %>
-          </div>
+        <div class="form-group">
+          Users with sudo rights
+          <%= form.select 'sudo_user_ids',
+                          options_from_collection_for_select(User.all,
+                                                            :id,
+                                                            :email),
+                          { },
+                          { class: 'form-control selecttwo', multiple: true} %>
         </div>
+        <div class="form-group">
+          Regular users
+          <%= form.select 'user_ids',
+                          options_from_collection_for_select(User.all,
+                                                              :id,
+                                                              :email),
+                          { },
+                          { class: 'form-control selecttwo', multiple: true} %>
+        </div>
+      </div>
     </div>    
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
@@ -128,17 +124,18 @@
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
       </div>
       <div class="col">
-        <div class="field form-group">
-          <%= check_box_tag(:up_hosts, true)%>
-          Enable port forwarding
-        </div>
-        <div class="field form-group">
-          <%= form.label 'Port' %>
-          <%= form.text_field :comment, class: 'form-control' %>
-        </div>
-        <div class="field form-group">
-          <%= form.label 'Application Name' %>
-          <%= form.text_field :comment, class: 'form-control' %>
+        <div class="field form-group pb-3 mb-3 border-bottom">
+          <input type="checkbox" data-toggle="collapse" data-target="#request_port_forwarding_info"> Enable port forwarding</input>     
+          <div id="request_port_forwarding_info" class="collapse">       
+            <div class="field form-group">
+              <%= form.label :port, "Port" %>
+              <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>
+            </div>
+            <div class="field form-group">
+              <%= form.label :application_name, "Application Name" %>
+              <%= form.text_field :application_name, class: 'form-control' %>
+            </div>
+          </div>
         </div>
         <div class="field form-group">
           <%= form.label :comment %>
@@ -147,104 +144,6 @@
       </div>
     </div>
 </div>
-
-
-  <fieldset class="form-group">
-    <div class="row bottom-buffer">
-      <legend class="col-form-label col-sm-2 pt-0">VM Templates:</legend>
-      <div class="col-sm-10">
-        <ul>
-          <input type="radio" class="template" name="template" id="template" value="none"/>
-          <%= "None" %>
-        </ul>
-        <% @request_templates.each_with_index do |request_template, index| %>
-          <ul>
-             <input type="radio" class="template" name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_mb, request_template.storage_mb, request_template.operating_system] %>"/>
-            <%= "#{request_template.name}: #{request_template.cpu_cores} CPU-Cores, #{request_template.ram_mb} MB RAM, #{request_template.storage_mb} MB Storage, #{request_template.operating_system}"
-            %>
-          </ul>
-        <% end %>
-      </div>
-    </div>
-  </fieldset>
-
-  <div class="field form-group">
-    <%= form.label :name, "VM Name" %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
-
-  <div class="field form-group">
-    <p>Responsible Users</p>
-    <%= form.select 'responsible_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email,
-                                                       @request.responsible_users.collect(&:id)),
-                    {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'Who is responsible for this VM?' }, style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :cpu_cores, "CPU cores" %>
-    <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :ram_gb, "RAM in GB" %>
-    <%= form.number_field :ram_gb, min: 0, class: 'form-control', id: 'ram' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :storage_gb, "Storage in GB" %>
-    <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
-  </div>
-
-  <div class="field form-group">
-    <p>Users with sudo rights</p>
-    <%= form.select 'sudo_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email,
-                                                     @request.sudo_user_assignments.collect(&:user_id)),
-                    {},
-                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <p>Assigned Users</p>
-    <%= form.select 'user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email,
-                                                       @request.non_sudo_user_assignments.collect(&:user_id)),
-                    {},
-                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', style: 'width: 100%' %>
-  </div>
-
-    <div class="field form-group">
-      <%= form.label :port, "Port" %>
-      <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :application_name, "Application Name" %>
-      <%= form.text_field :application_name, class: 'form-control' %>
-    </div>
-
-  <div class="field form-group">
-    <%= form.label :description %>
-    <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :comment %>
-    <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
-  </div>
 
   <% if locals[:updating] %>
     <div id="acceptAndReject">
@@ -260,7 +159,6 @@
 <% end %>
 
 <% if locals[:updating] %>
-  <hr/>
   <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
     <div class="field form-group">
       <%= rejection_form.label :rejection_information %>
