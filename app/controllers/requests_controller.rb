@@ -104,11 +104,7 @@ class RequestsController < ApplicationController
   private
 
   def add_notices(redirect_params)
-    if redirect_params[:alert]
-      redirect_params[:warning] = 'There were issues when creating the VM, but it was still created. It may not be configured correctly however!'
-    else
-      redirect_params[:notice] = I18n.t('request.successfully_updated_and_vm_created')
-    end
+    redirect_params[:notice] = I18n.t('request.successfully_updated_and_vm_created') unless redirect_params[:alert]
     redirect_params
   end
 
