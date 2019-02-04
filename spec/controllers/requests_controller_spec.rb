@@ -82,9 +82,14 @@ RSpec.describe RequestsController, type: :controller do
     }
   end
 
+  let(:host) do
+    v_sphere_host_mock('someHost')
+  end
+
   # Authenticate an user
   before do
     sign_in user
+    allow(VSphere::Host).to receive(:all).and_return [host]
   end
 
   # This should return the minimal set of values that should be in the session

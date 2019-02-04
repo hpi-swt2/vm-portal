@@ -230,7 +230,7 @@ RSpec.describe VmsController, type: :controller do
     context 'when the vm requires more resouces than any host can provide' do
       before do
         summary_double = double
-        allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(42)
+        allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(999)
 
         allow(vm2).to receive(:summary).and_return(summary_double)
         allow(vm2).to receive(:change_power_state)        
