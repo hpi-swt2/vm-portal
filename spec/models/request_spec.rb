@@ -289,7 +289,7 @@ RSpec.describe Request, type: :model do
         expect(@git_stub.git).to have_received(:commit_all).with('Add myvm')
       end
 
-      it 'returns no error message' do
+      it 'returns an empty error message' do
         expect(request.push_to_git).to eq({})
       end
     end

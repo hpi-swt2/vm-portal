@@ -103,13 +103,19 @@ class RequestsController < ApplicationController
 
   private
 
+  def add_notices(redirect_params)
+    if redirect_params[:alert]
+      redirect_params[:warning] = 'There were issues when creating the VM, but it was still created. It may not be configured correctly however!'
+    else
+      redirect_params[:notice] = I18n.t('request.successfully_updated_and_vm_created')
+    end
+    redirect_params
+  end
+
   def safe_create_vm_for(format, request, redirect_params)
     vm = request.create_vm
     if vm
-      format.html do
-        redirect_to({ controller: :vms, action: 'edit_config', id: vm.name },
-                    { method: :get, notice: I18n.t('request.successfully_updated_and_vm_created') }.merge(redirect_params))
-      end
+      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(add_notices(redirect_params))) }
       format.json { render status: :ok }
     else
       format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
