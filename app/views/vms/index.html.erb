@@ -37,7 +37,17 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %></td>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= user.name %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </td>
       <td class="table-active align-middle">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
           <div class="round
@@ -90,7 +100,17 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %></td>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= user.name %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </td>
       <td class="table-active">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
           <div class="round
@@ -136,7 +156,16 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= user.name %></li>
+            <% end %>
+          </ul>
+        <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},
@@ -172,7 +201,15 @@
       </td>
       <td class="table-active"><%= 'lorem' %></td>
       <td class="table-active align-middle">
-        ipsum
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= user.name %></li>
+            <% end %>
+          </ul>
+        <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},
