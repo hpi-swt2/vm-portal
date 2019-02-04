@@ -119,8 +119,13 @@ class User < ApplicationRecord
     path = File.join Rails.root, 'public', 'puppet_script_temp'
 
     begin
+      # ONLY for debugging purposes. Will be removed when error is found.
+      logger.info(User.all)
+      puppet_script_file = generate_puppet_init_script
+      logger.info(puppet_script_file)
+
       GitHelper.write_to_repository(path) do |git_writer|
-        git_writer.write_file('init.pp', generate_puppet_init_script)
+        git_writer.write_file('init.pp', puppet_script_file)
         message = if git_writer.added?
                     'Create init.pp'
                   else
@@ -128,6 +133,8 @@ class User < ApplicationRecord
                   end
         git_writer.save(message)
       end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
   end
 
