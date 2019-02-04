@@ -89,7 +89,7 @@ class Request < ApplicationRecord
       GitHelper.write_to_repository(path) do |git_writer|
         git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
         git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
-        message = commit_and_notice_message(git_writer)
+        message, _notice = commit_and_notice_message(git_writer) # notice is no longer used
         git_writer.save(message)
       end
       {}
