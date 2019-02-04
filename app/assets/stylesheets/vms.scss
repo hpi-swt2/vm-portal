@@ -78,6 +78,10 @@ h2{
   content: "\25A0 ";
 }
 
+.script-doc::before {
+  content: "\1F4CE";
+}
+
 .btn-manage {
   font-size: 1.25rem;
   margin-left: 0.5rem;
@@ -89,6 +93,7 @@ h2{
 .btn-manage:hover {
   text-decoration: none;
   color: black;
+  filter: drop-shadow(2px 2px 1px $secondary);
 }
 
 .filter-box {

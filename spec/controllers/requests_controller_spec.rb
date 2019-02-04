@@ -27,8 +27,8 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
-
   let(:sudo_user) { FactoryBot.create :user }
+  let(:sudo_user2) { FactoryBot.create :admin }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -37,14 +37,16 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: 'myvm',
       cpu_cores: 2,
-      ram_mb: 1,
-      storage_mb: 2,
+      ram_gb: 1,
+      storage_gb: 2,
       operating_system: 'MyOS',
       description: 'Description',
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['']
+      responsible_user_ids: [user.id],
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
+      user_ids: ['', user.id.to_s]
     }
   end
 
@@ -52,8 +54,8 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: '',
       cpu_cores: 2,
-      ram_mb: 1000,
-      storage_mb: -2000,
+      ram_gb: 1000,
+      storage_gb: -2000,
       operating_system: '',
       description: '',
       comment: 'Comment',
@@ -118,24 +120,27 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     context 'with invalid params' do
-      before do
-        post :create, params: { request: invalid_attributes }
+      it 'does not create a request if responible users are empty' do
+        request_count = Request.all.size
+        post :create, params: { request: valid_attributes.except(:responsible_user_ids) }
+        expect(request_count).to equal(Request.all.size)
       end
 
       it 'returns a success response (i.e. to display the "new" template)' do
+        post :create, params: { request: invalid_attributes }
         expect(response).to be_successful
       end
 
       # regression test for #320
       it 'assigns the sudo users to the request' do
+        post :create, params: { request: invalid_attributes }
         expect(assigns(:request).sudo_users).to match_array([sudo_user])
       end
 
       # regression test for #320
       it 'does not persist the sudo users' do
-        assigns(:request).users_assigned_to_requests.each do |each|
-          expect(each).not_to be_persisted
-        end
+        post :create, params: { request: invalid_attributes }
+        expect(assigns(:request).sudo_user_assignments).to all(be_changed)
       end
     end
   end
@@ -177,35 +182,44 @@ RSpec.describe RequestsController, type: :controller do
         {
           name: 'mynewvm',
           cpu_cores: 3,
-          ram_mb: 2,
-          storage_mb: 3,
+          ram_gb: 2,
+          storage_gb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',
-          user: user
+          user: user,
+          sudo_user_ids: ['', sudo_user.id.to_s, user.id.to_s],
+          user_ids: ['']
         }
       end
 
       # this variable may not be called request, because it would then override an internal RSpec variable
       let(:the_request) do
-        Request.create! valid_attributes
+        request = Request.create! valid_attributes
+        request.assign_sudo_users valid_attributes[:sudo_user_ids][1..-1]
+        request.save!
+        request
       end
 
-      it 'updates the requested request' do
+      before do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
+      end
+
+      it 'updates the request' do
         expect(the_request.name).to eq('mynewvm')
       end
 
-      it 'redirects to the requests index page, as there is no cluster available' do
-        patch :update, params: { id: the_request.to_param, request: valid_attributes }
-        expect(response).to redirect_to(requests_path)
+      it 'redirects to the new VMS config' do
+        expect(response).to redirect_to(edit_config_path(the_request.name))
       end
 
       it 'accepts the request' do
-        patch :update, params: { id: the_request.to_param, request: valid_attributes }
-        the_request.reload
         expect(the_request).to be_accepted
+      end
+
+      it 'correctly updates the sudo users' do
+        expect(the_request.sudo_users).to match_array([sudo_user, user])
       end
     end
 

@@ -21,8 +21,8 @@ end %>
   </div>
   <%= " for #{up_time}" if @vm.powered_on? %>
   <% if current_user.admin? || @vm.sudo_users.include?(current_user) %>
-    <div class="text-right float-right" style="width: 20%">
-      <div class="dropdown border text-right">
+    <div class="text-right float-right">
+      <div class="dropdown border  text-center w-auto">
         <a class="dropdown-toggle text-muted ml-0 pr-2 pt-1 lead nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
           Manage
         </a>
@@ -51,18 +51,13 @@ end %>
           <% end %>
           <% if @vm.active? %>
             <%= link_to 'Archive VM',
-                        {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
-            <div class="dropdown-divider"></div>
+                        {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, data: { confirm: 'Are you sure you want to archive this VM?' }, class: 'dropdown-item'%>
           <% end %>
           <% if @vm.archived? %>
 
             <%= link_to 'Revive VM',
                         {controller: :vms, action: 'request_vm_revive', id: @vm.name}, method: :post, class: 'dropdown-item'%>
-            <div class="dropdown-divider"></div>
           <% end %>
-          <%= link_to 'Delete VM',
-                        {controller: :vms, action: 'destroy', id: @vm.name},
-                        method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
         </div>
       </div>
     </div>
@@ -75,13 +70,13 @@ end %>
 </div>
 
 <%
-  committed = (@vm.summary&.storage&.committed.to_f / 1024**3).round(2) || 0
-  uncommitted = (@vm.summary&.storage&.committed.to_f / 1024**3).round(2) || 0
+  committed = (@vm.summary&.storage&.committed&.to_f / 1024**3) || 0
+  uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3) || 0
 
-  hdd_usage = committed
+  hdd_usage = committed.round(2)
   hdd_allocation = (committed + uncommitted).round(2)
   cpu_usage = @vm.summary.quickStats&.overallCpuUsage || 0
-  cpu_allocation = @vm.summary.config&.cpuReservation || 0
+  cpu_allocation = @vm.summary.quickStats&.overallCpuDemand || 0
   ram_usage = (@vm.summary.quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
   ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 0
   cpu_cores = @vm.summary.config&.numCpu  || 1
@@ -111,6 +106,19 @@ end %>
         <tr>
           <th colspan="2" ><h4 class="mb-0">Users</h4></th>
         </tr>
+        <% (@vm.users + @vm.responsible_users).uniq.each do |user| %>
+          <tr>
+            <td>
+            <%= link_to user.name, user %>
+            <% if @vm.sudo_users.include? user %>
+              <span class="badge badge-info">sudo user</span>
+            <% end %>
+            <% if @vm.responsible_users.include? user %>
+              <span class="badge badge-primary">responsible</span>
+            <% end %>
+            </td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>

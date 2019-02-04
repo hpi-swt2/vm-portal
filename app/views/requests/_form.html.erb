@@ -16,18 +16,29 @@
   </div>
 
   <div class="field form-group">
+    <p>Responsible Users</p>
+    <%= form.select 'responsible_user_ids',
+                    options_from_collection_for_select(User.all,
+                                                       :id,
+                                                       :email,
+                                                       @request.responsible_users.collect(&:id)),
+                    {},
+                    { multiple: true, class: "selecttwo", data: { placeholder: 'Who is responsible for this VM?' }, style: 'width: 100%' } %>
+  </div>
+
+  <div class="field form-group">
     <%= form.label :cpu_cores, "CPU cores" %>
     <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
   </div>
 
   <div class="field form-group">
-    <%= form.label :ram_mb, "RAM in GB" %>
-    <%= form.number_field :ram_mb, value: (@request && !@request&.ram_mb.nil?) ? mb_to_gb(@request.ram_mb) : nil, min: 0, class: 'form-control', id: 'ram' %>
+    <%= form.label :ram_gb, "RAM in GB" %>
+    <%= form.number_field :ram_gb, min: 0, class: 'form-control', id: 'ram' %>
   </div>
 
   <div class="field form-group">
-    <%= form.label :storage_mb, "Storage in GB" %>
-    <%= form.number_field :storage_mb, value: (@request && !@request&.storage_mb.nil?) ? mb_to_gb(@request.storage_mb) : nil, min: 0, class: 'form-control', id: 'storage' %>
+    <%= form.label :storage_gb, "Storage in GB" %>
+    <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
   </div>
 
   <div class="field form-group">
@@ -38,7 +49,7 @@
                                                      :email,
                                                      @request.sudo_user_assignments.collect(&:user_id)),
                     {},
-                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
   </div>
 
   <div class="field form-group">
@@ -49,12 +60,12 @@
                                                        :email,
                                                        @request.non_sudo_user_assignments.collect(&:user_id)),
                     {},
-                    { multiple: true, class: "selecttwo", style: 'width: 50%' } %>
+                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
   </div>
 
   <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %> <br>
-    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system' %>
+    <%= form.label :operating_system, "Operating System" %>
+    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', style: 'width: 100%' %>
   </div>
 
     <div class="field form-group">

@@ -95,6 +95,10 @@ body {
   width: auto;
 }
 
+.unread {
+  background-color: #e6f3ff;
+}
+
 #btns_users_role .btn-primary.active {
   background-color: $primary-active;
   border-color: $primary-active;

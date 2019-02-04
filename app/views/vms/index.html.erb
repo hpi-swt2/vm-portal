@@ -37,7 +37,17 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %></td>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= link_to user.name, user %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </td>
       <td class="table-active align-middle">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
           <div class="round
@@ -59,8 +69,6 @@
                 data: { confirm: 'Are you sure?' },
                 class: "btn-manage float-right replay" %>
             <% end %>
-          <% else %>
-            <p class="text-muted">VMWare tools are not installed</p>
           <% end %>
         <% end %>
       </td>
@@ -92,7 +100,17 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %></td>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= link_to user.name, user %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </td>
       <td class="table-active">
         <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
           <div class="round
@@ -103,7 +121,7 @@
         <%if current_user.admin? && vm.archivable? %>
           <%= link_to '',
                       {controller: :vms, action: 'archive_vm', id: vm.name},
-                      method: :post,
+                      method: :post, data: { confirm: 'Are you sure you want to archive this VM?' },
                       class: "btn-manage float-right checkmark" %>
         <% end %>
         <%= link_to '',
@@ -125,7 +143,7 @@
   <tr>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
   </tr>
   </thead>
   <tbody>
@@ -138,7 +156,16 @@
           method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= 'lorem' %></td>
-      <td class="table-active"><%= 'ipsum' %>
+      <td class="table-active">
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= link_to user.name, user %></li>
+            <% end %>
+          </ul>
+        <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},
@@ -174,7 +201,15 @@
       </td>
       <td class="table-active"><%= 'lorem' %></td>
       <td class="table-active align-middle">
-        ipsum
+        <% if vm.responsible_users.empty? %>
+          No responsible users found!
+        <% else %>
+          <ul class="list-unstyled">
+            <% vm.responsible_users.each do |user| %>
+              <li><%= link_to user.name, user %></li>
+            <% end %>
+          </ul>
+        <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},

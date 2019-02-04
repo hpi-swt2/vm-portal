@@ -3,6 +3,7 @@
 require 'vmapi.rb'
 class HostsController < ApplicationController
   attr_reader :hosts
+  before_action :authenticate_admin
 
   def index
     @hosts = VSphere::Host.all
@@ -11,7 +12,7 @@ class HostsController < ApplicationController
   def new; end
 
   def show
-    @host = VmApi.instance.get_host(params[:id])
+    @host = VSphere::Host.get_host(params[:id])
     render(template: 'errors/not_found', status: :not_found) if @host.nil?
   end
 end
