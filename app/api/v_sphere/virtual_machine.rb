@@ -72,7 +72,7 @@ module VSphere
 
     # Guest OS communication
     def vm_ware_tools?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+      @vm&.guest&.toolsStatus && @vm.guest.toolsStatus != 'toolsNotInstalled'
     end
 
     def suspend_vm
@@ -233,6 +233,18 @@ module VSphere
       @vm.summary
     end
 
+    def macs
+      @vm.macs
+    end
+
+    def disks
+      @vm.disks
+    end
+
+    def guest
+      @vm.guest
+    end
+
     def guest_heartbeat_status
       @vm.guestHeartbeatStatus
     end
@@ -271,10 +283,6 @@ module VSphere
 
     def ==(other)
       equal? other
-    end
-
-    def macs
-      @vm.macs
     end
 
     def request

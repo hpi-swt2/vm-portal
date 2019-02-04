@@ -73,12 +73,13 @@ end %>
   committed = (@vm.summary&.storage&.committed&.to_f / 1024**3) || 0
   uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3) || 0
 
-  hdd_usage = committed.round(2)
-  hdd_allocation = (committed + uncommitted).round(2)
-  cpu_usage = @vm.summary.quickStats&.overallCpuUsage || 0
-  cpu_allocation = @vm.summary.quickStats&.overallCpuDemand || 0
+  hdd_allocation = (@vm.disks.map(&:capacityInKB).inject(0, &:+).to_f / 1024**2).round(2)
+  guest_disks = @vm&.guest&.disk || []
+  hdd_usage = guest_disks.empty? ? 0 : (hdd_allocation - guest_disks.map(&:freeSpace).inject(0, &:+).to_f / 1024**3).round(2)
+  cpu_usage = @vm.summary.quickStats&.overallCpuDemand || 0
+  cpu_allocation = @vm.summary.runtime&.maxCpuUsage || 1
   ram_usage = (@vm.summary.quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
-  ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 0
+  ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 1
   cpu_cores = @vm.summary.config&.numCpu  || 1
 
   @values = {cpu_allocation: cpu_allocation,
