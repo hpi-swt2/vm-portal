@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   before_action :authenticate_admin, only: %i[index update_role]
 
   def index
-    @users = User.all
+    @users = User.search(params[:search], params[:role])
   end
 
   def show; end

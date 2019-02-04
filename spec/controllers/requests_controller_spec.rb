@@ -45,7 +45,8 @@ RSpec.describe RequestsController, type: :controller do
       status: 'pending',
       user: user,
       responsible_user_ids: [user.id],
-      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s]
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
+      user_ids: ['', user.id.to_s]
     }
   end
 
@@ -218,7 +219,8 @@ RSpec.describe RequestsController, type: :controller do
           comment: 'newComment',
           status: 'pending',
           user: user,
-          sudo_user_ids: ['', sudo_user.id.to_s]
+          sudo_user_ids: ['', sudo_user.id.to_s, user.id.to_s],
+          user_ids: ['']
         }
       end
 
@@ -248,7 +250,7 @@ RSpec.describe RequestsController, type: :controller do
       end
 
       it 'correctly updates the sudo users' do
-        expect(the_request.sudo_users).to match_array([sudo_user])
+        expect(the_request.sudo_users).to match_array([sudo_user, user])
       end
     end
 
