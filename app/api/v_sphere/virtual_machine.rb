@@ -72,7 +72,8 @@ module VSphere
 
     # Guest OS communication
     def vm_ware_tools?
-      @vm&.guest&.toolsStatus && @vm.guest.toolsStatus != 'toolsNotInstalled'
+      tool_status = @vm&.guest&.toolsStatus
+      tool_status && %w[toolsOk toolsOld].include?(tool_status)
     end
 
     def suspend_vm
@@ -247,10 +248,6 @@ module VSphere
 
     def guest_heartbeat_status
       @vm.guestHeartbeatStatus
-    end
-
-    def vmwaretools_installed?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
     end
 
     def host_name
