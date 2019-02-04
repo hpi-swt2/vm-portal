@@ -16,20 +16,17 @@
         <h5>General Information</h5>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod.
       </div>
-      <div class="col">
-
+      <div class="col-6">
         <div class="field form-group">
-          <%= form.label :name, "Name" %>
+          <%= form.label :name, "Name *" %>
           <%= form.text_field :name, class: 'form-control' %>
         </div>
-
         <div class="field form-group">
-          <%= form.label :description %>
+          <%= form.label :description, "Description *" %>
           <%= form.text_area :description, rows: "4", class: 'form-control' %>
         </div>
-
         <div class="field form-group">
-          <p>Project:</p>
+          <p>Project *</p>
           <%= form.select :project_id,
                           options_from_collection_for_select(Project.all,
                                                              :id,
@@ -38,9 +35,8 @@
                           { :include_blank => true},
                           { class: 'form-control' } %>
         </div>
-
         <div class="field form-group">
-          <p>Responsible User:</p>
+          <p>Responsible User *</p>
           <%= form.select 'responsible_user_ids',
                           options_from_collection_for_select(User.all,
                                                       :id,
@@ -56,8 +52,8 @@
         <h5>Hardware Information</h5>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </div>
-      <div class="col">
-        <div class="row-fluid pb-4 mb-2 border-bottom">
+      <div class="col-6">
+        <div class="form-group pb-4 mb-2 border-bottom">
           <%= form.label "Template" %>
           <%= form.select :template_id,
                           options_for_select(RequestTemplate.all.map{|request_template|
@@ -66,25 +62,23 @@
                           { :include_blank => 'None' },
                           { class: "form-control" } %>
         </div>
-        <div class="row pt-3">
+        <div class="form-group row full-width pt-3">
           <div class="col">
-            <%= form.label :cpu_cores, "CPU cores" %>
+            <%= form.label :cpu_cores, "CPU cores *" %>
             <%= form.number_field :cpu_cores, value: @request.persisted? ? @request.cpu_cores : nil, min: 0, class: 'form-control', id: 'cpu' %>
           </div>
           <div class="col">
-            <%= form.label :ram_gb, "RAM in GB" %>
+            <%= form.label :ram_gb, "RAM in GB *" %>
             <%= form.number_field :ram_gb, value: @request.persisted? ? @request.ram_gb : nil, min: 0, class: 'form-control', id: 'ram' %>
           </div>
           <div class="col">
-            <%= form.label :storage_gb, "Storage in GB" %>
+            <%= form.label :storage_gb, "Storage in GB *" %>
             <%= form.number_field :storage_gb, value: @request.persisted? ? @request.storage_gb : nil, min: 0, class: 'form-control', id: 'storage' %>
           </div>
         </div>
-        <div class="row pt-3">
-          <div class="col">
-            <%= form.label :operating_system, "Operating System" %> <br>
-            <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
-          </div>
+        <div class="form-group pt-3">
+          <%= form.label :operating_system, "Operating System *" %> <br>
+          <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
         </div>
       </div>
     </div>
@@ -93,7 +87,7 @@
         <h5>Users</h5>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.
       </div>
-      <div class="col">
+      <div class="col-6">
         <div class="form-group">
           Users with sudo rights
           <%= form.select 'sudo_user_ids',
@@ -121,9 +115,9 @@
         <h5>Other Information</h5>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
       </div>
-      <div class="col">
+      <div class="col-6">
         <div class="field form-group pb-3 mb-3 border-bottom">
-          <input type="checkbox" data-toggle="collapse" data-target="#request_port_forwarding_info"> Enable port forwarding</input>
+          <input id="request_port_forwarding_checkbox" type="checkbox" data-toggle="collapse" data-target="#request_port_forwarding_info" data="<%= @request.port %>"> Enable port forwarding</input>
           <div id="request_port_forwarding_info" class="collapse">
             <div class="field form-group">
               <%= form.label :port, "Port" %>

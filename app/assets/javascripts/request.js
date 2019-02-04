@@ -25,3 +25,7 @@ $('#request_template_id').click(function (){
         os.value = operating_system_clean;
     }
  });
+
+ if($('#request_port_forwarding_checkbox').attr("data") != "") {
+   $('#request_port_forwarding_checkbox').trigger('click');
+ }
