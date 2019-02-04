@@ -58,6 +58,18 @@ module VSphere
       equal? other
     end
 
+    def get_num_cpu
+      @host.summary.hardware.numCpuCores
+    end
+
+    def get_ram_gb
+      @host.summary.hardware.memorySize.to_i / 1024**2
+    end
+
+    def get_storage_gb
+      @host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_i / 1024**2
+    end
+
     private
 
     def managed_folder_entry
