@@ -46,7 +46,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
           <%= link_to('Profile', user_path(current_user), class: "dropdown-item") %>
-          <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "text-danger dropdown-item") %>
+          <%= link_to('Logout', new_sign_out_path, method: :post, class: "text-danger dropdown-item") %>
         </div>
       </li>
       <% end %>
