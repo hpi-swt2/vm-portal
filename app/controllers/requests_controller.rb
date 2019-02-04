@@ -208,18 +208,18 @@ class RequestsController < ApplicationController
 
   def enough_resources
     def get_num_cpu(host)
-      host[:summary].hardware.numCpuCores
+      host.summary.hardware.numCpuCores
     end
 
     def get_ram_gb(host)
-      host[:summary].hardware.memorySize.to_i / 1024**2
+      host.summary.hardware.memorySize.to_i / 1024**2
     end
 
     def get_storage_gb(host)
-      host[:summary].host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_i / 1024**2
+      host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_i / 1024**2
     end
 
-    hosts = VmApi.instance.all_hosts
+    hosts = VSphere::Host.all
 
     # get max host resources
     max_cpu_host = hosts[0]
