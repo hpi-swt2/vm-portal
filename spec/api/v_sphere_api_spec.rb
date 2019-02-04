@@ -152,6 +152,7 @@ describe VSphere do
     end
 
     it 'has users if a fitting request exists' do
+      skip 'git will not be tested, should have users when a fitting puppet script exists'
       request = FactoryBot.create :accepted_request
       request.users << FactoryBot.create(:user)
       vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
