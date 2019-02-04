@@ -60,10 +60,11 @@ class RequestsController < ApplicationController
     respond_to do |format|
       prepare_params
       @request.assign_sudo_users(request_params[:sudo_user_ids])
-      @request.accept!
       if @request.update(request_params)
+        redirect_params = @request.accept!
+        @request.save!
         notify_request_update
-        safe_create_vm_for format, @request
+        safe_create_vm_for format, @request, redirect_params
       else
         unsuccessful_action format, :edit
       end
@@ -102,10 +103,13 @@ class RequestsController < ApplicationController
 
   private
 
-  def safe_create_vm_for(format, request)
+  def safe_create_vm_for(format, request, redirect_params)
     vm = request.create_vm
     if vm
-      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created')) }
+      format.html do
+        redirect_to({ controller: :vms, action: 'edit_config', id: vm.name },
+                    { method: :get, notice: I18n.t('request.successfully_updated_and_vm_created') }.merge(redirect_params))
+      end
       format.json { render status: :ok }
     else
       format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
