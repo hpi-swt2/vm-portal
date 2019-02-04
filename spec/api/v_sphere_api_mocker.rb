@@ -74,8 +74,8 @@ def vim_vm_summary_mock(power_state: 'poweredOn')
   allow(summary_double).to receive_message_chain(:config, :guestId).and_return('Win10')
   allow(summary_double).to receive_message_chain(:config, :guestFullName).and_return('Win10 EE')
   allow(summary_double).to receive_message_chain(:guest, :ipAddress).and_return('0.0.0.0')
-  allow(summary_double).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(50)
   allow(summary_double).to receive_message_chain(:quickStats, :overallCpuDemand).and_return(100)
+  allow(summary_double).to receive_message_chain(:runtime, :maxCpuUsage).and_return(500)
   allow(summary_double).to receive_message_chain(:quickStats, :guestMemoryUsage).and_return(1024)
   allow(summary_double).to receive_message_chain(:config, :memorySizeMB).and_return(2024)
   allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
@@ -84,6 +84,19 @@ def vim_vm_summary_mock(power_state: 'poweredOn')
   summary_double
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+def vim_disks_mock
+  disk = double
+  allow(disk).to receive(:capacityInKB).and_return(100 * (1024**2))
+  [disk]
+end
+
+def vim_guest_mock(tools_status: 'toolsNotInstalled')
+  guest = double
+  allow(guest).to receive(:toolsStatus).and_return tools_status
+  allow(guest).to receive(:disk).and_return [] # vSphere will actually return an empty array if wm_ware_tools are not installed
+  guest
+end
 
 # rubocop:disable Metrics/AbcSize
 def vim_vm_mock(
@@ -101,9 +114,10 @@ def vim_vm_mock(
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
   allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
-  allow(vm).to receive_message_chain(:guest, :toolsStatus).and_return vm_ware_tools
+  allow(vm).to receive(:guest).and_return vim_guest_mock(tools_status: vm_ware_tools)
   allow(vm).to receive(:macs).and_return macs
   allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: power_state)
+  allow(vm).to receive(:disks).and_return vim_disks_mock
 
   vm
 end

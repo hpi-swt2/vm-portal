@@ -42,9 +42,9 @@ class User < ApplicationRecord
     if term
       users = where('first_name LIKE ? or last_name LIKE ?', "%#{term}%", "%#{term}%")
       users = users.where(role: role) if role && role != ''
-      users
+      users.order(last_name: :asc)
     else
-      all
+      order(last_name: :asc)
     end
   end
 
