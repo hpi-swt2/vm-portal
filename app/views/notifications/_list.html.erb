@@ -1,27 +1,27 @@
-<% if @notifications.empty? %>
-<p>You don't have any notifications at the moment.</p>
-<%  else %>
+<% unless @notifications.empty? %>
 
-<%  @notifications.each do |notification| %>
-<%  class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
-<div class="<%=  class_names %>" style="width:100%">
-  <div class="card-body">
-    <h5 class="card-title">
-      <%=  notification.title %>
-    </h5>
-    <%=  # The [^\s|<] of the regex is necessary, because simple_format will add a </p> at the end of the message
+  <% @notifications.each do |notification| %>
+    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
+    <div class="<%= class_names %>" style="width:100%">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%= notification.title %>
+        </h5>
+        <%= # The [^\s|<] of the regex is necessary, because simple_format will add a </p> at the end of the message
             # Without the < exclusion, this </p> would then be added to the link, which breaks it!
-            simple_format(notification.message).gsub(/(?:https?|ftp|mailto):\/\/[^\s|<]+/, '<a href = "\0" >\0 < /a>').html_safe  %>
-    <div class="pull-right">
-      <%=  link_to mark_as_read_notification_path(notification), class: 'icon-link check' do  %>
-      <%=  fa_icon('check', class: 'big-icon')  %>
-      <%  end unless notification.read %>
-      <%=  link_to notification, method: :delete, data: { confirm: 'Are you sure you want to delete this notification?' }, class: 'icon-link delete'  do  %>
-      <%=  fa_icon('trash', class: 'big-icon')  %>
-      <%  end  %>
+            simple_format(notification.message).gsub(/(?:https?|ftp|mailto):\/\/[^\s|<]+/, '<a href="\0">\0</a>').html_safe %>
+        <div class="pull-right">
+          <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
+            <%= fa_icon('check', class: 'big-icon') %>
+          <% end unless notification.read%>
+          <%= link_to notification, method: :delete, data: { confirm: 'Are you sure you want to delete this notification?' }, class: 'icon-link delete'  do %>
+            <%= fa_icon('trash', class: 'big-icon') %>
+          <% end %>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<% end %>
+  <% end %>
 
-< %>
+<% else %>
+  <p>You don't have any notifications at the moment.</p>
+<% end %>
