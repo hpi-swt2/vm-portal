@@ -33,7 +33,7 @@ module Puppetscript
   def self.user_script(user)
     <<-USER_SCRIPT
 
-  @accounts::virtual { '#{user.first_name}.#{user.last_name}':
+  @accounts::virtual { '#{user.email.split('@').first}':
     uid             =>  #{user.user_id},
     realname        =>  '#{user.first_name} #{user.last_name}',
     sshkeytype      =>  'ssh-rsa',
@@ -44,7 +44,7 @@ module Puppetscript
 
   def self.generic_node_script
     <<~NODE_SCRIPT
-      class node_%s {
+      class node_$%s {
               $admins = [%s]
               $users = [%s]
 
@@ -56,17 +56,17 @@ module Puppetscript
 
   def self.generic_name_script
     <<~NAME_SCRIPT
-      node \'%s\'{
+      node \'$%s\'{
 
-          if defined( node_%s) {
-                      class { node_%s: }
+          if defined( node_$%s) {
+                      class { node_$%s: }
           }
       }
     NAME_SCRIPT
   end
 
   def self.generate_user_array(users)
-    users.map! { |user| "\"#{user.first_name << '.' << user.last_name}\"" }
+    users = users.map { |user| "\"#{user.email.split('@').first}\"" }
     users.join(', ')
   end
 end

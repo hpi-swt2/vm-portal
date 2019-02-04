@@ -43,7 +43,7 @@ module GitHelper
       uri = ENV['GIT_REPOSITORY_URL']
       name = ENV['GIT_REPOSITORY_NAME']
 
-      git = Git.clone(uri, name, path: path)
+      git = Git.clone(uri, name, path: File.join(path, '../'))
       git.config('user.name', ENV['GITHUB_USER_NAME'])
       git.config('user.email', ENV['GITHUB_USER_EMAIL'])
       git

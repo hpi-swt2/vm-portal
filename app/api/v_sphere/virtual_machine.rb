@@ -60,12 +60,13 @@ module VSphere
     def self.user_vms(user)
       vms = []
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        files = Dir.entries(PuppetParserHelper.puppet_script_path)
-        files.map! { |file| file[(6..file.length - 4)] }
+        files = Dir.entries(File.join PuppetParserHelper.puppet_script_path, 'Node')
+        files.map! { |file| file[(5..file.length - 4)] }
+        files.select! { |file| !file.nil? }
         files.each do |vm_name|
           users = PuppetParserHelper.read_node_file(vm_name)
           users = users['admins'] + users['users'] | []
-          vms += find_by_name(vm_name) if users.include? user
+          vms.append(find_by_name(vm_name)) if users.include? user
         end
       end
       vms
@@ -258,7 +259,7 @@ module VSphere
     def users
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
         users = PuppetParserHelper.read_node_file(name)
-        (users['admins'] + users['users']).uniq
+        users['users']
       end
     end
 
@@ -276,9 +277,13 @@ module VSphere
       GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
         all_users = PuppetParserHelper.read_node_file(name)
         sudo_users = all_users['admins']
-        new_users = User.find_all_by_id(ids)
-        puppetscript = Puppetscript.node_script(name, sudo_users, new_users)
-        git_writer.write_file(name, puppetscript)
+        new_users = User.where(id: ids)
+        name_path = File.join('Name', name + '.pp')
+        node_path = File.join('Node', 'node-' + name + '.pp')
+        name_script = Puppetscript.name_script(name)
+        node_script = Puppetscript.node_script(name, sudo_users, new_users)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
       end
@@ -297,9 +302,13 @@ module VSphere
       GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
         all_users = PuppetParserHelper.read_node_file(name)
         users = all_users['users']
-        new_sudo_users = User.find_all_by_id(ids)
-        puppetscript = Puppetscript.node_script(name, new_sudo_users, users)
-        git_writer.write_file(name, puppetscript)
+        new_sudo_users = User.where(id: ids)
+        name_path = File.join('Name', name + '.pp')
+        node_path = File.join('Node', 'node-' + name + '.pp')
+        name_script = Puppetscript.name_script(name)
+        node_script = Puppetscript.node_script(name, new_sudo_users, users)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
       end

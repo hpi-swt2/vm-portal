@@ -19,8 +19,8 @@ module PuppetParserHelper
       contents = File.open(path).read
       raise 'Unsupported Format' unless node_file_correct?(vm_name, contents)
 
-      admins = contents.lines[1][/\[.*?\]/].tr('\'[]', '').split(', ')
-      users = contents.lines[2][/\[.*?\]/].tr('\'[]', '').split(', ')
+      admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
+      users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
       admins.map! { |admin| User.from_mail_identifier(admin) }
       users.map! { |user| User.from_mail_identifier(user) }
       values['admins'] = admins

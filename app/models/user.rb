@@ -80,8 +80,8 @@ class User < ApplicationRecord
   end
 
   def self.from_mail_identifier(mail_id)
-    all do |user|
-      return user if user.email.split('@').first == mail_id
+    all.each do |user|
+      return user if user.email.split('@').first.downcase == mail_id.downcase
     end
   end
 
@@ -120,7 +120,7 @@ class User < ApplicationRecord
 
     begin
       GitHelper.open_repository(path) do |git_writer|
-        git_writer.write_file('init.pp', generate_puppet_init_script)
+        git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
         message = if git_writer.added?
                     'Create init.pp'
                   else
