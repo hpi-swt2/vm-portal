@@ -2,7 +2,7 @@
 
 require 'vmapi.rb'
 class VmsController < ApplicationController
-  rescue_from RbVmomi::Fault, :with => :not_enough_resources
+  rescue_from RbVmomi::Fault, with: :not_enough_resources
 
   attr_reader :vms
 
@@ -108,7 +108,7 @@ class VmsController < ApplicationController
 
   def change_power_state
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
-    @vm.change_power_state    
+    @vm.change_power_state
     redirect_back(fallback_location: root_path)
   end
 
