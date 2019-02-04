@@ -60,10 +60,11 @@ class RequestsController < ApplicationController
     respond_to do |format|
       prepare_params
       @request.assign_sudo_users(request_params[:sudo_user_ids])
-      @request.accept!
       if @request.update(request_params)
+        redirect_params = @request.accept!
+        @request.save!
         notify_request_update
-        safe_create_vm_for format, @request
+        safe_create_vm_for format, @request, redirect_params
       else
         unsuccessful_action format, :edit
       end
@@ -102,10 +103,15 @@ class RequestsController < ApplicationController
 
   private
 
-  def safe_create_vm_for(format, request)
+  def add_notices(redirect_params)
+    redirect_params[:notice] = I18n.t('request.successfully_updated_and_vm_created') unless redirect_params[:alert]
+    redirect_params
+  end
+
+  def safe_create_vm_for(format, request, redirect_params)
     vm = request.create_vm
     if vm
-      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created')) }
+      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(add_notices(redirect_params))) }
       format.json { render status: :ok }
     else
       format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
@@ -161,6 +167,10 @@ class RequestsController < ApplicationController
 
     request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
     request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
+
+    # the user_ids must contain the ids of ALL users, sudo or not
+    request_parameters[:user_ids] ||= []
+    request_parameters[:user_ids] += request_parameters[:sudo_user_ids] if request_parameters[:sudo_user_ids]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
