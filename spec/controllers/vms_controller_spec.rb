@@ -226,6 +226,33 @@ RSpec.describe VmsController, type: :controller do
         expect(response).to redirect_to(vms_path)
       end
     end
+
+    context 'when the vm requires more resouces than any host can provide' do
+      before do
+        summary_double = double
+        allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(42)
+
+        allow(vm2).to receive(:summary).and_return(summary_double)
+        allow(vm2).to receive(:change_power_state)        
+        
+        post :change_power_state, params: { id: vm2.name }
+      end
+
+      it 'raises an error' do 
+        expect {
+          post :change_power_state, params: { id: vm2.name }
+        }.to raise_error(RbVmomi::Fault)
+      end
+
+      it 'redirects to the details page of the vm' do
+        expect(response).to redirect_to(vms_path)
+      end
+
+      it 'delivers a flash[:alert] banner' do
+        expect(flash[:alert]).to be_present
+        expect(flash[:alert]).to match(/NotEnoughCpus:.*/)
+      end
+    end
   end
 
   describe 'POST #suspend_vm' do
