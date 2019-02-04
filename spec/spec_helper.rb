@@ -66,6 +66,7 @@ RSpec.configure do |config|
     allow(PuppetParserHelper).to receive(:read_node_file).and_return('admins' => [], 'users' => [])
     allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock(clusters: [cluster_mock]))
     @git_stub = create_git_stub
+    allow_any_instance_of(User).to receive(:update_repository)
   end
 
   config.after do
