@@ -109,7 +109,7 @@ end %>
         <% (@vm.users + @vm.responsible_users).uniq.each do |user| %>
           <tr>
             <td>
-            <%= user.name %>
+            <%= link_to user.name, user %>
             <% if @vm.sudo_users.include? user %>
               <span class="badge badge-info">sudo user</span>
             <% end %>

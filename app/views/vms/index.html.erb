@@ -43,7 +43,7 @@
         <% else %>
           <ul class="list-unstyled">
             <% vm.responsible_users.each do |user| %>
-              <li><%= user.name %></li>
+              <li><%= link_to user.name, user %></li>
             <% end %>
           </ul>
         <% end %>
@@ -106,7 +106,7 @@
         <% else %>
           <ul class="list-unstyled">
             <% vm.responsible_users.each do |user| %>
-              <li><%= user.name %></li>
+              <li><%= link_to user.name, user %></li>
             <% end %>
           </ul>
         <% end %>
@@ -162,7 +162,7 @@
         <% else %>
           <ul class="list-unstyled">
             <% vm.responsible_users.each do |user| %>
-              <li><%= user.name %></li>
+              <li><%= link_to user.name, user %></li>
             <% end %>
           </ul>
         <% end %>
@@ -206,7 +206,7 @@
         <% else %>
           <ul class="list-unstyled">
             <% vm.responsible_users.each do |user| %>
-              <li><%= user.name %></li>
+              <li><%= link_to user.name, user %></li>
             <% end %>
           </ul>
         <% end %>
