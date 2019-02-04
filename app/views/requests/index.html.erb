@@ -4,8 +4,11 @@
     method: :get,
     class: "btn btn-primary float-right mt-3" %>
   <%= button_to "Templates", request_templates_path,
+    method: :get,
     class: "btn btn-primary float-right mt-3 mr-3" %>
-  <%= button_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary float-right mt-3 mr-3' %>
+  <%= button_to 'Operating Systems', operating_systems_path,
+    method: :get,
+    class: 'btn btn-primary float-right mt-3 mr-3' %>
 </div>
 
 <%= link_to "Pending requests (#{@pending_requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
