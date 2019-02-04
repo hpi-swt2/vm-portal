@@ -59,13 +59,14 @@ module VSphere
 
     def self.user_vms(user)
       vms = []
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path
-      files = Dir.entries(PuppetParserHelper.puppet_script_path)
-      files.map! { |file| file[(6..file.length - 4)] }
-      files.each do |vm_name|
-        users = PuppetParserHelper.read_node_file(vm_name)
-        users = users['admins'] + users['users'] | []
-        vms += find_by_name(vm_name) if users.include? user
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        files = Dir.entries(PuppetParserHelper.puppet_script_path)
+        files.map! { |file| file[(6..file.length - 4)] }
+        files.each do |vm_name|
+          users = PuppetParserHelper.read_node_file(vm_name)
+          users = users['admins'] + users['users'] | []
+          vms += find_by_name(vm_name) if users.include? user
+        end
       end
       vms
     end
