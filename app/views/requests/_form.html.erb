@@ -30,10 +30,11 @@
 
         <div class="field form-group">
           <p>Project:</p>
-          <%= form.select 'project_ids',
+          <%= form.select :project_id,
                           options_from_collection_for_select(Project.all,
                                                              :id,
-                                                             :name),
+                                                             :name,
+                                                             :selected => form.object.project_id),
                           { :include_blank => true},
                           { class: 'form-control' } %>
         </div>
@@ -58,22 +59,17 @@
       <div class="col">
         <div class="row-fluid pb-4 mb-2 border-bottom">
           <%= form.label "Template" %>
-          <select id="request_template_selection" class='form-control'>
-            <option value="none">None</option>
-            <% unless @request_templates.nil? %>
-              <% @request_templates.each_with_index do |request_template, index| %>
-                <option name="template" id="template" value="<%= [request_template.cpu_cores, request_template.ram_gb, request_template.storage_gb, request_template.operating_system] %>">
-                  <%= "#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}"
-                  %>
-                </option>
-              <% end %>
-            <% end %>
-          </select>
+          <%= form.select :template_id,
+                          options_for_select(RequestTemplate.all.map{|request_template|
+                                            ["#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}",
+                                            "[#{request_template.cpu_cores}, #{request_template.ram_gb}, #{request_template.storage_gb}, '#{request_template.operating_system}']"]}),
+                          { :include_blank => 'None' },
+                          { class: "form-control" } %>
         </div>
         <div class="row pt-3">
-          <div class="col">              
+          <div class="col">
             <%= form.label :cpu_cores, "CPU cores" %>
-            <%= form.number_field :cpu_cores, value: @request.persisted? ? @request.cpu_cores : nil, min: 0, class: 'form-control', id: 'cpu' %>              
+            <%= form.number_field :cpu_cores, value: @request.persisted? ? @request.cpu_cores : nil, min: 0, class: 'form-control', id: 'cpu' %>
           </div>
           <div class="col">
             <%= form.label :ram_gb, "RAM in GB" %>
@@ -87,8 +83,8 @@
         <div class="row pt-3">
           <div class="col">
             <%= form.label :operating_system, "Operating System" %> <br>
-            <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>  
-          </div>        
+            <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
+          </div>
         </div>
       </div>
     </div>
@@ -101,23 +97,25 @@
         <div class="form-group">
           Users with sudo rights
           <%= form.select 'sudo_user_ids',
-                          options_from_collection_for_select(User.all,
+                          options_from_collection_for_select(User.admin,
                                                             :id,
-                                                            :email),
+                                                            :email,
+                                                            @request.sudo_users.collect(&:id)),
                           { },
                           { class: 'form-control selecttwo', multiple: true} %>
         </div>
         <div class="form-group">
           Regular users
           <%= form.select 'user_ids',
-                          options_from_collection_for_select(User.all,
+                          options_from_collection_for_select(User.employee,
                                                               :id,
-                                                              :email),
+                                                              :email,
+                                                              @request.users.collect(&:id)),
                           { },
                           { class: 'form-control selecttwo', multiple: true} %>
         </div>
       </div>
-    </div>    
+    </div>
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>Other Information</h5>
@@ -125,8 +123,8 @@
       </div>
       <div class="col">
         <div class="field form-group pb-3 mb-3 border-bottom">
-          <input type="checkbox" data-toggle="collapse" data-target="#request_port_forwarding_info"> Enable port forwarding</input>     
-          <div id="request_port_forwarding_info" class="collapse">       
+          <input type="checkbox" data-toggle="collapse" data-target="#request_port_forwarding_info"> Enable port forwarding</input>
+          <div id="request_port_forwarding_info" class="collapse">
             <div class="field form-group">
               <%= form.label :port, "Port" %>
               <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>

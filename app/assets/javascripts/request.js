@@ -1,9 +1,9 @@
-$('#request_template_selection').click(function (){
+$('#request_template_id').click(function (){
     cpus = document.getElementById('cpu');
     ram = document.getElementById('ram');
     storage = document.getElementById('storage');
     os = document.getElementById('operating_system');
- 
+
     if(this.value === 'none') {
         cpus.value = "";
         ram.value = "";
