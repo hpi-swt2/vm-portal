@@ -88,6 +88,7 @@ end %>
              cpu_cores: cpu_cores }
 
   @hardware = {'IP Address' => @vm.ip,
+               'DNS' => @vm.dns,
                'Heartbeat Status' => @vm.guest_heartbeat_status }
   %>
 
