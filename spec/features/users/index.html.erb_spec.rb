@@ -26,6 +26,121 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       visit users_path
     end
 
+    context 'when searching' do
+      before do
+        @user1 = FactoryBot.create :user, first_name: "test_user_1"
+        @user2 = FactoryBot.create :user, first_name: "test_user_2"
+        @admin = FactoryBot.create :admin, first_name: "test_admin"
+        @employee = FactoryBot.create :employee, first_name: "test_employee"
+      end
+
+      context 'all with search' do
+        before do
+          select "user", :from => "role"
+          fill_in "search", :with => "test_user_2"
+          click_on "Search"
+        end
+
+        it 'does not show user 1' do
+          expect(page).not_to have_content("test_user_1")
+        end
+
+        it 'show user 1' do
+          expect(page).to have_content("test_user_2")
+        end
+
+        it 'does not show admins' do
+          expect(page).not_to have_content("test_admin")
+        end
+
+        it 'does not show employees' do
+          expect(page).not_to have_content("test_employee")
+        end
+      end
+
+      context 'for all' do
+        before do
+          select "all", :from => "role"
+          click_on "Search"
+        end
+
+        it 'shows user 1' do
+          expect(page).to have_content("test_user_1")
+        end
+
+        it 'shows user 2' do
+          expect(page).to have_content("test_user_2")
+        end
+
+        it 'shows all admins' do
+          expect(page).to have_content("test_admin")
+        end
+
+        it 'shows all employees' do
+          expect(page).to have_content("test_employee")
+        end
+      end
+
+      context 'for users' do
+        before do
+          select "user", :from => "role"
+          click_on "Search"
+        end
+
+        it 'shows all users' do
+          expect(page).to have_content("test_user_1")
+          expect(page).to have_content("test_user_2")
+        end
+
+        it 'does not show admins' do
+          expect(page).not_to have_content("test_admin")
+        end
+
+        it 'does not show employees' do
+          expect(page).not_to have_content("test_employee")
+        end
+      end
+
+      context 'for admins' do
+        before do
+          select "admin", :from => "role"
+          click_on "Search"
+        end
+
+        it 'does not show users' do
+          expect(page).not_to have_content("test_user_1")
+          expect(page).not_to have_content("test_user_2")
+        end
+
+        it 'shows all admins' do
+          expect(page).to have_content("test_admin")
+        end
+
+        it 'does not show employees' do
+          expect(page).not_to have_content("test_employee")
+        end
+      end
+
+      context 'for employees' do
+        before do
+          select "employee", :from => "role"
+          click_on "Search"
+        end
+
+        it 'does not show users' do
+          expect(page).not_to have_content("test_user_1")
+          expect(page).not_to have_content("test_user_2")
+        end
+
+        it 'does not show admins' do
+          expect(page).not_to have_content("test_admin")
+        end
+
+        it 'shows employees' do
+          expect(page).to have_content("test_employee")
+        end
+      end
+    end
     context 'looking at a normal user' do
       before do
         @button_user = page.find(id: "btn-user-#{user.id}")
