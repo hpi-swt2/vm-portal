@@ -7,15 +7,15 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/show.html.erb', type: :view do
   let(:vm_on) do
-    v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'vm', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm_on_without_tools) do
-    v_sphere_vm_mock 'VM'
+    v_sphere_vm_mock 'vm'
   end
 
   let(:vm_off) do
-    v_sphere_vm_mock 'VM', power_state: 'powerOff'
+    v_sphere_vm_mock 'vm', power_state: 'powerOff'
   end
 
   let(:current_user) { FactoryBot.create :user }
@@ -24,7 +24,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   before do
     sign_in current_user
     assign(:vm, vm_on)
-    connection = v_sphere_connection_mock [vm_on, vm_on_without_tools, vm_off], [], [], [], []
+    connection = v_sphere_connection_mock normal_vms: [vm_on, vm_on_without_tools, vm_off]
     allow(VSphere::Connection).to receive(:instance).and_return connection
     render
   end

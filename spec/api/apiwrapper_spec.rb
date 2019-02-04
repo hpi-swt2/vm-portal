@@ -338,7 +338,7 @@ RSpec.describe VmApi do
   end
 
   describe '#vm_users' do
-    let(:vm_name) { 'My fancy VM' }
+    let(:vm_name) { 'my-fancy-vm' }
 
     let(:vm_mock) do
       mock = double

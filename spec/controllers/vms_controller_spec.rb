@@ -9,7 +9,7 @@ RSpec.describe VmsController, type: :controller do
   let(:admin) { FactoryBot.create :admin }
 
   let(:vm1) do
-    v_sphere_vm_mock 'My insanely cool vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm2) do
@@ -25,7 +25,7 @@ RSpec.describe VmsController, type: :controller do
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
-    allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock([vm1, vm2], [], [], [], [])
+    allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock(normal_vms: [vm1, vm2])
   end
 
   describe 'GET #index' do

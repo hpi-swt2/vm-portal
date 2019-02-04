@@ -104,11 +104,11 @@ module VSphere
     # We do not provide a power_state? method which just returns a boolean, because vSphere can internally handle
     # more than just two power states and we might later need to respond to more states than just two
     def powered_on?
-      @vm.runtime.powerState == 'poweredOn'
+      @vm.summary.runtime.powerState == 'poweredOn'
     end
 
     def powered_off?
-      @vm.runtime.powerState == 'poweredOff'
+      @vm.summary.runtime.powerState == 'poweredOff'
     end
 
     # Power state
@@ -143,6 +143,7 @@ module VSphere
     def set_pending_archivation
       move_into pending_archivation_folder
       ArchivationRequest.new(name: name).save
+      move_into_correct_subfolder
     end
 
     def archivable?
@@ -163,6 +164,7 @@ module VSphere
 
       move_into archived_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Reviving
@@ -172,11 +174,13 @@ module VSphere
 
     def set_pending_reviving
       move_into pending_revivings_folder
+      move_into_correct_subfolder
     end
 
     def set_revived
       move_into root_folder
       archivation_request&.delete
+      move_into_correct_subfolder
     end
 
     # Config methods
@@ -197,11 +201,39 @@ module VSphere
       config&.dns || ''
     end
 
-    # Utilities
+    # Folder Utilities
     def move_into(folder)
       folder.move_here self
     end
 
+    def move_into_correct_subfolder
+      target = target_subfolder
+      move_into target unless target.vms(recursive: false).include? self
+    end
+
+    # Users
+    def responsible_users
+      config&.responsible_users || []
+    end
+
+    # this method should return all users, including the sudo users
+    def users
+      request&.users || []
+    end
+
+    def sudo_users
+      if request
+        request.sudo_users
+      else
+        []
+      end
+    end
+
+    def belongs_to(user)
+      users.include? user
+    end
+
+    # Information about the vm
     def boot_time
       @vm.runtime.bootTime
     end
@@ -314,10 +346,22 @@ module VSphere
       @vm.macs
     end
 
-    private
-
     def request
       Request.accepted.find { |each| name == each.name }
+    end
+
+    private
+
+    def target_subfolder
+      path = [] << case status
+                   when :archived then archived_folder.name
+                   when :pending_reviving then pending_revivings_folder.name
+                   when :pending_archivation then pending_archivation_folder.name
+                   else
+                     'Active VMs'
+                   end
+      path << responsible_users.first.human_readable_identifier if responsible_users.first
+      VSphere::Connection.instance.root_folder.ensure_subfolder_by_path path
     end
 
     def archivation_request

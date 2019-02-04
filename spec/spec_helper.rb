@@ -61,9 +61,10 @@ end
 
 RSpec.configure do |config|
   config.before do
+    cluster_mock = vim_cluster_mock('MockCluster', [])
     allow(VSphere::VirtualMachine).to receive(:user_vms).and_return []
     allow(PuppetParserHelper).to receive(:read_node_file).and_return('admins' => [], 'users' => [])
-    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock([], [], [], [], []))
+    allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock(clusters: [cluster_mock]))
     @git_stub = create_git_stub
   end
 

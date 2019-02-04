@@ -4,8 +4,11 @@
     method: :get,
     class: "btn btn-primary float-right mt-3" %>
   <%= button_to "Templates", request_templates_path,
+    method: :get,
     class: "btn btn-primary float-right mt-3 mr-3" %>
-  <%= button_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary float-right mt-3 mr-3' %>
+  <%= button_to 'Operating Systems', operating_systems_path,
+    method: :get,
+    class: 'btn btn-primary float-right mt-3 mr-3' %>
 </div>
 
 <%= link_to "Pending requests (#{@pending_requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
@@ -35,8 +38,8 @@
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= mb_to_gb(request.ram_mb) %> GB</td>
-      <td class="table-active"><%= mb_to_gb(request.storage_mb) %> GB</td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
       <td class="table-active"><%= request.operating_system %></td>
       <td class="table-active"><%= request.port %></td>
       <td class="table-active"><%= request.application_name %></td>
@@ -71,8 +74,8 @@
         <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
       </td>
       <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= mb_to_gb(request.ram_mb) %> GB</td>
-      <td class="table-active"><%= mb_to_gb(request.storage_mb) %> GB</td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
       <td class="table-active"><%= request.operating_system %></td>
       <td class="table-active"><%= request.port %></td>
       <td class="table-active"><%= request.application_name %></td>
