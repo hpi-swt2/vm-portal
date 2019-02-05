@@ -35,49 +35,6 @@
           </tbody>
         </table>
       </div>
-
-    </div>
-
-    <div class="card">
-      <%= link_to hosts_path, method: :get, class: "dashboard-header-link" do %>
-        <div class="card-header bg-primary text-white">
-          <div class="btn-group">
-            <!-- Add server list instead of host list -->
-            <h3><i class="fa fa-users"></i> Hosts</h3>
-          </div>
-        </div>
-      <% end %>
-      <div class="card-body">
-
-        <table data-toggle="table" class="table">
-          <thead>
-          </thead>
-          <tbody>
-          <% @hosts.each do |host| %>
-            <tr>
-              <td><%= link_to host.name,
-                              {controller: :hosts, action: 'show', id: host.name},
-                              method: :get, class: "btn btn-link" %></td>
-              <td><%= host.connection_state %></td>
-              <td>
-                <ul class="bulletless pl-1">
-                  <% unless host.vms.nil?
-                       vms = host.vms.take(3)
-                       vms.each do |vm| %>
-                  <li><%=  vm.name  -%></li>
-                  <%  end  %>
-                  <%  end %>
-
-                  <% if host.vms.length>3 %>
-                      ... (<%=host.vms.length%>)
-                  <% end %>
-                </ul>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
   <!-- end left column -->
@@ -96,6 +53,4 @@
       </div>
     </div>
   </div>
-
-
 </div>
