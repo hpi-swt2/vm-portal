@@ -49,7 +49,7 @@ module GitHelper
     end
 
     def open_git
-      @git = Git.open(path)
+      @git = Git.open(@path)
       @git.config('user.name', ENV['GITHUB_USER_NAME'])
       @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
     end
