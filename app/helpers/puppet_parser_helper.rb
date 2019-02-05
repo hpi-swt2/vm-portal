@@ -12,8 +12,8 @@ module PuppetParserHelper
     result
   end
 
-  def self.read_node_file(vm_name, repository_path = puppet_script_folder)
-    path = File.join(Rails.root, repository_path, 'Node', 'node-' + vm_name + '.pp')
+  def self.read_node_file(vm_name, repository_path = puppet_script_path)
+    path = File.join(repository_path, 'Node', 'node-' + vm_name + '.pp')
     values = { 'admins' => [], 'users' => [] }
     return values unless File.exist?(path)
 
@@ -27,11 +27,8 @@ module PuppetParserHelper
     values
   end
 
-  def self.puppet_script_folder
-    ENV['GIT_REPOSITORY_NAME']
-  end
 
   def self.puppet_script_path
-    File.join(Rails.root, puppet_script_folder)
+    File.join(Rails.root, 'private', ENV['GIT_REPOSITORY_NAME'])
   end
 end
