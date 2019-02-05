@@ -235,7 +235,7 @@ RSpec.describe VmsController, type: :controller do
         allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(999)
         allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm2
         allow(vm2).to receive(:summary).and_return(summary_double)
-        allow(vm2).to receive(:change_power_state).and_raise(RbVmomi::Fault.new("NotEnoughCpus:", nil))
+        allow(vm2).to receive(:change_power_state).and_raise(RbVmomi::Fault.new('NotEnoughCpus:', nil))
 
         post :change_power_state, params: { id: vm2.name }
       end
@@ -243,7 +243,7 @@ RSpec.describe VmsController, type: :controller do
       it 'catches the error' do
         expect {
           post :change_power_state, params: { id: vm2.name }
-        }.not_to raise_error(RbVmomi::Fault)
+        }.not_to raise_error
       end
 
       it 'redirects to the details page of the vm' do
