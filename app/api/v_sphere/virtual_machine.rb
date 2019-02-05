@@ -58,14 +58,14 @@ module VSphere
     end
 
     def self.prepare_vm_names
-      files = Dir.entries(File.join(PuppetParserHelper.puppet_script_path, 'Node'))
+      files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
       files
     end
 
     def self.includes_user?(vm_name, user)
-      users = PuppetParserHelper.read_node_file(vm_name)
+      users = Puppetscript.read_node_file(vm_name)
       users = users['admins'] + users['users'] | []
       users.include? user
     end
@@ -73,7 +73,7 @@ module VSphere
     def self.user_vms(user)
       vms = []
       begin
-        GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        GitHelper.open_repository Puppetscript.puppet_script_path do
           vm_names = prepare_vm_names
           vm_names.each do |vm_name|
             vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
@@ -280,8 +280,8 @@ module VSphere
     def users
       users = []
       begin
-        GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-          remote_users = PuppetParserHelper.read_node_file(name)
+        GitHelper.open_repository Puppetscript.puppet_script_path do
+          remote_users = Puppetscript.read_node_file(name)
           users = remote_users['users']
         end
       rescue Git::GitExecuteError => e
@@ -309,7 +309,7 @@ module VSphere
     end
 
     def user_name_and_node_script(ids)
-      all_users = PuppetParserHelper.read_node_file(name)
+      all_users = Puppetscript.read_node_file(name)
       sudo_users = all_users['admins']
       new_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
@@ -318,7 +318,7 @@ module VSphere
     end
 
     def users=(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
         git_writer.write_file(name_path, name_script)
         git_writer.write_file(node_path, node_script)
@@ -332,8 +332,8 @@ module VSphere
     def sudo_users
       admins = []
       begin
-        GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-          users = PuppetParserHelper.read_node_file(name)
+        GitHelper.open_repository Puppetscript.puppet_script_path do
+          users = Puppetscript.read_node_file(name)
           admins = users['admins']
         end
       rescue Git::GitExecuteError => e
@@ -343,7 +343,7 @@ module VSphere
     end
 
     def sudo_name_and_node_script(ids)
-      all_users = PuppetParserHelper.read_node_file(name)
+      all_users = Puppetscript.read_node_file(name)
       users = all_users['users']
       new_sudo_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
@@ -352,7 +352,7 @@ module VSphere
     end
 
     def sudo_users=(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
         name_script, node_script = sudo_name_and_node_script(ids)
         git_writer.write_file(name_path, name_script)
         git_writer.write_file(node_path, node_script)
