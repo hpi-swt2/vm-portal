@@ -238,7 +238,7 @@ module VSphere
 
     def macs
       @vm.macs
-    end›
+    end
 
     def disks
       @vm.disks
