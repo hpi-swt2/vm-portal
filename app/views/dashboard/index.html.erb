@@ -25,7 +25,9 @@
               <td><%= link_to vm.name,
                               {controller: :vms, action: 'show', id: vm.name},
                               method: :get, class: "btn btn-link"  %></td>
-              <td><%= vm.boot_time %></td>
+              <td class="table-active align-middle">
+                <%= render 'vms/vm_status', vm: vm %>
+              </td>
             <tr>
           <% end %>
           </tbody>
