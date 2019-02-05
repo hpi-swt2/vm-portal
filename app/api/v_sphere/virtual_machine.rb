@@ -82,7 +82,8 @@ module VSphere
 
     # Guest OS communication
     def vm_ware_tools?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+      tool_status = @vm&.guest&.toolsStatus
+      tool_status && %w[toolsOk toolsOld].include?(tool_status)
     end
 
     def suspend_vm
@@ -191,7 +192,8 @@ module VSphere
     end
 
     def ensure_config
-      @config ||= VirtualMachineConfig.create(name: name)
+      @config = VirtualMachineConfig.create!(name: name) unless config
+      config
     end
 
     def ip
@@ -217,8 +219,6 @@ module VSphere
       config&.responsible_users || []
     end
 
-    # this method should return all users, including the sudo users
-
     # Information about the vm
     def boot_time
       @vm.runtime.bootTime
@@ -228,12 +228,20 @@ module VSphere
       @vm.summary
     end
 
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
+    def macs
+      @vm.macs
     end
 
-    def vmwaretools_installed?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    def disks
+      @vm.disks
+    end
+
+    def guest
+      @vm.guest
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
     end
 
     def host_name
@@ -255,6 +263,7 @@ module VSphere
         :offline
       end
     end
+
     # this method should return all users, including the sudo users
     def users
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
@@ -332,12 +341,8 @@ module VSphere
       equal? other
     end
 
-    def macs
-      @vm.macs
-    end
-
     def request
-      Request.accepted.find { |each| name == each.name }
+      @request ||= Request.accepted.find_by name: name
     end
 
     private

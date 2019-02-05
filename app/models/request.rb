@@ -86,14 +86,14 @@ class Request < ApplicationRecord
     path = PuppetParserHelper.puppet_script_path
 
     begin
-      notice = ''
       GitHelper.open_repository(path) do |git_writer|
         git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
         git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
-        message, notice = commit_and_notice_message(git_writer)
+        message, _notice = commit_and_notice_message(git_writer) # notice is no longer used
         git_writer.save(message)
       end
-      { notice: notice }
+    rescue Git::GitExecuteError
+      { alert: "Users could not be associated with the VM!\nCould not push to git. Please check that your ssh key and environment variables are set." }
     end
   end
 

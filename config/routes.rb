@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   post '/vms/vm/:id/request_vm_revive' => 'vms#request_vm_revive', constraints: { id: /.*/ }
   post '/vms/vm/:id/revive_vm' => 'vms#revive_vm', constraints: { id: /.*/ }
   post '/vms/vm/:id/stop_archiving' => 'vms#stop_archiving', constraints: { id: /.*/ }
+  resources :vms, except: :new, path: 'vms/vm'
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
@@ -45,7 +46,6 @@ Rails.application.routes.draw do
                omniauth_callbacks: 'users/omniauth_callbacks'
              }
 
-  resources :vms, except: :new
   resources :hosts, :servers
   resources :users do
     member do

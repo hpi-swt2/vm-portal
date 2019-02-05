@@ -7,11 +7,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   let(:mock_vms) do
     [v_sphere_vm_mock('my-insanely-cool-vm',
                       power_state: 'poweredOn',
-                      vm_ware_tools: 'toolsInstalled'),
+                      vm_ware_tools: 'toolsOld'),
      v_sphere_vm_mock('another-vm',
                       power_state: 'poweredOff',
                       boot_time: 'Friday',
-                      vm_ware_tools: 'toolsInstalled')]
+                      vm_ware_tools: 'toolsOk')]
   end
 
   let(:mock_vms_without_tools) do

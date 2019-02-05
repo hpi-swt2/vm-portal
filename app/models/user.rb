@@ -38,6 +38,16 @@ class User < ApplicationRecord
     end
   end
 
+  def self.search(term, role)
+    if term
+      users = where('first_name LIKE ? or last_name LIKE ?', "%#{term}%", "%#{term}%")
+      users = users.where(role: role) if role && role != ''
+      users.order(last_name: :asc)
+    else
+      order(last_name: :asc)
+    end
+  end
+
   # notifications
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
@@ -128,13 +138,13 @@ class User < ApplicationRecord
                   end
         git_writer.save(message)
       end
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
   end
 
   def generate_puppet_init_script
-    Puppetscript.init_scrit(User.all)
+    Puppetscript.init_scrit(User.unscoped.all)
   end
 
   def valid_ssh_key?

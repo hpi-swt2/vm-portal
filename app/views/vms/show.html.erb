@@ -35,7 +35,7 @@ end %>
             <%= link_to 'Power Off',
                         {controller: :vms, action: 'change_power_state', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
             <div class="dropdown-divider"></div>
-            <% if @vm.vmwaretools_installed? %>
+            <% if @vm.vm_ware_tools? %>
               <%= link_to 'Shutdown Guest OS',
                           {controller: :vms, action: 'shutdown_guest_os', id: @vm.name}, method: :post, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
               <%= link_to 'Restart Guest OS',
@@ -51,7 +51,7 @@ end %>
           <% end %>
           <% if @vm.active? %>
             <%= link_to 'Archive VM',
-                        {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, class: 'dropdown-item'%>
+                        {controller: :vms, action: 'request_vm_archivation', id: @vm.name}, method: :post, data: { confirm: 'Are you sure you want to archive this VM?' }, class: 'dropdown-item'%>
           <% end %>
           <% if @vm.archived? %>
 
@@ -70,15 +70,13 @@ end %>
 </div>
 
 <%
-  committed = (@vm.summary&.storage&.committed&.to_f / 1024**3) || 0
-  uncommitted = (@vm.summary&.storage&.uncommitted&.to_f / 1024**3) || 0
-
-  hdd_usage = committed.round(2)
-  hdd_allocation = (committed + uncommitted).round(2)
-  cpu_usage = @vm.summary.quickStats&.overallCpuUsage || 0
-  cpu_allocation = @vm.summary.quickStats&.overallCpuDemand || 0
+  hdd_allocation = (@vm.disks.map(&:capacityInKB).inject(0, &:+).to_f / 1024**2).round(2)
+  guest_disks = @vm&.guest&.disk || []
+  hdd_usage = guest_disks.empty? ? 0 : (hdd_allocation - guest_disks.map(&:freeSpace).inject(0, &:+).to_f / 1024**3).round(2)
+  cpu_usage = @vm.summary.quickStats&.overallCpuDemand || 0
+  cpu_allocation = @vm.summary.runtime&.maxCpuUsage || 1
   ram_usage = (@vm.summary.quickStats&.guestMemoryUsage.to_f / 1024).round(2) || 0
-  ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 0
+  ram_allocation = (@vm.summary.config&.memorySizeMB.to_f / 1024).round(2) || 1
   cpu_cores = @vm.summary.config&.numCpu  || 1
 
   @values = {cpu_allocation: cpu_allocation,
@@ -90,6 +88,7 @@ end %>
              cpu_cores: cpu_cores }
 
   @hardware = {'IP Address' => @vm.ip,
+               'DNS' => @vm.dns,
                'Heartbeat Status' => @vm.guest_heartbeat_status }
   %>
 
@@ -106,6 +105,19 @@ end %>
         <tr>
           <th colspan="2" ><h4 class="mb-0">Users</h4></th>
         </tr>
+        <% (@vm.users + @vm.responsible_users).uniq.each do |user| %>
+          <tr>
+            <td>
+            <%= link_to user.name, user %>
+            <% if @vm.sudo_users.include? user %>
+              <span class="badge badge-info">sudo user</span>
+            <% end %>
+            <% if @vm.responsible_users.include? user %>
+              <span class="badge badge-primary">responsible</span>
+            <% end %>
+            </td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>

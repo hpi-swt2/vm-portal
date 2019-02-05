@@ -295,8 +295,8 @@ RSpec.describe Request, type: :model do
         expect(@git_stub.git).to have_received(:commit_all).with('Add myvm')
       end
 
-      it 'returns a success message' do
-        expect(request.push_to_git).to eq(notice: 'Added file and pushed to git.')
+      it 'returns an empty error message' do
+        expect(request.push_to_git).to eq({})
       end
     end
 
@@ -311,8 +311,8 @@ RSpec.describe Request, type: :model do
         request.push_to_git
       end
 
-      it 'returns a success message' do
-        expect(request.push_to_git).to eq(notice: 'Changed file and pushed to git.')
+      it 'returns an empty error message' do
+        expect(request.push_to_git).to eq({})
       end
     end
 
@@ -327,8 +327,8 @@ RSpec.describe Request, type: :model do
         request.push_to_git
       end
 
-      it 'returns a success message' do
-        expect(request.push_to_git).to eq(notice: 'Already up to date.')
+      it 'returns an emtpy error message' do
+        expect(request.push_to_git).to eq({})
       end
     end
   end
