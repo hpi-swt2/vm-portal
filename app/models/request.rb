@@ -27,9 +27,7 @@ class Request < ApplicationRecord
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
   validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
-  byebug
   with_options if: :port_forwarding do | request |
-    byebug
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true
   end
