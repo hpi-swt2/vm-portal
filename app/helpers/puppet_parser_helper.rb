@@ -16,8 +16,10 @@ module PuppetParserHelper
     path = File.join(Rails.root, repository_path, 'Node', 'node-' + vm_name + '.pp')
     values = { 'admins' => [], 'users' => [] }
     return values unless File.exist?(path)
+
     contents = File.open(path).read
     raise 'Unsupported Format' unless node_file_correct?(vm_name, contents)
+
     admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
     users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
     values['admins'] = admins.map { |admin| User.from_mail_identifier(admin) }

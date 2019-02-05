@@ -60,7 +60,7 @@ module VSphere
     def self.prepare_vm_names
       files = Dir.entries(File.join(PuppetParserHelper.puppet_script_path, 'Node'))
       files.map! { |file| file[(5..file.length - 4)] }
-      files.reject! { |file| file.nil? }
+      files.reject!(&:nil?)
       files
     end
 
