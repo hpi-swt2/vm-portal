@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_01_091109) do
+ActiveRecord::Schema.define(version: 2019_02_04_164433) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.string "application_name"
     t.text "description"
     t.integer "user_id"
+    t.integer "project_id"
+    t.index ["project_id"], name: "index_requests_on_project_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -129,10 +131,6 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "ssh_key"
     t.string "provider"
     t.string "uid"
     t.string "ssh_key"
@@ -151,6 +149,8 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
