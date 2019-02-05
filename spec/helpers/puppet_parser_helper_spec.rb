@@ -1,18 +1,23 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'pp'
 
 RSpec.describe PuppetParserHelper, type: :helper do
   let(:path) { File.join('spec', 'helpers') }
 
   before do
     allow(PuppetParserHelper).to receive(:read_node_file).and_call_original
+    @user = FactoryBot.create :puppet_user
+    @admin1 = FactoryBot.create :puppet_admin
+    @admin2 = FactoryBot.create :puppet_admin2
   end
 
   describe 'read valid node file' do
-    let(:user) { FactoryBot.create :puppet_user }
-    let(:admin1) { FactoryBot.create :puppet_admin }
-    let(:admin2) { FactoryBot.create :puppet_admin2 }
+    # let won\t be saved in db, but we need the objects in db for testing
+    # let(:user) { FactoryBot.create :puppet_user }
+    # let(:admin1) { FactoryBot.create :puppet_admin }
+    # let(:admin2) { FactoryBot.create :puppet_admin2 }
     let(:puppet_file) { PuppetParserHelper.read_node_file('example', path) }
 
     it 'returns the results as a Hash' do
@@ -20,6 +25,7 @@ RSpec.describe PuppetParserHelper, type: :helper do
     end
 
     it 'returns the admins as an Array' do
+      pp puppet_file
       admins = puppet_file['admins']
       expect(admins).to be_a_kind_of Array
     end
@@ -30,13 +36,13 @@ RSpec.describe PuppetParserHelper, type: :helper do
     end
 
     it 'contains the first admin in the admins\' Array' do
-      admins = puppet_file['admins'].first
-      expect(admins).to include(admin1)
+      admins = puppet_file['admins']
+      expect(admins).to include(@admin1)
     end
 
     it 'contains the secondadmin in the admins\' Array' do
-      admins = puppet_file['admins'].first
-      expect(admins).to include(admin2)
+      admins = puppet_file['admins']
+      expect(admins).to include(@admin2)
     end
 
     it 'returns the users as an Array' do
@@ -50,8 +56,8 @@ RSpec.describe PuppetParserHelper, type: :helper do
     end
 
     it 'contains the first user in the users\' Array' do
-      users = puppet_file['users'].first
-      expect(users).to include(user)
+      users = puppet_file['users']
+      expect(users).to include(@user)
     end
 
     it 'raises an error if trying to read a puppet file which does not contain admins' do
