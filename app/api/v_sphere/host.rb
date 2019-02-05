@@ -63,11 +63,11 @@ module VSphere
     end
 
     def get_ram_gb
-      @host.summary.hardware.memorySize.to_i / 1024**2
+      (@host.summary.hardware.memorySize.to_f / 1024**2).round(2)
     end
 
     def get_storage_gb
-      @host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_i / 1024**2
+      (@host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_f / 1024**2).round(2)
     end
 
     private
