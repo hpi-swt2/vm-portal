@@ -3,12 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe VmsHelper, type: :helper do
-  it 'returns the request to the vm correctly' do
-    vm = v_sphere_vm_mock 'testvm'
-    request = FactoryBot.create :accepted_request, name: 'testvm'
-    expect(request_for(vm).name).to eq(request.name)
-  end
-
   context 'when notifying users about changes in their rights regarding a VM' do
     before do
       users_before = FactoryBot.create_list(:employee, 4)

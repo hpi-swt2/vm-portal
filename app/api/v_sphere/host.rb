@@ -11,6 +11,13 @@ module VSphere
       VSphere::Cluster.all.map(&:hosts).flatten
     end
 
+    def self.get_host(name)
+      VSphere::Host.all.each do |host|
+        return host if host.name == name
+      end
+      nil
+    end
+
     def initialize(rbvmomi_host)
       @host = rbvmomi_host
     end

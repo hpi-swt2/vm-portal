@@ -4,6 +4,7 @@ class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
+  has_and_belongs_to_many :responsible_users, class_name: 'User', join_table: 'requests_responsible_users'
 
   before_save do
     users_assigned_to_requests.each(&:save)
@@ -13,22 +14,22 @@ class Request < ApplicationRecord
 
   MAX_NAME_LENGTH = 20
   MAX_CPU_CORES = 64
-  MAX_RAM_MB = 256_000
-  MAX_STORAGE_MB = 1_000_000
+  MAX_RAM_GB = 256
+  MAX_STORAGE_GB = 1_000
 
   enum status: %i[pending accepted rejected]
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
-            format: { with: /\A[a-zA-Z1-9\-\s]+\z/, message: 'only letters and numbers allowed' },
+            format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
-  validates :cpu_cores, :ram_mb, :storage_mb, :operating_system, :description, presence: true
+  validates :responsible_users, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
-  validates :ram_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_MB }
-  validates :storage_mb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_MB }
+  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
+  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
-    description += "- Responsible: TBD\n"
+    description += "- Responsible: #{responsible_users.first.name}\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
     description += url(host_name) + "\n"
     description
@@ -68,30 +69,33 @@ class Request < ApplicationRecord
   end
 
   def create_vm
-    folder = VSphere::Connection.instance.root_folder
     clusters = VSphere::Cluster.all
-    return unless clusters.first
+    return nil unless clusters.first
 
-    vm = folder.create_vm(cpu_cores, ram_mb, storage_mb, name, clusters.first)
-    config = vm.ensure_config
-    config.description = description
-    config.save
+    create_vm_in_cluster(clusters.first)
+  end
+
+  def create_vm_in_cluster(cluster)
+    vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
+    vm.ensure_config.responsible_users = responsible_users
+    vm.config.description = description
+    vm.config.save
+    vm.move_into_correct_subfolder
+    vm
   end
 
   def push_to_git
-    path = File.join Rails.root, 'public', 'puppet_script_temp'
+    path = PuppetParserHelper.puppet_script_path
 
     begin
       notice = ''
-      GitHelper.write_to_repository(path) do |git_writer|
+      GitHelper.open_repository(path) do |git_writer|
         git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
         git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
         message, notice = commit_and_notice_message(git_writer)
         git_writer.save(message)
       end
       { notice: notice }
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 
@@ -119,5 +123,13 @@ class Request < ApplicationRecord
 
   def url(host_name)
     Rails.application.routes.url_helpers.request_url self, host: host_name
+  end
+
+  def gibi_to_mibi(gibi)
+    gibi * 1024
+  end
+
+  def gibi_to_kibi(gibi)
+    gibi * 1024**2
   end
 end

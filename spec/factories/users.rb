@@ -22,4 +22,22 @@ FactoryBot.define do
   factory :employee, parent: :user do
     role { :employee }
   end
+
+  factory :puppet_admin, parent: :admin do
+    first_name { 'Vorname' }
+    last_name { 'Nachname' }
+    email { 'vorname.nachname@hpi.de' }
+  end
+
+  factory :puppet_admin2, parent: :admin do
+    first_name { 'weitererVorname' }
+    last_name { 'Nachname' }
+    email { 'weitererVorname.nachname@hpi.de' }
+  end
+
+  factory :puppet_user, parent: :user do
+    first_name { 'andererVorname' }
+    last_name { 'Nachname' }
+    email { 'andererVorname.nachname@hpi.de' }
+  end
 end

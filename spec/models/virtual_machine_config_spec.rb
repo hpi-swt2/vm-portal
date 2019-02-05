@@ -3,5 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe VirtualMachineConfig, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:config) { FactoryBot.create(:virtual_machine_config) }
+
+  it 'can save responsible users' do
+    responsible_users = [FactoryBot.create(:admin)]
+    config.responsible_users = responsible_users
+    config.save!
+    expect(config.responsible_users).to match_array(responsible_users)
+  end
+
+  it 'can save without responsible users' do
+    config.responsible_users = []
+    expect(config).to be_valid
+  end
 end

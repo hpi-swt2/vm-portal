@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
   has_many :servers
+  has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
   validate :valid_ssh_key
@@ -59,6 +60,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def human_readable_identifier
+    email.split(/@/).first
+  end
+
   def valid_ssh_key
     errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
   end
@@ -72,6 +77,16 @@ class User < ApplicationRecord
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
     end
+  end
+
+  def self.from_mail_identifier(mail_id)
+    all.each do |user|
+      return user if user.email.split('@').first.downcase == mail_id.downcase
+    end
+  end
+
+  def vm_infos
+    VmApi.instance.user_vms(self)
   end
 
   def vms
@@ -101,11 +116,11 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    path = File.join Rails.root, 'public', 'puppet_script_temp'
+    path = PuppetParserHelper.puppet_script_path
 
     begin
-      GitHelper.write_to_repository(path) do |git_writer|
-        git_writer.write_file('init.pp', generate_puppet_init_script)
+      GitHelper.open_repository(path) do |git_writer|
+        git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
         message = if git_writer.added?
                     'Create init.pp'
                   else
@@ -113,6 +128,8 @@ class User < ApplicationRecord
                   end
         git_writer.save(message)
       end
+    rescue Git::GitExecuteError
+      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
     end
   end
 

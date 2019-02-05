@@ -15,6 +15,8 @@ module VmsHelper
       'bg-success'
     when :offline
       'bg-danger'
+    else
+      # type code here
     end
   end
 
@@ -30,6 +32,8 @@ module VmsHelper
       'online'
     when :offline
       'offline'
+    else
+      # type code here
     end
   end
 
@@ -44,9 +48,5 @@ module VmsHelper
       User.find(user_id).notify('Sudo rights granted', "You have been made sudo user on VM '#{vm_name}'") if sudo_lists
       User.find(user_id).notify('User rights granted', "You have been made user on VM '#{vm_name}'") unless sudo_lists
     end
-  end
-
-  def request_for(vm)
-    Request.accepted.find { |each| vm.name == each.name }
   end
 end
