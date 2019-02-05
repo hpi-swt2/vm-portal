@@ -57,16 +57,25 @@ module VSphere
       root_folder.find_vm(name)
     end
 
+    def self.prepare_vm_names
+      files = Dir.entries(File.join(PuppetParserHelper.puppet_script_path, 'Node'))
+      files.map! { |file| file[(5..file.length - 4)] }
+      files.reject!(&:nil?)
+      files
+    end
+
+    def self.includes_user?(vm_name, user)
+      users = PuppetParserHelper.read_node_file(vm_name)
+      users = users['admins'] + users['users'] | []
+      users.include? user
+    end
+
     def self.user_vms(user)
       vms = []
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        files = Dir.entries(File.join PuppetParserHelper.puppet_script_path, 'Node')
-        files.map! { |file| file[(5..file.length - 4)] }
-        files.select! { |file| !file.nil? }
-        files.each do |vm_name|
-          users = PuppetParserHelper.read_node_file(vm_name)
-          users = users['admins'] + users['users'] | []
-          vms.append(find_by_name(vm_name)) if users.include? user
+        vm_names = prepare_vm_names
+        vm_names.each do |vm_name|
+          vms.append(find_by_name(vm_name)) if includes_user?(vmname, user)
         end
       end
       vms
@@ -82,7 +91,8 @@ module VSphere
 
     # Guest OS communication
     def vm_ware_tools?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+      tool_status = @vm&.guest&.toolsStatus
+      tool_status && %w[toolsOk toolsOld].include?(tool_status)
     end
 
     def suspend_vm
@@ -191,8 +201,7 @@ module VSphere
     end
 
     def ensure_config
-      @config = config
-      @config ||= VirtualMachineConfig.create(name: name)
+      @config = config || VirtualMachineConfig.create!(name: name) unless @config
     end
 
     def ip
@@ -218,8 +227,6 @@ module VSphere
       config&.responsible_users || []
     end
 
-    # this method should return all users, including the sudo users
-
     # Information about the vm
     def boot_time
       @vm.runtime.bootTime
@@ -229,12 +236,20 @@ module VSphere
       @vm.summary
     end
 
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
+    def macs
+      @vm.macs
+    end›
+
+    def disks
+      @vm.disks
     end
 
-    def vmwaretools_installed?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    def guest
+      @vm.guest
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
     end
 
     def host_name
@@ -321,6 +336,89 @@ module VSphere
       users.include? user
     end
 
+    # this method should return all users, including the sudo users
+    def users
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        users = PuppetParserHelper.read_node_file(name)
+        users['users']
+      rescue Git::GitExecuteError
+        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
+    end
+
+    def commit_message(git_writer)
+      if git_writer.added?
+        'Add ' + name
+      elsif git_writer.updated?
+        'Update ' + name
+      else
+        ''
+      end
+    end
+
+    def name_path
+      File.join('Name', name + '.pp')
+    end
+
+    def node_path
+      File.join('Node', 'node-' + name + '.pp')
+    end
+
+    def user_name_and_node_script(ids)
+      all_users = PuppetParserHelper.read_node_file(name)
+      sudo_users = all_users['admins']
+      new_users = User.where(id: ids)
+      name_script = Puppetscript.name_script(name)
+      node_script = Puppetscript.node_script(name, sudo_users, new_users)
+      return name_script, node_script
+    end
+
+    def users=(ids)
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        name_script, node_script = user_name_and_node_script(ids)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
+        message = commit_message(git_writer)
+        git_writer.save(message)
+      rescue Git::GitExecuteError
+        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
+    end
+
+    def sudo_users
+      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
+        users = PuppetParserHelper.read_node_file(name)
+        users['admins']
+      rescue Git::GitExecuteError
+        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
+    end
+
+    def sudo_name_and_node_script(ids)
+      all_users = PuppetParserHelper.read_node_file(name)
+      users = all_users['users']
+      new_sudo_users = User.where(id: ids)
+      name_script = Puppetscript.name_script(name)
+      node_script = Puppetscript.node_script(name, new_sudo_users, users)
+      return name_script, node_script
+    end
+
+    def sudo_users=(ids)
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        name_script, node_script = sudo_name_and_node_script(ids)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
+        message = commit_message(git_writer)
+        git_writer.save(message)
+      rescue Git::GitExecuteError
+        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      end
+    end
+
+    def belongs_to(user)
+      users.include? user
+    end
+
     # We cannot use Object identity to check if to Virtual Machine objects are equal
     # because they are created on demand and to Virtual Machine objects can wrap the same vSphere VM.
     # Therefore we must use another method of comparing equality.
@@ -333,12 +431,8 @@ module VSphere
       equal? other
     end
 
-    def macs
-      @vm.macs
-    end
-
     def request
-      Request.accepted.find { |each| name == each.name }
+      @request ||= Request.accepted.find_by name: name
     end
 
     private

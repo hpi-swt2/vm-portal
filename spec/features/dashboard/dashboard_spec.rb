@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe 'Dashboard', type: :feature do
-  let (:user) { FactoryBot.create(:user) }
-  let (:vm1) { vim_vm_mock('testing') }
-  let (:vm2) { vim_vm_mock('testing2') }
+  let(:user) { FactoryBot.create(:user) }
+  let(:vm1) { vim_vm_mock('testing') }
+  let(:vm2) { vim_vm_mock('testing2') }
 
   before do
     sign_in(user)

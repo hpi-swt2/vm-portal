@@ -85,27 +85,22 @@ class Request < ApplicationRecord
   end
 
   def push_to_git
-    path = PuppetParserHelper.puppet_script_path
-
-    begin
-      notice = ''
-      GitHelper.open_repository(path) do |git_writer|
-        git_writer.write_file('Node/' + "node_#{name}.pp", generate_puppet_node_script)
-        git_writer.write_file('Name/' + "#{name}.pp", generate_puppet_name_script)
-        message, notice = commit_and_notice_message(git_writer)
-        git_writer.save(message)
-      end
-      { notice: notice }
+    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      git_writer.write_file(File.join('Node', "node_#{name}.pp"), generate_puppet_node_script)
+      git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
+      git_writer.save(commit_message(git_writer))
+    rescue Git::GitExecuteError
+      { alert: "Users could not be associated with the VM!\nCould not push to git. Please check that your ssh key and environment variables are set." }
     end
   end
 
-  def commit_and_notice_message(git_writer)
+  def commit_message(git_writer)
     if git_writer.added?
-      ['Add ' + name, 'Added file and pushed to git.']
+      'Add ' + name
     elsif git_writer.updated?
-      ['Update ' + name, 'Changed file and pushed to git.']
+      'Update ' + name
     else
-      ['', 'Already up to date.']
+      ''
     end
   end
 

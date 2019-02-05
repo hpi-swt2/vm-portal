@@ -3,11 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'End to End testing', type: :feature do
+  let(:host) do
+    v_sphere_host_mock('someHost')
+  end
+
   before do
     @user = FactoryBot.create :user
     @employee = FactoryBot.create :employee
     @admin = FactoryBot.create :admin
     @requestname = 'capybara-test-vm'
+    allow(VSphere::Host).to receive(:all).and_return [host]
   end
 
   describe 'GET "/" - Landing Page'
@@ -20,7 +25,7 @@ RSpec.describe 'End to End testing', type: :feature do
   describe 'Request Process'
   it 'is possible to request a new VM' do
     sign_in @employee
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     expect(page).to have_current_path('/vms/requests/new')
     fill_in('VM Name', with: @requestname)
@@ -41,7 +46,7 @@ RSpec.describe 'End to End testing', type: :feature do
 
   it 'is possible to accept a VM request' do
     sign_in @admin
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     fill_in('VM Name', with: @requestname)
     fill_in('cpu', with: 4)
@@ -74,7 +79,7 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to turn on a VM' do
     skip
     sign_in @admin
-    visit '/vms'
+    visit '/vms/vm'
     click_on 'New Request'
     fill_in('VM Name', with: @requestname)
     fill_in('cpu', with: 4)
@@ -93,7 +98,7 @@ RSpec.describe 'End to End testing', type: :feature do
     fill_in('virtual_machine_config_dns', with: 'www.example.com')
     click_on 'Update Configuration'
     click_on @requestname
-    visit "/vms/#{@requestname}"
+    visit "/vms/vm/#{@requestname}"
     expect(page).to have_text('offline')
     select('Power On', from: 'navbarDropdown')
     expect(page).to have_text('online')
