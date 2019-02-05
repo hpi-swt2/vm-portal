@@ -48,10 +48,6 @@ class VmsController < ApplicationController
     @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return if !@vm || @vm.archived? || @vm.pending_archivation?
 
-    User.admin.each do |each|
-      each.notify("VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
-    end
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
                   "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within three days.\n" +
@@ -60,6 +56,8 @@ class VmsController < ApplicationController
     @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
+    @admin_ids = User.admin.pluck(:id)
+    ApplicationJob.set(wait: 3.days).perform_later(@admin_ids, @vm.name, url_for(controller: :vms, action: 'show', id: @vm.name))
   end
 
   def request_vm_revive

@@ -146,7 +146,12 @@ class RequestsController < ApplicationController
     return if @request.pending?
 
     if @request.accepted?
-      notify_users('Request has been accepted', @request.description_text(host_url))
+      ([@request.user] + User.admin).each do |each|
+        each.notify('Request has been accepted', @request.description_text(host_url))
+      end
+      @request.users.each do |each|
+        each.notify('You have (sudo) rights on a new VM', @request.description_text(host_url))
+      end
     elsif @request.rejected?
       message = @request.description_text host_url
       message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
@@ -208,7 +213,6 @@ class RequestsController < ApplicationController
   end
 
   def enough_resources
-
     hosts = VSphere::Host.all
 
     # get max host resources
