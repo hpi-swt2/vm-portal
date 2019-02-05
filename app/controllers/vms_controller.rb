@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
+require './app/api/v_sphere/virtual_machine'
+
 class VmsController < ApplicationController
   rescue_from RbVmomi::Fault, with: :not_enough_resources
 
@@ -8,7 +10,7 @@ class VmsController < ApplicationController
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
-  before_action :authorize_vm_access, only: %i[show]
+  before_action :authorize_vm_access, only: %i[show edit update]
   before_action :authenticate_root_user_or_admin, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
   def index
@@ -42,6 +44,28 @@ class VmsController < ApplicationController
       flash[:alert] = 'Configuration could not be found!'
       redirect_to controller: :vms, action: 'index'
     end
+  end
+
+  def edit
+    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+
+    @sudo_user_ids = @vm.sudo_users.map(&:id)
+    @non_sudo_user_ids = @vm.users.map(&:id)
+    @description = @vm.ensure_config.description
+  end
+
+  def update
+    notify_changed_users(@vm.sudo_users.map(&:id), params[:vm_info][:sudo_user_ids].map(&:to_i), true, @vm.name)
+    notify_changed_users(@vm.users.map(&:id), params[:vm_info][:non_sudo_user_ids].map(&:to_i), false, @vm.name)
+    @vm.sudo_users = params[:vm_info][:sudo_user_ids]
+    @vm.users = params[:vm_info][:non_sudo_user_ids]
+    @vm.config.description = params[:vm_info][:description]
+    unless @vm.config.save
+      flash[:error] = 'Description couldn\'t be saved.'
+      redirect_to edit_vm_path(@vm.name)
+    end
+
+    redirect_to vm_path(@vm.name)
   end
 
   def request_vm_archivation
