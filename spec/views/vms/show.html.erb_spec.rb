@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: check, to which degree view tests should be created
-
 require 'rails_helper'
 require './spec/api/v_sphere_api_mocker'
 
@@ -123,6 +121,10 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     before do
       associate_users_with_vms(admins: [current_user], vms: [vm_on])
       render
+    end
+
+    it 'has a link to edit information' do
+      expect(rendered).to have_link 'Edit'
     end
 
     context 'when powered on' do
