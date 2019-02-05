@@ -119,8 +119,8 @@ def vim_vm_mock(
   allow(vm).to receive(:boot_time). and_return 0
   allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: power_state)
   allow(vm).to receive(:disks).and_return vim_disks_mock
-  allow(vm1).to receive(:users=)
-  allow(vm1).to receive(:sudo_users=)
+  allow(vm).to receive(:users=)
+  allow(vm).to receive(:sudo_users=)
 
   vm
 end
