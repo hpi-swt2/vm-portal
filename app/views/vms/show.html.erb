@@ -58,6 +58,9 @@ end %>
             <%= link_to 'Revive VM',
                         {controller: :vms, action: 'request_vm_revive', id: @vm.name}, method: :post, class: 'dropdown-item'%>
           <% end %>
+          <%= link_to 'Edit',
+                        {controller: :vms, action: 'edit', id: @vm.name},
+                        method: :get, class: "dropdown-item" %>
         </div>
       </div>
     </div>

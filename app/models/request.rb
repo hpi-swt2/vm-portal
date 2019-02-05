@@ -78,6 +78,8 @@ class Request < ApplicationRecord
   def create_vm_in_cluster(cluster)
     vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
     vm.ensure_config.responsible_users = responsible_users
+    vm.config.description = description
+    vm.config.save
     vm.move_into_correct_subfolder
     vm
   end
