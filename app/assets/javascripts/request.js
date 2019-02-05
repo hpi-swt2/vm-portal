@@ -26,6 +26,14 @@ $('#request_template_id').click(function (){
     }
  });
 
- if($('#request_port_forwarding_checkbox').attr("data") != "") {
-   $('#request_port_forwarding_checkbox').trigger('click');
- }
+ if($('#request_port_forwarding_checkbox').prop("data-port_forwarding") == "true" ||
+    $('#request_port_forwarding_checkbox').prop("checked") ||
+    $('#port_field').val() ||
+    $('#application_name_field').val()) {
+    $('#request_port_forwarding_checkbox').prop('checked', true);
+    $('#request_port_forwarding_info').addClass('show')
+  }
+  else{
+     $('#request_port_forwarding_checkbox').prop('checked', false);
+     $('#request_port_forwarding_info').addClass('remove')
+  } 
