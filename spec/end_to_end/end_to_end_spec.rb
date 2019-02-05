@@ -3,11 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'End to End testing', type: :feature do
+  let(:host) do
+    v_sphere_host_mock('someHost')
+  end
+
   before do
     @user = FactoryBot.create :user
     @employee = FactoryBot.create :employee
     @admin = FactoryBot.create :admin
     @requestname = 'capybara-test-vm'
+    allow(VSphere::Host).to receive(:all).and_return [host]
   end
 
   describe 'GET "/" - Landing Page'
