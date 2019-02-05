@@ -9,7 +9,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 #
 
-# Test users for different roles, usable in OpenID Testmode just comment in the user with the role you which to login with when clicking login with OAuth on Local Dev Server
+# Test users for different roles, usable in OpenID Testmode just comment in the user with the role you which to login with
+# when clicking login with OAuth on Local Dev Server
 # User.create(email: 'max.mustermann@student.hpi.de', first_name: 'Max', last_name: 'Mustermann', role: :user, uid: '123545')
 # User.create(email: 'max.mustermann@student.hpi.de', first_name: 'Max', last_name: 'Mustermann', role: :employee, uid: '123545')
 # User.create(email: 'max.mustermann@student.hpi.de', first_name: 'Max', last_name: 'Mustermann', role: :admin, uid: '123545')
