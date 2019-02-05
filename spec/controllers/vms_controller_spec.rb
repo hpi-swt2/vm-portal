@@ -111,8 +111,6 @@ RSpec.describe VmsController, type: :controller do
   describe 'PATCH #update' do
     before do
       sign_in admin
-      allow(vm1).to receive(:users=)
-      allow(vm1).to receive(:sudo_users=)
       allow(vm1).to receive(:config).and_return config
       allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
       @description = 'oh how nice is panama'
