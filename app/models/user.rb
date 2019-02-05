@@ -7,11 +7,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  after_create :set_user_id
+  before_create :set_user_id
 
-  # Needs to be called after set_user_id.
-  # This is the default callback execution order,
-  # but if the order ever changes, please change accordingly
   after_save :update_repository
 
   after_initialize :set_default_role, if: :new_record?
@@ -126,7 +123,6 @@ class User < ApplicationRecord
                      else
                        Rails.configuration.start_user_id
                      end
-      save
     end
   end
 
