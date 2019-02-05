@@ -14,11 +14,17 @@
         </div>
       <% end %>
       <div class="card-body">
+        <%= link_to "Active machines (#{@vms&.size}) <small>&#x25bc;</small>".html_safe, '#active' %><br />
+        <%= link_to "To be archived (#{@pending_archivation_vms&.size}) <small>&#x25bc;</small>".html_safe, '#to_be_archived' %><br />
+
+        <h2 id="active">Active machines</h2>
         <table data-toggle="table" class="table">
           <thead>
           <tr>
-
+            <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+            <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
           </tr>
+          </thead>
           <tbody id="vms">
           <% @vms.each do |vm| %>
             <tr>
@@ -29,6 +35,47 @@
                 <%= render 'vms/vm_status', vm: vm %>
               </td>
             <tr>
+          <% end %>
+          </tbody>
+        </table>
+
+        <h2 id="to_be_archived">To be archived</h2>
+
+        <table data-toggle="table" class="table" id="vms_to_be_archived">
+          <thead>
+          <tr>
+            <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+            <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @pending_archivation_vms&.each do |vm| %>
+            <tr>
+
+              <td class="table-active">
+                <%= link_to vm.name,
+                            {controller: :vms, action: 'show', id: vm.name},
+                            method: :get, class: "btn btn-link"  %>
+              </td>
+              <td class="table-active">
+                <div class="<%= 'boot-time mt-1' if vm.powered_on? %>">
+                  <div class="round
+            <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>">
+                  </div>
+                  <%= vm.boot_time.to_s.strip if vm.powered_on? %>
+                </div>
+                <%if current_user.admin? && vm.archivable? %>
+                  <%= link_to '',
+                              {controller: :vms, action: 'archive_vm', id: vm.name},
+                              method: :post, data: { confirm: 'Are you sure you want to archive this VM?' },
+                              class: "btn-manage float-right checkmark" %>
+                <% end %>
+                <%= link_to '',
+                            {controller: :vms, action: 'revive_vm', id: vm.name},
+                            method: :post,
+                            class: "btn-manage float-right cross" %>
+              </td>
+            </tr>
           <% end %>
           </tbody>
         </table>
