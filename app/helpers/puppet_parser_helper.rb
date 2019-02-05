@@ -15,17 +15,13 @@ module PuppetParserHelper
   def self.read_node_file(vm_name, repository_path = puppet_script_folder)
     path = File.join(Rails.root, repository_path, 'Node', 'node-' + vm_name + '.pp')
     values = { 'admins' => [], 'users' => [] }
-    if File.exist?(path)
-      contents = File.open(path).read
-      raise 'Unsupported Format' unless node_file_correct?(vm_name, contents)
-
-      admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
-      users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
-      admins.map! { |admin| User.from_mail_identifier(admin) }
-      users.map! { |user| User.from_mail_identifier(user) }
-      values['admins'] = admins
-      values['users'] = users
-    end
+    return values unless File.exist?(path)
+    contents = File.open(path).read
+    raise 'Unsupported Format' unless node_file_correct?(vm_name, contents)
+    admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
+    users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
+    values['admins'] = admins.map { |admin| User.from_mail_identifier(admin) }
+    values['users'] = users.map { |user| User.from_mail_identifier(user) }
     values
   end
 

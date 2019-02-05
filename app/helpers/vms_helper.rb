@@ -15,8 +15,6 @@ module VmsHelper
       'bg-success'
     when :offline
       'bg-danger'
-    else
-      # type code here
     end
   end
 
@@ -32,8 +30,6 @@ module VmsHelper
       'online'
     when :offline
       'offline'
-    else
-      # type code here
     end
   end
 end

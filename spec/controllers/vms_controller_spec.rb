@@ -239,9 +239,7 @@ RSpec.describe VmsController, type: :controller do
       end
 
       it 'catches the error' do
-        expect {
-          post :change_power_state, params: { id: vm2.name }
-        }.not_to raise_error
+        expect { post :change_power_state, params: { id: vm2.name } }.not_to raise_error
       end
 
       it 'redirects to the details page of the vm' do
