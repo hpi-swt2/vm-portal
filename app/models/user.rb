@@ -119,10 +119,7 @@ class User < ApplicationRecord
     path = File.join Rails.root, 'public', 'puppet_script_temp'
 
     begin
-      # ONLY for debugging purposes. Will be removed when error is found.
-      logger.info(User.all)
       puppet_script_file = generate_puppet_init_script
-      logger.info(puppet_script_file)
 
       GitHelper.write_to_repository(path) do |git_writer|
         git_writer.write_file('init.pp', puppet_script_file)
@@ -139,7 +136,7 @@ class User < ApplicationRecord
   end
 
   def generate_puppet_init_script
-    Puppetscript.init_scrit(User.all)
+    Puppetscript.init_scrit(User.unscoped.all)
   end
 
   def valid_ssh_key?
