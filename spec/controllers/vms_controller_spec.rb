@@ -229,7 +229,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the vm requires more resouces than any host can provide' do
       let(:current_user) { admin }
-      
+
       before do
         summary_double = double
         allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(999)
@@ -240,7 +240,7 @@ RSpec.describe VmsController, type: :controller do
         post :change_power_state, params: { id: vm2.name }
       end
 
-      it 'catches the error an error' do
+      it 'catches the error' do
         expect {
           post :change_power_state, params: { id: vm2.name }
         }.not_to raise_error(RbVmomi::Fault)
