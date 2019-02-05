@@ -42,12 +42,18 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     prepare_params
+
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
 
     respond_to do |format|
-      if @request.save
-        successful_save(format)
+      if enough_resources
+        if @request.save
+          @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+          successful_save(format)
+        else
+          unsuccessful_action(format, :new)
+        end
       else
         unsuccessful_action(format, :new)
       end
@@ -198,5 +204,41 @@ class RequestsController < ApplicationController
   def split_requests(requests)
     @pending_requests = requests.select(&:pending?)
     @resolved_requests = requests.reject(&:pending?)
+  end
+
+  def enough_resources
+
+    hosts = VSphere::Host.all
+
+    # get max host resources
+    max_cpu_host = hosts[0]
+    max_ram_host = hosts[0]
+    max_storage_host = hosts[0]
+
+    hosts.each do |host|
+      # check if the host could handle the vm
+      host_num_cpu = host.get_num_cpu
+      host_ram = host.get_ram_gb
+      host_free_hdd = host.get_storage_gb
+
+      if (request_params[:cpu_cores].to_i <= host_num_cpu) && (request_params[:ram_mb].to_i <= host_ram) && (request_params[:storage_mb].to_i <= host_free_hdd)
+        return true
+      end
+
+      # get hosts with max resources per category
+      max_cpu_host = host if host_num_cpu > max_cpu_host.get_num_cpu
+
+      max_ram_host = host if host_ram > max_ram_host.get_ram_gb
+
+      max_storage_host = host if host_free_hdd > max_storage_host.get_storage_gb
+    end
+
+    max_cpu_host_msg = "cores: #{max_cpu_host.get_num_cpu}, ram: #{max_cpu_host.get_ram_gb / 1024}GB, hdd: #{max_cpu_host.get_storage_gb / 1024}GB"
+    max_ram_host_msg = "cores: #{max_ram_host.get_num_cpu}, ram: #{max_ram_host.get_ram_gb / 1024}GB, hdd: #{max_ram_host.get_storage_gb / 1024}GB"
+    max_storage_host_msg = "cores: #{max_storage_host.get_num_cpu}, ram: #{max_storage_host.get_ram_gb / 1024}GB, hdd: #{max_storage_host.get_storage_gb / 1024}GB"
+
+    error_message = "Requested VM resources are too high! Most Powerful Hosts are: Max Core Host(#{max_cpu_host_msg}) Max RAM Host(#{max_ram_host_msg}) Max HDD Host(#{max_storage_host_msg}) "
+    @request.errors[:base] << error_message
+    false
   end
 end
