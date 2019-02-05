@@ -7,7 +7,13 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  after_create :set_user_id, :update_repository
+  after_create :set_user_id
+
+  # Needs to be called after set_user_id.
+  # This is the default callback execution order,
+  # but if the order ever changes, please change accordingly
+  after_save :update_repository
+
   after_initialize :set_default_role, if: :new_record?
 
   devise :database_authenticatable, :registerable,
@@ -79,7 +85,7 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+    where(provider: auth.provider, uid: auth.uid).find_or_create_by do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
       user.role = :user
@@ -125,21 +131,23 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-      git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
-      message = if git_writer.added?
-                  'Create init.pp'
-                else
-                  "Add #{name}"
-                end
-      git_writer.save(message)
+    begin
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
+        message = if git_writer.added?
+                    'Create init.pp'
+                  else
+                    "Add #{name}"
+                  end
+        git_writer.save(message)
+      end
     rescue Git::GitExecuteError => e
       logger.error(e)
     end
   end
 
   def generate_puppet_init_script
-    Puppetscript.init_scrit(User.unscoped.all)
+    Puppetscript.init_scrit(User.all)
   end
 
   def valid_ssh_key?

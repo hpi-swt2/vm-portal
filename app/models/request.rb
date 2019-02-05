@@ -90,12 +90,14 @@ class Request < ApplicationRecord
   end
 
   def push_to_git
-    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-      git_writer.write_file(File.join('Node', "node_#{name}.pp"), generate_puppet_node_script)
-      git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
-      git_writer.save(commit_message(git_writer))
-    rescue Git::GitExecuteError
-      { alert: "Users could not be associated with the VM!\nCould not push to git. Please check that your ssh key and environment variables are set." }
+    begin
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        git_writer.write_file(File.join('Node', "node_#{name}.pp"), generate_puppet_node_script)
+        git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
+        git_writer.save(commit_message(git_writer))
+      end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
   end
 
