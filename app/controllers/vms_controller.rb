@@ -172,10 +172,11 @@ class VmsController < ApplicationController
   end
 
   def filter_vm_categories(user)
-    @vms = @vms.select { |each| each.belongs_to user }
-    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
-    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
-    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
+    user_vms = VSphere::VirtualMachine.user_vms(user)
+    @vms = @vms.select { |each| user_vms.include?(each) }
+    @archived_vms = @archived_vms.select { |each| user_vms.include?(each) }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| user_vms.include?(each) }
+    @pending_reviving_vms = @pending_reviving_vms.select { |each| user_vms.include?(each) }
   end
 
   def authorize_vm_access
