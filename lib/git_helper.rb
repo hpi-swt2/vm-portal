@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module GitHelper
-  def self.write_to_repository(path)
+  def self.open_repository(path)
     FileUtils.mkdir_p(path) unless File.exist?(path)
     git_writer = GitWriter.new(path)
     begin
       yield git_writer
     ensure
-      FileUtils.rm_rf(path) if File.exist?(path)
+      FileUtils.rm_rf(path)
     end
   end
 
@@ -18,7 +18,7 @@ module GitHelper
     end
 
     def write_file(file_name, file_content)
-      path = File.join @path, ENV['GIT_REPOSITORY_NAME'], file_name
+      path = File.join @path, file_name
       File.delete(path) if File.exist?(path)
       File.open(path, 'w') { |f| f.write(file_content) }
       @git.add(path)
@@ -43,7 +43,7 @@ module GitHelper
       uri = ENV['GIT_REPOSITORY_URL']
       name = ENV['GIT_REPOSITORY_NAME']
 
-      git = Git.clone(uri, name, path: path)
+      git = Git.clone(uri, name, path: File.join(path, '../'))
       git.config('user.name', ENV['GITHUB_USER_NAME'])
       git.config('user.email', ENV['GITHUB_USER_EMAIL'])
       git

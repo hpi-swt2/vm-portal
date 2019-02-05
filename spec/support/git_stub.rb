@@ -12,7 +12,7 @@ def create_git_stub
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
 
-  path = File.join Rails.root, 'public', 'puppet_script_temp', ENV['GIT_REPOSITORY_NAME']
+  path = PuppetParserHelper.puppet_script_path
   node_path = File.join path, 'Node'
   name_path = File.join path, 'Name'
 
