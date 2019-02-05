@@ -228,24 +228,26 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the vm requires more resouces than any host can provide' do
+      let(:current_user) { admin }
+      
       before do
         summary_double = double
         allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(999)
-
+        allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm2
         allow(vm2).to receive(:summary).and_return(summary_double)
-        allow(vm2).to receive(:change_power_state)
+        allow(vm2).to receive(:change_power_state).and_raise(RbVmomi::Fault.new("NotEnoughCpus:", nil))
 
         post :change_power_state, params: { id: vm2.name }
       end
 
-      it 'raises an error' do
+      it 'catches the error an error' do
         expect {
           post :change_power_state, params: { id: vm2.name }
-        }.to raise_error(RbVmomi::Fault)
+        }.not_to raise_error(RbVmomi::Fault)
       end
 
       it 'redirects to the details page of the vm' do
-        expect(response).to redirect_to(vms_path)
+        expect(response).to redirect_to(old_path)
       end
 
       it 'delivers a flash[:alert] banner' do
