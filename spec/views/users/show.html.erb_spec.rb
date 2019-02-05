@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'users/show.html.erb', type: :view do
   let(:project) { FactoryBot.create :project }
-  let(:user) { FactoryBot.create :user, responsible_projects: [project] }
+  let(:user) { FactoryBot.create :employee, responsible_projects: [project] }
   let(:current_user) { FactoryBot.create :user, responsible_projects: [project] }
 
   before do
@@ -20,6 +20,10 @@ RSpec.describe 'users/show.html.erb', type: :view do
 
   it 'shows the users email' do
     expect(rendered).to include user.email
+  end
+
+  it 'shows the users role' do
+    expect(rendered).to include user.role
   end
 
   it 'shows the responsible projects name' do

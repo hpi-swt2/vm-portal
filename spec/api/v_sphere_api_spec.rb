@@ -239,7 +239,7 @@ describe VSphere do
     end
 
     it 'shuts the vm down when its being archived' do # rubocop:disable RSpec/ExampleLength
-      vm_mock = vim_vm_mock('My VM', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled')
+      vm_mock = vim_vm_mock('My VM', power_state: 'poweredOn', vm_ware_tools: 'toolsOk')
       vm = VSphere::VirtualMachine.new vm_mock
       allow(mock_archived_vms_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       allow(vm_mock).to receive_message_chain :ShutdownGuest, :wait_for_completion

@@ -72,7 +72,8 @@ module VSphere
 
     # Guest OS communication
     def vm_ware_tools?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+      tool_status = @vm&.guest&.toolsStatus
+      tool_status && %w[toolsOk toolsOld].include?(tool_status)
     end
 
     def suspend_vm
@@ -181,7 +182,8 @@ module VSphere
     end
 
     def ensure_config
-      @config ||= VirtualMachineConfig.create(name: name)
+      @config = VirtualMachineConfig.create!(name: name) unless config
+      config
     end
 
     def ip
@@ -213,11 +215,7 @@ module VSphere
     end
 
     def sudo_users
-      if request
-        request.sudo_users
-      else
-        []
-      end
+      request&.sudo_users || []
     end
 
     def belongs_to(user)
@@ -233,12 +231,20 @@ module VSphere
       @vm.summary
     end
 
-    def guest_heartbeat_status
-      @vm.guestHeartbeatStatus
+    def macs
+      @vm.macs
     end
 
-    def vmwaretools_installed?
-      @vm.guest.toolsStatus != 'toolsNotInstalled'
+    def disks
+      @vm.disks
+    end
+
+    def guest
+      @vm.guest
+    end
+
+    def guest_heartbeat_status
+      @vm.guestHeartbeatStatus
     end
 
     def host_name
@@ -273,12 +279,8 @@ module VSphere
       equal? other
     end
 
-    def macs
-      @vm.macs
-    end
-
     def request
-      Request.accepted.find { |each| name == each.name }
+      @request ||= Request.accepted.find_by name: name
     end
 
     private
