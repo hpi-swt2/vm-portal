@@ -21,6 +21,8 @@ module GitHelper
     def write_file(file_name, file_content)
       path = File.join @path, file_name
       File.delete(path) if File.exist?(path)
+      directory_path = File.dirname(path)
+      FileUtils.mkdir_p(directory_path) unless File.exist?(directory_path)
       File.open(path, 'w') { |f| f.write(file_content) }
       @git.add(path)
     end
