@@ -68,6 +68,7 @@ class RequestsController < ApplicationController
       @request.assign_sudo_users(request_params[:sudo_user_ids])
       if @request.update(request_params)
         redirect_params = @request.accept!
+        redirect_params = redirect_params.nil? ? {} : redirect_params
         @request.save!
         notify_request_update
         safe_create_vm_for format, @request, redirect_params

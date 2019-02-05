@@ -116,6 +116,7 @@ def vim_vm_mock(
   allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
   allow(vm).to receive(:guest).and_return vim_guest_mock(tools_status: vm_ware_tools)
   allow(vm).to receive(:macs).and_return macs
+  allow(vm).to receive(:boot_time). and_return 0
   allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: power_state)
   allow(vm).to receive(:disks).and_return vim_disks_mock
 

@@ -83,10 +83,19 @@ class User < ApplicationRecord
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
       user.role = :user
-
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
     end
+  end
+
+  def self.from_mail_identifier(mail_id)
+    all.each do |user|
+      return user if user.email.split('@').first.casecmp(mail_id).zero?
+    end
+  end
+
+  def vm_infos
+    VmApi.instance.user_vms(self)
   end
 
   def vms
@@ -116,20 +125,14 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    path = File.join Rails.root, 'public', 'puppet_script_temp'
-
-    begin
-      puppet_script_file = generate_puppet_init_script
-
-      GitHelper.write_to_repository(path) do |git_writer|
-        git_writer.write_file('init.pp', puppet_script_file)
-        message = if git_writer.added?
-                    'Create init.pp'
-                  else
-                    "Add #{name}"
-                  end
-        git_writer.save(message)
-      end
+    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
+      message = if git_writer.added?
+                  'Create init.pp'
+                else
+                  "Add #{name}"
+                end
+      git_writer.save(message)
     rescue Git::GitExecuteError => e
       logger.error(e)
     end
