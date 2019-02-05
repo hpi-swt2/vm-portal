@@ -131,19 +131,17 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    begin
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-        git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
-        message = if git_writer.added?
-                    'Create init.pp'
-                  else
-                    "Add #{name}"
-                  end
-        git_writer.save(message)
-      end
-    rescue Git::GitExecuteError => e
-      logger.error(e)
+    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
+      message = if git_writer.added?
+                  'Create init.pp'
+                else
+                  "Add #{name}"
+                end
+      git_writer.save(message)
     end
+  rescue Git::GitExecuteError => e
+    logger.error(e)
   end
 
   def generate_puppet_init_script

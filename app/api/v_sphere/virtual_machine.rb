@@ -318,17 +318,15 @@ module VSphere
     end
 
     def users=(ids)
-      begin
-        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-          name_script, node_script = user_name_and_node_script(ids)
-          git_writer.write_file(name_path, name_script)
-          git_writer.write_file(node_path, node_script)
-          message = commit_message(git_writer)
-          git_writer.save(message)
-        end
-      rescue Git::GitExecuteError => e
-        Rails.logger.error(e)
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        name_script, node_script = user_name_and_node_script(ids)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
+        message = commit_message(git_writer)
+        git_writer.save(message)
       end
+    rescue Git::GitExecuteError => e
+      Rails.logger.error(e)
     end
 
     def sudo_users
@@ -354,17 +352,15 @@ module VSphere
     end
 
     def sudo_users=(ids)
-      begin
-        GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-          name_script, node_script = sudo_name_and_node_script(ids)
-          git_writer.write_file(name_path, name_script)
-          git_writer.write_file(node_path, node_script)
-          message = commit_message(git_writer)
-          git_writer.save(message)
-        end
-      rescue Git::GitExecuteError => e
-        logger.error(e)
+      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+        name_script, node_script = sudo_name_and_node_script(ids)
+        git_writer.write_file(name_path, name_script)
+        git_writer.write_file(node_path, node_script)
+        message = commit_message(git_writer)
+        git_writer.save(message)
       end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
 
     def belongs_to(user)
