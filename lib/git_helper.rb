@@ -4,17 +4,18 @@ module GitHelper
   def self.open_repository(path)
     FileUtils.mkdir_p(path) unless File.exist?(path)
     git_writer = GitWriter.new(path)
-    begin
-      yield git_writer
-    ensure
-      FileUtils.rm_rf(path)
-    end
+    yield git_writer
   end
 
   class GitWriter
     def initialize(path)
       @path = path
-      @git = setup_git(path)
+      if File.exist?(File.join(path, '.git'))
+        open_git
+        @git.pull
+      else
+        setup_git
+      end
     end
 
     def write_file(file_name, file_content)
@@ -38,15 +39,19 @@ module GitHelper
 
     private
 
-    def setup_git(path)
-      # Dir.mkdir(dir) unless File.exists?(dir)
+    def setup_git
       uri = ENV['GIT_REPOSITORY_URL']
       name = ENV['GIT_REPOSITORY_NAME']
 
-      git = Git.clone(uri, name, path: File.join(path, '../'))
-      git.config('user.name', ENV['GITHUB_USER_NAME'])
-      git.config('user.email', ENV['GITHUB_USER_EMAIL'])
-      git
+      @git = Git.clone(uri, name, path: File.join(@path, '..'))
+      @git.config('user.name', ENV['GITHUB_USER_NAME'])
+      @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
+    end
+
+    def open_git
+      @git = Git.open(@path)
+      @git.config('user.name', ENV['GITHUB_USER_NAME'])
+      @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
     end
 
     def commit_and_push(message)
