@@ -130,7 +130,6 @@ RSpec.describe VmsController, type: :controller do
     end
 
     it 'saves the new description in config' do
-      config.reload
       expect(VirtualMachineConfig.find(config.id).description).to eq(@description)
     end
   end
