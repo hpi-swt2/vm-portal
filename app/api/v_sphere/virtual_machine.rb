@@ -201,7 +201,7 @@ module VSphere
     end
 
     def ensure_config
-      @config = config || VirtualMachineConfig.create!(name: name) unless @config
+      @config ||= config || VirtualMachineConfig.create!(name: name)
     end
 
     def ip
@@ -306,7 +306,7 @@ module VSphere
       new_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, sudo_users, new_users)
-      return name_script, node_script
+      [name_script, node_script]
     end
 
     def users=(ids)
@@ -336,7 +336,7 @@ module VSphere
       new_sudo_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, new_sudo_users, users)
-      return name_script, node_script
+      [name_script, node_script]
     end
 
     def sudo_users=(ids)
