@@ -212,7 +212,6 @@ class RequestsController < ApplicationController
   end
 
   def enough_resources
-
     hosts = VSphere::Host.all
 
     # get max host resources
