@@ -2,6 +2,8 @@
 
 require 'vmapi.rb'
 class VmsController < ApplicationController
+  rescue_from RbVmomi::Fault, with: :not_enough_resources
+
   attr_reader :vms
 
   include VmsHelper
@@ -169,5 +171,10 @@ class VmsController < ApplicationController
     return unless @vm
 
     redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
+  end
+
+  def not_enough_resources(exception)
+    redirect_back(fallback_location: root_path)
+    flash[:alert] = exception.message
   end
 end

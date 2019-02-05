@@ -65,9 +65,31 @@ RSpec.describe RequestsController, type: :controller do
     }
   end
 
+  # one of the attributes should be higher than the max resource of the host list
+  let(:to_high_resource_attributes) do
+    {
+      name: 'myvm',
+      cpu_cores: 1_000_000_000_000_000,
+      ram_gb: 1,
+      storage_gb: 2,
+      operating_system: 'MyOS',
+      description: 'Description',
+      comment: 'Comment',
+      status: 'pending',
+      user: user,
+      responsible_user_ids: [user.id],
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s]
+    }
+  end
+
+  let(:host) do
+    v_sphere_host_mock('someHost')
+  end
+
   # Authenticate an user
   before do
     sign_in user
+    allow(VSphere::Host).to receive(:all).and_return [host]
   end
 
   # This should return the minimal set of values that should be in the session
@@ -141,6 +163,19 @@ RSpec.describe RequestsController, type: :controller do
       it 'does not persist the sudo users' do
         post :create, params: { request: invalid_attributes }
         expect(assigns(:request).sudo_user_assignments).to all(be_changed)
+      end
+    end
+
+    context 'with to high resource params' do
+      it 'does not create a request' do
+        request_count = Request.all.size
+        post :create, params: { request: to_high_resource_attributes }
+        expect(request_count).to equal(Request.all.size)
+      end
+
+      it 'returns a success response' do
+        post :create, params: { request: to_high_resource_attributes }
+        expect(response).to be_successful
       end
     end
   end
