@@ -16,6 +16,7 @@ RSpec.describe 'requests/edit', type: :view do
                                   comment: 'Comment',
                                   status: 'pending',
                                   user: FactoryBot.create(:employee),
+                                  project: FactoryBot.create(:project),
                                   responsible_users: [FactoryBot.create(:user)]
                                 ))
     assign(:request_templates, [RequestTemplate.new(

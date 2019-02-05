@@ -45,7 +45,6 @@ class RequestsController < ApplicationController
 
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
-    #byebug
     respond_to do |format|
       if enough_resources
         if @request.save
