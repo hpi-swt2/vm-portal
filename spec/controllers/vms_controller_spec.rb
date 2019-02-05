@@ -111,6 +111,8 @@ RSpec.describe VmsController, type: :controller do
   describe 'PATCH #update' do
     before do
       sign_in admin
+      allow(vm1).to receive(:users=)
+      allow(vm1).to receive(:sudo_users=)
       allow(vm1).to receive(:config).and_return config
       allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
       @description = 'oh how nice is panama'
@@ -120,11 +122,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     it 'calls set_sudo_users on vm' do
-      expect(vm1).to have_received('sudo_users=').with(@sudo_user_ids)
+      expect(vm1).to have_received(:sudo_users=).with(@sudo_user_ids)
     end
 
     it 'calls set_users on vm' do
-      expect(vm1).to have_received('users=').with(@non_sudo_user_ids)
+      expect(vm1).to have_received(:users=).with(@non_sudo_user_ids)
     end
 
     it 'saves the new description in config' do
