@@ -75,7 +75,7 @@ module VSphere
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
         vm_names = prepare_vm_names
         vm_names.each do |vm_name|
-          vms.append(find_by_name(vm_name)) if includes_user?(vmname, user)
+          vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
         end
       end
       vms
@@ -270,70 +270,6 @@ module VSphere
       else
         :offline
       end
-    end
-    # this method should return all users, including the sudo users
-    def users
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        users = PuppetParserHelper.read_node_file(name)
-        users['users']
-      end
-    end
-
-    def commit_message(git_writer)
-      if git_writer.added?
-        'Add ' + name
-      elsif git_writer.updated?
-        'Update ' + name
-      else
-        ''
-      end
-    end
-
-    def set_users(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-        all_users = PuppetParserHelper.read_node_file(name)
-        sudo_users = all_users['admins']
-        new_users = User.where(id: ids)
-        name_path = File.join('Name', name + '.pp')
-        node_path = File.join('Node', 'node-' + name + '.pp')
-        name_script = Puppetscript.name_script(name)
-        node_script = Puppetscript.node_script(name, sudo_users, new_users)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
-      end
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
-    end
-
-    def sudo_users
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        users = PuppetParserHelper.read_node_file(name)
-        users['admins']
-      end
-    end
-
-    def set_sudo_users(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
-        all_users = PuppetParserHelper.read_node_file(name)
-        users = all_users['users']
-        new_sudo_users = User.where(id: ids)
-        name_path = File.join('Name', name + '.pp')
-        node_path = File.join('Node', 'node-' + name + '.pp')
-        name_script = Puppetscript.name_script(name)
-        node_script = Puppetscript.node_script(name, new_sudo_users, users)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
-      end
-    rescue Git::GitExecuteError
-      { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
-    end
-
-    def belongs_to(user)
-      users.include? user
     end
 
     # this method should return all users, including the sudo users

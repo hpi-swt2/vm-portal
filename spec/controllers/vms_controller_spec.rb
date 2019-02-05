@@ -22,6 +22,13 @@ RSpec.describe VmsController, type: :controller do
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
   let(:old_path) { 'old_path' }
 
+  let(:config) do
+    config = FactoryBot.create :virtual_machine_config
+    config.name = vm1.name
+    config.save!
+    config
+  end
+
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in current_user
@@ -98,6 +105,33 @@ RSpec.describe VmsController, type: :controller do
 
     it 'returns http success' do
       expect(response).to redirect_to(vms_path)
+    end
+  end
+
+  describe 'PATCH #update' do
+    before do
+      sign_in admin
+      allow(vm1).to receive(:users=)
+      allow(vm1).to receive(:sudo_users=)
+      allow(vm1).to receive(:config).and_return config
+      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      @description = 'oh how nice is panama'
+      @sudo_user_ids = [admin.id.to_s]
+      @non_sudo_user_ids = [current_user.id.to_s]
+      patch :update, params: { id: vm1.name, vm_info: { sudo_user_ids: @sudo_user_ids, non_sudo_user_ids: @non_sudo_user_ids, description: @description } }
+    end
+
+    it 'calls set_sudo_users on vm' do
+      expect(vm1).to have_received('sudo_users=').with(@sudo_user_ids)
+    end
+
+    it 'calls set_users on vm' do
+      expect(vm1).to have_received('users=').with(@non_sudo_user_ids)
+    end
+
+    it 'saves the new description in config' do
+      config.reload
+      expect(VirtualMachineConfig.find(config.id).description).to eq(@description)
     end
   end
 
