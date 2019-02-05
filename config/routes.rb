@@ -39,9 +39,6 @@ Rails.application.routes.draw do
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
 
-  devise_scope :user do # temporary fix related to GitHub issue 304
-    post '/users/new_sign_out' => 'devise/sessions#destroy', as: :new_sign_out
-  end
   devise_for :users,
              path: 'users',
              controllers: {
