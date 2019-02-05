@@ -191,6 +191,7 @@ module VSphere
     end
 
     def ensure_config
+      @config = config
       @config ||= VirtualMachineConfig.create(name: name)
     end
 

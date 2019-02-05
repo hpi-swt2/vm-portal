@@ -54,13 +54,14 @@ class VmsController < ApplicationController
 
   def update
     sudo_lists = true
-    notify_changed_users(@vm.sudo_users.map(&:id), params[:sudo_user_ids], sudo_lists, @vm.name)
+    notify_changed_users(@vm.sudo_users.map(&:id), params[:vm_info][:sudo_user_ids], sudo_lists, @vm.name)
     sudo_lists = false
-    notify_changed_users(@vm.users.map(&:id), params[:non_sudo_user_ids], sudo_lists, @vm.name)
+    notify_changed_users(@vm.users.map(&:id), params[:vm_info][:non_sudo_user_ids], sudo_lists, @vm.name)
     @vm.set_sudo_users params[:vm_info][:sudo_user_ids]
     @vm.set_users params[:vm_info][:non_sudo_user_ids]
     @vm.config.description = params[:vm_info][:description]
     unless @vm.config.save
+      raise
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
     end
