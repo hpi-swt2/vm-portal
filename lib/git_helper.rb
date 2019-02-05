@@ -39,17 +39,25 @@ module GitHelper
 
     private
 
+    def create_folder_structure
+      FileUtils.mkdir_p(File.join(@path, 'Init')) unless File.exist?(File.join(@path, 'Init'))
+      FileUtils.mkdir_p(File.join(@path, 'Node')) unless File.exist?(File.join(@path, 'Node'))
+      FileUtils.mkdir_p(File.join(@path, 'Name')) unless File.exist?(File.join(@path, 'Name'))
+    end
+
     def setup_git
       uri = ENV['GIT_REPOSITORY_URL']
       name = ENV['GIT_REPOSITORY_NAME']
 
       @git = Git.clone(uri, name, path: File.join(@path, '..'))
+      create_folder_structure
       @git.config('user.name', ENV['GITHUB_USER_NAME'])
       @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
     end
 
     def open_git
       @git = Git.open(@path)
+      create_folder_structure
       @git.config('user.name', ENV['GITHUB_USER_NAME'])
       @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
     end
