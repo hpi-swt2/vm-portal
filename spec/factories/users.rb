@@ -40,4 +40,10 @@ FactoryBot.define do
     last_name { 'Nachname' }
     email { 'andererVorname.nachname@hpi.de' }
   end
+
+  factory :puppet_user2, parent: :user do
+    first_name { 'andererVorname' }
+    last_name { 'Nachname' }
+    email { 'andererVorname2.nachname@hpi.de' }
+  end
 end

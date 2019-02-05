@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'pp'
 
 RSpec.describe PuppetParserHelper, type: :helper do
   let(:path) { File.join('spec', 'helpers') }
@@ -25,7 +24,6 @@ RSpec.describe PuppetParserHelper, type: :helper do
     end
 
     it 'returns the admins as an Array' do
-      pp puppet_file
       admins = puppet_file['admins']
       expect(admins).to be_a_kind_of Array
     end
