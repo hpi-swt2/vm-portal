@@ -75,7 +75,7 @@ module VSphere
       GitHelper.open_repository PuppetParserHelper.puppet_script_path do
         vm_names = prepare_vm_names
         vm_names.each do |vm_name|
-          vms.append(find_by_name(vm_name)) if include.user?(vmname, user)
+          vms.append(find_by_name(vm_name)) if includes_user?(vmname, user)
         end
       end
       vms
