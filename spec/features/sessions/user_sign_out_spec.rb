@@ -9,7 +9,7 @@ describe 'Sign Out', type: :feature do
   end
 
   it 'has a logout button' do
-    expect(page).to have_link 'Logout', href: new_sign_out_path
+    expect(page).to have_link 'Logout', href: destroy_user_session_path
   end
 
   it 'logs out the user' do
