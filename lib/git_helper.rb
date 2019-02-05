@@ -10,11 +10,11 @@ module GitHelper
   class GitWriter
     def initialize(path)
       @path = path
-      unless File.exist?(File.join(path, '.git'))
-        setup_git
-      else
+      if File.exist?(File.join(path, '.git'))
         open_git
         @git.pull
+      else
+        setup_git
       end
     end
 
