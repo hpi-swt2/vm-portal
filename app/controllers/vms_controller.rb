@@ -55,11 +55,11 @@ class VmsController < ApplicationController
   end
 
   def update
-    notify_changed_users(@vm.sudo_users.map(&:id), params[:vm_info][:sudo_user_ids].map(&:to_i), true, @vm.name)
-    notify_changed_users(@vm.users.map(&:id), params[:vm_info][:non_sudo_user_ids].map(&:to_i), false, @vm.name)
-    @vm.sudo_users = params[:vm_info][:sudo_user_ids]
-    @vm.users = params[:vm_info][:non_sudo_user_ids]
-    @vm.config.description = params[:vm_info][:description]
+    notify_changed_users(@vm.sudo_users.map(&:id), info_params[:vm_info][:sudo_user_ids].map(&:to_i), true, @vm.name)
+    notify_changed_users(@vm.users.map(&:id), info_params[:vm_info][:non_sudo_user_ids].map(&:to_i), false, @vm.name)
+    @vm.sudo_users = info_params[:vm_info][:sudo_user_ids]
+    @vm.users = info_params[:vm_info][:non_sudo_user_ids]
+    @vm.config.description = info_params[:vm_info][:description]
     unless @vm.config.save
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
@@ -184,6 +184,10 @@ class VmsController < ApplicationController
     return unless @vm
 
     redirect_to vms_path unless current_user.admin? || @vm.users.include?(current_user)
+  end
+
+  def info_params
+    params.require(:vm_info).permit(:description, sudo_user_ids: [], non_sudo_user_ids: [])
   end
 
   def config_params
