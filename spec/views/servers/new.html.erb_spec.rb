@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'servers/new', type: :view do
-  before do
+  before(:each) do
     assign(:server, Server.new(
                       name: 'SpecServer',
                       cpu_cores: 4,

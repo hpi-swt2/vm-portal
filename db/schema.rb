@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_05_115620) do
+ActiveRecord::Schema.define(version: 2019_01_24_151713) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -52,8 +52,8 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.integer "cpu_cores"
-    t.integer "ram_gb"
-    t.integer "storage_gb"
+    t.integer "ram_mb"
+    t.integer "storage_mb"
     t.string "operating_system"
     t.text "comment"
     t.text "rejection_information"
@@ -64,9 +64,6 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.string "application_name"
     t.text "description"
     t.integer "user_id"
-    t.integer "project_id"
-    t.boolean "port_forwarding"
-    t.index ["project_id"], name: "index_requests_on_project_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -138,7 +135,6 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -153,20 +149,12 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
-  create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
-    t.integer "virtual_machine_config_id", null: false
-    t.integer "user_id", null: false
-    t.index ["user_id", "virtual_machine_config_id"], name: "index_responsible_users_virtual_machine_configs"
-    t.index ["virtual_machine_config_id", "user_id"], name: "index_virtual_machine_configs_responsible_users"
-  end
-
   create_table "virtual_machine_configs", force: :cascade do |t|
     t.string "name"
     t.string "ip"
     t.string "dns"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
   end
 
 end

@@ -27,28 +27,22 @@ require 'rails_helper'
 
 RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
-  let(:sudo_user) { FactoryBot.create :user }
-  let(:sudo_user2) { FactoryBot.create :admin }
-  let(:project) { FactoryBot.create :project }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: 'myvm',
+      name: 'MyVM',
       cpu_cores: 2,
-      ram_gb: 1,
-      storage_gb: 2,
+      ram_mb: 1,
+      storage_mb: 2,
       operating_system: 'MyOS',
       description: 'Description',
       comment: 'Comment',
       status: 'pending',
       user: user,
-      responsible_user_ids: [user.id],
-      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
-      user_ids: ['', user.id.to_s],
-      project_id: project.id
+      sudo_user_ids: ['']
     }
   end
 
@@ -56,44 +50,20 @@ RSpec.describe RequestsController, type: :controller do
     {
       name: '',
       cpu_cores: 2,
-      ram_gb: 1000,
-      storage_gb: -2000,
+      ram_mb: 1000,
+      storage_mb: -2000,
       operating_system: '',
       description: '',
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['', sudo_user.id.to_s], # the first parameter is for some reason always empty
-      project_id: project.id
+      sudo_user_ids: ['']
     }
-  end
-
-  # one of the attributes should be higher than the max resource of the host list
-  let(:to_high_resource_attributes) do
-    {
-      name: 'myvm',
-      cpu_cores: 1_000_000_000_000_000,
-      ram_gb: 1,
-      storage_gb: 2,
-      operating_system: 'MyOS',
-      description: 'Description',
-      comment: 'Comment',
-      status: 'pending',
-      user: user,
-      responsible_user_ids: [user.id],
-      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
-      project_id: project.id
-    }
-  end
-
-  let(:host) do
-    v_sphere_host_mock('someHost')
   end
 
   # Authenticate an user
   before do
     sign_in user
-    allow(VSphere::Host).to receive(:all).and_return [host]
   end
 
   # This should return the minimal set of values that should be in the session
@@ -143,47 +113,11 @@ RSpec.describe RequestsController, type: :controller do
         post :create, params: { request: valid_attributes }
         expect(response).to redirect_to(requests_path)
       end
-
-      it 'correctly assigns the sudo users' do
-        post :create, params: { request: valid_attributes }
-        expect(assigns(:request).sudo_users).to match_array([sudo_user, sudo_user2])
-      end
     end
 
     context 'with invalid params' do
-      it 'does not create a request if responible users are empty' do
-        request_count = Request.all.size
-        post :create, params: { request: valid_attributes.except(:responsible_user_ids) }
-        expect(request_count).to equal(Request.all.size)
-      end
-
       it 'returns a success response (i.e. to display the "new" template)' do
         post :create, params: { request: invalid_attributes }
-        expect(response).to be_successful
-      end
-
-      # regression test for #320
-      it 'assigns the sudo users to the request' do
-        post :create, params: { request: invalid_attributes }
-        expect(assigns(:request).sudo_users).to match_array([sudo_user])
-      end
-
-      # regression test for #320
-      it 'does not persist the sudo users' do
-        post :create, params: { request: invalid_attributes }
-        expect(assigns(:request).sudo_user_assignments).to all(be_changed)
-      end
-    end
-
-    context 'with to high resource params' do
-      it 'does not create a request' do
-        request_count = Request.all.size
-        post :create, params: { request: to_high_resource_attributes }
-        expect(request_count).to equal(Request.all.size)
-      end
-
-      it 'returns a success response' do
-        post :create, params: { request: to_high_resource_attributes }
         expect(response).to be_successful
       end
     end
@@ -224,46 +158,37 @@ RSpec.describe RequestsController, type: :controller do
     context 'with valid params' do
       let(:new_attributes) do
         {
-          name: 'mynewvm',
+          name: 'MyNewVM',
           cpu_cores: 3,
-          ram_gb: 2,
-          storage_gb: 3,
+          ram_mb: 2,
+          storage_mb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
           status: 'pending',
-          user: user,
-          sudo_user_ids: ['', sudo_user.id.to_s, user.id.to_s],
-          user_ids: ['']
+          user: user
         }
       end
 
       # this variable may not be called request, because it would then override an internal RSpec variable
       let(:the_request) do
-        request = Request.create! valid_attributes
-        request.assign_sudo_users valid_attributes[:sudo_user_ids][1..-1]
-        request.save!
-        request
+        Request.create! valid_attributes
       end
 
-      before do
+      it 'updates the requested request' do
         patch :update, params: { id: the_request.to_param, request: new_attributes }
         the_request.reload
+        expect(the_request.name).to eq('MyNewVM')
       end
 
-      it 'updates the request' do
-        expect(the_request.name).to eq('mynewvm')
-      end
-
-      it 'redirects to the new VMS config' do
-        expect(response).to redirect_to(edit_config_path(the_request.name))
+      it 'redirects to the requests index page, as there is no cluster available' do
+        patch :update, params: { id: the_request.to_param, request: valid_attributes }
+        expect(response).to redirect_to(requests_path)
       end
 
       it 'accepts the request' do
+        patch :update, params: { id: the_request.to_param, request: valid_attributes }
+        the_request.reload
         expect(the_request).to be_accepted
-      end
-
-      it 'correctly updates the sudo users' do
-        expect(the_request.sudo_users).to match_array([sudo_user, user])
       end
     end
 
@@ -290,22 +215,6 @@ RSpec.describe RequestsController, type: :controller do
     it 'redirects to the requests list' do
       request = Request.create! valid_attributes
       delete :destroy, params: { id: request.to_param }
-      expect(response).to redirect_to(requests_url)
-    end
-  end
-
-  describe 'POST #push_to_git' do
-    before do
-      request = Request.create! valid_attributes
-      allow(request).to receive(:push_to_git).and_return(notice: 'Successfully pushed to git.')
-      request_class = class_double('Request')
-                      .as_stubbed_const(transfer_nested_constants: true)
-
-      expect(request_class).to receive(:find) { request }
-    end
-
-    it 'redirects with a success message' do
-      post :push_to_git, params: { id: request.to_param }
       expect(response).to redirect_to(requests_url)
     end
   end

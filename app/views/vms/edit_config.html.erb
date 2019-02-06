@@ -1,6 +1,6 @@
 <h1>Editing configuration of VM '<%= @vm.name %>'</h1>
 
-<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config.name }, local: true) do |form| %>
+<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config }, local: true) do |form| %>
   <div class="field">
     <p>Network Adapters</p>
     <table class="table">
@@ -26,20 +26,6 @@
     <%= form.label :dns, "DNS" %>
     <%= form.text_field :dns, class: 'form-control' %>
   </div>
-
-  <table class="table table-fixed-columns table-flex-width">
-    <tbody>
-      <tr>
-        <td><strong>Operating System:</strong></td>
-        <td><%= @vm.request.operating_system %></td>
-      </tr>
-
-      <tr>
-        <td><strong>Comment:</strong></td>
-        <td class="col-md-4"><%= @vm.request.comment %></td>
-      </tr>
-    </tbody>
-  </table>
 
   <div class="actions">
     <%= form.submit 'Update Configuration', class: "btn btn-primary" %>

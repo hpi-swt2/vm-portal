@@ -338,7 +338,7 @@ RSpec.describe VmApi do
   end
 
   describe '#vm_users' do
-    let(:vm_name) { 'my-fancy-vm' }
+    let(:vm_name) { 'My fancy VM' }
 
     let(:vm_mock) do
       mock = double
@@ -348,7 +348,19 @@ RSpec.describe VmApi do
 
     let(:user) { FactoryBot.create(:user) }
 
-    it 'returns empty list if no matching puppet script exists' do
+    it 'returns empty list if no matching request exists' do
+      expect(described_class.instance.vm_users(vm_mock)).to be_empty
+    end
+
+    it 'returns the users associated to the request' do
+      FactoryBot.create :accepted_request, name: vm_name, users: [user]
+
+      expect(described_class.instance.vm_users(vm_mock)).to include(user)
+    end
+
+    it 'returns an empty list no the matching request is not accepted' do
+      FactoryBot.create :rejected_request, name: vm_name, users: [user]
+
       expect(described_class.instance.vm_users(vm_mock)).to be_empty
     end
   end

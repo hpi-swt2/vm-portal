@@ -19,7 +19,7 @@
           <tr>
 
           </tr>
-          <tbody id="vms">
+          <tbody>
           <% @vms.each do |vm| %>
             <tr>
               <td><%= vm.name %></td>
@@ -61,12 +61,12 @@
               <td><%= host.connection_state %></td>
               <td>
                 <ul class="bulletless pl-1">
-                  <% unless host.vms.nil?
-                       vms = host.vms.take(3)
-                       vms.each do |vm| %>
-                  <li><%=  vm.name  -%></li>
-                  <%  end  %>
-                  <%  end %>
+                  <% if not host.vms.nil?
+                      vms = host.vms.take(3)
+                      vms.each do |vm| %>
+                        <li><%= vm.name -%></li>
+                      <% end %>
+                  <% end %>
 
                   <% if host.vms.length>3 %>
                       ... (<%=host.vms.length%>)

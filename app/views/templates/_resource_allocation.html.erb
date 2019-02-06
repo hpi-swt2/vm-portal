@@ -1,7 +1,7 @@
 <%
-  ram_usage_percentage = @values[:ram_allocation] == 0 ? 0 : (@values[:ram_usage] / @values[:ram_allocation].to_f * 100).round.clamp(0,100)
-  hdd_usage_percentage = @values[:hdd_allocation] == 0 ? 0 : (@values[:hdd_usage] / @values[:hdd_allocation].to_f * 100).round.clamp(0,100)
-  cpu_usage_percentage = @values[:cpu_allocation] == 0 ? 0 : (@values[:cpu_usage] / @values[:cpu_allocation].to_f * 100).round.clamp(0,100)
+  ram_usage_percentage = @values[:ram_allocation] == 0 ? 0 : (@values[:ram_usage] / @values[:ram_allocation].to_f * 100).round
+  hdd_usage_percentage = @values[:hdd_allocation] == 0 ? 0 : (@values[:hdd_usage] / @values[:hdd_allocation].to_f * 100).round
+  cpu_usage_percentage = @values[:cpu_allocation] == 0 ? 0 : (@values[:cpu_usage] / @values[:cpu_allocation].to_f * 100).round
 %>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>

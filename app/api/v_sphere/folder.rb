@@ -48,16 +48,8 @@ module VSphere
     # Ensure that a subfolder exists and return it
     # folder_name is a string with the name of the subfolder
     def ensure_subfolder(folder_name)
-      subfolder = subfolders.find { |each| each.name == folder_name }
-      subfolder || VSphere::Folder.new(@folder.CreateFolder(name: folder_name))
-    end
-
-    # Ensure that the path relative to this folder is a valid folder and return it
-    # The path is an array of strings
-    def ensure_subfolder_by_path(path)
-      return self if path.empty?
-
-      ensure_subfolder(path.first).ensure_subfolder_by_path(path[1..-1])
+      folder = subfolders.find { |each| each.name == folder_name }
+      folder || VSphere::Folder.new(@folder.CreateFolder(name: folder_name))
     end
 
     def move_here(folder_entry)

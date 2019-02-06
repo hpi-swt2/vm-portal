@@ -160,7 +160,6 @@ RSpec.describe RequestTemplatesController, type: :controller do
 
   context 'when the current_user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
-
     describe 'GET #new' do
       it 'returns a success response' do
         get :new, params: {}, session: valid_session

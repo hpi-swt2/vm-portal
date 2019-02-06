@@ -2,20 +2,15 @@
 
 FactoryBot.define do
   factory :request do
-    name { 'myvm' }
+    name { 'MyVM' }
     cpu_cores { 2 }
-    ram_gb { 1 }
-    storage_gb { 3 }
+    ram_mb { 1000 }
+    storage_mb { 2000 }
     operating_system { 'MyOS' }
     description { 'Description' }
     comment { 'Comment' }
     status { 'pending' }
     user { FactoryBot.create :admin }
-    responsible_users { [FactoryBot.create(:user)] }
-    project { FactoryBot.create(:project) }
-    port_forwarding { true }
-    port { 4000 }
-    application_name { 'MyName' }
   end
 
   factory :rejected_request, parent: :request do
@@ -25,15 +20,5 @@ FactoryBot.define do
 
   factory :accepted_request, parent: :request do
     status { 'accepted' }
-  end
-
-  factory :request_with_users, parent: :request do
-    transient do
-      users_count { 4 }
-    end
-
-    after(:create) do |request, evaluator|
-      create_list(:user, evaluator.users_count, requests: [request])
-    end
   end
 end

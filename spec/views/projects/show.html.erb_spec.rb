@@ -39,7 +39,6 @@ RSpec.describe 'projects/show', type: :view do
 
   context 'if the current user is not a responsible user for the project' do
     let(:current_user) { FactoryBot.create :user }
-
     it 'does not show a link to edit the project' do
       expect(rendered).not_to have_link('Edit', href: edit_project_path(project))
     end
