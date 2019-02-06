@@ -5,30 +5,29 @@ require './spec/api/v_sphere_api_mocker'
 
 RSpec.describe 'vms/index.html.erb', type: :view do
   let(:mock_vms) do
-    [v_sphere_vm_mock('my-insanely-cool-vm',
+    [v_sphere_vm_mock('My insanely cool vm',
                       power_state: 'poweredOn',
-                      vm_ware_tools: 'toolsOld'),
-     v_sphere_vm_mock('another-vm',
+                      vm_ware_tools: 'toolsInstalled'),
+     v_sphere_vm_mock('Another VM',
                       power_state: 'poweredOff',
                       boot_time: 'Friday',
-                      vm_ware_tools: 'toolsOk')]
+                      vm_ware_tools: 'toolsInstalled')]
   end
 
   let(:mock_vms_without_tools) do
-    [v_sphere_vm_mock('yet-another-vm'),
-     v_sphere_vm_mock('and-the-best-vm-there-is',
+    [v_sphere_vm_mock('My insanely cool vm'),
+     v_sphere_vm_mock('Another VM',
                       power_state: 'poweredOff',
                       boot_time: 'Friday')]
   end
 
   let(:current_user) { FactoryBot.create :user }
-  let(:admin) { FactoryBot.create :admin }
 
   before do
-    sign_in current_user
     assign(:vms, mock_vms)
+    allow(view).to receive(:current_user).and_return(current_user)
     assign(:archived_vms, [])
-    assign(:skip_archivation_vms, [])
+    assign(:pending_archivation_vms, [])
     render
   end
 
@@ -51,7 +50,10 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is a root user for the vms' do
     before do
-      associate_users_with_vms(admins: [current_user], vms: mock_vms)
+      request = FactoryBot.create :accepted_request, name: mock_vms[0].name
+      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
+      request = FactoryBot.create :accepted_request, name: mock_vms[1].name
+      FactoryBot.create :users_assigned_to_request, request: request, user: current_user, sudo: true
       render
     end
 
@@ -66,12 +68,11 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     context 'when vmwaretools are not installed' do
       before do
         assign(:vms, mock_vms_without_tools)
+        render
       end
 
-      it 'shows no power buttons' do
-        rendered = render
-        expect(rendered).not_to have_css('a.btn-manage.play')
-        expect(rendered).not_to have_css('a.btn-manage.stop')
+      it 'shows no power buttons when vmwaretools are not installed' do
+        expect(rendered).to have_text('VMWare tools are not installed', count: 2)
       end
     end
   end
@@ -80,6 +81,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     it 'does not show any manage buttons' do
       expect(rendered).not_to have_css('a.btn-manage.play')
       expect(rendered).not_to have_css('a.btn-manage.stop')
+      expect(rendered).not_to have_text('VMWare tools are not installed')
     end
   end
 
@@ -109,27 +111,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
   context 'when the user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
-
-    it 'shows correct power on / off button' do
-      expect(rendered).to have_css('a.btn-manage.play')
-    end
-
-    it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
-    end
-
-    context 'when vmwaretools are not installed' do
-      before do
-        assign(:vms, mock_vms_without_tools)
-        render
-      end
-
-      it 'shows no power buttons' do
-        rendered = render
-        expect(rendered).not_to have_css('a.btn-manage.play')
-        expect(rendered).not_to have_css('a.btn-manage.stop')
-      end
-    end
 
     it 'links to new vm page' do
       expect(rendered).to have_button('New Request')

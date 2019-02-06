@@ -11,13 +11,6 @@ module VSphere
       VSphere::Cluster.all.map(&:hosts).flatten
     end
 
-    def self.get_host(name)
-      VSphere::Host.all.each do |host|
-        return host if host.name == name
-      end
-      nil
-    end
-
     def initialize(rbvmomi_host)
       @host = rbvmomi_host
     end
@@ -56,18 +49,6 @@ module VSphere
 
     def ==(other)
       equal? other
-    end
-
-    def get_num_cpu
-      @host.summary.hardware.numCpuCores
-    end
-
-    def get_ram_gb
-      (@host.summary.hardware.memorySize.to_f / 1024**2).round(2)
-    end
-
-    def get_storage_gb
-      (@host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_f / 1024**2).round(2)
     end
 
     private

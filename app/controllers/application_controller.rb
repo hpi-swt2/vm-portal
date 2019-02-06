@@ -19,11 +19,11 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   def render_timeout
-    render(template: 'errors/timeout', status: 408) && nil
+    render(template: 'errors/timeout', status: 408) && return
   end
 
   def render_not_found
-    render(template: 'errors/not_found', status: 404) && nil
+    render(template: 'errors/not_found', status: 404) && return
   end
 
   def authenticate_employee

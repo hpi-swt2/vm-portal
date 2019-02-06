@@ -3,43 +3,43 @@
     <h1>VM-Portal</h1>
     <p>This Ruby on Rails application enables managing of virtual machines via VMware vSphere.</p>
     <p><a href="https://github.com/hpi-swt2/vm-portal">More information</a></p>
-    <a class='btn btn-primary' href='<%= omniauth_authorize_path(:user, :hpi) %>'>
-      Sign in with HPI OpenID Connect
-    </a>
   </div>
 
-  <% if Rails.env.development? %>
-    <div class='col-5'>
-      <div class='card'>
-        <div class="card-header">
-          <h2>Development Log in</h2>
-        </div>
-        <div class="card-body">
-          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-            <div class="login-form-group input-group">
-              <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: :email, class: 'form-control' %>
-            </div>
+  <div class='col-5'>
+    <div class='card'>
+      <div class="card-header">
+        <h2>Log in</h2>
+      </div>
+      <div class="card-body">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="login-form-group input-group">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: :email, class: 'form-control' %>
+          </div>
 
-            <div class="login-form-group input-group">
-              <%= f_password_field = f.password_field :password, autocomplete: "current-password", placeholder: :password, class: 'form-control'
-                  f_password_field %>
-            </div>
+          <div class="login-form-group input-group">
+            <%= f_password_field = f.password_field :password, autocomplete: "current-password", placeholder: :password, class: 'form-control'
+                f_password_field %>
+          </div>
 
-            <% if devise_mapping.rememberable? -%>
-              <div class="login-form-group">
-                <div class="form-check">
-                  <%= f.check_box :remember_me, class: 'form-check-input' %>
-                  <%= f.label :remember_me, class: 'form-check-label' %>
-                </div>
+          <% if devise_mapping.rememberable? -%>
+            <div class="login-form-group">
+              <div class="form-check">
+                <%= f.check_box :remember_me, class: 'form-check-input' %>
+                <%= f.label :remember_me, class: 'form-check-label' %>
               </div>
-            <% end -%>
-
-            <div class="login-form-group actions">
-              <%= f.submit "Log in", class: 'btn btn-block btn-secondary float-right' %>
             </div>
           <% end -%>
-        </div>
+          <div class="login-form-group actions">
+            <%= f.submit "Log in", class: 'btn btn-block btn-primary float-right' %>
+            <a class='btn btn-block btn-secondary float-right' href='<%= omniauth_authorize_path(:user, :hpi) %>'>
+              Sign in with HPI OpenID Connect
+            </a>
+          </div>
+        <% end -%>
+      </div>
+      <div class='card-footer'>
+        <%= render "devise/shared/links" %>
       </div>
     </div>
-  <% end %>
+  </div>
 </div>

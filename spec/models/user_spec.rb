@@ -51,14 +51,6 @@ RSpec.describe User, type: :model do
     end
 
     context 'when the user does not exist' do
-      before do
-        @git_stub = create_git_stub
-      end
-
-      after do
-        @git_stub.delete
-      end
-
       it 'creates a new user' do
         expect { user }.to change(User, :count).by(1)
       end
@@ -77,15 +69,6 @@ RSpec.describe User, type: :model do
 
       it 'sets the users email' do
         expect(user.email).to eq(mail)
-      end
-
-      it 'adds the users to puppet_script init' do
-        allow(@git_stub.status).to receive(:changed).and_return(['init.pp'])
-        allow(@git_stub.status).to receive(:added).and_return([])
-        allow_any_instance_of(User).to receive(:update_repository).and_call_original
-
-        user
-        expect(@git_stub.git).to have_received(:commit_all).with('Add First Last')
       end
     end
 

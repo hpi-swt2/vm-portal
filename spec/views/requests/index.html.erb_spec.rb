@@ -4,25 +4,52 @@ require 'rails_helper'
 
 RSpec.describe 'requests/index', type: :view do
   let(:requests) do
-    [FactoryBot.create(:request), FactoryBot.create(:request, name: 'myvm1')]
+    [
+      Request.create!(
+        name: 'MyVM',
+        cpu_cores: 3,
+        ram_mb: 1000,
+        storage_mb: 2000,
+        operating_system: 'MyOS',
+        port: '4000',
+        application_name: 'MyName',
+        description: 'Description',
+        comment: 'Comment',
+        status: 'pending',
+        user: FactoryBot.create(:employee)
+      ),
+      Request.create!(
+        name: 'MyVM1',
+        cpu_cores: 3,
+        ram_mb: 1000,
+        storage_mb: 2000,
+        operating_system: 'MyOS',
+        port: '4000',
+        application_name: 'MyName',
+        description: 'Description',
+        comment: 'Comment',
+        status: 'pending',
+        user: FactoryBot.create(:employee)
+      )
+    ]
   end
 
   before do
-    assign(:pending_requests, requests)
-    assign(:resolved_requests, requests)
+    assign(:requests, requests)
     render
   end
 
-  it 'renders a list of all requests' do
-    assert_select 'tr>td', text: 'myvm'.to_s, count: 2
-    assert_select 'tr>td', text: 'myvm1'.to_s, count: 2
-    assert_select 'tr>td', text: 2.to_s, count: 4
-    assert_select 'tr>td', text: '1 GB', count: 4
-    assert_select 'tr>td', text: '3 GB', count: 4
-    assert_select 'tr>td', text: 'MyOS'.to_s, count: 4
-    assert_select 'tr>td', text: 4000.to_s, count: 4
-    assert_select 'tr>td', text: 'MyName'.to_s, count: 4
-    assert_select 'tr>td', text: 'Comment'.to_s, count: 4
+  it 'renders a list of requests' do
+    assert_select 'tr>td', text: 'MyVM'.to_s, count: 1
+    assert_select 'tr>td', text: 'MyVM1'.to_s, count: 1
+    assert_select 'tr>td', text: 3.to_s, count: 2
+    assert_select 'tr>td', text: 1.to_s, count: 2
+    assert_select 'tr>td', text: 2.to_s, count: 2
+    assert_select 'tr>td', text: 'MyOS'.to_s, count: 2
+    assert_select 'tr>td', text: 4000.to_s, count: 2
+    assert_select 'tr>td', text: 'MyName'.to_s, count: 2
+    assert_select 'tr>td', text: 'Comment'.to_s, count: 2
+    assert_select 'tr>td', text: 'pending'.to_s, count: 2
   end
 
   it 'has a link to edit the request status' do

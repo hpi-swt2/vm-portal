@@ -1,13 +1,6 @@
 <h1>Users</h1>
 <small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
-<%= form_with url: users_path, method: :get, class: 'form-inline', local: true do |form|  %>
-  <%= form.text_field :search, value: params[:search] || '', placeholder: 'Name', class: 'form-control mb-2 mr-sm-2'%>
-  <%= form.select :role, options_for_select(User.roles.merge(all: ''), params[:role] || ''), {}, {class: 'form-control mb-2 mr-sm-2'} %>
-  <%= form.submit 'Search', class: 'btn btn-primary mb-2' %>
-<% end %>
-
-
 <table class="table">
   <thead>
     <th><%= User.human_attribute_name('name') %></th>
