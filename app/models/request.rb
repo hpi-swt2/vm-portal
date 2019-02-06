@@ -74,7 +74,7 @@ class Request < ApplicationRecord
 
   def create_vm
     clusters = VSphere::Cluster.all
-    return nil, nil unless clusters.first
+    return nil, nil if clusters.empty?
 
     warning = nil
     begin
@@ -83,7 +83,7 @@ class Request < ApplicationRecord
       logger.error(e)
       warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
     end
-    [create_vm_in_cluster(clusters.first), warning]
+    [create_vm_in_cluster(clusters.sample), warning]
   end
 
   def create_vm_in_cluster(cluster)
