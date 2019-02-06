@@ -44,7 +44,7 @@ module Puppetscript
 
   def self.generic_node_script
     <<~NODE_SCRIPT
-      class node-%s {
+      class node_%s {
               $admins = [%s]
               $users = [%s]
 
@@ -58,8 +58,8 @@ module Puppetscript
     <<~NAME_SCRIPT
       node \'%s\'{
 
-          if defined( node-%s) {
-                      class { node-%s: }
+          if defined( node_%s) {
+                      class { node_%s: }
           }
       }
     NAME_SCRIPT
@@ -69,9 +69,9 @@ module Puppetscript
     users = users.map { |user| "\"#{user.email.split('@').first}\"" }
     users.join(', ')
   end
-  
+
   def self.node_file_correct?(vm_name, contents)
-    result =    contents.lines[0].chomp.eql?('class node-' + vm_name + ' {')
+    result =    contents.lines[0].chomp.eql?('class node_' + vm_name + ' {')
     result &&=  contents.lines[1].start_with?('        $admins = [')
     result &&=  contents.lines[2].start_with?('        $users = [')
     result &&=  contents.lines[4].chomp.eql?('        realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])')
