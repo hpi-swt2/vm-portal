@@ -233,6 +233,11 @@ module VSphere
       config&.responsible_users || []
     end
 
+    # Users
+    def project
+      config&.project
+    end
+
     # Information about the vm
     def boot_time
       @vm.runtime.bootTime
