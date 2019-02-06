@@ -10,83 +10,133 @@
     </div>
   <% end %>
 
-  <div class="field form-group">
-    <%= form.label :name, "VM Name" %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
-
-  <div class="field form-group">
-    <p>Responsible Users</p>
-    <%= form.select 'responsible_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email,
-                                                       @request.responsible_users.collect(&:id)),
-                    {},
-                    { multiple: true, class: "selecttwo", data: { placeholder: 'Who is responsible for this VM?' }, style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :cpu_cores, "CPU cores" %>
-    <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :ram_gb, "RAM in GB" %>
-    <%= form.number_field :ram_gb, min: 0, class: 'form-control', id: 'ram' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :storage_gb, "Storage in GB" %>
-    <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
-  </div>
-
-  <div class="field form-group">
-    <p>Users with sudo rights</p>
-    <%= form.select 'sudo_user_ids',
-                    options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email,
-                                                     @request.sudo_user_assignments.collect(&:user_id)),
-                    {},
-                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <p>Assigned Users</p>
-    <%= form.select 'user_ids',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :email,
-                                                       @request.non_sudo_user_assignments.collect(&:user_id)),
-                    {},
-                    { multiple: true, class: "selecttwo", style: 'width: 100%' } %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', style: 'width: 100%' %>
-  </div>
-
-    <div class="field form-group">
-      <%= form.label :port, "Port" %>
-      <%= form.number_field :port, min: 0, max: 65535, class: 'form-control' %>
+  <div class="container-fluid styled-form">
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>General Information</h5>
+        Please enter a short description of the VM and how you are planning to use it.
+      </div>
+      <div class="col-6">
+        <div class="field form-group">
+          <%= form.label :name, "Name *" %>
+          <%= form.text_field :name, class: 'form-control' %>
+        </div>
+        <div class="field form-group">
+          <%= form.label :description, "Description *" %>
+          <%= form.text_area :description, rows: "4", class: 'form-control' %>
+        </div>
+        <div class="field form-group">
+          <p>Project *</p>
+          <%= form.select :project_id,
+                          options_from_collection_for_select(Project.all,
+                                                             :id,
+                                                             :name,
+                                                             :selected => form.object.project_id),
+                          { :include_blank => true},
+                          { class: 'form-control' } %>
+        </div>
+        <div class="field form-group">
+          <p>Responsible User *</p>
+          <%= form.select 'responsible_user_ids',
+                          options_from_collection_for_select(User.all,
+                                                      :id,
+                                                      :email,
+                                                      @request.responsible_users.collect(&:id)),
+                          {},
+                          { multiple: true, class: "form-control selecttwo"} %>
+        </div>
+      </div>
     </div>
-
-    <div class="field form-group">
-      <%= form.label :application_name, "Application Name" %>
-      <%= form.text_field :application_name, class: 'form-control' %>
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Hardware Information</h5>
+        You can select a Template or enter custom requirements. If you have special requirements or need an operating system that is not in the list you can use the comment field at the bottom of this page.
+      </div>
+      <div class="col-6">
+        <div class="form-group pb-4 mb-2 border-bottom">
+          <%= form.label "Template" %>
+          <%= form.select :template_id,
+                          options_for_select(@request_templates.map{|request_template|
+                                            ["#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}",
+                                            "[#{request_template.cpu_cores}, #{request_template.ram_gb}, #{request_template.storage_gb}, '#{request_template.operating_system}']"]}),
+                          { :include_blank => 'None' },
+                          { class: "form-control" } %>
+        </div>
+        <div class="form-group row full-width pt-3">
+          <div class="col">
+            <%= form.label :cpu_cores, "CPU cores *" %>
+            <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
+          </div>
+          <div class="col">
+            <%= form.label :ram_gb, "RAM in GB *" %>
+            <%= form.number_field :ram_gb,  min: 0, class: 'form-control', id: 'ram' %>
+          </div>
+          <div class="col">
+            <%= form.label :storage_gb, "Storage in GB *" %>
+            <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
+          </div>
+        </div>
+        <div class="form-group pt-3">
+          <%= form.label :operating_system, "Operating System *" %> <br>
+          <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
+        </div>
+      </div>
     </div>
-
-  <div class="field form-group">
-    <%= form.label :description %>
-    <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control' %>
-  </div>
-
-  <div class="field form-group">
-    <%= form.label :comment %>
-    <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
-  </div>
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Users</h5>
+        Enter all users that need access to this VM. If you can't find a user, that is most likely because they have never logged into the HART system. Ask them to log in once so they are added to our list. You will be able to change which users have access to your VM at a later date. Make sure to enter yourself in the user list if you need access to the VM.
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          Users with sudo rights
+          <%= form.select 'sudo_user_ids',
+                          options_from_collection_for_select(User.all,
+                                                            :id,
+                                                            :email,
+                                                            @request.sudo_users.collect(&:id)),
+                          { },
+                          { class: 'form-control selecttwo', multiple: true} %>
+        </div>
+        <div class="form-group">
+          Regular users
+          <%= form.select 'user_ids',
+                          options_from_collection_for_select(User.all,
+                                                              :id,
+                                                              :email,
+                                                              @request.users.collect(&:id)),
+                          { },
+                          { class: ' selecttwo', multiple: true} %>
+        </div>
+      </div>
+    </div>
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Other Information</h5>
+        If you require port forwarding, please enter the port and the application name below. </br>
+        Any comment or additional information can be entered in the comment field.
+      </div>
+      <div class="col-6">
+        <div class="field form-group pb-3 mb-3 border-bottom">
+          <%= form.check_box :port_forwarding, options = {id: "request_port_forwarding_checkbox", data: { toggle:"collapse", target:"#request_port_forwarding_info", port_forwarding: @request.persisted? ? @request.port_forwarding : nil }} %> Enable port forwarding
+          <div id="request_port_forwarding_info" class="collapse">
+            <div class="field form-group">
+              <%= form.label :port, "Port" %>
+              <%= form.number_field :port, min: 0, max: 65535, class: 'form-control', id:'port_field' %>
+            </div>
+            <div class="field form-group">
+              <%= form.label :application_name, "Application Name" %>
+              <%= form.text_field :application_name, class: 'form-control', id:'application_name_field' %>
+            </div>
+          </div>
+        </div>
+        <div class="field form-group">
+          <%= form.label :comment %>
+          <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+</div>
 
   <% if locals[:updating] %>
     <div id="acceptAndReject">
@@ -102,7 +152,6 @@
 <% end %>
 
 <% if locals[:updating] %>
-  <hr/>
   <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
     <div class="field form-group">
       <%= rejection_form.label :rejection_information %>

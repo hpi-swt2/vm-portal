@@ -4,27 +4,8 @@ require 'rails_helper'
 
 RSpec.describe 'requests/edit', type: :view do
   before do
-    @request = assign(:request, Request.create!(
-                                  name: 'myvm',
-                                  cpu_cores: 2,
-                                  ram_gb: 1,
-                                  storage_gb: 2,
-                                  operating_system: 'MyOS',
-                                  port: '4000',
-                                  application_name: 'MyName',
-                                  description: 'Description',
-                                  comment: 'Comment',
-                                  status: 'pending',
-                                  user: FactoryBot.create(:employee),
-                                  responsible_users: [FactoryBot.create(:user)]
-                                ))
-    assign(:request_templates, [RequestTemplate.new(
-      name: 'MyTemplate',
-      cpu_cores: 2,
-      ram_gb: 1,
-      storage_gb: 2,
-      operating_system: 'CentOS 7'
-    )])
+    @request = assign(:request, FactoryBot.create(:request))
+    assign(:request_templates, [FactoryBot.create(:request_template)])
   end
 
   it 'renders the edit request form' do
