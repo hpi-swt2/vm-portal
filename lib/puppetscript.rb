@@ -44,7 +44,7 @@ module Puppetscript
 
   def self.generic_node_script
     <<~NODE_SCRIPT
-      class node_$%s {
+      class node_%s {
               $admins = [%s]
               $users = [%s]
 
@@ -56,10 +56,10 @@ module Puppetscript
 
   def self.generic_name_script
     <<~NAME_SCRIPT
-      node \'$%s\'{
+      node \'%s\'{
 
-          if defined( node_$%s) {
-                      class { node_$%s: }
+          if defined( node_%s) {
+                      class { node_%s: }
           }
       }
     NAME_SCRIPT
@@ -71,7 +71,7 @@ module Puppetscript
   end
 
   def self.node_file_correct?(vm_name, contents)
-    result =    contents.lines[0].chomp.eql?('class node_$' + vm_name + ' {')
+    result =    contents.lines[0].chomp.eql?('class node_' + vm_name + ' {')
     result &&=  contents.lines[1].start_with?('        $admins = [')
     result &&=  !contents.lines[1].include?('[]')
     result &&=  contents.lines[2].start_with?('        $users = [')
