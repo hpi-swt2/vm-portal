@@ -23,8 +23,9 @@ class DashboardController < ApplicationController
   end
 
   def filter_vm_categories(user)
-    @vms = @vms.select { |each| each.belongs_to user }
-    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
+    user_vms = VSphere::VirtualMachine.user_vms(user)
+    @vms = @vms.select { |vm| user_vms.include?(vm) }
+    @pending_archivation_vms = @pending_archivation_vms.select { |vm| user_vms.include?(vm) }
   end
 
   def number_of_notifications
