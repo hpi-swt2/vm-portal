@@ -1,10 +1,8 @@
 <div class="clearfix">
   <h1 class="float-left">Requests</h1>
-  <% if current_user.employee_or_admin? %>
   <%= link_to fa_icon('plus'), new_request_path,
     method: :get,
     class: "btn btn-primary float-right mt-3" %>
-  <% end %>
   <% if current_user.admin? %>
   <%= button_to "Templates", request_templates_path,
     method: :get,
