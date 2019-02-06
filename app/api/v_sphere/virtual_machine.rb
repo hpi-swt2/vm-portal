@@ -336,6 +336,11 @@ module VSphere
       Rails.logger.error(e)
     end
 
+    def sudo_users_without_pull
+      users = Puppetscript.read_node_file(name)
+      users['admins']
+    end
+
     def sudo_users
       admins = []
       begin
