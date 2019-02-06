@@ -32,6 +32,7 @@
   <% @vms&.each do |vm| %>
     <tr>
       <td class="table-active">
+        <% puts 'This is Sparta' %>
         <%= link_to vm.name,
           {controller: :vms, action: 'show', id: vm.name},
           method: :get, class: "btn btn-link"  %>

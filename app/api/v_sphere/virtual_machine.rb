@@ -292,6 +292,11 @@ module VSphere
       users
     end
 
+    def users_without_pull
+      remote_users = Puppetscript.read_node_file(name)
+      remote_users['users']
+    end
+
     def commit_message(git_writer)
       if git_writer.added?
         'Add ' + name
@@ -326,9 +331,9 @@ module VSphere
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
-      rescue Git::GitExecuteError => e
-        Rails.logger.error(e)
       end
+    rescue Git::GitExecuteError => e
+      Rails.logger.error(e)
     end
 
     def sudo_users
@@ -360,9 +365,9 @@ module VSphere
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
-      rescue Git::GitExecuteError => e
-        logger.error(e)
       end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
 
     # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms
