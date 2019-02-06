@@ -22,8 +22,8 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
         expect(request.status).to eq('accepted')
       end
 
-      it 'redirects to the requests page, as the vm cannot be created' do
-        expect(page).to have_current_path(requests_path)
+      it 'redirects to VMs config page' do
+        expect(page).to have_current_path(edit_config_path(request.name))
       end
     end
 

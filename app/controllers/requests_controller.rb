@@ -3,14 +3,15 @@
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
   include RequestsHelper
-  before_action :set_request, only: %i[show edit update destroy request_state_change]
+  before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
   # GET /requests.json
   def index
-    @requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
+    requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
+    split_requests(requests)
   end
 
   # GET /requests/1
@@ -29,6 +30,7 @@ class RequestsController < ApplicationController
   # GET /requests/1/edit
   def edit
     redirect_to @request unless @request.pending?
+    @request_templates = RequestTemplate.all
   end
 
   def notify_users(title, message)
@@ -41,11 +43,11 @@ class RequestsController < ApplicationController
   # POST /requests.json
   def create
     prepare_params
-    @request = Request.new(request_params.merge(user: current_user))
 
+    @request = Request.new(request_params.merge(user: current_user))
+    @request.assign_sudo_users(request_params[:sudo_user_ids])
     respond_to do |format|
-      if @request.save
-        @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+      if enough_resources && @request.save
         successful_save(format)
       else
         unsuccessful_action(format, :new)
@@ -58,17 +60,11 @@ class RequestsController < ApplicationController
   def update
     respond_to do |format|
       prepare_params
+      @request.assign_sudo_users(request_params[:sudo_user_ids])
+      @request.accept!
       if @request.update(request_params)
-        @request.accept!
-        @request.save
         notify_request_update
-        vm = @request.create_vm
-        if vm
-          format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, method: :get, notice: I18n.t('request.successfully_updated_and_vm_created')) }
-          format.json { render status: :ok }
-        else
-          format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
-        end
+        safe_create_vm_for format, @request
       else
         unsuccessful_action format, :edit
       end
@@ -78,9 +74,8 @@ class RequestsController < ApplicationController
   def reject
     @request = Request.find params[:id]
     respond_to do |format|
+      @request.reject!
       if @request&.update(rejection_params)
-        @request.reject!
-        @request.save
         notify_request_update
         format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
         format.json { render status: :ok, action: :index }
@@ -100,7 +95,26 @@ class RequestsController < ApplicationController
     end
   end
 
+  # Creates puppet files for request and pushes the created files into a git repository
+  def push_to_git
+    response = @request.push_to_git
+    redirect_to requests_path, response
+  end
+
   private
+
+  def safe_create_vm_for(format, request)
+    vm, warning = request.create_vm
+    if vm
+      notices = warning.nil? ? { notice: 'VM was successfully created!' } : { alert: warning }
+      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices)) }
+      format.json { render status: :ok }
+    else
+      format.html { redirect_to requests_path, alert: 'VM could not be created, there are no hosts available in vSphere!' }
+    end
+  rescue RbVmomi::Fault => fault
+    format.html { redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\"" }
+  end
 
   def host_url
     request.base_url
@@ -121,7 +135,12 @@ class RequestsController < ApplicationController
     return if @request.pending?
 
     if @request.accepted?
-      notify_users('Request has been accepted', @request.description_text(host_url))
+      ([@request.user] + User.admin).each do |each|
+        each.notify('Request has been accepted', @request.description_text(host_url))
+      end
+      @request.users.each do |each|
+        each.notify('You have (sudo) rights on a new VM', @request.description_text(host_url))
+      end
     elsif @request.rejected?
       message = @request.description_text host_url
       message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
@@ -142,20 +161,78 @@ class RequestsController < ApplicationController
   end
 
   # Storage and RAM are displayed in GB but internally stored in MB.
+  # sudo_user_ids always contain one empty element which must be removed
   def prepare_params
-    params[:request][:name] = replace_whitespaces(params[:request][:name]) if params[:request][:name]
-    params[:request][:ram_mb] = gb_to_mb(params[:request][:ram_mb].to_i) if params[:request][:ram_mb]
-    params[:request][:storage_mb] = gb_to_mb(params[:request][:storage_mb].to_i) if params[:request][:storage_mb]
+    request_parameters = params[:request]
+    return unless request_parameters
+
+    request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
+    request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
+
+    # the user_ids must contain the ids of ALL users, sudo or not
+    request_parameters[:user_ids] ||= []
+    request_parameters[:user_ids] += request_parameters[:sudo_user_ids] if request_parameters[:sudo_user_ids]
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def request_params
-    params.require(:request).permit(:name, :cpu_cores, :ram_mb, :storage_mb, :operating_system,
-                                    :port, :application_name, :description, :comment,
-                                    :rejection_information, user_ids: [], sudo_user_ids: [])
+    params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
+                                    :port, :application_name, :description, :comment, :project_id, :port_forwarding,
+                                    :rejection_information, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
   end
 
   def rejection_params
     params.require(:request).permit(:rejection_information)
+  end
+
+  def puppet_node_script(request)
+    request.generate_puppet_node_script
+  end
+  helper_method :puppet_node_script
+
+  def puppet_name_script(request)
+    request.generate_puppet_name_script
+  end
+
+  helper_method :puppet_name_script
+
+  def split_requests(requests)
+    @pending_requests = requests.select(&:pending?)
+    @resolved_requests = requests.reject(&:pending?)
+  end
+
+  def enough_resources
+    hosts = VSphere::Host.all
+
+    # get max host resources
+    max_cpu_host = hosts[0]
+    max_ram_host = hosts[0]
+    max_storage_host = hosts[0]
+
+    hosts.each do |host|
+      # check if the host could handle the vm
+      host_num_cpu = host.get_num_cpu
+      host_ram = host.get_ram_gb
+      host_free_hdd = host.get_storage_gb
+
+      if (request_params[:cpu_cores].to_i <= host_num_cpu) && (request_params[:ram_mb].to_i <= host_ram) && (request_params[:storage_mb].to_i <= host_free_hdd)
+        return true
+      end
+
+      # get hosts with max resources per category
+      max_cpu_host = host if host_num_cpu > max_cpu_host.get_num_cpu
+
+      max_ram_host = host if host_ram > max_ram_host.get_ram_gb
+
+      max_storage_host = host if host_free_hdd > max_storage_host.get_storage_gb
+    end
+
+    max_cpu_host_msg = "cores: #{max_cpu_host.get_num_cpu}, ram: #{max_cpu_host.get_ram_gb / 1024}GB, hdd: #{max_cpu_host.get_storage_gb / 1024}GB"
+    max_ram_host_msg = "cores: #{max_ram_host.get_num_cpu}, ram: #{max_ram_host.get_ram_gb / 1024}GB, hdd: #{max_ram_host.get_storage_gb / 1024}GB"
+    max_storage_host_msg = "cores: #{max_storage_host.get_num_cpu}, ram: #{max_storage_host.get_ram_gb / 1024}GB, hdd: #{max_storage_host.get_storage_gb / 1024}GB"
+
+    error_message = "Requested VM resources are too high! Most Powerful Hosts are: Max Core Host(#{max_cpu_host_msg}) Max RAM Host(#{max_ram_host_msg}) Max HDD Host(#{max_storage_host_msg}) "
+    @request.errors[:base] << error_message
+    false
   end
 end
