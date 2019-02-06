@@ -69,7 +69,7 @@ end %>
 
 <div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
   <div class="float-left">Host: <%= link_to @vm.host_name, controller: "hosts", action: "show", id: @vm.host_name unless @vm.nil? %></div>
-  <div class="text-right">Project: <%= @vm.project.name %></div>
+  <div class="text-right">Project: <%= @vm.project.nil? ? 'No project found!' : @vm.project.name %></div>
 </div>
 
 <%
