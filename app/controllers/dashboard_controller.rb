@@ -6,11 +6,25 @@ require './app/api/v_sphere/host'
 class DashboardController < ApplicationController
   attr_reader :vms, :hosts, :notifications
 
+  include VmsHelper
+
   def index
     redirect_to '/users/sign_in' if current_user.nil?
-    @vms = current_user.nil? ? VSphere::VirtualMachine.all : VSphere::VirtualMachine.user_vms(current_user)
-    @hosts = VSphere::Host.all
+    initialize_vm_categories
+    filter_vm_categories current_user unless current_user.admin?
     @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
+  end
+
+  private
+
+  def initialize_vm_categories
+    @vms = VSphere::VirtualMachine.rest
+    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+  end
+
+  def filter_vm_categories(user)
+    @vms = @vms.select { |each| each.belongs_to user }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
   end
 
   def number_of_notifications
