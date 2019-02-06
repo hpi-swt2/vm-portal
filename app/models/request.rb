@@ -4,6 +4,7 @@ class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
+  belongs_to :project
   has_and_belongs_to_many :responsible_users, class_name: 'User', join_table: 'requests_responsible_users'
 
   before_save do
@@ -22,10 +23,14 @@ class Request < ApplicationRecord
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
-  validates :responsible_users, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
+  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
   validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
+  with_options if: :port_forwarding do |request|
+    request.validates :port, presence: true, numericality: { only_integer: true }
+    request.validates :application_name, presence: true
+  end
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"

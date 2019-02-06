@@ -12,6 +12,10 @@ FactoryBot.define do
     status { 'pending' }
     user { FactoryBot.create :admin }
     responsible_users { [FactoryBot.create(:user)] }
+    project { FactoryBot.create(:project) }
+    port_forwarding { true }
+    port { 4000 }
+    application_name { 'MyName' }
   end
 
   factory :rejected_request, parent: :request do
