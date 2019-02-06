@@ -48,7 +48,7 @@ RSpec.describe RequestsController, type: :controller do
       responsible_user_ids: [user.id],
       sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
       user_ids: ['', user.id.to_s],
-      project: project
+      project_id: project.id
     }
   end
 
@@ -64,7 +64,7 @@ RSpec.describe RequestsController, type: :controller do
       status: 'pending',
       user: user,
       sudo_user_ids: ['', sudo_user.id.to_s], # the first parameter is for some reason always empty
-      project: project
+      project_id: project.id
     }
   end
 
@@ -82,7 +82,7 @@ RSpec.describe RequestsController, type: :controller do
       user: user,
       responsible_user_ids: [user.id],
       sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
-      project: project
+      project_id: project.id
     }
   end
 
