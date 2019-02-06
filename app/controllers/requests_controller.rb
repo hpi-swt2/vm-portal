@@ -30,6 +30,7 @@ class RequestsController < ApplicationController
   # GET /requests/1/edit
   def edit
     redirect_to @request unless @request.pending?
+    @request_templates = RequestTemplate.all
   end
 
   def notify_users(title, message)

@@ -28,32 +28,26 @@ RSpec.describe 'requests/new', type: :view do
   before do
     assign(:user, user)
     assign(:request, request)
-    assign(:request_templates, [RequestTemplate.new(
-      name: 'MyTemplate',
-      cpu_cores: 2,
-      ram_gb: 1,
-      storage_gb: 2,
-      operating_system: 'CentOS 7'
-    )])
+    assign(:request_templates, [FactoryBot.build(:request_template)])
     render
   end
 
   context 'when a template should be selected' do
-    it 'has the correct css' do
-      expect(rendered).to have_css('.template')
+    it 'has a dropdown for selecting templates' do
+      expect(rendered).to have_select 'request_template_id'
     end
 
-    it 'has a list of templates' do
-      expect(rendered).to have_text('Request templates')
+    it 'has a dropdown labelled \"Template\"' do
+      expect(rendered).to have_text('Template')
     end
 
-    it 'has a list with \"none\" template' do
-      expect(rendered).to have_text('None')
+    it 'has a select with \"none\" template as option' do
+      expect(rendered).to have_select 'request_template_id', with_options: ['None']
     end
 
     context 'when a new template is generated' do
       it 'has a list with this pre-generated template' do
-        expect(rendered).to have_text('MyTemplate: 2 CPU cores, 1 GB RAM, 2 GB Storage, CentOS 7')
+        expect(rendered).to have_select 'request_template_id', with_options: ['My Template: 1 CPU cores, 1 GB RAM, 1 GB Storage, MyString']
       end
     end
   end
