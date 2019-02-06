@@ -18,9 +18,11 @@
             <%= link_to('Hosts', hosts_path, class: "nav-link") %>
           </li>
         <% end %>
+        <% if current_user.employee_or_admin? %>
         <li class="nav-item">
           <%= link_to('Servers', servers_path, class: "nav-link") %>
         </li>
+        <% end %>
         <li class="nav-item">
           <%= link_to('Projects', projects_path, class: "nav-link") %>
         </li>

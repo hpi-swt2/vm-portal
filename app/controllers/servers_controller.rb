@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ServersController < ApplicationController
-  before_action :set_server, only: %i[show edit update destroy]
+  
   before_action :authenticate_employee, only: %i[show]
   before_action :authenticate_admin, only: %i[new create edit update destroy]
   # GET /servers
