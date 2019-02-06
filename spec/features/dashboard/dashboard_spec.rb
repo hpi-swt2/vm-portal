@@ -1,32 +1,13 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require './spec/api/v_sphere_api_mocker'
 
 describe 'Dashboard', type: :feature do
-  let(:user) { FactoryBot.create(:user) }
-  let(:vm1) { vim_vm_mock('testing') }
-  let(:vm2) { vim_vm_mock('testing2') }
+  let(:user) { FactoryBot.create(:puppet_admin) }
 
   before do
     sign_in(user)
-  end
-
-  it 'does render a list of all available vms for a signed in user' do
-    associate_users_with_vms(users: [user], vms: [vm1, vm2])
-    visit(:dashboard)
-    expect(page).to(have_text('testing'))
-    expect(page).to(have_text('testing2'))
-  end
-
-  it 'does render an empty list if a user does not have access to a vm' do
-    visit(:dashboard)
-    expect(page).to have_css('tbody#vms', exact_text: '')
-  end
-
-  it 'does render a selection of details per vm' do
-    skip('vm has no selected details on dashboard')
-    associate_users_with_vms(users: [user], vms: [vm1, vm2])
-    visit(:dashboard)
   end
 
   it 'does render notifications for a user' do
