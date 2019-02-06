@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_01_091109) do
+ActiveRecord::Schema.define(version: 2019_02_05_115620) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -64,6 +64,9 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.string "application_name"
     t.text "description"
     t.integer "user_id"
+    t.integer "project_id"
+    t.boolean "port_forwarding"
+    t.index ["project_id"], name: "index_requests_on_project_id"
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
@@ -129,9 +132,6 @@ ActiveRecord::Schema.define(version: 2019_02_01_091109) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "ssh_key"
     t.string "provider"
     t.string "uid"
     t.integer "user_id"

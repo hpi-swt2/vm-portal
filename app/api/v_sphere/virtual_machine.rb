@@ -77,7 +77,7 @@ module VSphere
         GitHelper.open_repository Puppetscript.puppet_script_path do
           vm_names = prepare_vm_names
           vm_names.each do |vm_name|
-            vms.append(find_by_name(vm_name)) if user.admin? || includes_user?(vm_name, user)
+            vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
           end
         end
       rescue Git::GitExecuteError => e
@@ -353,15 +353,17 @@ module VSphere
     end
 
     def sudo_users=(ids)
-      GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
-        name_script, node_script = sudo_name_and_node_script(ids)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
+      begin
+        GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
+          name_script, node_script = sudo_name_and_node_script(ids)
+          git_writer.write_file(name_path, name_script)
+          git_writer.write_file(node_path, node_script)
+          message = commit_message(git_writer)
+          git_writer.save(message)
+        end
+      rescue Git::GitExecuteError => e
+        logger.error(e)
       end
-    rescue Git::GitExecuteError => e
-      logger.error(e)
     end
 
     # this method is fine for a single check. If you need to check all or several vms for a user, check with user_vms
