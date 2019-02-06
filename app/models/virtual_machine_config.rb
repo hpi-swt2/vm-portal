@@ -2,4 +2,5 @@
 
 class VirtualMachineConfig < ApplicationRecord
   has_and_belongs_to_many :responsible_users, class_name: 'User'
+  belongs_to :project, optional: true
 end
