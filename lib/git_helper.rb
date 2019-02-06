@@ -2,10 +2,6 @@
 
 module GitHelper
   def self.open_repository(path)
-    3.times do
-      puts 'Open Git'
-      puts '//////////////////////'
-    end
     FileUtils.mkdir_p(path) unless File.exist?(path)
     git_writer = GitWriter.new(path)
     yield git_writer
