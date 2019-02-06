@@ -138,7 +138,6 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.string "ssh_key"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
