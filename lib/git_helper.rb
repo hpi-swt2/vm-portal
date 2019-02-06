@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+#
+require 'time'
 
 module GitHelper
   def self.open_repository(path, for_write: false)
@@ -43,7 +45,7 @@ module GitHelper
 
     def pull
       path = File.join(@path, '.last_pull')
-      File.open(path, 'w') { |file| file.puts(Time.httpdate) }
+      File.open(path, 'w') { |file| file.write(Time.now) }
       @git.pull
     end
 
@@ -52,7 +54,7 @@ module GitHelper
       return false unless File.exist?(path)
 
       last_date = Time.parse(File.open(path, &:readline))
-      difference = Time.httpdate - last_date
+      difference = Time.now - last_date
 
       difference < 60
     end
