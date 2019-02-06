@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_05_115620) do
+ActiveRecord::Schema.define(version: 2019_02_06_113452) do
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -132,12 +132,12 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "provider"
-    t.string "uid"
-    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+    t.string "provider"
+    t.string "uid"
     t.integer "user_id"
+    t.string "ssh_key"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -167,6 +167,8 @@ ActiveRecord::Schema.define(version: 2019_02_05_115620) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.integer "project_id"
+    t.index ["project_id"], name: "index_virtual_machine_configs_on_project_id"
   end
 
 end

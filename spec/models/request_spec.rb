@@ -230,10 +230,10 @@ RSpec.describe Request, type: :model do
     it 'returns correct declaration script for a given request' do
       script = request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
-        node \'$myvm\'{
+        node \'myvm\'{
 
-            if defined( node_$myvm) {
-                        class { node_$myvm: }
+            if defined( node_myvm) {
+                        class { node_myvm: }
             }
         }
       NAME_SCRIPT
@@ -248,7 +248,7 @@ RSpec.describe Request, type: :model do
       email4 = users[3].email.split('@').first
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
-        class node_$myvm {
+        class node_myvm {
                 $admins = []
                 $users = ["#{email}", "#{email2}", "#{email3}", "#{email4}"]
 
