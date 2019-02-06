@@ -58,6 +58,7 @@ module VSphere
     end
 
     def self.prepare_vm_names
+      return [] unless File.exist?(File.join(Puppetscript.puppet_script_path, 'Node'))
       files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
@@ -76,7 +77,7 @@ module VSphere
         GitHelper.open_repository Puppetscript.puppet_script_path do
           vm_names = prepare_vm_names
           vm_names.each do |vm_name|
-            vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
+            vms.append(find_by_name(vm_name)) if user.admin? || includes_user?(vm_name, user)
           end
         end
       rescue Git::GitExecuteError => e
@@ -363,6 +364,7 @@ module VSphere
       logger.error(e)
     end
 
+    # this method is fine for a single check. If you need to check all or several vms for a user, check with user_vms
     def belongs_to(user)
       users.include? user
     end
