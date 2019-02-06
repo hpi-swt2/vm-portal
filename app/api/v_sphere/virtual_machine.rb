@@ -332,8 +332,8 @@ module VSphere
         message = commit_message(git_writer)
         git_writer.save(message)
       end
-      rescue Git::GitExecuteError => e
-        Rails.logger.error(e)
+    rescue Git::GitExecuteError => e
+      Rails.logger.error(e)
     end
 
     def sudo_users
@@ -366,8 +366,8 @@ module VSphere
         message = commit_message(git_writer)
         git_writer.save(message)
       end
-      rescue Git::GitExecuteError => e
-        logger.error(e)
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
 
     # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms

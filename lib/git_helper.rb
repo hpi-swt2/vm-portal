@@ -54,8 +54,7 @@ module GitHelper
       last_date = Time.parse(File.open(path, &:readline))
       difference = Time.httpdate - last_date
 
-      pulled = difference < 60 ? true : false
-      pulled
+      difference < 60
     end
 
     def setup_git
