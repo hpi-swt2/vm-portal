@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RequestTemplatesController < ApplicationController
-  before_action :authenticate_admin, only: %i[new edit create update destroy]
   before_action :set_request_template, only: %i[show edit update destroy]
+  before_action :authenticate_admin
 
   # GET /request_templates
   # GET /request_templates.json
