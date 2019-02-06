@@ -98,7 +98,7 @@ class Request < ApplicationRecord
 
   # Error handling has been moved into create_vm to provide easier feedback for the user
   def push_to_git
-    GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
+    GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
       git_writer.write_file(File.join('Node', "node-#{name}.pp"), generate_puppet_node_script)
       git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
       git_writer.save(commit_message(git_writer))

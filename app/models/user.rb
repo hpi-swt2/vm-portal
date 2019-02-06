@@ -127,7 +127,7 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
+    GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
       git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
       message = if git_writer.added?
                   'Create init.pp'
