@@ -71,7 +71,7 @@ module Puppetscript
   end
 
   def self.node_file_correct?(vm_name, contents)
-    result =    contents.lines[0].chomp.eql?('class node_$' + vm_name + ' {')
+    result =    contents.lines[0].chomp.eql?('class node_' + vm_name + ' {')
     result &&=  contents.lines[1].start_with?('        $admins = [')
     result &&=  !contents.lines[1].include?('[]')
     result &&=  contents.lines[2].start_with?('        $users = [')
