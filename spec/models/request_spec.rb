@@ -219,7 +219,7 @@ RSpec.describe Request, type: :model do
 
     it 'saves the responsible users in the VM' do
       request.responsible_users = [FactoryBot.create(:admin)]
-      vm = request.create_vm
+      vm, _warning = request.create_vm
       expect(vm.responsible_users).to match_array(request.responsible_users)
     end
   end
