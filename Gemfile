@@ -62,6 +62,9 @@ gem 'omniauth_openid_connect'
 # Allow locks on database
 gem 'with_advisory_lock'
 
+# Ruby Git
+gem 'git'
+
 # Mina for deployment
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma

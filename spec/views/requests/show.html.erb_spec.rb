@@ -7,28 +7,15 @@ RSpec.describe 'requests/show', type: :view do
 
   before do
     @user = FactoryBot.create(:user)
+    @request = assign(:request, FactoryBot.create(:request, user_ids: [@user.id], user: FactoryBot.create(:employee)))
     @second_user = FactoryBot.create(:user, email: 'test@test.de')
-    @request = assign(:request, Request.create!(
-                                  name: 'MyVM',
-                                  cpu_cores: 3,
-                                  ram_mb: 1000,
-                                  storage_mb: 2000,
-                                  operating_system: 'MyOS',
-                                  port: '4000',
-                                  application_name: 'MyName',
-                                  description: 'Description',
-                                  comment: 'Comment',
-                                  status: 'pending',
-                                  user_ids: [@user.id],
-                                  user: FactoryBot.create(:employee)
-                                ))
     @request.assign_sudo_users([@second_user.id])
     allow(view).to receive(:current_user).and_return(current_user)
     render
   end
 
   it 'renders attributes in <p>' do
-    expect(rendered).to match(/MyVM/)
+    expect(rendered).to match(/myvm/)
     expect(rendered).to match(/3/)
     expect(rendered).to match(/1/)
     expect(rendered).to match(/2/)

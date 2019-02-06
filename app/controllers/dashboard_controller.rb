@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
 
   def index
     redirect_to '/users/sign_in' if current_user.nil?
-    @vms = VSphere::VirtualMachine.all
+    @vms = current_user.nil? ? VSphere::VirtualMachine.all : VSphere::VirtualMachine.user_vms(current_user)
     @hosts = VSphere::Host.all
     @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
   end

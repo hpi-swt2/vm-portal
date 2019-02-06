@@ -1,59 +1,122 @@
-<h1>Requests</h1>
+<div class="clearfix">
+  <h1 class="float-left">Requests</h1>
+  <%= link_to fa_icon('plus'), new_request_path,
+    method: :get,
+    class: "btn btn-primary float-right mt-3" %>
+  <%= button_to "Templates", request_templates_path,
+    method: :get,
+    class: "btn btn-primary float-right mt-3 mr-3" %>
+  <%= button_to 'Operating Systems', operating_systems_path,
+    method: :get,
+    class: 'btn btn-primary float-right mt-3 mr-3' %>
+</div>
 
-<table class="table-bar">
+<%= link_to "Pending requests (#{@pending_requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
+<%= link_to "Resolved requests (#{@resolved_requests&.size}) <small>&#x25bc;</small>".html_safe, '#resolved' %><br />
+
+<h2 id="pending">Pending requests</h2>
+
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_pending" onkeyup="filter_table('filter_pending', 'requests_pending', document)" placeholder="Search">
+
+<table data-toggle="table" class="table" id="requests_pending">
+  <thead>
+  <tr>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">VM Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">CPU Cores</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">RAM</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">HDD</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">OS</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Port</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Application Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Comment</th>
+  </tr>
+  </thead>
   <tbody>
+  <% @pending_requests&.each do |request| %>
     <tr>
-      <td>
-        <%=link_to(fa_icon('plus'),
-        {controller: :requests, action: 'new'},
-        method: :get, class: 'btn btn-primary') %>
+      <td class="table-active">
+        <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
       </td>
-      <td>
-        <%= link_to 'Templates', request_templates_path, class: 'btn btn-primary' %>
-      </td>
-      <td>
-        <%= link_to 'Operating Systems', operating_systems_path, class: 'btn btn-primary' %>
-      </td>
+      <td class="table-active"><%= request.cpu_cores %></td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
+      <td class="table-active"><%= request.operating_system %></td>
+      <td class="table-active"><%= request.port %></td>
+      <td class="table-active"><%= request.application_name %></td>
+      <td class="table-active"><%= request.comment %></td>
     </tr>
+  <% end %>
   </tbody>
 </table>
 
-<table class="table table-fixed-columns">
-  <thead>
-    <tr>
-      <th>VM Name</th>
-      <th>CPU cores</th>
-      <th>RAM in GB</th>
-      <th>Storage in GB</th>
-      <th>Operating System</th>
-      <th>Port</th>
-      <th>Application Name</th>
-      <th>Comment</th>
-      <th>Status </th>
-    </tr>
-  </thead>
+<h2 id="resolved">Resolved requests</h2>
 
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_resolved" onkeyup="filter_table('filter_resolved', 'requests_resolved', document)" placeholder="Search">
+
+<table data-toggle="table" class="table" id="requests_resolved">
+  <thead>
+  <tr>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">VM Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">CPU Cores</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">RAM</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">HDD</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">OS</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Port</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Application Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white">Comment</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
+  </tr>
+  </thead>
   <tbody>
-    <% @requests.each do |request| %>
-      <tr>
-        <td><%= link_to request.name, request_path(request) %></td>
-        <td><%= request.cpu_cores %></td>
-        <td><%= mb_to_gb(request.ram_mb) %></td>
-        <td><%= mb_to_gb(request.storage_mb) %></td>
-        <td><%= request.operating_system %></td>
-        <td><%= request.port %></td>
-        <td><%= request.application_name %></td>
-        <td><%= request.comment %></td>
-        <td>
-          <%= link_to request.status,
-                      request_path(request),
-                      class: 'btn btn-primary'
-          %>
+  <% @resolved_requests&.each do |request| %>
+    <tr>
+      <td class="table-active">
+        <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
+      </td>
+      <td class="table-active"><%= request.cpu_cores %></td>
+      <td class="table-active"><%= request.ram_gb %> GB</td>
+      <td class="table-active"><%= request.storage_gb %> GB</td>
+      <td class="table-active"><%= request.operating_system %></td>
+      <td class="table-active"><%= request.port %></td>
+      <td class="table-active"><%= request.application_name %></td>
+      <td class="table-active"><%= request.comment %></td>
+      <td class="table-active">
+          <div class="round mt-2
+            <%= request.accepted? ? 'bg-success' : 'bg-danger'  %>">
+          </div>
+          <% if request.accepted? %>
+            <a class="btn-manage script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
+            </a>
+            <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <pre>
+                        <%= debug puppet_node_script(request) %>
+                        <%= debug puppet_name_script(request) %>
+                      </pre>
+                  </div>
+                  <div class="modal-footer">
+                    <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<% if @requests.length == 0 %>
-<p class="empty-table-label">No requests created yet</p>
-<% end %>
+
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

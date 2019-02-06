@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
 require 'vmapi.rb'
+require './app/api/v_sphere/virtual_machine'
+
 class VmsController < ApplicationController
+  rescue_from RbVmomi::Fault, with: :not_enough_resources
+
   attr_reader :vms
 
   include VmsHelper
   before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
-  before_action :authorize_vm_access, only: %i[show]
-  before_action :authenticate_root_user, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
+  before_action :authorize_vm_access, only: %i[show edit update]
+  before_action :authenticate_root_user_or_admin, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
 
   def index
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-  end
-
-  def destroy
-    # params[:id] is actually the name of the vm, since the vsphere backend doesn't identify vms by IDs
-    # VSphere::VirtualMachine.delete_vm(params[:id])
   end
 
   def create
@@ -42,26 +41,47 @@ class VmsController < ApplicationController
         redirect_to requests_path, notice: 'Could not update the configuration'
       end
     else
-      redirect_to controller: :vms, action: 'index', notice: 'Configuration could not be found!'
+      flash[:alert] = 'Configuration could not be found!'
+      redirect_to controller: :vms, action: 'index'
     end
+  end
+
+  def edit
+    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+
+    @sudo_user_ids = @vm.sudo_users.map(&:id)
+    @non_sudo_user_ids = @vm.users.map(&:id)
+    @description = @vm.ensure_config.description
+  end
+
+  def update
+    notify_changed_users(@vm.sudo_users.map(&:id), params[:vm_info][:sudo_user_ids].map(&:to_i), true, @vm.name)
+    notify_changed_users(@vm.users.map(&:id), params[:vm_info][:non_sudo_user_ids].map(&:to_i), false, @vm.name)
+    @vm.sudo_users = params[:vm_info][:sudo_user_ids]
+    @vm.users = params[:vm_info][:non_sudo_user_ids]
+    @vm.config.description = params[:vm_info][:description]
+    unless @vm.config.save
+      flash[:error] = 'Description couldn\'t be saved.'
+      redirect_to edit_vm_path(@vm.name)
+    end
+
+    redirect_to vm_path(@vm.name)
   end
 
   def request_vm_archivation
     @vm = VSphere::VirtualMachine.find_by_name params[:id]
     return if !@vm || @vm.archived? || @vm.pending_archivation?
 
-    User.admin.each do |each|
-      each.notify("VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and has to be archived.\n#{url_for(controller: :vms, action: 'show', id: @vm.name)}")
-    end
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM has been shut down and will soon be archived.\nYou can raise an objection to this on the vms overview site\n" +
+                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within three days.\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
+    @admin_ids = User.admin.pluck(:id)
+    ApplicationJob.set(wait: 3.days).perform_later(@admin_ids, @vm.name, url_for(controller: :vms, action: 'show', id: @vm.name))
   end
 
   def request_vm_revive
@@ -152,10 +172,11 @@ class VmsController < ApplicationController
   end
 
   def filter_vm_categories(user)
-    @vms = @vms.select { |each| each.belongs_to user }
-    @archived_vms = @archived_vms.select { |each| each.belongs_to user }
-    @pending_archivation_vms = @pending_archivation_vms.select { |each| each.belongs_to user }
-    @pending_reviving_vms = @pending_reviving_vms.select { |each| each.belongs_to user }
+    user_vms = VSphere::VirtualMachine.user_vms(user)
+    @vms = @vms.select { |each| user_vms.include?(each) }
+    @archived_vms = @archived_vms.select { |each| user_vms.include?(each) }
+    @pending_archivation_vms = @pending_archivation_vms.select { |each| user_vms.include?(each) }
+    @pending_reviving_vms = @pending_reviving_vms.select { |each| user_vms.include?(each) }
   end
 
   def authorize_vm_access
@@ -169,10 +190,15 @@ class VmsController < ApplicationController
     params.require(:virtual_machine_config).permit(:ip, :dns)
   end
 
-  def authenticate_root_user
+  def authenticate_root_user_or_admin
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     return unless @vm
 
     redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
+  end
+
+  def not_enough_resources(exception)
+    redirect_back(fallback_location: root_path)
+    flash[:alert] = exception.message
   end
 end
