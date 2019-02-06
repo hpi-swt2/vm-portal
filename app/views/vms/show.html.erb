@@ -108,7 +108,7 @@ end %>
         <tr>
           <th colspan="2" ><h4 class="mb-0">Users</h4></th>
         </tr>
-        <% (@vm.users + @vm.responsible_users).uniq.each do |user| %>
+        <% (@vm.users + @vm.sudo_users + @vm.responsible_users).uniq.each do |user| %>
           <tr>
             <td>
             <%= link_to user.name, user %>

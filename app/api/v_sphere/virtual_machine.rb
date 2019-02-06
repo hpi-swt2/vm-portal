@@ -58,6 +58,8 @@ module VSphere
     end
 
     def self.prepare_vm_names
+      return [] unless File.exist?(File.join(Puppetscript.puppet_script_path, 'Node'))
+
       files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
@@ -324,9 +326,9 @@ module VSphere
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
+      rescue Git::GitExecuteError => e
+        Rails.logger.error(e)
       end
-    rescue Git::GitExecuteError => e
-      Rails.logger.error(e)
     end
 
     def sudo_users
@@ -358,11 +360,12 @@ module VSphere
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
+      rescue Git::GitExecuteError => e
+        logger.error(e)
       end
-    rescue Git::GitExecuteError => e
-      logger.error(e)
     end
 
+    # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms
     def belongs_to(user)
       users.include? user
     end
