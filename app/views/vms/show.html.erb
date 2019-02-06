@@ -98,6 +98,10 @@ end %>
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
   <%= render 'templates/resource_allocation', values: @values %>
 </div>
+<div class="table-active container mb-3 pb-3 pt-3">
+  <h4 class="mb-4">Description</h4>
+  <%= simple_format(@vm&.config&.description) %>
+</div>
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
   <div class="column float-left mr-3 half-screen-box">
     <%= render 'templates/hardware_table', hardware: @hardware %>

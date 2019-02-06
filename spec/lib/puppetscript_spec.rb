@@ -58,10 +58,6 @@ RSpec.describe Puppetscript do
       expect(users).to include(@user)
     end
 
-    it 'raises an error if trying to read a puppet file which does not contain admins' do
-      expect { Puppetscript.read_node_file('example2', path) }.to raise_error 'Unsupported Format'
-    end
-
     it 'raises an error if trying to read a puppet file with the node name not matching the file namne' do
       expect { Puppetscript.read_node_file('example3', path) }.to raise_error 'Unsupported Format'
     end
