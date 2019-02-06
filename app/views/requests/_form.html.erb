@@ -91,7 +91,7 @@
         <div class="form-group">
           Users with sudo rights
           <%= form.select 'sudo_user_ids',
-                          options_from_collection_for_select(User.admin,
+                          options_from_collection_for_select(User.all,
                                                             :id,
                                                             :email,
                                                             @request.sudo_users.collect(&:id)),
@@ -101,7 +101,7 @@
         <div class="form-group">
           Regular users
           <%= form.select 'user_ids',
-                          options_from_collection_for_select(User.employee,
+                          options_from_collection_for_select(User.all,
                                                               :id,
                                                               :email,
                                                               @request.users.collect(&:id)),
