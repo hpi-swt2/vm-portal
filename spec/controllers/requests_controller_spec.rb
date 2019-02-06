@@ -143,6 +143,11 @@ RSpec.describe RequestsController, type: :controller do
         post :create, params: { request: valid_attributes }
         expect(response).to redirect_to(requests_path)
       end
+
+      it 'correctly assigns the sudo users' do
+        post :create, params: { request: valid_attributes }
+        expect(assigns(:request).sudo_users).to match_array([sudo_user, sudo_user2])
+      end
     end
 
     context 'with invalid params' do

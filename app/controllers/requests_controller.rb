@@ -49,7 +49,7 @@ class RequestsController < ApplicationController
     respond_to do |format|
       if enough_resources
         if @request.save
-          @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
+          @request.assign_sudo_users(request_params[:sudo_user_ids])
           successful_save(format)
         else
           unsuccessful_action(format, :new)
