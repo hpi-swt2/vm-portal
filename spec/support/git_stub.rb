@@ -13,7 +13,7 @@ def create_git_stub
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
 
-  path = PuppetParserHelper.puppet_script_path
+  path = Puppetscript.puppet_script_path
   node_path = File.join path, 'Node'
   name_path = File.join path, 'Name'
 
