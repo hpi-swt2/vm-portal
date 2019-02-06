@@ -4,6 +4,7 @@ class Request < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :users, through: :users_assigned_to_requests
   belongs_to :user
+  belongs_to :project
   has_and_belongs_to_many :responsible_users, class_name: 'User', join_table: 'requests_responsible_users'
 
   before_save do
@@ -22,10 +23,14 @@ class Request < ApplicationRecord
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
             uniqueness: true
-  validates :responsible_users, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
+  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
   validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
+  with_options if: :port_forwarding do |request|
+    request.validates :port, presence: true, numericality: { only_integer: true }
+    request.validates :application_name, presence: true
+  end
 
   def description_text(host_name)
     description  = "- VM Name: #{name}\n"
@@ -37,7 +42,6 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
-    push_to_git
   end
 
   def reject!
@@ -70,9 +74,16 @@ class Request < ApplicationRecord
 
   def create_vm
     clusters = VSphere::Cluster.all
-    return nil unless clusters.first
+    return nil, nil unless clusters.first
 
-    create_vm_in_cluster(clusters.first)
+    warning = nil
+    begin
+      push_to_git
+    rescue Git::GitExecuteError => e
+      logger.error(e)
+      warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
+    end
+    [create_vm_in_cluster(clusters.first), warning]
   end
 
   def create_vm_in_cluster(cluster)
@@ -84,13 +95,12 @@ class Request < ApplicationRecord
     vm
   end
 
+  # Error handling has been moved into create_vm to provide easier feedback for the user
   def push_to_git
-    GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+    GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
       git_writer.write_file(File.join('Node', "node_#{name}.pp"), generate_puppet_node_script)
       git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
       git_writer.save(commit_message(git_writer))
-    rescue Git::GitExecuteError
-      { alert: "Users could not be associated with the VM!\nCould not push to git. Please check that your ssh key and environment variables are set." }
     end
   end
 

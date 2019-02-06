@@ -13,10 +13,7 @@ RSpec.describe VmsController, type: :controller do
   end
 
   let(:vm2) do
-    # associate vm2 with the user
-    vm = v_sphere_vm_mock 'myVM', power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
-    associate_users_with_vms(users: [current_user], vms: [vm])
-    vm
+    v_sphere_vm_mock 'myVM', power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
@@ -31,6 +28,7 @@ RSpec.describe VmsController, type: :controller do
 
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
+    associate_users_with_vms(users: [current_user], vms: [vm2])
     sign_in current_user
     allow(VSphere::Connection).to receive(:instance).and_return v_sphere_connection_mock(normal_vms: [vm1, vm2])
   end
@@ -48,7 +46,6 @@ RSpec.describe VmsController, type: :controller do
 
       it 'returns only vms associated to current user' do
         get :index
-        puts subject.vms
         expect(subject.vms.size).to be 1
       end
     end
