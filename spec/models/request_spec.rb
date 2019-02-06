@@ -219,7 +219,7 @@ RSpec.describe Request, type: :model do
 
     it 'saves the responsible users in the VM' do
       request.responsible_users = [FactoryBot.create(:admin)]
-      vm = request.create_vm
+      vm, _warning = request.create_vm
       expect(vm.responsible_users).to match_array(request.responsible_users)
     end
   end
@@ -284,20 +284,15 @@ RSpec.describe Request, type: :model do
         allow(@git_stub.status).to receive(:added).and_return(['added_file'])
       end
 
-      it 'pushes to git when a request is accepted' do
+      it 'pushes to git when a vm is created' do
         expect(@git_stub.git).to receive(:commit_all)
         expect(@git_stub.git).to receive(:push)
-        request.accept!
+        request.create_vm
       end
 
       it 'correctly calls git' do
         request.push_to_git
         expect(@git_stub.git).to have_received(:commit_all).with('Add myvm')
-      end
-
-      it 'returns an empty error message' do
-        skip('Why would it show this behavior?')
-        expect(request.push_to_git).to eq({})
       end
     end
 
@@ -311,11 +306,6 @@ RSpec.describe Request, type: :model do
         expect(@git_stub.git).to receive(:commit_all).with('Update myvm')
         request.push_to_git
       end
-
-      it 'returns an empty error message' do
-        skip('Why would it show this behavior?')
-        expect(request.push_to_git).to eq({})
-      end
     end
 
     context 'without any changes' do
@@ -327,11 +317,6 @@ RSpec.describe Request, type: :model do
       it 'correctly calls git' do
         expect(@git_stub.git).not_to receive(:commit_all)
         request.push_to_git
-      end
-
-      it 'returns an emtpy error message' do
-        skip('Why would it show this behavior?')
-        expect(request.push_to_git).to eq({})
       end
     end
   end

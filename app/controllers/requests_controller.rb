@@ -47,13 +47,8 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     respond_to do |format|
-      if enough_resources
-        if @request.save
-          @request.assign_sudo_users(request_params[:sudo_user_ids][1..-1])
-          successful_save(format)
-        else
-          unsuccessful_action(format, :new)
-        end
+      if enough_resources && @request.save
+        successful_save(format)
       else
         unsuccessful_action(format, :new)
       end
@@ -66,12 +61,10 @@ class RequestsController < ApplicationController
     respond_to do |format|
       prepare_params
       @request.assign_sudo_users(request_params[:sudo_user_ids])
+      @request.accept!
       if @request.update(request_params)
-        redirect_params = @request.accept!
-        redirect_params = redirect_params.nil? ? {} : redirect_params
-        @request.save!
         notify_request_update
-        safe_create_vm_for format, @request, redirect_params
+        safe_create_vm_for format, @request
       else
         unsuccessful_action format, :edit
       end
@@ -110,18 +103,14 @@ class RequestsController < ApplicationController
 
   private
 
-  def add_notices(redirect_params)
-    redirect_params[:notice] = I18n.t('request.successfully_updated_and_vm_created') unless redirect_params[:alert]
-    redirect_params
-  end
-
-  def safe_create_vm_for(format, request, redirect_params)
-    vm = request.create_vm
+  def safe_create_vm_for(format, request)
+    vm, warning = request.create_vm
     if vm
-      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(add_notices(redirect_params))) }
+      notices = warning.nil? ? { notice: 'VM was successfully created!' } : { alert: warning }
+      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices)) }
       format.json { render status: :ok }
     else
-      format.html { redirect_to requests_path, alert: 'VM could not be created, please create it manually in vSphere!' }
+      format.html { redirect_to requests_path, alert: 'VM could not be created, there are no hosts available in vSphere!' }
     end
   rescue RbVmomi::Fault => fault
     format.html { redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\"" }

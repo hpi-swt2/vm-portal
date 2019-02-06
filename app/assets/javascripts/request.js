@@ -1,4 +1,4 @@
-$('#request_template_id').click(function (){
+$('#request_template_id').change(function (){
     cpus = document.getElementById('cpu');
     ram = document.getElementById('ram');
     storage = document.getElementById('storage');

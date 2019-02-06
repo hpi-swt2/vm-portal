@@ -104,7 +104,7 @@
                           options_from_collection_for_select(User.all,
                                                               :id,
                                                               :email,
-                                                              @request.users.collect(&:id)),
+                                                              (@request.users - @request.sudo_users).collect(&:id)),
                           { },
                           { class: ' selecttwo', multiple: true} %>
         </div>

@@ -42,7 +42,6 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
-    push_to_git
   end
 
   def reject!
@@ -75,9 +74,16 @@ class Request < ApplicationRecord
 
   def create_vm
     clusters = VSphere::Cluster.all
-    return nil unless clusters.first
+    return nil, nil unless clusters.first
 
-    create_vm_in_cluster(clusters.first)
+    warning = nil
+    begin
+      push_to_git
+    rescue Git::GitExecuteError => e
+      logger.error(e)
+      warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
+    end
+    [create_vm_in_cluster(clusters.first), warning]
   end
 
   def create_vm_in_cluster(cluster)
@@ -89,14 +95,13 @@ class Request < ApplicationRecord
     vm
   end
 
+  # Error handling has been moved into create_vm to provide easier feedback for the user
   def push_to_git
     GitHelper.open_repository(Puppetscript.puppet_script_path) do |git_writer|
       git_writer.write_file(File.join('Node', "node_#{name}.pp"), generate_puppet_node_script)
       git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
       git_writer.save(commit_message(git_writer))
     end
-  rescue Git::GitExecuteError => e
-    logger.error(e)
   end
 
   def commit_message(git_writer)
