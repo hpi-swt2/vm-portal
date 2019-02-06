@@ -83,7 +83,7 @@ class Request < ApplicationRecord
       logger.error(e)
       warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
     end
-    return create_vm_in_cluster(clusters.first), warning
+    [create_vm_in_cluster(clusters.first), warning]
   end
 
   def create_vm_in_cluster(cluster)
