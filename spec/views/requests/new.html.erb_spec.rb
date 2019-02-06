@@ -6,23 +6,7 @@ RSpec.describe 'requests/new', type: :view do
   let(:user) { FactoryBot.create :user }
 
   let(:request) do
-#    FactoryBot.build(:request, user: FactoryBot.create(:employee))
-
-    Request.new(
-      name: 'myvm',
-      cpu_cores: 2,
-      ram_gb: 1,
-      storage_gb: 2,
-      operating_system: 'MyOS',
-      port: '4000',
-      application_name: 'MyName',
-      description: 'Description',
-      comment: 'Comment',
-      status: 'pending',
-      user: FactoryBot.create(:employee),
-      project: FactoryBot.create(:project)
-    )
-
+    FactoryBot.build(:request, user: FactoryBot.create(:employee))
   end
 
   before do
