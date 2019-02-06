@@ -47,13 +47,8 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     respond_to do |format|
-      if enough_resources
-        if @request.save
-          @request.assign_sudo_users(request_params[:sudo_user_ids])
-          successful_save(format)
-        else
-          unsuccessful_action(format, :new)
-        end
+      if enough_resources && @request.save
+        successful_save(format)
       else
         unsuccessful_action(format, :new)
       end
