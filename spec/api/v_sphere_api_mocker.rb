@@ -205,6 +205,7 @@ def v_sphere_connection_mock(
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder
   allow(double_connection).to receive(:clusters_folder).and_return clusters_folder
+  allow(double_connection).to receive(:configured?).and_return true
   double_connection
 end
 

@@ -55,3 +55,24 @@
     </ul>
   </div>
 </nav>
+
+<% if user_signed_in? && !VSphere::Connection.instance.configured? %>
+  <% if current_user.admin? %>
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">vSphere is not configured!</h4>
+      <p>The correct environment Variables are not set! Please assign the following environment variables</p>
+      <ul>
+        <li>VSPHERE_SERVER_IP: '<i>Your vSphere-Server ip</i>'</li>
+        <li>VSPHERE_SERVER_USER: '<i>The user email for the server login</i>'</li>
+        <li>VSPHERE_SERVER_PASSWORD: '<i>The password to your vSphere account</i>'</li>
+      </ul>
+      <hr>
+      <p>You can add environment variables either in the /config/environment_variables.yml file or as UNIX environment variables</p>
+    </div>
+  <% else %>
+    <div class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">Virtual machines temporarily unavailable</h4>
+      <p>HART can currently not access any virtual machines. If you need access, please contact your system administrator directly.</p>
+    </div>
+  <% end %>
+<% end %>

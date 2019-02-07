@@ -103,14 +103,23 @@ class RequestsController < ApplicationController
 
   private
 
+  def notice_for(vm, warning)
+    if warning
+      { alert: warning }
+    elsif vm
+      { notice: 'VM was successfully created!' }
+    else
+      { alert: 'VM could not be created due to an unkown error! Please create it manually in vSphere' }
+    end
+  end
+
   def safe_create_vm_for(format, request)
     vm, warning = request.create_vm
+    notices = notice_for vm, warning
     if vm
-      notices = warning.nil? ? { notice: 'VM was successfully created!' } : { alert: warning }
       format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices)) }
-      format.json { render status: :ok }
     else
-      format.html { redirect_to requests_path, alert: 'VM could not be created, there are no hosts available in vSphere!' }
+      format.html { redirect_to requests_path, notices }
     end
   rescue RbVmomi::Fault => fault
     format.html { redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\"" }
