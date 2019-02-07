@@ -35,7 +35,7 @@ RSpec.describe ServersController, type: :controller do
 
   let(:valid_session) { {} }
 
-  # Authenticate an user
+  # Authenticate an admin
   before do
     sign_in FactoryBot.create :admin
   end
@@ -156,12 +156,12 @@ RSpec.describe ServersController, type: :controller do
   # Authenticate an user
   before do
     sign_in FactoryBot.create :user
+    get :index
   end
 
-  describe 'GET #index' do
-    it 'returns a success response' do
-      get :new, params: {}, session: valid_session
-      expect(response).to redirect_to(dashboard_path)
+  describe 'GET #index if user is logged in' do
+    it 'returns http redirect' do
+      expect(response).to have_http_status(:redirect)
     end
   end
 end

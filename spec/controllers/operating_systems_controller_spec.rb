@@ -46,98 +46,124 @@ RSpec.describe OperatingSystemsController, type: :controller do
   # OperatingSystemsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  before do
-    sign_in FactoryBot.create :user
-  end
-
-  describe 'GET #index' do
-    it 'returns a success response' do
-      OperatingSystem.create! valid_attributes
-      get :index, params: {}, session: valid_session
-      expect(response).to be_successful
+  context 'if current_user is admin' do
+    before do
+      sign_in FactoryBot.create :admin
     end
-  end
 
-  describe 'GET #new' do
-    it 'returns a success response' do
-      get :new, params: {}, session: valid_session
-      expect(response).to be_successful
+    describe 'GET #index' do
+      it 'returns a success response' do
+        OperatingSystem.create! valid_attributes
+        get :index, params: {}, session: valid_session
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe 'GET #edit' do
-    it 'returns a success response' do
-      operating_system = OperatingSystem.create! valid_attributes
-      get :edit, params: { id: operating_system.to_param }, session: valid_session
-      expect(response).to be_successful
+    describe 'GET #new' do
+      it 'returns a success response' do
+        get :new, params: {}, session: valid_session
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe 'POST #create' do
-    context 'with valid params' do
-      it 'creates a new OperatingSystem' do
-        expect do
+    describe 'GET #edit' do
+      it 'returns a success response' do
+        operating_system = OperatingSystem.create! valid_attributes
+        get :edit, params: { id: operating_system.to_param }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+
+    describe 'POST #create' do
+      context 'with valid params' do
+        it 'creates a new OperatingSystem' do
+          expect do
+            post :create, params: { operating_system: valid_attributes }, session: valid_session
+          end.to change(OperatingSystem, :count).by(1)
+        end
+
+        it 'redirects to the created operating_system' do
           post :create, params: { operating_system: valid_attributes }, session: valid_session
-        end.to change(OperatingSystem, :count).by(1)
+          expect(response).to redirect_to(operating_systems_url)
+        end
       end
 
-      it 'redirects to the created operating_system' do
-        post :create, params: { operating_system: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(operating_systems_url)
+      context 'with invalid params' do
+        it "returns a success response (i.e. to display the 'new' template)" do
+          post :create, params: { operating_system: invalid_attributes }, session: valid_session
+          expect(response).to be_successful
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      context 'with valid params' do
+        let(:new_attributes) do
+          {
+            name: 'MyNewOS'
+          }
+        end
+
+        it 'updates the requested operating_system' do
+          operating_system = OperatingSystem.create! valid_attributes
+          put :update, params: { id: operating_system.to_param, operating_system: new_attributes }, session: valid_session
+          operating_system.reload
+          expect(operating_system.name).to eq('MyNewOS')
+        end
+
+        it 'redirects to the operating_system' do
+          operating_system = OperatingSystem.create! valid_attributes
+          put :update, params: { id: operating_system.to_param, operating_system: valid_attributes }, session: valid_session
+          expect(response).to redirect_to(operating_systems_url)
+        end
+      end
+
+      context 'with invalid params' do
+        it "returns a success response (i.e. to display the 'edit' template)" do
+          operating_system = OperatingSystem.create! valid_attributes
+          put :update, params: { id: operating_system.to_param, operating_system: invalid_attributes }, session: valid_session
+          expect(response).to be_successful
+        end
       end
     end
 
-    context 'with invalid params' do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { operating_system: invalid_attributes }, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-  end
-
-  describe 'PUT #update' do
-    context 'with valid params' do
-      let(:new_attributes) do
-        {
-          name: 'MyNewOS'
-        }
-      end
-
-      it 'updates the requested operating_system' do
+    describe 'DELETE #destroy' do
+      it 'destroys the requested operating_system' do
         operating_system = OperatingSystem.create! valid_attributes
-        put :update, params: { id: operating_system.to_param, operating_system: new_attributes }, session: valid_session
-        operating_system.reload
-        expect(operating_system.name).to eq('MyNewOS')
+        expect do
+          delete :destroy, params: { id: operating_system.to_param }, session: valid_session
+        end.to change(OperatingSystem, :count).by(-1)
       end
 
-      it 'redirects to the operating_system' do
+      it 'redirects to the operating_systems list' do
         operating_system = OperatingSystem.create! valid_attributes
-        put :update, params: { id: operating_system.to_param, operating_system: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(operating_systems_url)
-      end
-    end
-
-    context 'with invalid params' do
-      it "returns a success response (i.e. to display the 'edit' template)" do
-        operating_system = OperatingSystem.create! valid_attributes
-        put :update, params: { id: operating_system.to_param, operating_system: invalid_attributes }, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-  end
-
-  describe 'DELETE #destroy' do
-    it 'destroys the requested operating_system' do
-      operating_system = OperatingSystem.create! valid_attributes
-      expect do
         delete :destroy, params: { id: operating_system.to_param }, session: valid_session
-      end.to change(OperatingSystem, :count).by(-1)
+        expect(response).to redirect_to(operating_systems_url)
+      end
+    end
+  end
+  context 'if current_user is user' do
+    before do
+      sign_in FactoryBot.create :user
+      get :index
     end
 
-    it 'redirects to the operating_systems list' do
-      operating_system = OperatingSystem.create! valid_attributes
-      delete :destroy, params: { id: operating_system.to_param }, session: valid_session
-      expect(response).to redirect_to(operating_systems_url)
+    describe 'GET #index if user is logged in' do
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+  end
+  context 'if current_user is employee' do
+    before do
+      sign_in FactoryBot.create :employee
+      get :index
+    end
+
+    describe 'GET #index if employee is logged in' do
+      it 'returns http redirect' do
+        expect(response).to have_http_status(:redirect)
+      end
     end
   end
 end

@@ -2,6 +2,7 @@
 
 class OperatingSystemsController < ApplicationController
   before_action :set_operating_system, only: %i[edit update destroy]
+  before_action :authenticate_admin
 
   # GET /operating_systems
   # GET /operating_systems.json
