@@ -103,7 +103,7 @@ class RequestsController < ApplicationController
 
   private
 
-  def notice_for(vm, warning)
+  def notice_for(vm, warning) # rubocop:disable Naming/UncommunicativeMethodParamName
     if warning
       { alert: warning }
     elsif vm
