@@ -34,7 +34,7 @@ class RequestsController < ApplicationController
   end
 
   def notify_users(title, message)
-    ([@request.user] + @request.users + User.admin).each do |each|
+    ([@request.user] + @request.users + User.admin).uniq.each do |each|
       each.notify(title, message)
     end
   end
