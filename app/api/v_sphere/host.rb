@@ -58,16 +58,20 @@ module VSphere
       equal? other
     end
 
-    def get_num_cpu
+    def cpu_cores
       @host.summary.hardware.numCpuCores
     end
 
-    def get_ram_gb
+    def ram_gb
       (@host.summary.hardware.memorySize.to_f / 1024**2).round(2)
     end
 
-    def get_storage_gb
+    def storage_gb
       (@host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_f / 1024**2).round(2)
+    end
+
+    def enough_resources?(cpu_cores, ram_gb, storage_gb)
+      cpu_cores <= self.cpu_cores && ram_gb <= self.ram_gb && storage_gb <= self.storage_gb
     end
 
     private

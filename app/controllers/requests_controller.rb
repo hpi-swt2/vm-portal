@@ -47,7 +47,7 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     respond_to do |format|
-      if enough_resources && @request.save
+      if enough_resources? && @request.save
         successful_save(format)
       else
         unsuccessful_action(format, :new)
@@ -210,35 +210,26 @@ class RequestsController < ApplicationController
     @resolved_requests = requests.reject(&:pending?)
   end
 
-  def enough_resources
+  def enough_resources?
     hosts = VSphere::Host.all
-
-    # get max host resources
-    max_cpu_host = hosts[0]
-    max_ram_host = hosts[0]
-    max_storage_host = hosts[0]
-
-    hosts.each do |host|
-      # check if the host could handle the vm
-      host_num_cpu = host.get_num_cpu
-      host_ram = host.get_ram_gb
-      host_free_hdd = host.get_storage_gb
-
-      if (request_params[:cpu_cores].to_i <= host_num_cpu) && (request_params[:ram_mb].to_i <= host_ram) && (request_params[:storage_mb].to_i <= host_free_hdd)
-        return true
-      end
-
-      # get hosts with max resources per category
-      max_cpu_host = host if host_num_cpu > max_cpu_host.get_num_cpu
-
-      max_ram_host = host if host_ram > max_ram_host.get_ram_gb
-
-      max_storage_host = host if host_free_hdd > max_storage_host.get_storage_gb
+    if hosts.empty?
+      @request.errors[:base] << 'You cannot create a request right now. There are no hosts available!'
+      return false
     end
 
-    max_cpu_host_msg = "cores: #{max_cpu_host.get_num_cpu}, ram: #{max_cpu_host.get_ram_gb / 1024}GB, hdd: #{max_cpu_host.get_storage_gb / 1024}GB"
-    max_ram_host_msg = "cores: #{max_ram_host.get_num_cpu}, ram: #{max_ram_host.get_ram_gb / 1024}GB, hdd: #{max_ram_host.get_storage_gb / 1024}GB"
-    max_storage_host_msg = "cores: #{max_storage_host.get_num_cpu}, ram: #{max_storage_host.get_ram_gb / 1024}GB, hdd: #{max_storage_host.get_storage_gb / 1024}GB"
+    # get max host resources
+    max_cpu_host = hosts.max_by(&:cpu_cores)
+    max_ram_host = hosts.max_by(&:ram_gb)
+    max_storage_host = hosts.max_by(&:storage_gb)
+
+    host_available = [max_cpu_host, max_ram_host, max_storage_host].any? do |host|
+      host.enough_resources?(request_params[:cpu_cores], request_params[:ram_gb], request_params[:storage_gb])
+    end
+    return true if host_available
+
+    max_cpu_host_msg = "cores: #{max_cpu_host.cpu_cores}, ram: #{max_cpu_host.ram_gb / 1024}GB, hdd: #{max_cpu_host.storage_gb / 1024}GB"
+    max_ram_host_msg = "cores: #{max_ram_host.cpu_cores}, ram: #{max_ram_host.ram_gb / 1024}GB, hdd: #{max_ram_host.storage_gb / 1024}GB"
+    max_storage_host_msg = "cores: #{max_storage_host.cpu_cores}, ram: #{max_storage_host.ram_gb / 1024}GB, hdd: #{max_storage_host.storage_gb / 1024}GB"
 
     error_message = "Requested VM resources are too high! Most Powerful Hosts are: Max Core Host(#{max_cpu_host_msg}) Max RAM Host(#{max_ram_host_msg}) Max HDD Host(#{max_storage_host_msg}) "
     @request.errors[:base] << error_message
