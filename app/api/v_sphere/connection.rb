@@ -51,7 +51,7 @@ module VSphere
     def connect
       return unless configured?
 
-      @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
+      @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
       @vm_folder = VSphere::Folder.new @dc.vmFolder
       @cluster_folder = VSphere::Folder.new @dc.hostFolder

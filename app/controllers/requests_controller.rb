@@ -223,7 +223,7 @@ class RequestsController < ApplicationController
     max_storage_host = hosts.max_by(&:storage_gb)
 
     host_available = [max_cpu_host, max_ram_host, max_storage_host].any? do |host|
-      host.enough_resources?(request_params[:cpu_cores], request_params[:ram_gb], request_params[:storage_gb])
+      host.enough_resources?(@request.cpu_cores, @request.ram_gb, @request.storage_gb)
     end
     return true if host_available
 
