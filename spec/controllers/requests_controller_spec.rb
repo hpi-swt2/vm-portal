@@ -29,6 +29,7 @@ RSpec.describe RequestsController, type: :controller do
   let(:user) { FactoryBot.create :employee }
   let(:sudo_user) { FactoryBot.create :user }
   let(:sudo_user2) { FactoryBot.create :admin }
+  let(:project) { FactoryBot.create :project }
 
   # This should return the minimal set of attributes required to create a valid
   # Request. As you add validations to Request, be sure to
@@ -46,7 +47,8 @@ RSpec.describe RequestsController, type: :controller do
       user: user,
       responsible_user_ids: [user.id],
       sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
-      user_ids: ['', user.id.to_s]
+      user_ids: ['', user.id.to_s],
+      project_id: project.id
     }
   end
 
@@ -61,7 +63,8 @@ RSpec.describe RequestsController, type: :controller do
       comment: 'Comment',
       status: 'pending',
       user: user,
-      sudo_user_ids: ['', sudo_user.id.to_s] # the first parameter is for some reason always empty
+      sudo_user_ids: ['', sudo_user.id.to_s], # the first parameter is for some reason always empty
+      project_id: project.id
     }
   end
 
@@ -78,7 +81,8 @@ RSpec.describe RequestsController, type: :controller do
       status: 'pending',
       user: user,
       responsible_user_ids: [user.id],
-      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s]
+      sudo_user_ids: ['', sudo_user.id.to_s, sudo_user2.id.to_s],
+      project_id: project.id
     }
   end
 
@@ -138,6 +142,11 @@ RSpec.describe RequestsController, type: :controller do
       it 'redirects to the request page index page' do
         post :create, params: { request: valid_attributes }
         expect(response).to redirect_to(requests_path)
+      end
+
+      it 'correctly assigns the sudo users' do
+        post :create, params: { request: valid_attributes }
+        expect(assigns(:request).sudo_users).to match_array([sudo_user, sudo_user2])
       end
     end
 

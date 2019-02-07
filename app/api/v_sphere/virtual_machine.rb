@@ -58,25 +58,31 @@ module VSphere
     end
 
     def self.prepare_vm_names
-      files = Dir.entries(File.join(PuppetParserHelper.puppet_script_path, 'Node'))
+      return [] unless File.exist?(File.join(Puppetscript.puppet_script_path, 'Node'))
+
+      files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
       files
     end
 
     def self.includes_user?(vm_name, user)
-      users = PuppetParserHelper.read_node_file(vm_name)
+      users = Puppetscript.read_node_file(vm_name)
       users = users['admins'] + users['users'] | []
       users.include? user
     end
 
     def self.user_vms(user)
       vms = []
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        vm_names = prepare_vm_names
-        vm_names.each do |vm_name|
-          vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
+      begin
+        GitHelper.open_repository Puppetscript.puppet_script_path do
+          vm_names = prepare_vm_names
+          vm_names.each do |vm_name|
+            vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
+          end
         end
+      rescue Git::GitExecuteError => e
+        Rails.logger.error(e)
       end
       vms
     end
@@ -227,6 +233,11 @@ module VSphere
       config&.responsible_users || []
     end
 
+    # Users
+    def project
+      config&.project
+    end
+
     # Information about the vm
     def boot_time
       @vm.runtime.bootTime
@@ -274,12 +285,16 @@ module VSphere
 
     # this method should return all users, including the sudo users
     def users
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        users = PuppetParserHelper.read_node_file(name)
-        users['users']
-      rescue Git::GitExecuteError
-        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      users = []
+      begin
+        GitHelper.open_repository Puppetscript.puppet_script_path do
+          remote_users = Puppetscript.read_node_file(name)
+          users = remote_users['users']
+        end
+      rescue Git::GitExecuteError => e
+        Rails.logger.error(e)
       end
+      users
     end
 
     def commit_message(git_writer)
@@ -301,7 +316,7 @@ module VSphere
     end
 
     def user_name_and_node_script(ids)
-      all_users = PuppetParserHelper.read_node_file(name)
+      all_users = Puppetscript.read_node_file(name)
       sudo_users = all_users['admins']
       new_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
@@ -310,28 +325,32 @@ module VSphere
     end
 
     def users=(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
         git_writer.write_file(name_path, name_script)
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
-      rescue Git::GitExecuteError
-        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
       end
+    rescue Git::GitExecuteError => e
+      Rails.logger.error(e)
     end
 
     def sudo_users
-      GitHelper.open_repository PuppetParserHelper.puppet_script_path do
-        users = PuppetParserHelper.read_node_file(name)
-        users['admins']
-      rescue Git::GitExecuteError
-        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
+      admins = []
+      begin
+        GitHelper.open_repository Puppetscript.puppet_script_path do
+          users = Puppetscript.read_node_file(name)
+          admins = users['admins']
+        end
+      rescue Git::GitExecuteError => e
+        Rails.logger.error(e)
       end
+      admins
     end
 
     def sudo_name_and_node_script(ids)
-      all_users = PuppetParserHelper.read_node_file(name)
+      all_users = Puppetscript.read_node_file(name)
       users = all_users['users']
       new_sudo_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
@@ -340,17 +359,18 @@ module VSphere
     end
 
     def sudo_users=(ids)
-      GitHelper.open_repository(PuppetParserHelper.puppet_script_path) do |git_writer|
+      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = sudo_name_and_node_script(ids)
         git_writer.write_file(name_path, name_script)
         git_writer.write_file(node_path, node_script)
         message = commit_message(git_writer)
         git_writer.save(message)
-      rescue Git::GitExecuteError
-        { alert: 'Could not push to git. Please check that your ssh key and environment variables are set.' }
       end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
     end
 
+    # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms
     def belongs_to(user)
       users.include? user
     end

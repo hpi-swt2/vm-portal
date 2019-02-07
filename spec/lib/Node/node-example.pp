@@ -1,4 +1,4 @@
-class node_$example {
+class node_example {
         $admins = ["Vorname.Nachname", "weitererVorname.Nachname"]
         $users = ["andererVorname.Nachname"]
 

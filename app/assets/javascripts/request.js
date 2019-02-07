@@ -1,4 +1,4 @@
-$('input:radio').click(function (){
+$('#request_template_id').change(function (){
     cpus = document.getElementById('cpu');
     ram = document.getElementById('ram');
     storage = document.getElementById('storage');
@@ -24,4 +24,16 @@ $('input:radio').click(function (){
         storage.value = storage_mb;
         os.value = operating_system_clean;
     }
-});
+ });
+
+ if($('#request_port_forwarding_checkbox').prop("data-port_forwarding") == "true" ||
+    $('#request_port_forwarding_checkbox').prop("checked") ||
+    $('#port_field').val() ||
+    $('#application_name_field').val()) {
+    $('#request_port_forwarding_checkbox').prop('checked', true);
+    $('#request_port_forwarding_info').addClass('show')
+  }
+  else{
+     $('#request_port_forwarding_checkbox').prop('checked', false);
+     $('#request_port_forwarding_info').addClass('remove')
+  } 
