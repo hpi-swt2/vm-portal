@@ -135,11 +135,12 @@ class RequestsController < ApplicationController
     return if @request.pending?
 
     if @request.accepted?
-      ([@request.user] + User.admin).each do |each|
+      ([@request.user] + User.admin).uniq.each do |each|
         each.notify('Request has been accepted', @request.description_text(host_url))
       end
-      @request.users.each do |each|
-        each.notify('You have (sudo) rights on a new VM', @request.description_text(host_url))
+      @request.users.uniq.each do |each|
+        rights = @request.sudo_users.include?(each) ? 'sudo access' : 'access'
+        each.notify("You have #{rights} rights on a new VM", @request.description_text(host_url))
       end
     elsif @request.rejected?
       message = @request.description_text host_url
