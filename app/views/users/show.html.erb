@@ -1,11 +1,13 @@
-<h1>
-User profile
-<%= link_to(fa_icon('edit', text: t('actions.edit')),
-                            edit_user_path(@user),
-                            class: 'btn btn-primary',
-                            id: 'editUserButton')
-%>
-</h1>
+<div class="clearfix">
+  <h1 class="float-left">User profile</h1>
+  <% if @user == current_user %>
+    <%= link_to(fa_icon('edit', text: t('actions.edit')),
+                edit_user_path(@user),
+                class: 'btn btn-primary float-right',
+                id: 'editUserButton')
+    %>
+  <% end %>
+</div>
 
 <br>
 
