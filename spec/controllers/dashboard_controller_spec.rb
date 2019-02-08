@@ -32,7 +32,6 @@ RSpec.describe DashboardController, type: :controller do
 
       it 'returns only vms associated to current user' do
         get :index
-        puts subject.vms
         expect(subject.vms.size).to be 1
       end
     end
@@ -46,7 +45,6 @@ RSpec.describe DashboardController, type: :controller do
 
       it 'returns all vms' do
         get :index
-        puts subject.vms
         expect(subject.vms.size).to be 2
       end
     end
