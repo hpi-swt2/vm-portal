@@ -1,19 +1,19 @@
 # Copy and set environment variable values in a new environment_variables.yml
 
 development:
-  GIT_REPOSITORY_URL: GIT_REPOSITORY_URL
-  GIT_REPOSITORY_NAME: GIT_REPOSITORY_NAME
-  GITHUB_USER_NAME: GITHUB_USER_NAME
-  GITHUB_USER_EMAIL: GITHUB_USER_EMAIL
+  GIT_REPOSITORY_URL: git@github.com-user-name:organisation/repository-name.git
+  GIT_REPOSITORY_NAME: repository-name
+  GITHUB_USER_NAME: user-name
+  GITHUB_USER_EMAIL: user@email.com
   VSPHERE_SERVER_IP: '127.0.0.1'
   VSPHERE_SERVER_USER: 'email@email.com'
   VSPHERE_SERVER_PASSWORD: 'password'
 
 production:
-  GIT_REPOSITORY_URL: GIT_REPOSITORY_URL
-  GIT_REPOSITORY_NAME: GIT_REPOSITORY_NAME
-  GITHUB_USER_NAME: GITHUB_USER_NAME
-  GITHUB_USER_EMAIL: GITHUB_USER_EMAIL
+  GIT_REPOSITORY_URL: git@github.com-user-name:organisation/repository-name.git
+  GIT_REPOSITORY_NAME: repository-name
+  GITHUB_USER_NAME: user-name
+  GITHUB_USER_EMAIL: user@email.com
   VSPHERE_SERVER_IP: '127.0.0.1'
   VSPHERE_SERVER_USER: 'email@email.com'
   VSPHERE_SERVER_PASSWORD: 'password'
