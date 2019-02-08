@@ -8,6 +8,11 @@ development:
   VSPHERE_SERVER_IP: '127.0.0.1'
   VSPHERE_SERVER_USER: 'email@email.com'
   VSPHERE_SERVER_PASSWORD: 'password'
+  EMAIL_NOTIFICATIONS_SMTP_ADDRESS: smtp.provider.com
+  EMAIL_NOTIFICATIONS_SMTP_PORT: 587
+  EMAIL_NOTIFICATIONS_SMTP_DOMAIN: provider.com
+  EMAIL_NOTIFICATIONS_SMTP_USER: example.email@provider.com
+  EMAIL_NOTIFICATIONS_SMTP_PASSWORD: 'password'
 
 production:
   GIT_REPOSITORY_URL: git@github.com-user-name:organisation/repository-name.git
@@ -17,6 +22,11 @@ production:
   VSPHERE_SERVER_IP: '127.0.0.1'
   VSPHERE_SERVER_USER: 'email@email.com'
   VSPHERE_SERVER_PASSWORD: 'password'
+  EMAIL_NOTIFICATIONS_SMTP_ADDRESS: smtp.provider.com
+  EMAIL_NOTIFICATIONS_SMTP_PORT: 587
+  EMAIL_NOTIFICATIONS_SMTP_DOMAIN: provider.com
+  EMAIL_NOTIFICATIONS_SMTP_USER: example.email@provider.com
+  EMAIL_NOTIFICATIONS_SMTP_PASSWORD: 'password'
 
 test:
   GIT_REPOSITORY_URL: test_repository_url

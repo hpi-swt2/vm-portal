@@ -7,9 +7,20 @@ module EnvironmentVariablesExample
 
       if File.exist?(env_file)
         YAML.load_file(env_file)[Rails.env].each do |key, value|
-          ENV[key.to_s] = value
+          # you can only assign strings to ENV-Variables
+          ENV[key.to_s] = value.to_s
         end
       end
+
+      config.action_mailer.smtp_settings = {
+        address: ENV['EMAIL_NOTIFICATIONS_SMTP_ADDRESS'],
+        port: ENV['EMAIL_NOTIFICATIONS_SMTP_PORT'].to_i,
+        domain: ENV['EMAIL_NOTIFICATIONS_SMTP_DOMAIN'],
+        user_name: ENV['EMAIL_NOTIFICATIONS_SMTP_USER'],
+        password: ENV['EMAIL_NOTIFICATIONS_SMTP_PASSWORD'],
+        authentication: :plain
+        # enable_starttls_auto: true
+      }
     end
   end
 end
