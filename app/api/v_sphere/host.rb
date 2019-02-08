@@ -63,11 +63,11 @@ module VSphere
     end
 
     def ram_gb
-      (@host.summary.hardware.memorySize.to_f / 1024**2).round(2)
+      (@host.summary.hardware.memorySize.to_f / 1024**3).round(2)
     end
 
     def storage_gb
-      (@host.summary.host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_f / 1024**2).round(2)
+      (@host.datastore.sum { |datastore| datastore.summary.freeSpace }.to_f / 1024**3).round(2)
     end
 
     def enough_resources?(cpu_cores, ram_gb, storage_gb)
