@@ -12,23 +12,25 @@
 
 <h1>User profile</h1><br>
 
-<%= form_for @user do |f| %>
+<%= form_for @user do |form| %>
   <table class="table">
     <tbody>
-    <tr>
-      <td><%= User.human_attribute_name('email') %></td>
-      <td><%= @user.email %></td>
-    </tr>
-    <tr>
-      <td>Name</td>
-      <td><%= @user.name %></td>
-    </tr>
-    <% if current_user?(@user) %>
+      <tr>
+        <td><%= User.human_attribute_name('email') %></td>
+        <td><%= @user.email %></td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td><%= @user.name %></td>
+      </tr>
       <tr>
         <td><%= User.human_attribute_name('ssh_key') %></td>
-        <td><%= f.text_area :ssh_key, class: 'form-control', rows: '8', id: 'sshKeyField' %></td>
+        <td><%= form.text_area :ssh_key, class: 'form-control', rows: '8', id: 'sshKeyField' %></td>
       </tr>
-    <% end %>
+      <tr>
+        <td><%= User.human_attribute_name('email_notifications') %></td>
+        <td><%= form.check_box :email_notifications %></td>
+      </tr>
     </tbody>
   </table><br>
 
