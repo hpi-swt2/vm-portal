@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'vmapi.rb'
-
 module VmsHelper
   def button_style_for(vm)
     case vm.status

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'vmapi.rb'
 require './app/api/v_sphere/virtual_machine'
 
 class VmsController < ApplicationController
@@ -16,11 +15,6 @@ class VmsController < ApplicationController
   def index
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-  end
-
-  def create
-    VmApi.instance.create_vm(params[:cpu], params[:ram], params[:capacity], params[:name])
-    redirect_to action: :index
   end
 
   def show

@@ -26,10 +26,6 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe RequestTemplatesController, type: :controller do
-  before do
-    sign_in current_user
-  end
-
   # This should return the minimal set of attributes required to create a valid
   # RequestTemplate. As you add validations to RequestTemplate, be sure to
   # adjust the attributes here as well.
@@ -58,173 +54,103 @@ RSpec.describe RequestTemplatesController, type: :controller do
   # RequestTemplatesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  context 'when the current_user is an user' do
-    let(:current_user) { FactoryBot.create :user }
+  before do
+    sign_in FactoryBot.create :admin
+  end
 
-    describe 'GET #index' do
-      it 'returns a success response' do
-        RequestTemplate.create! valid_attributes
-        get :index, params: {}, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-
-    describe 'GET #new' do
-      it 'returns a no success response' do
-        get :new, params: {}, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'GET #edit' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        get :edit, params: { id: request_template.to_param }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'POST #create' do
-      it 'returns a no success response' do
-        post :create, params: { request_template: valid_attributes }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'PUT #update' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'DELETE #destroy' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        delete :destroy, params: { id: request_template.to_param }, session: valid_session
-        expect(response).not_to be_successful
-      end
+  describe 'GET #new' do
+    it 'returns a success response' do
+      get :new, params: {}, session: valid_session
+      expect(response).to be_successful
     end
   end
 
-  context 'when the current_user is an employee' do
-    let(:current_user) { FactoryBot.create :employee }
-
-    describe 'GET #index' do
-      it 'returns a success response' do
-        RequestTemplate.create! valid_attributes
-        get :index, params: {}, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-
-    describe 'GET #new' do
-      it 'returns a no success response' do
-        get :new, params: {}, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'GET #edit' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        get :edit, params: { id: request_template.to_param }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'POST #create' do
-      it 'returns a no success response' do
-        post :create, params: { request_template: valid_attributes }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'PUT #update' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-
-    describe 'DELETE #destroy' do
-      it 'returns a no success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        delete :destroy, params: { id: request_template.to_param }, session: valid_session
-        expect(response).not_to be_successful
-      end
+  describe 'GET #edit' do
+    it 'returns a success response' do
+      request_template = RequestTemplate.create! valid_attributes
+      get :edit, params: { id: request_template.to_param }, session: valid_session
+      expect(response).to be_successful
     end
   end
 
-  context 'when the current_user is an admin' do
-    let(:current_user) { FactoryBot.create :admin }
-
-    describe 'GET #new' do
-      it 'returns a success response' do
-        get :new, params: {}, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-
-    describe 'GET #edit' do
-      it 'returns a success response' do
-        request_template = RequestTemplate.create! valid_attributes
-        get :edit, params: { id: request_template.to_param }, session: valid_session
-        expect(response).to be_successful
-      end
-    end
-
-    describe 'POST #create' do
-      context 'with valid params' do
-        it 'creates a new RequestTemplate' do
-          expect do
-            post :create, params: { request_template: valid_attributes }, session: valid_session
-          end.to change(RequestTemplate, :count).by(1)
-        end
-      end
-
-      context 'with invalid params' do
-        it "returns a success response (i.e. to display the 'new' template)" do
-          post :create, params: { request_template: invalid_attributes }, session: valid_session
-          expect(response).to be_successful
-        end
-      end
-    end
-
-    describe 'PUT #update' do
-      context 'with valid params' do
-        let(:new_attributes) do
-          {
-            name: 'newName'
-          }
-        end
-
-        it 'updates the requested request_template' do
-          request_template = RequestTemplate.create! valid_attributes
-          put :update, params: { id: request_template.to_param, request_template: new_attributes }, session: valid_session
-          request_template.reload
-          expect(request_template.name).to eq 'newName'
-        end
-      end
-
-      context 'with invalid params' do
-        it "returns a success response (i.e. to display the 'edit' template)" do
-          request_template = RequestTemplate.create! valid_attributes
-          put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
-          expect(response).to be_successful
-        end
-      end
-    end
-
-    describe 'DELETE #destroy' do
-      it 'destroys the requested request_template' do
-        request_template = RequestTemplate.create! valid_attributes
+  describe 'POST #create' do
+    context 'with valid params' do
+      it 'creates a new RequestTemplate' do
         expect do
-          delete :destroy, params: { id: request_template.to_param }, session: valid_session
-        end.to change(RequestTemplate, :count).by(-1)
+          post :create, params: { request_template: valid_attributes }, session: valid_session
+        end.to change(RequestTemplate, :count).by(1)
       end
+    end
+
+    context 'with invalid params' do
+      it "returns a success response (i.e. to display the 'new' template)" do
+        post :create, params: { request_template: invalid_attributes }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+  end
+
+  describe 'PUT #update' do
+    context 'with valid params' do
+      let(:new_attributes) do
+        {
+          name: 'newName'
+        }
+      end
+
+      it 'updates the requested request_template' do
+        request_template = RequestTemplate.create! valid_attributes
+        put :update, params: { id: request_template.to_param, request_template: new_attributes }, session: valid_session
+        request_template.reload
+        expect(request_template.name).to eq 'newName'
+      end
+    end
+
+    context 'with invalid params' do
+      it "returns a success response (i.e. to display the 'edit' template)" do
+        request_template = RequestTemplate.create! valid_attributes
+        put :update, params: { id: request_template.to_param, request_template: invalid_attributes }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'destroys the requested request_template' do
+      request_template = RequestTemplate.create! valid_attributes
+      expect do
+        delete :destroy, params: { id: request_template.to_param }, session: valid_session
+      end.to change(RequestTemplate, :count).by(-1)
+    end
+  end
+end
+
+RSpec.describe RequestTemplatesController, type: :controller do
+  let(:valid_session) { {} }
+
+  before do
+    sign_in FactoryBot.create :user
+    get :index
+  end
+
+  describe 'GET #index if user is logged in' do
+    it 'returns http redirect' do
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+end
+
+RSpec.describe RequestTemplatesController, type: :controller do
+  let(:valid_session) { {} }
+
+  before do
+    sign_in FactoryBot.create :employee
+    get :index
+  end
+
+  describe 'GET #index if employee is logged in' do
+    it 'returns http redirect' do
+      expect(response).to have_http_status(:redirect)
     end
   end
 end

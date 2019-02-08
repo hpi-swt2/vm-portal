@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'sshkey'
-require 'vmapi.rb'
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -55,7 +54,7 @@ class User < ApplicationRecord
   def notify(title, message)
     notify_slack("*#{title}*\n#{message}")
 
-    NotificationMailer.with(user: self, title: title.to_s, message: message.to_s).notify_email.deliver_now if email_notifications
+    NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: message.to_s).notify_email.deliver_now if email_notifications
 
     notification = Notification.new title: title, message: message
     notification.user_id = id
@@ -95,10 +94,6 @@ class User < ApplicationRecord
     all.each do |user|
       return user if user.email.split('@').first.casecmp(mail_id).zero?
     end
-  end
-
-  def vm_infos
-    VmApi.instance.user_vms(self)
   end
 
   def vms

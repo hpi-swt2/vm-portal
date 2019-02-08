@@ -133,10 +133,7 @@ end
 
 def vim_host_mock(name)
   host = double
-  summary = double
-  datastore = double
   allow(host).to receive(:name).and_return name
-  allow(host).to receive(:summary).and_return summary
   allow(host).to receive_message_chain(:runtime, :bootTime)
   allow(host).to receive(:connection_state).and_return('connected')
   allow(host).to receive(:boot_time).and_return('someRuntime')
@@ -151,6 +148,8 @@ def vim_host_mock(name)
   allow(host).to receive(:vm).and_return([v_sphere_vm_mock('My insanely cool vm',
                                                            power_state: 'poweredOn',
                                                            vm_ware_tools: 'toolsInstalled')])
+
+  summary = double
   allow(summary).to receive_message_chain(:runtime, :powerState)
   allow(summary).to receive_message_chain(:config, :product, :osType).and_return('someOS')
   allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(['someProduct'])
@@ -158,12 +157,16 @@ def vim_host_mock(name)
   allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
   allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
   allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
-  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000)
+  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
   allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
   allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
-  allow(summary).to receive_message_chain(:host, :datastore).and_return([datastore])
-  allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000)
-  allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(1000)
+  allow(host).to receive(:summary).and_return summary
+
+  datastore = double
+  allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000 * 1024**3) # in bytes
+  allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(1000 * 1024**3) # in bytes
+  allow(host).to receive(:datastore).and_return([datastore])
+
   host
 end
 
@@ -205,6 +208,7 @@ def v_sphere_connection_mock(
   double_connection = double
   allow(double_connection).to receive(:root_folder).and_return root_folder
   allow(double_connection).to receive(:clusters_folder).and_return clusters_folder
+  allow(double_connection).to receive(:configured?).and_return true
   double_connection
 end
 
