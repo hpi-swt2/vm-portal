@@ -218,15 +218,15 @@ class RequestsController < ApplicationController
       return false
     end
 
-    # get max host resources
-    max_cpu_host = hosts.max_by(&:cpu_cores)
-    max_ram_host = hosts.max_by(&:ram_gb)
-    max_storage_host = hosts.max_by(&:storage_gb)
-
-    host_available = [max_cpu_host, max_ram_host, max_storage_host].any? do |host|
+    host_available = hosts.any? do |host|
       host.enough_resources?(@request.cpu_cores, @request.ram_gb, @request.storage_gb)
     end
     return true if host_available
+
+    max_cpu_host = hosts.max_by(&:cpu_cores)
+    max_ram_host = hosts.max_by(&:ram_gb)
+    max_storage_host = hosts.max_by(&:free_storage_gb)
+
 
     max_cpu_host_msg = "cores: #{max_cpu_host.cpu_cores}, ram: #{max_cpu_host.ram_gb / 1024}GB, hdd: #{max_cpu_host.storage_gb / 1024}GB"
     max_ram_host_msg = "cores: #{max_ram_host.cpu_cores}, ram: #{max_ram_host.ram_gb / 1024}GB, hdd: #{max_ram_host.storage_gb / 1024}GB"
