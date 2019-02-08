@@ -20,5 +20,28 @@ module VmPortal
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+    config.before_configuration do
+      env_file = Rails.root.join('config', 'environment_variables.yml').to_s
+
+      if File.exist?(env_file)
+        configuration = YAML.load_file(env_file)&.[](Rails.env)
+        if configuration
+          configuration.each do |key, value|
+            # you can only assign strings to ENV-Variables
+            ENV[key.to_s] = value.to_s
+          end
+        else
+          puts '=== Warning: No configuration found ==='
+          puts 'Configuration file path: config/environment_variables.yml'
+          puts "Add an entry for the '#{Rails.env}' environment to fix this issue"
+          puts '======================================='
+        end
+      else
+        puts '=== Warning: No configuration file found ==='
+        puts 'Configuration file path: config/environment_variables.yml'
+        puts 'If you are configuring HART using Unix environment variables you can ignore this warning.'
+        puts '============================================'
+      end
+    end
   end
 end

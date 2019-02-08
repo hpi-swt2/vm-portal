@@ -38,6 +38,16 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
 
+  config.action_mailer.smtp_settings = {
+    address: ENV['EMAIL_NOTIFICATIONS_SMTP_ADDRESS'],
+    port: ENV['EMAIL_NOTIFICATIONS_SMTP_PORT'].to_i,
+    domain: ENV['EMAIL_NOTIFICATIONS_SMTP_DOMAIN'],
+    user_name: ENV['EMAIL_NOTIFICATIONS_SMTP_USER'],
+    password: ENV['EMAIL_NOTIFICATIONS_SMTP_PASSWORD'],
+    authentication: :plain
+    # enable_starttls_auto: true
+  }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
