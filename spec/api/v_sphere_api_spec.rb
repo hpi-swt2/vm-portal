@@ -72,6 +72,62 @@ describe VSphere do
     [v_sphere_cluster_mock('cluster1', cluster1_hosts), v_sphere_cluster_mock('cluster2', cluster2_hosts)]
   end
 
+  context 'when the connection is not configured correctly' do
+    before do
+      # connections are mocked in every test, so we need to 'unstub' it
+      allow(VSphere::Connection).to receive(:instance).and_call_original
+      allow(VSphere::Connection.instance).to receive(:configured?).and_return false
+    end
+
+    it 'returns no root_folder' do
+      expect(VSphere::Connection.instance.root_folder).to be_nil
+    end
+
+    it 'returns no clusters_folder' do
+      expect(VSphere::Connection.instance.clusters_folder).to be_nil
+    end
+
+    it 'returns no Virtual Machines' do
+      expect(VSphere::VirtualMachine.all).to be_empty
+    end
+
+    it 'returns no VM by name' do
+      expect(VSphere::VirtualMachine.find_by_name('myVM')).to be_nil
+    end
+
+    it 'returns no archived VMs' do
+      expect(VSphere::VirtualMachine.archived).to be_empty
+    end
+
+    it 'returns no pending archivation VMS' do
+      expect(VSphere::VirtualMachine.pending_archivation).to be_empty
+    end
+
+    it 'returns no pending reviving VMs' do
+      expect(VSphere::VirtualMachine.pending_revivings).to be_empty
+    end
+
+    it 'returns no rest-VMs' do
+      expect(VSphere::VirtualMachine.rest).to be_empty
+    end
+
+    it 'returns no user_vms' do
+      expect(VSphere::VirtualMachine.user_vms(FactoryBot.create(:user))).to be_empty
+    end
+
+    it 'returns no clusters' do
+      expect(VSphere::Cluster.all).to be_empty
+    end
+
+    it 'returns no hosts' do
+      expect(VSphere::Host.all).to be_empty
+    end
+
+    it 'returns no host by name' do
+      expect(VSphere::Host.get_host('myHost')).to be_nil
+    end
+  end
+
   describe VSphere::Folder do
     it 'finds all vms recursively' do
       vms = (mock_root_folder_vms + mock_archived_vms + mock_pending_archivings_vms +

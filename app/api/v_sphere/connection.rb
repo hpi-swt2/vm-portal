@@ -20,26 +20,38 @@ module VSphere
   class Connection
     include Singleton
 
-    API_SERVER_IP = '192.168.30.3'
-    API_SERVER_USER = 'administrator@swt.local'
-    API_SERVER_PASSWORD = 'Vcsaswt"2018'
+    def initialize
+      @server_ip = ENV['VSPHERE_SERVER_IP']
+      @server_user = ENV['VSPHERE_SERVER_USER']
+      @server_password = ENV['VSPHERE_SERVER_PASSWORD']
+    end
 
+    # Warning:
+    # This method may return nil, if no connection could be established!
     def root_folder
       connect
 
       @vm_folder
     end
 
+    # Warning:
+    # This method may return nil, if no connection could be established!
     def clusters_folder
       connect
 
       @cluster_folder
     end
 
+    def configured?
+      @server_ip && @server_user && @server_password
+    end
+
     private
 
     def connect
-      @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
+      return unless configured?
+
+      @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
       @vm_folder = VSphere::Folder.new @dc.vmFolder
       @cluster_folder = VSphere::Folder.new @dc.hostFolder

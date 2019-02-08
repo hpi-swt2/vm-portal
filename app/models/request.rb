@@ -74,7 +74,7 @@ class Request < ApplicationRecord
 
   def create_vm
     clusters = VSphere::Cluster.all
-    return nil, nil if clusters.empty?
+    return nil, 'VM could not be created, as there are no clusters available in vSphere!' if clusters.empty?
 
     warning = nil
     begin

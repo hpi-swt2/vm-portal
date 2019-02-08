@@ -8,7 +8,7 @@ def root_folder
 end
 
 def ensure_root_subfolder(name)
-  root_folder.ensure_subfolder(name)
+  root_folder&.ensure_subfolder(name)
 end
 
 def archived_folder
@@ -29,7 +29,7 @@ module VSphere
   class VirtualMachine
     # instance creation
     def self.all
-      root_folder.vms
+      root_folder&.vms || []
     end
 
     def self.rest
@@ -42,19 +42,19 @@ module VSphere
     end
 
     def self.pending_archivation
-      pending_archivation_folder.vms
+      pending_archivation_folder&.vms || []
     end
 
     def self.archived
-      archived_folder.vms
+      archived_folder&.vms || []
     end
 
     def self.pending_revivings
-      pending_revivings_folder.vms
+      pending_revivings_folder&.vms || []
     end
 
     def self.find_by_name(name)
-      root_folder.find_vm(name)
+      root_folder&.find_vm(name)
     end
 
     def self.prepare_vm_names

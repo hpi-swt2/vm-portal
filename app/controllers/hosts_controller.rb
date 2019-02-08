@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'vmapi.rb'
 class HostsController < ApplicationController
   attr_reader :hosts
   before_action :authenticate_admin
