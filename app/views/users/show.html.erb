@@ -56,7 +56,11 @@
 <br /><br />
 <h2>Projects</h2>
 <% if @user.responsible_projects.empty? %>
-  <p>You are not part of any projects. All your projects will be shown here.</p>
+  <% if @user == current_user %>
+      <p>You are not part of any projects. All your projects will be shown here.</p>
+    <% else %>
+      <p>This user is not part of any projects. All his projects will be shown here.</p>
+    <% end %>
 <% else %>
   <%= render 'projects/list', projects: @user.responsible_projects %>
 <% end %>
