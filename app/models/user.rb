@@ -76,6 +76,10 @@ class User < ApplicationRecord
     email.split(/@/).first
   end
 
+  def human_readable_identifer_capitalized
+    self.human_readable_identifier.first.capitalize.gsub(/[-.][a-z]/, &:upcase) #Capitalize the first letter and upcase every letter that follows a . or -
+  end
+
   def valid_ssh_key
     errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
   end
@@ -136,7 +140,7 @@ class User < ApplicationRecord
   end
 
   def generate_puppet_init_script
-    Puppetscript.init_scrit(User.all)
+    Puppetscript.init_script(User.unscoped.order(user_id: :asc))
   end
 
   def valid_ssh_key?

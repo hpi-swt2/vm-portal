@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Puppetscript
-  def self.init_scrit(users)
+  def self.init_script(users)
     users_string = ''.dup
     users.each do |user|
       # "  " for identation
