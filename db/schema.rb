@@ -126,16 +126,16 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
     t.string "provider"
     t.string "uid"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "user_id"
     t.string "ssh_key"
     t.boolean "email_notifications", default: false

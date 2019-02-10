@@ -228,11 +228,11 @@ class RequestsController < ApplicationController
     max_storage_host = hosts.max_by(&:free_storage_gb)
 
 
-    max_cpu_host_msg = "cores: #{max_cpu_host.cpu_cores}, ram: #{max_cpu_host.ram_gb / 1024}GB, hdd: #{max_cpu_host.storage_gb / 1024}GB"
-    max_ram_host_msg = "cores: #{max_ram_host.cpu_cores}, ram: #{max_ram_host.ram_gb / 1024}GB, hdd: #{max_ram_host.storage_gb / 1024}GB"
-    max_storage_host_msg = "cores: #{max_storage_host.cpu_cores}, ram: #{max_storage_host.ram_gb / 1024}GB, hdd: #{max_storage_host.storage_gb / 1024}GB"
+    max_cpu_host_msg = "cores: #{max_cpu_host.cpu_cores}, ram: #{max_cpu_host.ram_gb}GB, hdd: #{max_cpu_host.storage_gb}GB"
+    max_ram_host_msg = "cores: #{max_ram_host.cpu_cores}, ram: #{max_ram_host.ram_gb}GB, hdd: #{max_ram_host.storage_gb}GB"
+    max_storage_host_msg = "cores: #{max_storage_host.cpu_cores}, ram: #{max_storage_host.ram_gb}GB, hdd: #{max_storage_host.storage_gb}GB"
 
-    error_message = "Requested VM resources are too high! Most Powerful Hosts are: Max Core Host(#{max_cpu_host_msg}) Max RAM Host(#{max_ram_host_msg}) Max HDD Host(#{max_storage_host_msg}) "
+    error_message = "Requested VM resources are too high! Most Powerful Hosts are:\nMax CPU Cores Host(#{max_cpu_host_msg})\nMax RAM Host(#{max_ram_host_msg})\nMax HDD Host(#{max_storage_host_msg}) "
     @request.errors[:base] << error_message
     false
   end
