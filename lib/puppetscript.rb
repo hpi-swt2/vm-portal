@@ -33,7 +33,7 @@ module Puppetscript
   def self.user_script(user)
     <<-USER_SCRIPT
 
-  @accounts::virtual { '#{user.email.split('@').first}':
+  @accounts::virtual { '#{user.human_readable_identifier_capitalized}':
     uid             =>  #{user.user_id},
     realname        =>  '#{user.first_name} #{user.last_name}',
     sshkeytype      =>  'ssh-rsa',
@@ -66,7 +66,7 @@ module Puppetscript
   end
 
   def self.generate_user_array(users)
-    users = users.map { |user| "\"#{user.email.split('@').first}\"" }
+    users = users.map { |user| "\"#{user.human_readable_identifier_capitalized}\"" }
     users.join(', ')
   end
 
@@ -82,7 +82,7 @@ module Puppetscript
 
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
     path = File.join(repository_path, 'Node', 'node-' + vm_name + '.pp')
-    values = { 'admins' => [], 'users' => [] }
+    values = {:admins => [], :users => [] }
     return values unless File.exist?(path)
 
     contents = File.open(path).read

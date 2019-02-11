@@ -76,8 +76,8 @@ class User < ApplicationRecord
     email.split(/@/).first
   end
 
-  def human_readable_identifer_capitalized
-    self.human_readable_identifier.first.capitalize.gsub(/[-.][a-z]/, &:upcase) #Capitalize the first letter and upcase every letter that follows a . or -
+  def human_readable_identifier_capitalized
+    self.human_readable_identifier.capitalize.gsub(/[-.][a-z]/, &:upcase) #Capitalize the first letter and upcase every letter that follows a . or -
   end
 
   def valid_ssh_key
@@ -96,7 +96,7 @@ class User < ApplicationRecord
 
   def self.from_mail_identifier(mail_id)
     all.each do |user|
-      return user if user.email.split('@').first.casecmp(mail_id).zero?
+      return user if user.human_readable_identifier.casecmp(mail_id).zero?
     end
   end
 

@@ -242,15 +242,15 @@ RSpec.describe Request, type: :model do
 
     it 'returns correct initialization script for a given request' do
       users = request.users
-      email = users[0].email.split('@').first
-      email2 = users[1].email.split('@').first
-      email3 = users[2].email.split('@').first
-      email4 = users[3].email.split('@').first
+      email = users[0].human_readable_identifier
+      email2 = users[1].human_readable_identifier
+      email3 = users[2].human_readable_identifier
+      email4 = users[3].human_readable_identifier
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_myvm {
                 $admins = []
-                $users = ["#{email}", "#{email2}", "#{email3}", "#{email4}"]
+                $users = ["#{email.capitalize.gsub(/[-.][a-z]/, &:upcase)}", "#{email2.capitalize.gsub(/[-.][a-z]/, &:upcase)}", "#{email3.capitalize.gsub(/[-.][a-z]/, &:upcase)}", "#{email4.capitalize.gsub(/[-.][a-z]/, &:upcase)}"]
 
                 realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
                 realize(Accounts::Virtual[$users])
