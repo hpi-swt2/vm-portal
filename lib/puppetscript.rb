@@ -82,7 +82,7 @@ module Puppetscript
 
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
     path = File.join(repository_path, 'Node', 'node-' + vm_name + '.pp')
-    values = {:admins => [], :users => [] }
+    values = { admins: [], users: [] }
     return values unless File.exist?(path)
 
     contents = File.open(path).read
