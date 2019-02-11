@@ -47,7 +47,7 @@ describe VSphere do
     end
   end
 
-  let(:user_folder_mock) { vim_folder_mock('user', [], [], []) }
+  let(:user_folder_mock) { vim_folder_mock('User', [], [], []) }
 
   let(:active_vms_folder) { v_sphere_folder_mock('Active VMs', subfolders: [user_folder_mock]) }
 
