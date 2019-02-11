@@ -47,7 +47,7 @@ describe VSphere do
     end
   end
 
-  let(:user_folder_mock) { vim_folder_mock('User', [], [], []) }
+  let(:user_folder_mock) { vim_folder_mock('User.Surname-Surname2', [], [], []) }
 
   let(:active_vms_folder) { v_sphere_folder_mock('Active VMs', subfolders: [user_folder_mock]) }
 
@@ -197,7 +197,7 @@ describe VSphere do
 
     it 'can move into the responsible users subfolder' do
       config = FactoryBot.create :virtual_machine_config
-      config.responsible_users = [FactoryBot.create(:user, email: 'user@user.de')]
+      config.responsible_users = [FactoryBot.create(:user, email: 'user.surname-surname2@user.de')]
       config.save!
       v_sphere_vm_mock(config.name).move_into_correct_subfolder
       expect(user_folder_mock).to have_received(:MoveIntoFolder_Task)
