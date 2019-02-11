@@ -242,10 +242,10 @@ RSpec.describe Request, type: :model do
 
     it 'returns correct initialization script for a given request' do
       users = request.users
-      email = users[0].human_readable_identifier_capitalized
-      email2 = users[1].human_readable_identifier_capitalized
-      email3 = users[2].human_readable_identifier_capitalized
-      email4 = users[3].human_readable_identifier_capitalized
+      email = users[0].human_readable_identifier
+      email2 = users[1].human_readable_identifier
+      email3 = users[2].human_readable_identifier
+      email4 = users[3].human_readable_identifier
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_myvm {
