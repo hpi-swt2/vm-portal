@@ -77,7 +77,7 @@ class User < ApplicationRecord
   end
 
   def human_readable_identifer_capitalized
-    self.human_readable_identifier.first.capitalize.gsub(/[-.][a-z]/, &:upcase) #Capitalize the first letter and upcase every letter that follows a . or -
+    human_readable_identifier.first.capitalize.gsub(/[-.][a-z]/, &:upcase) # Capitalize the first letter and upcase every letter that follows a . or -
   end
 
   def valid_ssh_key
