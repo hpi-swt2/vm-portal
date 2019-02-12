@@ -95,7 +95,6 @@ module Puppetscript
     values
   end
 
-
   def self.puppet_script_path
     File.join(Rails.root, 'private', ENV['GIT_REPOSITORY_NAME'])
   end

@@ -227,7 +227,6 @@ class RequestsController < ApplicationController
     max_ram_host = hosts.max_by(&:ram_gb)
     max_storage_host = hosts.max_by(&:free_storage_gb)
 
-
     max_cpu_host_msg = "cores: #{max_cpu_host.cpu_cores}, ram: #{max_cpu_host.ram_gb}GB, hdd: #{max_cpu_host.storage_gb}GB"
     max_ram_host_msg = "cores: #{max_ram_host.cpu_cores}, ram: #{max_ram_host.ram_gb}GB, hdd: #{max_ram_host.storage_gb}GB"
     max_storage_host_msg = "cores: #{max_storage_host.cpu_cores}, ram: #{max_storage_host.ram_gb}GB, hdd: #{max_storage_host.storage_gb}GB"
