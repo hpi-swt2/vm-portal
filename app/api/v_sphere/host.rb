@@ -75,7 +75,7 @@ module VSphere
     end
 
     def enough_resources?(cpu_cores, ram_gb, storage_gb)
-      cpu_cores <= self.cpu_cores && ram_gb <= self.ram_gb && storage_gb <= self.free_storage_gb
+      cpu_cores <= self.cpu_cores && ram_gb <= self.ram_gb && storage_gb <= free_storage_gb
     end
 
     private
