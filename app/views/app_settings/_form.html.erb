@@ -1,82 +1,76 @@
-<%= form_with(model: app_setting, local: true) do |form| %>
+<% require './app/assets/helpers/hart_form_builder' %>
+
+<%= form_with(model: app_setting, local: true, builder: HartFormBuilder) do |form| %>
   <% if app_setting.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(app_setting.errors.count, "error") %> prohibited this app_setting from being saved:</h2>
 
       <ul>
-      <% app_setting.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% app_setting.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :git_repository_url %>
-    <%= form.text_field :git_repository_url %>
+  <div class="container-fluid styled-form">
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Git Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Repository URL', :git_repository_url %>
+
+        <%= form.labeled_text_field 'Repository Name', :git_repository_name %>
+
+        <%= form.labeled_text_field 'Github Username', :github_user_name %>
+
+        <%= form.labeled_text_field 'Github User E-Mail', :github_user_email %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>vSphere Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
+
+        <%= form.labeled_text_field 'User', :vsphere_server_user %>
+
+        <%= form.labeled_text_field 'Password', :vsphere_server_password %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Email Notifications Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'SMTP Server Address', :email_notification_smtp_address %>
+
+        <%= form.labeled_number_field 'SMTP Server Port', :email_notification_smtp_port %>
+
+        <%= form.labeled_text_field 'E-Mail Server Domain', :email_notification_smtp_domain %>
+
+        <%= form.labeled_text_field 'User', :email_notification_smtp_user %>
+
+        <%= form.labeled_text_field 'Password', :email_notification_smtp_password %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Virtual Machine Archivation</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_number_field 'Archivation Timeout (in minutes)', :vm_archivation_timeout %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= form.accept %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :git_repository_name %>
-    <%= form.text_field :git_repository_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :github_user_name %>
-    <%= form.text_field :github_user_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :github_user_email %>
-    <%= form.text_field :github_user_email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :vsphere_server_ip %>
-    <%= form.text_field :vsphere_server_ip %>
-  </div>
-
-  <div class="field">
-    <%= form.label :vsphere_server_user %>
-    <%= form.text_field :vsphere_server_user %>
-  </div>
-
-  <div class="field">
-    <%= form.label :vsphere_server_password %>
-    <%= form.text_field :vsphere_server_password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email_notification_smtp_address %>
-    <%= form.text_field :email_notification_smtp_address %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email_notification_smtp_port %>
-    <%= form.number_field :email_notification_smtp_port %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email_notification_smtp_domain %>
-    <%= form.text_field :email_notification_smtp_domain %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email_notification_smtp_user %>
-    <%= form.text_field :email_notification_smtp_user %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email_notification_smtp_password %>
-    <%= form.text_field :email_notification_smtp_password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :vm_archivation_timeout %>
-    <%= form.number_field :vm_archivation_timeout %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
 <% end %>

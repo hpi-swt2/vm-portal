@@ -8,6 +8,7 @@ class AppSetting < ApplicationRecord
 
   def self.instance
     first_or_create!(singleton_guard: 0,
+                     github_user_email: 'email@example.com',
                      email_notification_smtp_port: 587,
                      vm_archivation_timeout: 4320) # 3 days = 4320 minutes
   end
