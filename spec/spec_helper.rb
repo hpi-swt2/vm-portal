@@ -42,11 +42,6 @@ require 'support/factory_bot'
 require './app/api/v_sphere/connection'
 require './spec/api/v_sphere_api_mocker'
 
-ENV['GIT_REPOSITORY_URL'] ||= 'test_repository_url'
-ENV['GIT_REPOSITORY_NAME'] ||= 'test_repository_name'
-ENV['GITHUB_USER_NAME'] ||= 'test_user_name'
-ENV['GITHUB_USER_EMAIL'] ||= 'test_user_email'
-
 def associate_users_with_vms(users: [], admins: [], vms: [])
   users.each do |user|
     allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)

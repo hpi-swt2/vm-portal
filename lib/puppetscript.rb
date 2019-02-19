@@ -96,6 +96,6 @@ module Puppetscript
   end
 
   def self.puppet_script_path
-    File.join(Rails.root, 'private', ENV['GIT_REPOSITORY_NAME'])
+    GitHelper.repository_path
   end
 end

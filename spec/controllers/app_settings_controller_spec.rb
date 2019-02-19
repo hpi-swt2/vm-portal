@@ -82,10 +82,16 @@ RSpec.describe AppSettingsController, type: :controller do
         expect(response).to redirect_to(edit_app_setting_path(app_setting))
       end
 
-      it 'updates the mailer settings' do # rubocop:disable RSpec/MultipleExpectations
-        expect(Rails.configuration.action_mailer.smtp_settings[:address]).not_to eql(valid_attributes[:email_notification_smtp_address])
+      it 'updates the mailer settings' do
+        Rails.configuration.action_mailer.smtp_settings[:address] = 'Hello World!'
         put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
         expect(Rails.configuration.action_mailer.smtp_settings[:address]).to eql(valid_attributes[:email_notification_smtp_address])
+      end
+
+      it 'resets the git settings' do
+        allow(GitHelper).to receive(:reset)
+        put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
+        expect(GitHelper).to have_received(:reset)
       end
     end
 

@@ -3,8 +3,7 @@
 def create_git_stub
   git = double
   status = double
-  allow(git).to receive(:config).with('user.name', 'test_user_name')
-  allow(git).to receive(:config).with('user.email', 'test_user_email')
+  allow(git).to receive(:config)
   allow(git).to receive(:status) { status }
   allow(git).to receive(:add)
   allow(git).to receive(:commit_all)
@@ -12,6 +11,13 @@ def create_git_stub
   allow(git).to receive(:pull)
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
+
+  AppSetting.instance.update!(
+    git_repository_url: 'test_repository_url',
+    git_repository_name: 'test_repository_name',
+    github_user_name: 'test_user_name',
+    github_user_email: 'test@email.com'
+  )
 
   path = Puppetscript.puppet_script_path
   node_path = File.join path, 'Node'

@@ -15,6 +15,8 @@ class AppSetting < ApplicationRecord
       password: setting.email_notification_smtp_password,
       authentication: :plain
     }
+
+    GitHelper.reset
   end
 
   def self.instance

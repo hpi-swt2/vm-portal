@@ -20,12 +20,6 @@ module VSphere
   class Connection
     include Singleton
 
-    def initialize
-      @server_ip = ENV['VSPHERE_SERVER_IP']
-      @server_user = ENV['VSPHERE_SERVER_USER']
-      @server_password = ENV['VSPHERE_SERVER_PASSWORD']
-    end
-
     # Warning:
     # This method may return nil, if no connection could be established!
     def root_folder
