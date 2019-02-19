@@ -43,12 +43,19 @@ module VSphere
     end
 
     def configured?
-      @server_ip && @server_user && @server_password
+      !@server_ip&.empty? && !@server_user&.empty? && !@server_password&.empty?
     end
 
     private
 
+    def initialize_settings
+      @server_ip = AppSetting.instance.vsphere_server_ip
+      @server_user = AppSetting.instance.vsphere_server_user
+      @server_password = AppSetting.instance.vsphere_server_password
+    end
+
     def connect
+      initialize_settings
       return unless configured?
 
       @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)

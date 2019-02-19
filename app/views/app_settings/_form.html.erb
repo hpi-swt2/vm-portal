@@ -2,8 +2,8 @@
 
 <%= form_with(model: app_setting, local: true, builder: HartFormBuilder) do |form| %>
   <% if app_setting.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(app_setting.errors.count, "error") %> prohibited this app_setting from being saved:</h2>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2><%= pluralize(app_setting.errors.count, "error") %> prohibited the Settings from being saved:</h2>
 
       <ul>
         <% app_setting.errors.full_messages.each do |message| %>
