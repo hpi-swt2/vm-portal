@@ -12,8 +12,8 @@ class AppSettingsController < ApplicationController
   def update
     respond_to do |format|
       if @app_setting.update(app_setting_params)
-        format.html { redirect_to @app_setting, notice: 'App setting was successfully updated.' }
-        format.json { render :show, status: :ok, location: @app_setting }
+        format.html { redirect_to edit_app_setting_path(@app_setting), notice: 'HART Settings were successfully updated.' }
+        format.json { render :edit, status: :ok, location: @app_setting }
       else
         format.html { render :edit }
         format.json { render json: @app_setting.errors, status: :unprocessable_entity }
@@ -25,7 +25,7 @@ class AppSettingsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_app_setting
-    @app_setting = AppSetting.instance
+    @app_setting = AppSetting.find(params[:id])
   end
 
   def authenticate_admin
@@ -34,6 +34,10 @@ class AppSettingsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def app_setting_params
-    params.require(:app_setting).permit(:singleton_guard, :git_repository_url, :git_repository_name, :github_user_name, :github_user_email, :vsphere_server_ip, :vsphere_server_user, :vsphere_server_password, :email_notification_smtp_address, :email_notification_smtp_port, :email_notification_smtp_domain, :email_notification_smtp_user, :email_notification_smtp_password, :vm_archivation_timeout)
+    params.require(:app_setting).permit(:git_repository_url, :git_repository_name, :github_user_name, :github_user_email,
+                                        :vsphere_server_ip, :vsphere_server_user, :vsphere_server_password,
+                                        :email_notification_smtp_address, :email_notification_smtp_port, :email_notification_smtp_domain,
+                                        :email_notification_smtp_user, :email_notification_smtp_password,
+                                        :vm_archivation_timeout)
   end
 end
