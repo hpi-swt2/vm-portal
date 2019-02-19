@@ -2,8 +2,8 @@
 
 class AppSetting < ApplicationRecord
   validates_inclusion_of :singleton_guard, in: [0]
-  validates_format_of :github_user_email, with: Devise.email_regexp
-  validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }
+  validates_format_of :github_user_email, with: Devise.email_regexp, allow_blank: true
+  validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
   validates :vm_archivation_timeout, numericality: { greater_than_or_equal_to: 0 }
 
   def self.instance
