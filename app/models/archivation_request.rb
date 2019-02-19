@@ -6,6 +6,6 @@ class ArchivationRequest < ApplicationRecord
   end
 
   def can_be_executed?
-    Time.now >= created_at + timeout
+    Time.now >= created_at + self.class.timeout
   end
 end

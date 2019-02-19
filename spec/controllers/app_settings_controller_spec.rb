@@ -69,27 +69,23 @@ RSpec.describe AppSettingsController, type: :controller do
 
   describe 'PUT #update' do
     context 'with valid params' do
-      let(:new_attributes) do
-        skip('Add a hash of attributes valid for your model')
-      end
-
       it 'updates the requested app_setting' do
-        app_setting = AppSetting.create! valid_attributes
-        put :update, params: { id: app_setting.to_param, app_setting: new_attributes }
+        app_setting = AppSetting.instance
+        put :update, params: { id: app_setting.to_param, app_setting: valid_attributes }
         app_setting.reload
-        skip('Add assertions for updated state')
+        expect(app_setting.vsphere_server_password).to be_equal(valid_attributes[:vsphere_server_password])
       end
 
       it 'redirects to the app_setting' do
-        app_setting = AppSetting.create! valid_attributes
+        app_setting = AppSetting.instance
         put :update, params: { id: app_setting.to_param, app_setting: valid_attributes }
-        expect(response).to redirect_to(app_setting)
+        expect(response).to redirect_to(edit_app_setting_path(app_setting))
       end
     end
 
     context 'with invalid params' do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        app_setting = AppSetting.create! valid_attributes
+        app_setting = AppSetting.instance
         put :update, params: { id: app_setting.to_param, app_setting: invalid_attributes }
         expect(response).to be_successful
       end
