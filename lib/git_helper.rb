@@ -27,7 +27,7 @@ module GitHelper
       @path = path
       initialize_settings
 
-      if File.exist?(File.join(path, '.git'))
+      if File.exist?(File.join(@path, '.git'))
         open_git
         pull if for_write || !pulled_last_minute?
       else
@@ -82,7 +82,7 @@ module GitHelper
     end
 
     def setup_git
-      @git = Git.clone(@repository_url, @repository_name, path: File.join(@path, '..'))
+      @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       @git.config('user.name', @user_name)
       @git.config('user.email', @user_email)
     end
