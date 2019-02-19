@@ -1,0 +1,82 @@
+<%= form_with(model: app_setting, local: true) do |form| %>
+  <% if app_setting.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(app_setting.errors.count, "error") %> prohibited this app_setting from being saved:</h2>
+
+      <ul>
+      <% app_setting.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :git_repository_url %>
+    <%= form.text_field :git_repository_url %>
+  </div>
+
+  <div class="field">
+    <%= form.label :git_repository_name %>
+    <%= form.text_field :git_repository_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :github_user_name %>
+    <%= form.text_field :github_user_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :github_user_email %>
+    <%= form.text_field :github_user_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vsphere_server_ip %>
+    <%= form.text_field :vsphere_server_ip %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vsphere_server_user %>
+    <%= form.text_field :vsphere_server_user %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vsphere_server_password %>
+    <%= form.text_field :vsphere_server_password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_notification_smtp_address %>
+    <%= form.text_field :email_notification_smtp_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_notification_smtp_port %>
+    <%= form.number_field :email_notification_smtp_port %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_notification_smtp_domain %>
+    <%= form.text_field :email_notification_smtp_domain %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_notification_smtp_user %>
+    <%= form.text_field :email_notification_smtp_user %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_notification_smtp_password %>
+    <%= form.text_field :email_notification_smtp_password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vm_archivation_timeout %>
+    <%= form.number_field :vm_archivation_timeout %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

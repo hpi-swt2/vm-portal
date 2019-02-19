@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_06_113452) do
+ActiveRecord::Schema.define(version: 2019_02_19_095240) do
+
+  create_table "app_settings", force: :cascade do |t|
+    t.integer "singleton_guard"
+    t.string "git_repository_url"
+    t.string "git_repository_name"
+    t.string "github_user_name"
+    t.string "github_user_email"
+    t.string "vsphere_server_ip"
+    t.string "vsphere_server_user"
+    t.string "vsphere_server_password"
+    t.string "email_notification_smtp_address"
+    t.integer "email_notification_smtp_port"
+    t.string "email_notification_smtp_domain"
+    t.string "email_notification_smtp_user"
+    t.string "email_notification_smtp_password"
+    t.integer "vm_archivation_timeout"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
+  end
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false

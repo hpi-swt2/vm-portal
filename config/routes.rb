@@ -2,6 +2,7 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  resources :app_settings, only: %i[update edit]
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
 
   resources :request_templates, path: '/vms/request_templates', except: :show
