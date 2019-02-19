@@ -74,12 +74,12 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
 
   context 'when the current user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
-    it 'links to templates list' do
+    it 'links to settings list' do
       expect(rendered).to have_link('Settings', href: edit_app_setting_path(AppSetting.instance))
     end
 
-    it 'links to the settings edit page' do
-      expect(rendered).to have_link('Settings', href: request_templates_systems_path)
+    it 'links to the template edit page' do
+      expect(rendered).to have_link('Templates', href: request_templates_path)
     end
 
     it 'links to operating systems list' do
