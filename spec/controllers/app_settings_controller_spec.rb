@@ -73,7 +73,7 @@ RSpec.describe AppSettingsController, type: :controller do
         app_setting = AppSetting.instance
         put :update, params: { id: app_setting.to_param, app_setting: valid_attributes }
         app_setting.reload
-        expect(app_setting.vsphere_server_password).to be_equal(valid_attributes[:vsphere_server_password])
+        expect(app_setting.vsphere_server_password).to eql(valid_attributes[:vsphere_server_password])
       end
 
       it 'redirects to the app_setting' do
