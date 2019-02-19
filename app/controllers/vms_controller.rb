@@ -69,14 +69,14 @@ class VmsController < ApplicationController
 
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within three days.\n" +
+                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within #{ArchivationRequest.timeout}.\n" +
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
 
     redirect_to controller: :vms, action: 'show', id: @vm.name
     @admin_ids = User.admin.pluck(:id)
-    ApplicationJob.set(wait: 3.days).perform_later(@admin_ids, @vm.name, url_for(controller: :vms, action: 'show', id: @vm.name))
+    ApplicationJob.set(wait: ArchivationRequest.timeout).perform_later(@admin_ids, @vm.name, url_for(controller: :vms, action: 'show', id: @vm.name))
   end
 
   def request_vm_revive
