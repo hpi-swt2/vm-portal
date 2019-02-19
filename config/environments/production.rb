@@ -72,11 +72,11 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: ENV['EMAIL_NOTIFICATIONS_SMTP_ADDRESS'],
-    port: ENV['EMAIL_NOTIFICATIONS_SMTP_PORT'].to_i,
-    domain: ENV['EMAIL_NOTIFICATIONS_SMTP_DOMAIN'],
-    user_name: ENV['EMAIL_NOTIFICATIONS_SMTP_USER'],
-    password: ENV['EMAIL_NOTIFICATIONS_SMTP_PASSWORD'],
+    address: AppSetting.instance.email_notification_smtp_address,
+    port: AppSetting.instance.email_notification_smtp_port,
+    domain: AppSetting.instance.email_notification_smtp_domain,
+    user_name: AppSetting.instance.email_notification_smtp_user,
+    password: AppSetting.instance.email_notification_smtp_password,
     authentication: :plain
     # enable_starttls_auto: true
   }

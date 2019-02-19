@@ -81,6 +81,12 @@ RSpec.describe AppSettingsController, type: :controller do
         put :update, params: { id: app_setting.to_param, app_setting: valid_attributes }
         expect(response).to redirect_to(edit_app_setting_path(app_setting))
       end
+
+      it 'updates the mailer settings' do # rubocop:disable RSpec/MultipleExpectations
+        expect(Rails.configuration.action_mailer.smtp_settings[:address]).not_to eql(valid_attributes[:email_notification_smtp_address])
+        put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
+        expect(Rails.configuration.action_mailer.smtp_settings[:address]).to eql(valid_attributes[:email_notification_smtp_address])
+      end
     end
 
     context 'with invalid params' do
