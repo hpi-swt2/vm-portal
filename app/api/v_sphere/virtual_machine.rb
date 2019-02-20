@@ -294,7 +294,7 @@ module VSphere
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
       end
-      users
+      users || []
     end
 
     def commit_message(git_writer)
@@ -346,7 +346,7 @@ module VSphere
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
       end
-      admins
+      admins || []
     end
 
     def sudo_name_and_node_script(ids)
