@@ -37,7 +37,7 @@ module VSphere
     end
 
     def configured?
-      !@server_ip&.empty? && !@server_user&.empty? && !@server_password&.empty?
+      !@server_ip.nil? && !@server_user.nil? && !@server_password.nil?
     end
 
     private
