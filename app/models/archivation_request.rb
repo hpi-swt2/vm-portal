@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 class ArchivationRequest < ApplicationRecord
+  def self.timeout
+    AppSetting.instance.vm_archivation_timeout.days
+  end
+
+  def self.timeout_readable
+    AppSetting.instance.vm_archivation_timeout.to_s + ' days'
+  end
+
   def can_be_executed?
-    three_days = 60 * 60 * 24 * 3
-    Time.now >= created_at + three_days
+    Time.now >= created_at + self.class.timeout
   end
 end

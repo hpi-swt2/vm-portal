@@ -25,22 +25,10 @@ module VmPortal
 
       if File.exist?(env_file)
         configuration = YAML.load_file(env_file)&.[](Rails.env)
-        if configuration
-          configuration.each do |key, value|
-            # you can only assign strings to ENV-Variables
-            ENV[key.to_s] = value.to_s
-          end
-        else
-          puts '=== Warning: No configuration found ==='
-          puts 'Configuration file path: config/environment_variables.yml'
-          puts "Add an entry for the '#{Rails.env}' environment to fix this issue"
-          puts '======================================='
+        configuration&.each do |key, value|
+          # you can only assign strings to ENV-Variables
+          ENV[key.to_s] = value.to_s
         end
-      else
-        puts '=== Warning: No configuration file found ==='
-        puts 'Configuration file path: config/environment_variables.yml'
-        puts 'If you are configuring HART using Unix environment variables you can ignore this warning.'
-        puts '============================================'
       end
     end
   end

@@ -3,8 +3,7 @@
 def create_git_stub
   git = double
   status = double
-  allow(git).to receive(:config).with('user.name', 'test_user_name')
-  allow(git).to receive(:config).with('user.email', 'test_user_email')
+  allow(git).to receive(:config)
   allow(git).to receive(:status) { status }
   allow(git).to receive(:add)
   allow(git).to receive(:commit_all)
@@ -13,6 +12,9 @@ def create_git_stub
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
 
+  repository_name = 'test_repository_name'
+
+  allow(GitHelper).to receive(:repository_path).and_return(File.join(Rails.root, 'private', repository_name))
   path = Puppetscript.puppet_script_path
   node_path = File.join path, 'Node'
   name_path = File.join path, 'Name'
@@ -26,6 +28,13 @@ def create_git_stub
     FileUtils.mkdir_p(name_path) unless File.exist?(name_path)
     git
   end
+
+  AppSetting.instance.update!(
+    git_repository_url: 'test_repository_url',
+    git_repository_name: repository_name,
+    github_user_name: 'test_user_name',
+    github_user_email: 'test@email.com'
+  )
 
   GitStub.new(git_class, path, git, status)
 end

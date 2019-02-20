@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_06_113452) do
+ActiveRecord::Schema.define(version: 2019_02_19_095240) do
+
+  create_table "app_settings", force: :cascade do |t|
+    t.integer "singleton_guard"
+    t.string "git_repository_url"
+    t.string "git_repository_name"
+    t.string "github_user_name"
+    t.string "github_user_email"
+    t.string "vsphere_server_ip"
+    t.string "vsphere_server_user"
+    t.string "vsphere_server_password"
+    t.string "email_notification_smtp_address"
+    t.integer "email_notification_smtp_port"
+    t.string "email_notification_smtp_domain"
+    t.string "email_notification_smtp_user"
+    t.string "email_notification_smtp_password"
+    t.integer "vm_archivation_timeout"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
+  end
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -126,18 +146,18 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.integer "role"
     t.string "provider"
     t.string "uid"
+    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
     t.integer "user_id"
-    t.string "ssh_key"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -149,8 +169,6 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|

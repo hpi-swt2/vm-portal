@@ -9,10 +9,25 @@ module GitHelper
     yield git_writer
   end
 
+  def self.open_git_repository(for_write: false)
+    open_repository Puppetscript.puppet_script_path, for_write: for_write
+  end
+
+  def self.reset
+    FileUtils.rm_rf repository_path
+    GitWriter.new repository_path, true
+  end
+
+  def self.repository_path
+    File.join(Rails.root, 'private', AppSetting.instance.git_repository_name)
+  end
+
   class GitWriter
     def initialize(path, for_write)
       @path = path
-      if File.exist?(File.join(path, '.git'))
+      initialize_settings
+
+      if File.exist?(File.join(@path, '.git'))
         open_git
         pull if for_write || !pulled_last_minute?
       else
@@ -43,6 +58,13 @@ module GitHelper
 
     private
 
+    def initialize_settings
+      @repository_url = AppSetting.instance.git_repository_url
+      @repository_name = AppSetting.instance.git_repository_name
+      @user_name = AppSetting.instance.github_user_name
+      @user_email = AppSetting.instance.github_user_email
+    end
+
     def pull
       path = File.join(@path, '.last_pull')
       File.open(path, 'w') { |file| file.write(Time.now) }
@@ -60,18 +82,15 @@ module GitHelper
     end
 
     def setup_git
-      uri = ENV['GIT_REPOSITORY_URL']
-      name = ENV['GIT_REPOSITORY_NAME']
-
-      @git = Git.clone(uri, name, path: File.join(@path, '..'))
-      @git.config('user.name', ENV['GITHUB_USER_NAME'])
-      @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
+      @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
+      @git.config('user.name', @user_name)
+      @git.config('user.email', @user_email)
     end
 
     def open_git
       @git = Git.open(@path)
-      @git.config('user.name', ENV['GITHUB_USER_NAME'])
-      @git.config('user.email', ENV['GITHUB_USER_EMAIL'])
+      @git.config('user.name', @user_name)
+      @git.config('user.email', @user_email)
     end
 
     def commit_and_push(message)

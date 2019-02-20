@@ -20,12 +20,6 @@ module VSphere
   class Connection
     include Singleton
 
-    def initialize
-      @server_ip = ENV['VSPHERE_SERVER_IP']
-      @server_user = ENV['VSPHERE_SERVER_USER']
-      @server_password = ENV['VSPHERE_SERVER_PASSWORD']
-    end
-
     # Warning:
     # This method may return nil, if no connection could be established!
     def root_folder
@@ -43,12 +37,23 @@ module VSphere
     end
 
     def configured?
-      @server_ip && @server_user && @server_password
+      not_empty?(@server_ip) && not_empty?(@server_user) && not_empty?(@server_password)
     end
 
     private
 
+    def not_empty?(string)
+      !string.nil? && !string.empty?
+    end
+
+    def initialize_settings
+      @server_ip = AppSetting.instance.vsphere_server_ip
+      @server_user = AppSetting.instance.vsphere_server_user
+      @server_password = AppSetting.instance.vsphere_server_password
+    end
+
     def connect
+      initialize_settings
       return unless configured?
 
       @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
