@@ -37,7 +37,8 @@ module VSphere
     end
 
     def configured?
-      !@server_ip.nil? && !@server_user.nil? && !@server_password.nil?
+      # to_s converts nil to ''
+      !@server_ip.to_s.empty? && !@server_user.to_s.empty? && !@server_password.to_s.empty?
     end
 
     private
