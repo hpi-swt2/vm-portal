@@ -37,10 +37,14 @@ module VSphere
     end
 
     def configured?
-      !@server_ip.nil? && !@server_user.nil? && !@server_password.nil?
+      not_empty?(@server_ip) && not_empty?(@server_user) && not_empty?(@server_password)
     end
 
     private
+
+    def not_empty?(string)
+      !string.nil? && !string.empty?
+    end
 
     def initialize_settings
       @server_ip = AppSetting.instance.vsphere_server_ip
