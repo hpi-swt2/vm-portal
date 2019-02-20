@@ -289,12 +289,12 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           remote_users = Puppetscript.read_node_file(name)
-          users = remote_users['users']
+          users = remote_users['users'] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
       end
-      users || []
+      users
     end
 
     def commit_message(git_writer)
@@ -341,12 +341,12 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           users = Puppetscript.read_node_file(name)
-          admins = users['admins']
+          admins = users['admins'] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
       end
-      admins || []
+      admins
     end
 
     def sudo_name_and_node_script(ids)
