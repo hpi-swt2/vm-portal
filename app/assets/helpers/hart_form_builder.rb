@@ -23,6 +23,17 @@ class HartFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, args)
   end
 
+  def labeled_password_field(name, attribute, args = {})
+    @template.content_tag(:div, class: 'field form-group') do
+      label(attribute, name) + password_field(attribute, args)
+    end
+  end
+
+  def password_field(attribute, args = {})
+    args = add_control_class args
+    super(attribute, args)
+  end
+
   def accept
     submit class: 'btn btn-primary'
   end
