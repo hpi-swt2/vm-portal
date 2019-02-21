@@ -7,18 +7,9 @@ class AppSetting < ApplicationRecord
   validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
   validates :vm_archivation_timeout, numericality: { greater_than_or_equal_to: 0 }
 
-  after_commit :update_mail_and_git, on: :update
+  after_commit :update_git, on: :update
 
-  def update_mail_and_git
-    Rails.configuration.action_mailer.smtp_settings = {
-      address: email_notification_smtp_address,
-      port: email_notification_smtp_port,
-      domain: email_notification_smtp_domain,
-      user_name: email_notification_smtp_user,
-      password: email_notification_smtp_password,
-      authentication: :plain
-    }
-
+  def update_git
     GitHelper.reset
   end
 
