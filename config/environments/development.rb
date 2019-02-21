@@ -38,16 +38,6 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
 
-  config.action_mailer.smtp_settings = {
-      address: 'default',
-      port: 'default',
-      domain: 'default',
-      user_name: 'default',
-      password: 'default',
-      authentication: :plain
-      # enable_starttls_auto: true
-  }
-
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

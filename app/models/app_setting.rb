@@ -10,8 +10,6 @@ class AppSetting < ApplicationRecord
   after_commit :update_mail_and_git, on: :update
 
   def update_mail_and_git
-    puts Rails.configuration.action_mailer.smtp_settings
-
     Rails.configuration.action_mailer.smtp_settings = {
       address: email_notification_smtp_address,
       port: email_notification_smtp_port,
@@ -20,8 +18,6 @@ class AppSetting < ApplicationRecord
       password: email_notification_smtp_password,
       authentication: :plain
     }
-
-    puts Rails.configuration.action_mailer.smtp_settings
 
     GitHelper.reset
   end
