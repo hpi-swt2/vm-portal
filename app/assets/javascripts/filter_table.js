@@ -31,7 +31,7 @@ function filterTable(inputId, tableId) {
         }
     }
 
-    if(invisible === tr.length - 1) {
+    if(invisible === rows.length - 1) {
         hide(table);
     }
     else {
