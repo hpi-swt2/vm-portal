@@ -27,7 +27,7 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to request a new VM' do
     sign_in @employee
     visit '/vms/vm'
-    click_on 'New Request'
+    click_on '+'
     expect(page).to have_current_path('/vms/requests/new')
     fill_in('Name', with: @requestname)
     fill_in('cpu', with: 4)
@@ -49,7 +49,7 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to accept a VM request' do
     sign_in @admin
     visit '/vms/vm'
-    click_on 'New Request'
+    click_on '+'
     fill_in('Name', with: @requestname)
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
