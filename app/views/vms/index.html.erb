@@ -26,7 +26,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
-    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
+    <th scope="col" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -60,7 +60,7 @@
         <%= render 'vm_status', vm: vm %>
       </td>
       <td class="d-none"> <!-- Also not intended to be shown! -->
-        <%= vm.ensure_config.description %>
+        <%= vm.config&.description %>
       </td>
     </tr>
   <% end %>
@@ -78,7 +78,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
-    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intneded to be shown, just important for the search functionality -->
+    <th scope="col" class="d-none">Description</th> <!-- This is not intneded to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -127,7 +127,7 @@
                     class: "btn-manage float-right cross" %>
       </td>
       <td class="d-none"> <!-- Also not intended to be shown! -->
-        <%= vm.ensure_config.description %>
+        <%= vm.config&.description %>
       </td>
     </tr>
   <% end %>
@@ -144,7 +144,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
-    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
+    <th scope="col" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -182,7 +182,7 @@
         <% end %>
       </td>
       <td class="d-none"> <!-- Also not intended to be shown! -->
-        <%= vm.ensure_config.description %>
+        <%= vm.config&.description %>
       </td>
     </tr>
   <% end %>
@@ -199,7 +199,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
-    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
+    <th scope="col" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -240,7 +240,7 @@
         <% end %>
       </td>
       <td class="d-none"> <!-- Also not intended to be shown! -->
-        <%= vm.ensure_config.description %>
+        <%= vm.config&.description %>
       </td>
     </tr>
   <% end %>
