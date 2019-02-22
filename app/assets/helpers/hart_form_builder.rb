@@ -24,6 +24,7 @@ class HartFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def labeled_password_field(name, attribute, args = {})
+    args[:value] ||= @object.send(attribute)
     @template.content_tag(:div, class: 'field form-group') do
       label(attribute, name) + password_field(attribute, args)
     end
