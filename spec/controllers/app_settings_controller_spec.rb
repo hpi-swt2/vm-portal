@@ -95,6 +95,12 @@ RSpec.describe AppSettingsController, type: :controller do
         put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
         expect(GitHelper).to have_received(:reset)
       end
+
+      it 'can update the vSphere root folder' do
+        put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
+        expect(AppSetting.instance.vsphere_root_folder).to eql(valid_attributes[:vsphere_root_folder])
+        AppSetting.instance.update!(vsphere_root_folder: '') # Make sure that we use the default root folder during the tests
+      end
     end
 
     context 'with invalid params' do

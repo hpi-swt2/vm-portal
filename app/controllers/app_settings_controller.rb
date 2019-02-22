@@ -35,7 +35,7 @@ class AppSettingsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def app_setting_params
     params.require(:app_setting).permit(:git_repository_url, :git_repository_name, :github_user_name, :github_user_email,
-                                        :vsphere_server_ip, :vsphere_server_user, :vsphere_server_password,
+                                        :vsphere_server_ip, :vsphere_server_user, :vsphere_server_password, :vsphere_root_folder,
                                         :email_notification_smtp_address, :email_notification_smtp_port, :email_notification_smtp_domain,
                                         :email_notification_smtp_user, :email_notification_smtp_password,
                                         :vm_archivation_timeout)
