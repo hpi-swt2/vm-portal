@@ -83,7 +83,7 @@ RSpec.describe AppSettingsController, type: :controller do
       end
 
       it 'updates the mailer settings' do
-        Rails.configuration.action_mailer.smtp_settings[:address] = 'Hello World!'
+        ActionMailer::Base.smtp_settings[:address] = 'Hello World!'
         put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
         expect(ActionMailer::Base.smtp_settings[:address]).to eql(valid_attributes[:email_notification_smtp_address])
       end
