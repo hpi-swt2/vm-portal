@@ -4,7 +4,7 @@ class ApplicationMailer < ActionMailer::Base
   default from: 'noreply@vm-portal.com'
   layout 'mailer'
 
-  before_filter :set_mailer_settings
+  before_action :set_mailer_settings
 
   private
 
