@@ -2,11 +2,11 @@
   <h1 class="float-left">Virtual Machines</h1>
   <% if current_user.employee_or_admin? %>
     <%= button_to "New Request", new_request_path,
-      method: :get,
-      class: "btn btn-primary float-right mt-3" %>
+                  method: :get,
+                  class: "btn btn-primary float-right mt-3" %>
     <%= button_to "All Requests", requests_path,
-      method: :get,
-      class: "btn btn-primary float-right mt-3 mr-3" %>
+                  method: :get,
+                  class: "btn btn-primary float-right mt-3 mr-3" %>
   <% end %>
 </div>
 
@@ -26,6 +26,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
+    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -33,8 +34,8 @@
     <tr>
       <td class="table-active">
         <%= link_to vm.name,
-          {controller: :vms, action: 'show', id: vm.name},
-          method: :get, class: "btn btn-link"  %>
+                    {controller: :vms, action: 'show', id: vm.name},
+                    method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
@@ -58,6 +59,9 @@
       <td class="table-active align-middle">
         <%= render 'vm_status', vm: vm %>
       </td>
+      <td class="d-none"> <!-- Also not intended to be shown! -->
+        <%= vm.ensure_config.description %>
+      </td>
     </tr>
   <% end %>
   </tbody>
@@ -70,10 +74,11 @@
 <table data-toggle="table" class="table" id="vms_to_be_archived">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
+    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left" >Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Responsible</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
+    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intneded to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -82,8 +87,8 @@
 
       <td class="table-active">
         <%= link_to vm.name,
-          {controller: :vms, action: 'show', id: vm.name},
-          method: :get, class: "btn btn-link"  %>
+                    {controller: :vms, action: 'show', id: vm.name},
+                    method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
@@ -121,6 +126,9 @@
                     method: :post,
                     class: "btn-manage float-right cross" %>
       </td>
+      <td class="d-none"> <!-- Also not intended to be shown! -->
+        <%= vm.ensure_config.description %>
+      </td>
     </tr>
   <% end %>
   </tbody>
@@ -136,6 +144,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
+    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -144,8 +153,8 @@
 
       <td class="table-active">
         <%= link_to vm.name,
-          {controller: :vms, action: 'show', id: vm.name},
-          method: :get, class: "btn btn-link"  %>
+                    {controller: :vms, action: 'show', id: vm.name},
+                    method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
@@ -166,11 +175,14 @@
         <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name},
-            method: :post,
-            class: "btn-manage float-right checkmark" %>
+                      {controller: :vms, action: 'revive_vm', id: vm.name},
+                      method: :post,
+                      class: "btn-manage float-right checkmark" %>
 
         <% end %>
+      </td>
+      <td class="d-none"> <!-- Also not intended to be shown! -->
+        <%= vm.ensure_config.description %>
       </td>
     </tr>
   <% end %>
@@ -187,6 +199,7 @@
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white">Project</th>
     <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Responsible</th>
+    <th scope="col" data-sortable="true" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
   <tbody>
@@ -194,8 +207,8 @@
     <tr>
       <td class="table-active">
         <%= link_to vm.name,
-          {controller: :vms, action: 'show', id: vm.name},
-          method: :get, class: "btn btn-link"  %>
+                    {controller: :vms, action: 'show', id: vm.name},
+                    method: :get, class: "btn btn-link"  %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
@@ -216,15 +229,18 @@
         <% end %>
         <% if current_user.admin? %>
           <%= link_to '',
-            {controller: :vms, action: 'revive_vm', id: vm.name},
-            method: :post,
-            class: "btn-manage float-right arrow-up" %>
+                      {controller: :vms, action: 'revive_vm', id: vm.name},
+                      method: :post,
+                      class: "btn-manage float-right arrow-up" %>
         <% else %>
           <%= link_to '',
-            {controller: :vms, action: 'request_vm_revive', id: vm.name},
-            method: :post,
-            class: "btn-manage float-right arrow-up" %>
+                      {controller: :vms, action: 'request_vm_revive', id: vm.name},
+                      method: :post,
+                      class: "btn-manage float-right arrow-up" %>
         <% end %>
+      </td>
+      <td class="d-none"> <!-- Also not intended to be shown! -->
+        <%= vm.ensure_config.description %>
       </td>
     </tr>
   <% end %>
