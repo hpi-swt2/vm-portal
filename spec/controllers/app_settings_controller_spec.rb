@@ -38,6 +38,7 @@ RSpec.describe AppSettingsController, type: :controller do
       vsphere_server_ip: '127.0.0.1',
       vsphere_server_user: 'gozsdgfou2!§hdsfj',
       vsphere_server_password: '6§$%95r9v932',
+      vsphere_root_folder: 'my-root-folder-----------------------------------------------------------------', # 79 chars are allowed
       email_notification_smtp_address: 'smtp.email.com',
       email_notification_smtp_port: '1234',
       email_notification_smtp_domain: 'email.com',
@@ -51,7 +52,8 @@ RSpec.describe AppSettingsController, type: :controller do
     valid_attributes.merge(
       github_user_email: 'helloWorld',
       email_notification_smtp_port: 'NoInteger',
-      vm_archivation_timeout: 'NoInteger2'
+      vm_archivation_timeout: 'NoInteger2',
+      vsphere_root_folder: 'ThisIsATooLongStringThatContains/\%WhichIsInvalid...............................' # 80 chars are not allowed
     )
   end
 

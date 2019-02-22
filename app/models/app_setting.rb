@@ -6,6 +6,9 @@ class AppSetting < ApplicationRecord
   validates :github_user_name, :git_repository_name, :git_repository_url, presence: true
   validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
   validates :vm_archivation_timeout, numericality: { greater_than_or_equal_to: 0 }
+  validates :vsphere_root_folder,
+            length: { less_than: 80 },
+            format: { without: %r{/%\/}, message: 'The vSphere root folder may not contain "/", "\" or "%"' }
 
   after_commit :apply_settings, on: :update
 
