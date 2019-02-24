@@ -58,10 +58,10 @@ module VSphere
     end
 
     def self.prepare_vm_names
-      node_file = Puppetscript.nodes_path
-      return [] unless File.exist?(node_file)
+      nodes_path = Puppetscript.nodes_path
+      return [] unless File.exist?(nodes_path)
 
-      files = Dir.entries(node_file)
+      files = Dir.entries(nodes_path)
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
       files
@@ -320,7 +320,7 @@ module VSphere
     def users=(ids)
       GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
-        write_files(git_writer, name_script, node_script)
+        write_node_and_class_file(git_writer, name_script, node_script)
       end
     rescue Git::GitExecuteError => e
       Rails.logger.error(e)
@@ -329,13 +329,13 @@ module VSphere
     def sudo_users=(ids)
       GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = sudo_name_and_node_script(ids)
-        write_files(git_writer, name_script, node_script)
+        write_node_and_class_file(git_writer, name_script, node_script)
       end
     rescue Git::GitExecuteError => e
       logger.error(e)
     end
 
-    def write_files(git_writer, name_script, node_script)
+    def write_node_and_class_file(git_writer, name_script, node_script)
       git_writer.write_file(Puppetscript.class_file_name(name), name_script)
       git_writer.write_file(Puppetscript.node_file_name(name), node_script)
       message = commit_message(git_writer)
