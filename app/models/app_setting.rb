@@ -16,8 +16,8 @@ class AppSetting < ApplicationRecord
                      git_repository_name: 'repository',
                      git_repository_url: 'https://github.com/hpi-swt2/vm-portal.git',
                      puppet_init_path: '/',
-                     puppet_nodes_path: '/Nodes',
-                     puppet_classes_path: '/Names',
+                     puppet_nodes_path: '/Node',
+                     puppet_classes_path: '/Name',
                      vm_archivation_timeout: 3) # in days
   end
 

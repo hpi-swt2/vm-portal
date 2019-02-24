@@ -81,7 +81,7 @@ module Puppetscript
   end
 
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
-    path = File.join(repository_path, class_file_name(vm_name))
+    path = File.join(repository_path, node_file_name(vm_name))
     values = { admins: [], users: [] }
     return values unless File.exist?(path)
 
