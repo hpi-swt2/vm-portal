@@ -99,6 +99,10 @@ module Puppetscript
     GitHelper.repository_path
   end
 
+  def self.init_path
+    File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_init_path)
+  end
+
   def self.nodes_path
     File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_nodes_path)
   end
