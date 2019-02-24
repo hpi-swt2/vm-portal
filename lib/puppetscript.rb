@@ -104,11 +104,11 @@ module Puppetscript
   end
 
   def self.node_file_name(vm_name)
-    File.join(AppSetting.instance.puppet_nodes_path, vm_name + '.pp')
+    File.join(AppSetting.instance.puppet_nodes_path, 'node-' + vm_name + '.pp')
   end
 
   def self.class_file_name(vm_name)
-    File.join(AppSetting.instance.puppet_classes_path, 'name-' + vm_name + '.pp')
+    File.join(AppSetting.instance.puppet_classes_path, vm_name + '.pp')
   end
 
   def self.init_path
