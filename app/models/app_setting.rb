@@ -15,6 +15,9 @@ class AppSetting < ApplicationRecord
                      github_user_email: 'example@email.com',
                      git_repository_name: 'repository',
                      git_repository_url: 'https://github.com/hpi-swt2/vm-portal.git',
+                     puppet_init_path: '/',
+                     puppet_nodes_path: '/Nodes',
+                     puppet_classes_path: '/Names',
                      vm_archivation_timeout: 3) # in days
   end
 
@@ -23,7 +26,6 @@ class AppSetting < ApplicationRecord
   def apply_settings
     apply_mail_settings
     GitHelper.reset
-    Puppetscript.initialize_settings
   end
 
   def apply_mail_settings
