@@ -308,14 +308,6 @@ module VSphere
       end
     end
 
-    def name_path
-      File.join('Name', name + '.pp')
-    end
-
-    def node_path
-      File.join('Node', 'node-' + name + '.pp')
-    end
-
     def user_name_and_node_script(ids)
       all_users = Puppetscript.read_node_file(name)
       sudo_users = all_users['admins']
@@ -328,13 +320,26 @@ module VSphere
     def users=(ids)
       GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
+        write_files(git_writer, name_script, node_script)
       end
     rescue Git::GitExecuteError => e
       Rails.logger.error(e)
+    end
+
+    def sudo_users=(ids)
+      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |_git_writer|
+        name_script, node_script = sudo_name_and_node_script(ids)
+        write_files(git_writer, name_script, node_script)
+      end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
+    end
+
+    def write_files(git_writer, name_script, node_script)
+      git_writer.write_file(Puppetscript.classes_file_name(name), name_script)
+      git_writer.write_file(Puppetscript.node_file_name(name), node_script)
+      message = commit_message(git_writer)
+      git_writer.save(message)
     end
 
     def sudo_users
@@ -357,18 +362,6 @@ module VSphere
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, new_sudo_users, users)
       [name_script, node_script]
-    end
-
-    def sudo_users=(ids)
-      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
-        name_script, node_script = sudo_name_and_node_script(ids)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
-      end
-    rescue Git::GitExecuteError => e
-      logger.error(e)
     end
 
     # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms

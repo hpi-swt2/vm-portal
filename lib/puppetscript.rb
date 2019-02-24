@@ -81,7 +81,7 @@ module Puppetscript
   end
 
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
-    path = File.join(repository_path, 'Node', 'node-' + vm_name + '.pp')
+    path = File.join(repository_path, classes_file_name(vm_name))
     values = { admins: [], users: [] }
     return values unless File.exist?(path)
 
@@ -97,6 +97,14 @@ module Puppetscript
 
   def self.puppet_script_path
     GitHelper.repository_path
+  end
+
+  def self.node_file_name(vm_name)
+    File.join(AppSetting.instance.puppet_nodes_path, vm_name + '.pp')
+  end
+
+  def self.classes_file_name(vm_name)
+    File.join(AppSetting.instance.puppet_classes_path, 'name-' + vm_name + '.pp')
   end
 
   def self.init_path
