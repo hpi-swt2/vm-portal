@@ -99,6 +99,10 @@ module Puppetscript
     GitHelper.repository_path
   end
 
+  def self.init_file_name
+    File.join(AppSetting.instance.puppet_init_path, 'init.pp')
+  end
+
   def self.node_file_name(vm_name)
     File.join(AppSetting.instance.puppet_nodes_path, vm_name + '.pp')
   end
