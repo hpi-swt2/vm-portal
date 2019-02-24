@@ -6,7 +6,7 @@ RSpec.describe Puppetscript do
   let(:path) { File.join('spec', 'lib') }
 
   before do
-    allow(described_class).to receive(:read_node_file).and_call_original
+    allow(Puppetscript).to receive(:read_node_file).and_call_original
     @user = FactoryBot.create :puppet_user
     @admin1 = FactoryBot.create :puppet_admin
     @admin2 = FactoryBot.create :puppet_admin2
@@ -17,7 +17,7 @@ RSpec.describe Puppetscript do
     # let(:user) { FactoryBot.create :puppet_user }
     # let(:admin1) { FactoryBot.create :puppet_admin }
     # let(:admin2) { FactoryBot.create :puppet_admin2 }
-    let(:puppet_file) { described_class.read_node_file('example', path) }
+    let(:puppet_file) { Puppetscript.read_node_file('example', path) }
 
     it 'returns the results as a Hash' do
       expect(puppet_file).to be_a_kind_of Hash
@@ -59,27 +59,27 @@ RSpec.describe Puppetscript do
     end
 
     it 'raises an error if trying to read a puppet file with the node name not matching the file name' do
-      expect { described_class.read_node_file('example3', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example3', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which admins are not added as sudoroot' do
-      expect { described_class.read_node_file('example4', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example4', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which admins are not added as virtual user' do
-      expect { described_class.read_node_file('example5', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example5', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file in which users are not added as virtual user' do
-      expect { described_class.read_node_file('example6', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example6', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file with missing class declaration on the first line' do
-      expect { described_class.read_node_file('example7', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example7', path) }.to raise_error 'Unsupported Format'
     end
 
     it 'raises an error if trying to read a puppet file with missing closing bracket for the class declaration' do
-      expect { described_class.read_node_file('example8', path) }.to raise_error 'Unsupported Format'
+      expect { Puppetscript.read_node_file('example8', path) }.to raise_error 'Unsupported Format'
     end
   end
 end
