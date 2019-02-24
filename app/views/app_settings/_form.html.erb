@@ -44,6 +44,19 @@
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
+        <h5>Puppet Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Init.pp Path', :puppet_init_path %>
+
+        <%= form.labeled_text_field 'Classes Path', :puppet_classes_path %>
+
+        <%= form.labeled_text_field 'Nodes Path', :puppet_nodes_path %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
         <h5>Email Notifications Settings</h5>
       </div>
       <div class="col-6">
