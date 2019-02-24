@@ -31,7 +31,7 @@ class AppSetting < ApplicationRecord
   def apply_mail_settings
     ActionMailer::Base.smtp_settings = {
       address: email_notification_smtp_address,
-      port: email_notification_smtp_port,
+      port: email_ntification_smtp_port,
       domain: email_notification_smtp_domain,
       user_name: email_notification_smtp_user,
       password: email_notification_smtp_password,
