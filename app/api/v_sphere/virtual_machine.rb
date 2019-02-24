@@ -58,9 +58,10 @@ module VSphere
     end
 
     def self.prepare_vm_names
-      return [] unless File.exist?(File.join(Puppetscript.puppet_script_path, 'Node'))
+      node_file = Puppetscript.nodes_path
+      return [] unless File.exist?(node_file)
 
-      files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
+      files = Dir.entries(node_file)
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
       files

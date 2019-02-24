@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module Puppetscript
+  def self.initialize_settings
+    @init_path = AppSetting.instance.puppet_init_path
+    @classes_path = AppSetting.instance.puppet_classes_path
+    @nodes_path = AppSetting.instance.puppet_nodes_path
+  end
+
   def self.init_script(users)
     users_string = ''.dup
     users.each do |user|
@@ -97,5 +103,13 @@ module Puppetscript
 
   def self.puppet_script_path
     GitHelper.repository_path
+  end
+
+  def self.nodes_path
+    File.join(Puppetscript.puppet_script_path, @nodes_path)
+  end
+
+  def self.classes_path
+    File.join(Puppetscript.puppet_script_path, @classes_path)
   end
 end

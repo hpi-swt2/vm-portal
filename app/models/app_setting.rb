@@ -23,6 +23,7 @@ class AppSetting < ApplicationRecord
   def apply_settings
     apply_mail_settings
     GitHelper.reset
+    Puppetscript.initialize_settings
   end
 
   def apply_mail_settings

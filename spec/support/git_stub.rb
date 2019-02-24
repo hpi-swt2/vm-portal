@@ -16,8 +16,8 @@ def create_git_stub
 
   allow(GitHelper).to receive(:repository_path).and_return(File.join(Rails.root, 'private', repository_name))
   path = Puppetscript.puppet_script_path
-  node_path = File.join path, 'Node'
-  name_path = File.join path, 'Name'
+  node_path = Puppetscript.nodes_path
+  name_path = Puppetscript.classes_path
 
   git_class = class_double('Git')
               .as_stubbed_const(transfer_nested_constants: true)
