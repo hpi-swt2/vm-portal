@@ -1,14 +1,9 @@
 <h1>Users</h1>
 <small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
-<%= form_with url: users_path, method: :get, class: 'form-inline', local: true do |form|  %>
-  <%= form.text_field :search, value: params[:search] || '', placeholder: 'Name', class: 'form-control mb-2 mr-sm-2'%>
-  <%= form.select :role, options_for_select(User.roles.merge(all: ''), params[:role] || ''), {}, {class: 'form-control mb-2 mr-sm-2'} %>
-  <%= form.submit 'Search', class: 'btn btn-primary mb-2' %>
-<% end %>
+<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_users" onkeyup="filter_table('filter_users', 'users', document)" placeholder="Search">
 
-
-<table class="table">
+<table class="table" id="users">
   <thead>
     <th><%= User.human_attribute_name('name') %></th>
     <th><%= User.human_attribute_name('email') %></th>
@@ -24,7 +19,7 @@
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
         <% if current_user.admin? %>
-          <td>
+          <td data-filter-value="<%= user.role %>">
             <div class="btn-group
                         border
                         border-<%= if last_admin?(user) && current_user?(user) then 'secondary' else 'primary' end%>
@@ -35,8 +30,7 @@
                   <button class="btn
                                  btn-<%= if user.role == role then 'secondary' else 'light' end %>
                                  disabled"
-                          id= "btn-<%= role %>-<%= user.id %>",
-                  >
+                          id= "btn-<%= role %>-<%= user.id %>">
                     <%= role.capitalize %>
                   </button>
                 <% else %>

@@ -10,7 +10,8 @@ function filter_table(input_id, table_id, doc) {
     let td = tr[rowIndex].getElementsByTagName("td");
     let remainingFilters = filters;
     for (let columnIndex = 0; columnIndex < td.length; columnIndex++) {
-      let txtValue = td[columnIndex].textContent || td[columnIndex].innerText;
+      let column = td[columnIndex];
+      let txtValue = (column.dataset && column.dataset.filterValue) || column.textContent || column.innerText;
       remainingFilters = remainingFilters.filter((filter) => txtValue.toUpperCase().indexOf(filter) < 0);
     }
     tr[rowIndex].style.display = remainingFilters.length > 0 ? "none" : "";
