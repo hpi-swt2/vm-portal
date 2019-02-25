@@ -1,17 +1,16 @@
 <h1>Users</h1>
 <small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
-<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_users" onkeyup="filter_table('filter_users', 'users', document)" placeholder="Search">
+<input class="filter-box" type="text" id="filter_users" onkeyup="filter_table('filter_users', 'users', document)" placeholder="Search">
 
-<table class="table" id="users">
+<table data-toggle="table" class="table" id="users">
   <thead>
-    <th><%= User.human_attribute_name('name') %></th>
-    <th><%= User.human_attribute_name('email') %></th>
+    <th scope="col" data-sortable="true" class="rounded-left"><%= User.human_attribute_name('name') %></th>
+    <th scope="col" data-sortable="true"><%= User.human_attribute_name('email') %></th>
     <% if current_user.admin? %>
-      <th><%= User.human_attribute_name('role') %></th>
+      <th scope="col" data-sortable="true"><%= User.human_attribute_name('role') %></th>
     <% end %>
-    <th><%= User.human_attribute_name('last_sign_in_at') %></th>
-    <th></th>
+    <th scope="col" data-sortable="true" class="rounded-right"><%= User.human_attribute_name('last_sign_in_at') %></th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
@@ -50,3 +49,8 @@
     <% end %>
   </tbody>
 </table>
+
+<!-- Minified script sources for sortable tables -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
