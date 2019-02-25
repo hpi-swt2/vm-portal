@@ -1,4 +1,4 @@
-function sortWithoutHTML(a, b, rowA, rowB) {
+function sortWithoutHTML(a, b) {
   function stripHTML(html) {
     let tmp = document.createElement("DIV");
     tmp.innerHTML = html;
