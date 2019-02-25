@@ -7,6 +7,10 @@ require_relative 'cluster'
 # This class wraps a rbvmomi Folder and provides easy access to common operations
 module VSphere
   class Folder
+    # this limit is enforced by the vSphere API when creating a folder
+    # see: https://code.vmware.com/apis/196/vsphere#/doc/vim.Folder.html#createFolder
+    VSPHERE_FOLDER_NAME_CHARACTER_LIMIT = 79
+
     def initialize(rbvmomi_folder)
       @folder = rbvmomi_folder
     end

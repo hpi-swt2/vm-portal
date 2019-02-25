@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_19_095240) do
+ActiveRecord::Schema.define(version: 2019_02_22_160517) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2019_02_19_095240) do
     t.integer "vm_archivation_timeout"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "vsphere_root_folder", default: ""
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 
@@ -169,6 +170,8 @@ ActiveRecord::Schema.define(version: 2019_02_19_095240) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
+    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
