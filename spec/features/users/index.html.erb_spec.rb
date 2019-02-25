@@ -14,7 +14,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
     visit users_path
   end
 
-  context 'looking at a normal user' do
+  context 'when looking at a normal user' do
     before do
       @button_user = page.find(id: "btn-user-#{user.id}")
       @button_employee = page.find(id: "btn-employee-#{user.id}")
@@ -27,7 +27,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       expect(@button_admin[:class]).not_to include 'primary'
     end
 
-    context 'clicking the employee button' do
+    context 'when clicking the employee button' do
       before do
         @button_employee.click
         user.reload
@@ -43,7 +43,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       end
     end
 
-    context 'clicking the admin button' do
+    context 'when clicking the admin button' do
       before do
         @button_admin.click
         user.reload
@@ -60,7 +60,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
     end
   end
 
-  context 'looking at an employee' do
+  context 'when looking at an employee' do
     before do
       @button_user = page.find(id: "btn-user-#{employee.id}")
       @button_employee = page.find(id: "btn-employee-#{employee.id}")
@@ -73,7 +73,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       expect(@button_admin[:class]).not_to include 'primary'
     end
 
-    context 'clicking the user button' do
+    context 'when clicking the user button' do
       before do
         @button_user.click
         employee.reload
@@ -89,7 +89,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
       end
     end
 
-    context 'clicking the admin button' do
+    context 'when clicking the admin button' do
       before do
         @button_admin.click
         employee.reload
@@ -106,7 +106,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
     end
   end
 
-  context 'looking at an admin' do
+  context 'when looking at an admin' do
     before do
       @button_user = page.find(id: "btn-user-#{admin.id}")
       @button_employee = page.find(id: "btn-employee-#{admin.id}")
@@ -146,7 +146,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
       end
 
-      context 'clicking the employee button' do
+      context 'when clicking the employee button' do
         before do
           @button_employee.click
           admin.reload
@@ -193,7 +193,7 @@ RSpec.describe 'users/index.html.erb', type: :feature do
         end
       end
 
-      context 'clicking the employee button' do
+      context 'when clicking the employee button' do
         before do
           @button_employee.click
           admin.reload
