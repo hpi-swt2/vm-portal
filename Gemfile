@@ -43,7 +43,7 @@ gem 'devise'
 gem 'pundit'
 
 # Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
-gem 'bootstrap', '~> 4.1.3'
+gem 'bootstrap', '~> 4.3.1'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'jquery-rails'
