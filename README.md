@@ -10,8 +10,7 @@ dev    | [![Build Status](https://travis-ci.com/hpi-swt2/vm-portal.svg?branch=de
 ## Deployment
 
 The application requires access to internal resources, which are not directly available from the general internet.
-Therefore, the application is deployed on university servers. Both the 'dev' and 'master' branch are deployed:
-* master: http://hart.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547334-011e36636240414faf7c51e1.svg)](https://stats.uptimerobot.com/j8DADFQnv)
+Therefore, the application is deployed on university servers.
 * dev: http://hart-dev.epic-hpi.de/ [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m781547337-b65c7b3660b7a0ddeee7c5c5.svg)](https://stats.uptimerobot.com/j8DADFQnv)
 
 An overview of the status of all involved systems is available here: https://stats.uptimerobot.com/j8DADFQnv
