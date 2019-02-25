@@ -24,6 +24,8 @@
         <%= form.labeled_text_field 'User', :vsphere_server_user %>
 
         <%= form.labeled_password_field 'Password', :vsphere_server_password %>
+        
+        <%= form.labeled_text_field 'Root Folder', :vsphere_root_folder, description: 'Leave empty to use "/"' %>
       </div>
     </div>
 
