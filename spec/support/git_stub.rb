@@ -16,8 +16,8 @@ def create_git_stub
 
   allow(GitHelper).to receive(:repository_path).and_return(File.join(Rails.root, 'private', repository_name))
   path = Puppetscript.puppet_script_path
-  node_path = File.join path, 'Node'
-  name_path = File.join path, 'Name'
+  node_path = Puppetscript.nodes_path
+  classes_path = Puppetscript.classes_path
 
   git_class = class_double('Git')
               .as_stubbed_const(transfer_nested_constants: true)
@@ -25,7 +25,7 @@ def create_git_stub
   allow(git_class).to receive(:clone) do
     FileUtils.mkdir_p(path) unless File.exist?(path)
     FileUtils.mkdir_p(node_path) unless File.exist?(node_path)
-    FileUtils.mkdir_p(name_path) unless File.exist?(name_path)
+    FileUtils.mkdir_p(classes_path) unless File.exist?(classes_path)
     git
   end
 
