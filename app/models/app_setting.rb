@@ -6,7 +6,8 @@ class AppSetting < ApplicationRecord
   validates :github_user_name, :git_repository_name, :git_repository_url, presence: true
   validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
   validates :vm_archivation_timeout, numericality: { greater_than_or_equal_to: 0 }
-  validates :puppet_init_path, :puppet_nodes_path, :puppet_classes_path, format: { with: %r{\A\/?(?:[0-9a-zA-Z_-]+\/?)*\z}, message: 'has to be a valid UNIX file path' }
+  validates :puppet_init_path, :puppet_nodes_path, :puppet_classes_path,
+            format: { with: %r{\A\/?(?:[0-9a-zA-Z_-]+\/?)*\z}, message: 'has to be a valid UNIX file path' }
   after_commit :apply_settings, on: :update
 
   def self.instance

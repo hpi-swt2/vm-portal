@@ -16,6 +16,19 @@
   <div class="container-fluid styled-form">
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
+        <h5>vSphere Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
+
+        <%= form.labeled_text_field 'User', :vsphere_server_user %>
+
+        <%= form.labeled_password_field 'Password', :vsphere_server_password %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
         <h5>Git Settings</h5>
       </div>
       <div class="col-6">
@@ -31,21 +44,8 @@
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
-        <h5>vSphere Settings</h5>
-      </div>
-      <div class="col-6">
-        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
-
-        <%= form.labeled_text_field 'User', :vsphere_server_user %>
-
-        <%= form.labeled_password_field 'Password', :vsphere_server_password %>
-      </div>
-    </div>
-
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
         <h5>Puppet Settings</h5>
-        Please specify the path relative
+        Please specify the path relative to the git root
       </div>
       <div class="col-6">
         <%= form.labeled_text_field 'Init.pp Path', :puppet_init_path %>
