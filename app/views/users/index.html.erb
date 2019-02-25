@@ -1,5 +1,4 @@
 <h1>Users</h1>
-<small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
 <input class="filter-box" type="text" id="filter_users" onkeyup="filter_table('filter_users', 'users', document)" placeholder="Search">
 
@@ -19,6 +18,9 @@
         <td><%= user.email %></td>
         <% if current_user.admin? %>
           <td data-filter-value="<%= user.role %>">
+            <!-- add a hidden HTML element as the first element that will be used for sorting -->
+            <p class="d-none"><%= user.role %></p>
+
             <div class="btn-group
                         border
                         border-<%= if last_admin?(user) && current_user?(user) then 'secondary' else 'primary' end%>
@@ -49,8 +51,3 @@
     <% end %>
   </tbody>
 </table>
-
-<!-- Minified script sources for sortable tables -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
-      xmlns="http://www.w3.org/1999/html">
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
