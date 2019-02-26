@@ -94,6 +94,7 @@ class User < ApplicationRecord
     all.each do |user|
       return user if user.human_readable_identifier.casecmp(mail_id).zero?
     end
+    nil
   end
 
   def vms
