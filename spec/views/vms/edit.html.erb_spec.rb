@@ -7,7 +7,10 @@ RSpec.describe 'vms/edit.html.erb', type: :view do
     v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
   end
 
+  let(:current_user) { FactoryBot.create :user }
+
   before do
+    sign_in current_user
     assign(:vm, vm)
     render
   end
