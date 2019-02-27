@@ -22,6 +22,18 @@
       <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control', value: @description %>
   </div>
 
+  <% if current_user.admin? %>
+    <div class="field">
+      <%= form.label :ip, "IP" %>
+      <%= form.text_field :ip, class: 'form-control', value: @ip %>
+    </div>
+
+    <div class="field">
+      <%= form.label :dns, "DNS" %>
+      <%= form.text_field :dns, class: 'form-control', value: @dns %>
+    </div>
+  <%end  %>
+
   <div class="actions">
     <%= form.submit 'Update VM information', class: "btn btn-primary" %>
   </div>

@@ -46,6 +46,8 @@ class VmsController < ApplicationController
     @sudo_user_ids = @vm.sudo_users.map(&:id)
     @non_sudo_user_ids = @vm.users.map(&:id)
     @description = @vm.ensure_config.description
+    @ip = @vm.ensure_config.ip
+    @dns = @vm.ensure_config.dns
   end
 
   def update
@@ -55,6 +57,8 @@ class VmsController < ApplicationController
     @vm.sudo_users = info_params[:sudo_user_ids]
     @vm.users = info_params[:non_sudo_user_ids]
     @vm.ensure_config.description = info_params[:description]
+    @ip = @vm.ensure_config.ip = info_params[:ip]
+    @dns = @vm.ensure_config.dns = info_params[:dns]
     unless @vm.config.save
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
@@ -189,7 +193,7 @@ class VmsController < ApplicationController
   end
 
   def info_params
-    params.require(:vm_info).permit(:description, sudo_user_ids: [], non_sudo_user_ids: [])
+    params.require(:vm_info).permit(:description, :ip, :dns, sudo_user_ids: [], non_sudo_user_ids: [])
   end
 
   def config_params
