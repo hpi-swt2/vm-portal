@@ -90,8 +90,8 @@ module Puppetscript
 
     admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
     users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
-    values['admins'] = admins.map { |admin| User.from_mail_identifier(admin) }
-    values['users'] = users.map { |user| User.from_mail_identifier(user) }
+    values[:admins] = admins.map { |admin| User.from_mail_identifier(admin) }.compact
+    values[:users] = users.map { |user| User.from_mail_identifier(user) }.compact
     values
   end
 
