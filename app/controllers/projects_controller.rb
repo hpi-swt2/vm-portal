@@ -27,7 +27,7 @@ class ProjectsController < ApplicationController
       redirect_to action: :index
       @project.responsible_users.each do |each|
         each.notify('Project created',
-                    "The project #{@project.name} with you as the responsible has been created: " +
+                    "The project #{@project.name} with you as the responsible has been created.",
                     url_for(controller: :projects, action: 'show', id: @project.id))
       end
     else

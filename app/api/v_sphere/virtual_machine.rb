@@ -286,7 +286,7 @@ module VSphere
 
     # this method should return all users, including the sudo users
     def users
-
+      users = []
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           remote_users = Puppetscript.read_node_file(name)

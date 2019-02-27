@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
-  before_action :set_notification, only: %i[show edit update destroy mark_as_read]
+  before_action :set_notification, only: %i[show edit update destroy mark_as_read destroy_and_redirect]
 
   # GET /notifications
   # GET /notifications.json
@@ -38,6 +38,12 @@ class NotificationsController < ApplicationController
       format.html { redirect_back fallback_location: notifications_url }
       format.json { head :no_content }
     end
+  end
+
+  def destroy_and_redirect
+    link = @notification.link
+    @notification.destroy
+    redirect_to link
   end
 
   def mark_as_read

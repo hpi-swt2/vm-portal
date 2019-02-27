@@ -19,13 +19,19 @@ class DashboardController < ApplicationController
 
   def initialize_vm_categories
     @vms = VSphere::VirtualMachine.rest
-    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @archivable = VSphere::VirtualMachine.pending_archivation.select{ |vm| vm.archivable? }
+    @revivable = VSphere::VirtualMachine.pending_revivings
   end
 
   def filter_vm_categories(user)
     user_vms = VSphere::VirtualMachine.user_vms(user)
     @vms = @vms.select { |vm| user_vms.include?(vm) }
-    @pending_archivation_vms = @pending_archivation_vms.select { |vm| user_vms.include?(vm) }
+    @archivable = @archivable.select { |vm| user_vms.include?(vm) }
+    @revivable = @revivable.select { |vm| user_vms.include?(vm) }
+  end
+
+  def max_shown_vms
+    10
   end
 
   def number_of_notifications

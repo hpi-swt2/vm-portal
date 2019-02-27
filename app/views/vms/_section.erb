@@ -1,0 +1,6 @@
+<% if should_be_shown vms %>
+  <h2 id=<%= id %>>Archived machines</h2>
+
+  <%= render 'table', {id: 'vms_' + id, vms: vms, buttons: buttons} %>
+
+<% end %>
