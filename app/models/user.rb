@@ -51,14 +51,15 @@ class User < ApplicationRecord
   end
 
   # notifications
-  def notify(title, message)
-    notify_slack("*#{title}*\n#{message}")
+  def notify(title, message, link)
+    notify_slack("*#{title}*\n#{message+link}")
 
-    NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: message.to_s).notify_email.deliver_now if email_notifications
+    NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message+link).to_s).notify_email.deliver_now if email_notifications
 
     notification = Notification.new title: title, message: message
     notification.user_id = id
     notification.read = false
+    notification.link = link
     notification.save # saving might fail, but there is no useful way to handle the error.
   end
 

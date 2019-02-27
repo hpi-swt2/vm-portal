@@ -113,8 +113,8 @@ end %>
           <th colspan="2" ><h4 class="mb-0">Users</h4></th>
         </tr>
         <% (@vm.users + @vm.sudo_users + @vm.responsible_users).uniq.each do |user| %>
-          <tr>
-            <td>
+        <tr>
+          <td>
             <%= link_to user.name, user %>
             <% if @vm.sudo_users.include? user %>
               <span class="badge badge-info">sudo user</span>
@@ -122,9 +122,9 @@ end %>
             <% if @vm.responsible_users.include? user %>
               <span class="badge badge-primary">responsible</span>
             <% end %>
-            </td>
-          </tr>
-        <% end %>
+          </td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>
