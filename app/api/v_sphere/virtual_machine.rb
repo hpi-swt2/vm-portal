@@ -69,7 +69,7 @@ module VSphere
 
     def self.includes_user?(vm_name, user)
       users = Puppetscript.read_node_file(vm_name)
-      users = users['admins'] + users['users'] | []
+      users = users[:admins] + users[:users] | []
       users.include? user
     end
 
@@ -290,7 +290,7 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           remote_users = Puppetscript.read_node_file(name)
-          users = remote_users['users'] || []
+          users = remote_users[:users] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
@@ -310,7 +310,7 @@ module VSphere
 
     def user_name_and_node_script(ids)
       all_users = Puppetscript.read_node_file(name)
-      sudo_users = all_users['admins']
+      sudo_users = all_users[:admins]
       new_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, sudo_users, new_users)
@@ -347,7 +347,7 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           users = Puppetscript.read_node_file(name)
-          admins = users['admins'] || []
+          admins = users[:admins] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
@@ -357,7 +357,7 @@ module VSphere
 
     def sudo_name_and_node_script(ids)
       all_users = Puppetscript.read_node_file(name)
-      users = all_users['users']
+      users = all_users[:users]
       new_sudo_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, new_sudo_users, users)
