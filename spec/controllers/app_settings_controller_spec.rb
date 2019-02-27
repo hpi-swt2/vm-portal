@@ -38,6 +38,7 @@ RSpec.describe AppSettingsController, type: :controller do
       vsphere_server_ip: '127.0.0.1',
       vsphere_server_user: 'gozsdgfou2!§hdsfj',
       vsphere_server_password: '6§$%95r9v932',
+      vsphere_root_folder: 'my-root-folder-----------------------------------------------------------------', # 79 chars are allowed
       email_notification_smtp_address: 'smtp.email.com',
       email_notification_smtp_port: '1234',
       email_notification_smtp_domain: 'email.com',
@@ -51,7 +52,8 @@ RSpec.describe AppSettingsController, type: :controller do
     valid_attributes.merge(
       github_user_email: 'helloWorld',
       email_notification_smtp_port: 'NoInteger',
-      vm_archivation_timeout: 'NoInteger2'
+      vm_archivation_timeout: 'NoInteger2',
+      vsphere_root_folder: 'ThisIsATooLongStringThatContains/\%WhichIsInvalid...............................' # 80 chars are not allowed
     )
   end
 
@@ -83,15 +85,21 @@ RSpec.describe AppSettingsController, type: :controller do
       end
 
       it 'updates the mailer settings' do
-        Rails.configuration.action_mailer.smtp_settings[:address] = 'Hello World!'
+        ActionMailer::Base.smtp_settings[:address] = 'Hello World!'
         put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
-        expect(Rails.configuration.action_mailer.smtp_settings[:address]).to eql(valid_attributes[:email_notification_smtp_address])
+        expect(ActionMailer::Base.smtp_settings[:address]).to eql(valid_attributes[:email_notification_smtp_address])
       end
 
       it 'resets the git settings' do
         allow(GitHelper).to receive(:reset)
         put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
         expect(GitHelper).to have_received(:reset)
+      end
+
+      it 'can update the vSphere root folder' do
+        put :update, params: { id: AppSetting.instance.to_param, app_setting: valid_attributes }
+        expect(AppSetting.instance.vsphere_root_folder).to eql(valid_attributes[:vsphere_root_folder])
+        AppSetting.instance.update!(vsphere_root_folder: '') # Make sure that we use the default root folder during the tests
       end
     end
 

@@ -58,9 +58,10 @@ module VSphere
     end
 
     def self.prepare_vm_names
-      return [] unless File.exist?(File.join(Puppetscript.puppet_script_path, 'Node'))
+      nodes_path = Puppetscript.nodes_path
+      return [] unless File.exist?(nodes_path)
 
-      files = Dir.entries(File.join(Puppetscript.puppet_script_path, 'Node'))
+      files = Dir.entries(nodes_path)
       files.map! { |file| file[(5..file.length - 4)] }
       files.reject!(&:nil?)
       files
@@ -68,7 +69,7 @@ module VSphere
 
     def self.includes_user?(vm_name, user)
       users = Puppetscript.read_node_file(vm_name)
-      users = users['admins'] + users['users'] | []
+      users = users[:admins] + users[:users] | []
       users.include? user
     end
 
@@ -289,7 +290,7 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           remote_users = Puppetscript.read_node_file(name)
-          users = remote_users['users'] || []
+          users = remote_users[:users] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
@@ -307,17 +308,9 @@ module VSphere
       end
     end
 
-    def name_path
-      File.join('Name', name + '.pp')
-    end
-
-    def node_path
-      File.join('Node', 'node-' + name + '.pp')
-    end
-
     def user_name_and_node_script(ids)
       all_users = Puppetscript.read_node_file(name)
-      sudo_users = all_users['admins']
+      sudo_users = all_users[:admins]
       new_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, sudo_users, new_users)
@@ -327,13 +320,26 @@ module VSphere
     def users=(ids)
       GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
+        write_node_and_class_file(git_writer, name_script, node_script)
       end
     rescue Git::GitExecuteError => e
       Rails.logger.error(e)
+    end
+
+    def sudo_users=(ids)
+      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
+        name_script, node_script = sudo_name_and_node_script(ids)
+        write_node_and_class_file(git_writer, name_script, node_script)
+      end
+    rescue Git::GitExecuteError => e
+      logger.error(e)
+    end
+
+    def write_node_and_class_file(git_writer, name_script, node_script)
+      git_writer.write_file(Puppetscript.class_file_name(name), name_script)
+      git_writer.write_file(Puppetscript.node_file_name(name), node_script)
+      message = commit_message(git_writer)
+      git_writer.save(message)
     end
 
     def sudo_users
@@ -341,7 +347,7 @@ module VSphere
       begin
         GitHelper.open_repository Puppetscript.puppet_script_path do
           users = Puppetscript.read_node_file(name)
-          admins = users['admins'] || []
+          admins = users[:admins] || []
         end
       rescue Git::GitExecuteError => e
         Rails.logger.error(e)
@@ -351,23 +357,11 @@ module VSphere
 
     def sudo_name_and_node_script(ids)
       all_users = Puppetscript.read_node_file(name)
-      users = all_users['users']
+      users = all_users[:users]
       new_sudo_users = User.where(id: ids)
       name_script = Puppetscript.name_script(name)
       node_script = Puppetscript.node_script(name, new_sudo_users, users)
       [name_script, node_script]
-    end
-
-    def sudo_users=(ids)
-      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
-        name_script, node_script = sudo_name_and_node_script(ids)
-        git_writer.write_file(name_path, name_script)
-        git_writer.write_file(node_path, node_script)
-        message = commit_message(git_writer)
-        git_writer.save(message)
-      end
-    rescue Git::GitExecuteError => e
-      logger.error(e)
     end
 
     # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms

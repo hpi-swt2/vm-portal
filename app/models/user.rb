@@ -95,6 +95,7 @@ class User < ApplicationRecord
     all.each do |user|
       return user if user.human_readable_identifier.casecmp(mail_id).zero?
     end
+    nil
   end
 
   def vms
@@ -124,7 +125,7 @@ class User < ApplicationRecord
 
   def update_repository
     GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
-      git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
+      git_writer.write_file(Puppetscript.init_file_name, generate_puppet_init_script)
       message = if git_writer.added?
                   'Create init.pp'
                 else

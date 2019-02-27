@@ -16,6 +16,21 @@
   <div class="container-fluid styled-form">
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
+        <h5>vSphere Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
+
+        <%= form.labeled_text_field 'User', :vsphere_server_user %>
+
+        <%= form.labeled_password_field 'Password', :vsphere_server_password %>
+        
+        <%= form.labeled_text_field 'Root Folder', :vsphere_root_folder, description: 'Leave empty to use "/"' %>
+      </div>
+    </div>
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
         <h5>Git Settings</h5>
       </div>
       <div class="col-6">
@@ -31,14 +46,15 @@
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
-        <h5>vSphere Settings</h5>
+        <h5>Puppet Settings</h5>
+        Please specify the path relative to the git root
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
+        <%= form.labeled_text_field 'Init.pp Path', :puppet_init_path %>
 
-        <%= form.labeled_text_field 'User', :vsphere_server_user %>
+        <%= form.labeled_text_field 'Classes Path', :puppet_classes_path %>
 
-        <%= form.labeled_text_field 'Password', :vsphere_server_password %>
+        <%= form.labeled_text_field 'Nodes Path', :puppet_nodes_path %>
       </div>
     </div>
 
@@ -55,7 +71,7 @@
 
         <%= form.labeled_text_field 'User', :email_notification_smtp_user %>
 
-        <%= form.labeled_text_field 'Password', :email_notification_smtp_password %>
+        <%= form.labeled_password_field 'Password', :email_notification_smtp_password %>
       </div>
     </div>
 

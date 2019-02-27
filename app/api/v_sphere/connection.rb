@@ -37,6 +37,7 @@ module VSphere
     end
 
     def configured?
+      initialize_settings
       not_empty?(@server_ip) && not_empty?(@server_user) && not_empty?(@server_password)
     end
 
@@ -50,6 +51,7 @@ module VSphere
       @server_ip = AppSetting.instance.vsphere_server_ip
       @server_user = AppSetting.instance.vsphere_server_user
       @server_password = AppSetting.instance.vsphere_server_password
+      @root_folder_name = AppSetting.instance.vsphere_root_folder
     end
 
     def connect
@@ -58,7 +60,8 @@ module VSphere
 
       @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
-      @vm_folder = VSphere::Folder.new @dc.vmFolder
+      @vm_folder = VSphere::Folder.new(@dc.vmFolder)
+      @vm_folder = @vm_folder.ensure_subfolder(@root_folder_name) if not_empty?(@root_folder_name)
       @cluster_folder = VSphere::Folder.new @dc.hostFolder
     end
   end

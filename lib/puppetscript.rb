@@ -81,7 +81,7 @@ module Puppetscript
   end
 
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
-    path = File.join(repository_path, 'Node', 'node-' + vm_name + '.pp')
+    path = File.join(repository_path, node_file_name(vm_name))
     values = { admins: [], users: [] }
     return values unless File.exist?(path)
 
@@ -90,12 +90,36 @@ module Puppetscript
 
     admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
     users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
-    values['admins'] = admins.map { |admin| User.from_mail_identifier(admin) }
-    values['users'] = users.map { |user| User.from_mail_identifier(user) }
+    values[:admins] = admins.map { |admin| User.from_mail_identifier(admin) }.compact
+    values[:users] = users.map { |user| User.from_mail_identifier(user) }.compact
     values
   end
 
   def self.puppet_script_path
     GitHelper.repository_path
+  end
+
+  def self.init_file_name
+    File.join(AppSetting.instance.puppet_init_path, 'init.pp')
+  end
+
+  def self.node_file_name(vm_name)
+    File.join(AppSetting.instance.puppet_nodes_path, 'node-' + vm_name + '.pp')
+  end
+
+  def self.class_file_name(vm_name)
+    File.join(AppSetting.instance.puppet_classes_path, vm_name + '.pp')
+  end
+
+  def self.init_path
+    File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_init_path)
+  end
+
+  def self.nodes_path
+    File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_nodes_path)
+  end
+
+  def self.classes_path
+    File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_classes_path)
   end
 end
