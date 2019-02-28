@@ -136,7 +136,7 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
 
   <% if locals[:updating] %>
     <div id="acceptAndReject">
@@ -147,7 +147,7 @@
   <% else %>
     <div class="actions">
       <%= form.submit class: "btn btn-primary"%>
-      <%= button_to 'Back', requests_path, class:"btn" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 <% end %>
@@ -160,7 +160,7 @@
     </div>
     <div class="actions">
       <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-      <%= button_to 'Back', requests_path, class:"btn" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 <% end %>
