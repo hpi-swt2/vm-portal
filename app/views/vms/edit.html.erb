@@ -1,6 +1,8 @@
+<% require './app/assets/helpers/hart_form_builder' %>
+
 <h1>Edit VM information of <span style="font-style: italic;"><%= @vm.name %></span></h1>
 
-<%= form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @vm.name }, method: :patch, local: true) do |form| %>
+<%= form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @vm.name }, method: :patch, local: true, builder: HartFormBuilder) do |form| %>
   <div class="field">
     <%= form.label :sudo_user_ids, "Users with sudo rights" %>
     <%= form.select :sudo_user_ids,
@@ -23,15 +25,8 @@
   </div>
 
   <% if current_user.admin? %>
-    <div class="field">
-      <%= form.label :ip, "IP" %>
-      <%= form.text_field :ip, class: 'form-control', value: @ip %>
-    </div>
-
-    <div class="field">
-      <%= form.label :dns, "DNS" %>
-      <%= form.text_field :dns, class: 'form-control', value: @dns %>
-    </div>
+    <%= form.labeled_text_field 'IP', :ip, value: @ip %>
+    <%= form.labeled_text_field 'DNS', :dns, value: @dns %>
   <%end  %>
 
   <div class="actions">
