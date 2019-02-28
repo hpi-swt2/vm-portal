@@ -6,7 +6,7 @@
 #   from 'my_url'
 #   delete :destroy, params: { id: my_model.to_param }
 #   expect(response).to redirect_to('my_url')
-# 
+#
 
 module RedirectBack
   def from(url)
