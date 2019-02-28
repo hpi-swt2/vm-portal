@@ -69,7 +69,7 @@ class VmsController < ApplicationController
 
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within #{ArchivationRequest.timeout_readable}.\n",
+                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within #{ArchivationRequest.timeout_readable}.",
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
@@ -85,7 +85,7 @@ class VmsController < ApplicationController
 
     User.admin.each do |each|
       each.notify("VM #{@vm.name} has been requested to be revived",
-                  "The VM has to be revived.\n",
+                  'The VM has to be revived.',
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
@@ -106,7 +106,7 @@ class VmsController < ApplicationController
 
     # inform users
     @vm.users.each do |each|
-      each.notify("VM #{@vm.name} has been archived", "", url_for(controller: :vms, action: 'show', id: @vm.name))
+      each.notify("VM #{@vm.name} has been archived", '', url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
     redirect_to controller: :vms, action: 'index', id: @vm.name
@@ -118,7 +118,7 @@ class VmsController < ApplicationController
     @vm.power_on
 
     @vm.users.each do |each|
-      each.notify("VM #{@vm.name} has been revived", "", url_for(controller: :vms, action: 'show', id: @vm.name))
+      each.notify("VM #{@vm.name} has been revived", '', url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
     redirect_to controller: :vms, action: 'index', id: @vm.name

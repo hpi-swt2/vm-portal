@@ -19,7 +19,7 @@ class DashboardController < ApplicationController
 
   def initialize_vm_categories
     @vms = VSphere::VirtualMachine.rest
-    @archivable = VSphere::VirtualMachine.pending_archivation.select{ |vm| vm.archivable? }
+    @archivable = VSphere::VirtualMachine.pending_archivation.select(&:archivable?)
     @revivable = VSphere::VirtualMachine.pending_revivings
   end
 
