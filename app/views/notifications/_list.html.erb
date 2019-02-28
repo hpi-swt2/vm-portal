@@ -4,7 +4,7 @@
     <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
     <div class="<%= class_names %>" style="width:100%">
       <div class="card-body">
-        <%= link_to destroy_and_redirect_notification_path(notification), {controller: notification, action: 'destroy_and_redirect', method: :post} do %>
+        <%= link_to destroy_and_redirect_notification_path(notification), {controller: notification, action: 'destroy_and_redirect', method: :delete} do %>
           <h5 class="card-title">
             <%= notification.title %>
           </h5>

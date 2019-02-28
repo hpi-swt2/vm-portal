@@ -30,7 +30,7 @@ RSpec.describe NotificationsController, type: :controller do
     it 'destroys the notification' do
       notification = Notification.create!(valid_attributes)
       expect do
-        post :destroy_and_redirect, params: { id: notification.to_param }
+        delete :destroy_and_redirect, params: { id: notification.to_param }
       end.to change(Notification, :count).by(-1)
     end
   end
