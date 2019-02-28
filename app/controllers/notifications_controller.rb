@@ -43,7 +43,14 @@ class NotificationsController < ApplicationController
   def destroy_and_redirect
     link = @notification.link
     @notification.destroy
-    redirect_to link
+    respond_to do |format|
+      if link.nil? || link.empty?
+        format.html { redirect_back fallback_location: notifications_url }
+      else
+        format.html { redirect_to link }
+      end
+      format.json { head :no_content }
+    end
   end
 
   def mark_as_read
