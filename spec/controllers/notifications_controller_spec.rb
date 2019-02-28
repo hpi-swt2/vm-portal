@@ -3,13 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe NotificationsController, type: :controller do
+  let(:user) { FactoryBot.create :user }
   let(:valid_attributes) do
     {
       title: 'title',
       message: 'message',
       link: 'https://www.google.com',
-      user: FactoryBot.create(:user)
+      user: user
     }
+  end
+
+  before do
+    sign_in user
   end
 
   describe 'DELETE #destroy' do
