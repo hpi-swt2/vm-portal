@@ -7,7 +7,20 @@ RSpec.describe UsersController, type: :controller do
   let(:admin) { FactoryBot.create :admin }
 
   describe 'GET #index' do
-    it 'returns http success' do
+    it 'redirects normal users' do
+      sign_in user
+      get :index
+      expect(response).to have_http_status(302) # redirect
+    end
+
+    it 'returns http success for normal users in development environment' do
+      sign_in user
+      allow(Rails.env).to receive(:development?).and_return(true)
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'returns http success for admins' do
       sign_in admin
       get :index
       expect(response).to have_http_status(:success)
