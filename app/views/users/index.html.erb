@@ -12,9 +12,7 @@
   <thead>
     <th><%= User.human_attribute_name('name') %></th>
     <th><%= User.human_attribute_name('email') %></th>
-    <% if is_allowed_to_see_roles %>
-      <th><%= User.human_attribute_name('role') %></th>
-    <% end %>
+    <th><%= User.human_attribute_name('role') %></th>
     <th><%= User.human_attribute_name('last_sign_in_at') %></th>
     <th></th>
   </thead>
@@ -23,15 +21,14 @@
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
-        <% if is_allowed_to_see_roles %>
           <td>
             <div class="btn-group
                         border
-                        border-<%= if is_not_editable then 'secondary' else 'primary' end%>
+                        border-<%= if is_not_editable_for current_user then 'secondary' else 'primary' end%>
                         rounded"
                  role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if is_not_editable %>
+                <% if is_not_editable_for current_user %>
                   <button class="btn
                                  btn-<%= if user.role == role then 'secondary' else 'light' end %>
                                  disabled"
@@ -50,7 +47,6 @@
                 <% end %>
               <% end %>
             </div>
-        <% end %>
         <td><%= user.current_sign_in_at %></td>
       </tr>
     <% end %>
