@@ -139,27 +139,16 @@
   </div>
 
   <% if locals[:updating] %>
-    <div id="acceptAndReject">
-      <div class="actions">
+    <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
+        <%= rejection_form.label :rejection_information %>
+        <%= rejection_form.text_area :rejection_information, class: 'form-control' %>
         <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
-      </div>
-    </div>
+        <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
+        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+    <% end %>
   <% else %>
     <div class="actions">
-      <%= form.submit class: "btn btn-primary"%>
-      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-    </div>
-  <% end %>
-<% end %>
-
-<% if locals[:updating] %>
-  <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
-    <div class="field form-group">
-      <%= rejection_form.label :rejection_information %>
-      <%= rejection_form.text_field :rejection_information, class: 'form-control' %>
-    </div>
-    <div class="actions">
-      <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
+      <%= form.submit class: "btn btn-primary inline-class"%>
       <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
