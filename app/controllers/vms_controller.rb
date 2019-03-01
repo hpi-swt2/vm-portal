@@ -54,8 +54,8 @@ class VmsController < ApplicationController
     notify_changed_users(@vm.users.map(&:id), info_params[:non_sudo_user_ids].map(&:to_i), false, @vm.name)
     @vm.sudo_users = info_params[:sudo_user_ids]
     @vm.users = info_params[:non_sudo_user_ids]
-    @vm.ensure_config.update config_params
-    unless @vm.config.save
+
+    unless @vm.ensure_config.update config_params
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
     end
@@ -152,10 +152,6 @@ class VmsController < ApplicationController
     @vm.reset_vm
     redirect_back(fallback_location: root_path)
   end
-
-  # This controller doesn't use strong parameters
-  # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
-  # Because no Active Record model is being wrapped
 
   private
 
