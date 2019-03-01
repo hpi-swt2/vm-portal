@@ -21,12 +21,12 @@
 
   <div class="field">
       <%= form.label :description, 'Description' %>
-      <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control', value: @description %>
+      <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control', value: @configuration.description %>
   </div>
 
   <% if current_user.admin? %>
-    <%= form.labeled_text_field 'IP', :ip, value: @ip %>
-    <%= form.labeled_text_field 'DNS', :dns, value: @dns %>
+    <%= form.labeled_text_field 'IP', :ip, value: @configuration.ip %>
+    <%= form.labeled_text_field 'DNS', :dns, value: @configuration.dns %>
   <%end  %>
 
   <div class="actions">
