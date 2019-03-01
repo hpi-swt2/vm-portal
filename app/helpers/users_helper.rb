@@ -13,4 +13,12 @@ module UsersHelper
   def current_user?(user)
     user == current_user
   end
+
+  def is_not_editable
+    (last_admin?(user) && current_user?(user)) && !Rails.env.development?
+  end
+
+  def is_allowed_to_see_roles
+    current_user.admin? || Rails.env.development?
+  end
 end

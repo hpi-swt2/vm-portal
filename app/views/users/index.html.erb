@@ -12,7 +12,7 @@
   <thead>
     <th><%= User.human_attribute_name('name') %></th>
     <th><%= User.human_attribute_name('email') %></th>
-    <% if current_user.admin? || Rails.env.development? %>
+    <% if is_allowed_to_see_roles %>
       <th><%= User.human_attribute_name('role') %></th>
     <% end %>
     <th><%= User.human_attribute_name('last_sign_in_at') %></th>
@@ -23,15 +23,15 @@
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
-        <% if current_user.admin? || Rails.env.development? %>
+        <% if is_allowed_to_see_roles %>
           <td>
             <div class="btn-group
                         border
-                        border-<%= if (last_admin?(user) && current_user?(user)) && !Rails.env.development? then 'secondary' else 'primary' end%>
+                        border-<%= if is_not_editable then 'secondary' else 'primary' end%>
                         rounded"
                  role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if (last_admin?(user) && current_user?(user)) && !Rails.env.development? %>
+                <% if is_not_editable %>
                   <button class="btn
                                  btn-<%= if user.role == role then 'secondary' else 'light' end %>
                                  disabled"
