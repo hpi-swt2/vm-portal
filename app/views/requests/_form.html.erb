@@ -152,10 +152,8 @@
         <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
       <% end %>
     <% else %>
-      <div class="actions">
-        <%= form.submit class: "btn btn-primary inline-class" %>
-        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-      </div>
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     <% end %>
   </div>
 <% end %>
