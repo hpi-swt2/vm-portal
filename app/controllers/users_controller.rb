@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   before_action :authenticate_current_user, only: %i[edit update]
   before_action :authenticate_current_user_or_admin, only: %i[show]
-  before_action :authenticate_admin, only: %i[index update_role], unless: -> {Rails.env.development?}
+  before_action :authenticate_admin, only: %i[index update_role], unless: -> { Rails.env.development? }
 
   def index
     @users = User.search(params[:search], params[:role])
@@ -49,5 +49,4 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     redirect_to dashboard_path, alert: I18n.t('authorization.unauthorized') unless current_user == @user || current_user&.admin?
   end
-
 end
