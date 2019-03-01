@@ -1,3 +1,5 @@
+<% require './app/assets/helpers/hart_form_builder' %>
+
 <%= form_with(model: request, local: true) do |form| %>
   <% if request.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">
@@ -139,9 +141,8 @@
   </div>
 
   <% if locals[:updating] %>
-    <%= form_with(model: request, url:{action: 'reject', id: request}, local: true) do |rejection_form| %>
-        <%= rejection_form.label :rejection_information %>
-        <%= rejection_form.text_area :rejection_information, class: 'form-control' %>
+    <%= form_with(model: request, url:{action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
+        <%= rejection_form.labeled_text_area 'Comment (for rejection)', :rejection_information %>
         <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
         <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
         <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
