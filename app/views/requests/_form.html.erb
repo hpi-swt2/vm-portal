@@ -148,7 +148,7 @@
   <% if locals[:updating] %>
     <div class="actions">
       <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
-        <%= rejection_form.labeled_text_field 'Comment (for rejection)', :rejection_information %>
+        <%= rejection_form.labeled_text_area 'Comment (for rejection)', :rejection_information %>
         <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
       <% end %>
       <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
