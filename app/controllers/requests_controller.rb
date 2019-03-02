@@ -47,7 +47,9 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     respond_to do |format|
-      if enough_resources? && @request.save
+      # check for validity first, before checking enough_resources?
+      # this is neccessary to ensure that the request contains all information needed for enough_resources?
+      if @request.valid? && enough_resources? && @request.save
         successful_save(format)
       else
         unsuccessful_action(format, :new)
