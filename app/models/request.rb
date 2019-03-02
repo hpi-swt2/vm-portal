@@ -21,7 +21,7 @@ class Request < ApplicationRecord
   enum status: %i[pending accepted rejected]
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
-            format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
+            format: { with: /\A[a-z0-9\-]+\z/, message: 'only lowercase letters, numbers and "-" are allowed' },
             uniqueness: true
   validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
