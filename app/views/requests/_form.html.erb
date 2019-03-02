@@ -144,14 +144,14 @@
       </div>
     </div>
 
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>Admin Review</h5>
-        Accept will create VM...
-      </div>
-      <div class="col-6">
-        <div class="form-group pb-4 mb-2">
-          <% if locals[:updating] %>
+    <% if locals[:updating] %>
+      <div class="row border-bottom mb-4 pb-2">
+        <div class="col">
+          <h5>Admin Review</h5>
+          Accept will create VM...
+        </div>
+        <div class="col-6">
+          <div class="form-group pb-2 mb-2">
             <div class="actions">
               <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
                 <%= rejection_form.labeled_text_area 'Comment', :rejection_information %>
@@ -160,15 +160,15 @@
               <%= form.submit 'Accept', id: 'acceptButton', class: "btn btn-primary" %>
               <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
             </div>
-          <% else %>
-            <div class="actions">
-              <%= form.submit class: "btn btn-primary" %>
-              <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-            </div>
-          <% end %>
+          </div>
         </div>
       </div>
-    </div>
+    <% else %>
+      <div class="actions">
+        <%= form.submit class: "btn btn-primary" %>
+        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
   </div>
 <% end %>
 
