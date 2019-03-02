@@ -143,19 +143,23 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <% if locals[:updating] %>
+  <% if locals[:updating] %>
+    <div class="actions">
       <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
-        <%= rejection_form.labeled_text_area 'Comment (for rejection)', :rejection_information %>
-        <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
+        <%= rejection_form.labeled_text_field 'Comment (for rejection)', :rejection_information %>
         <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
       <% end %>
-    <% else %>
+      <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+    </div>
+  <% else %>
+    <div class="actions">
       <%= form.submit class: "btn btn-primary" %>
       <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>
 
 <%= javascript_include_tag('request') %>
