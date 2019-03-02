@@ -144,21 +144,31 @@
       </div>
     </div>
 
-    <% if locals[:updating] %>
-      <div class="actions">
-        <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
-          <%= rejection_form.labeled_text_area 'Comment (for rejection)', :rejection_information %>
-          <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-        <% end %>
-        <%= form.submit 'Accept & Create', id: 'acceptButton', class: "btn btn-success" %>
-        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
+        <h5>Admin Review</h5>
+        Accept will create VM...
       </div>
-    <% else %>
-      <div class="actions">
-        <%= form.submit class: "btn btn-primary" %>
-        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+      <div class="col-6">
+        <div class="form-group pb-4 mb-2">
+          <% if locals[:updating] %>
+            <div class="actions">
+              <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
+                <%= rejection_form.labeled_text_area 'Comment', :rejection_information %>
+                <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
+              <% end %>
+              <%= form.submit 'Accept', id: 'acceptButton', class: "btn btn-success" %>
+              <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+            </div>
+          <% else %>
+            <div class="actions">
+              <%= form.submit class: "btn btn-primary" %>
+              <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
+            </div>
+          <% end %>
+        </div>
       </div>
-    <% end %>
+    </div>
   </div>
 <% end %>
 
