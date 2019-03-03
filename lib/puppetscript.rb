@@ -47,7 +47,7 @@ module Puppetscript
   def self.generic_node_script
     <<~NODE_SCRIPT
       class node_%s {
-              INIT_SCRIPT$admins = [%s]
+              $admins = [%s]
               $users = [%s]
 
               realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
