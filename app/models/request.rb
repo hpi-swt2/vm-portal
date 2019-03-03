@@ -23,6 +23,7 @@ class Request < ApplicationRecord
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' },
             uniqueness: true
+  validate :no_vm_in_vsphere_has_same_name
   validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
@@ -30,6 +31,10 @@ class Request < ApplicationRecord
   with_options if: :port_forwarding do |request|
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true
+  end
+
+  def no_vm_in_vsphere_has_same_name
+    errors.add('vSphere alreday has a VM with the same name') if VSphere::VirtualMachine.all.any? { |vm| vm.name.eql? :name }
   end
 
   def description_text(host_name)
