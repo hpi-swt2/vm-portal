@@ -21,7 +21,7 @@ module Puppetscript
   def self.name_script(name)
     puppet_script = generic_name_script
     vm_name_with_underscores = replace_dashes_with_underscores(name)
-    format(puppet_script, vm_name_with_underscores, vm_name_with_underscores, vm_name_with_underscores)
+    format(puppet_script, name, vm_name_with_underscores, vm_name_with_underscores)
   end
 
   def self.generic_init_script
