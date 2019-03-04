@@ -111,11 +111,11 @@ module VSphere
     end
 
     def shutdown_guest_os
-      @vm.ShutdownGuest.wait_for_completion if powered_on?
+      @vm.ShutdownGuest if powered_on?
     end
 
     def reboot_guest_os
-      @vm.RebootGuest.wait_for_completion
+      @vm.RebootGuest
     end
 
     # Power state testing
