@@ -24,19 +24,11 @@
           <td>
             <div class="btn-group
                         border
-                        border-<%= if is_not_editable_for current_user then 'secondary' else 'primary' end%>
+                        border-<%= if editable_for user then 'primary' else 'secondary' end%>
                         rounded"
                  role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if is_not_editable_for current_user %>
-                  <button class="btn
-                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
-                                 disabled"
-                          id= "btn-<%= role %>-<%= user.id %>"
-                  >
-                    <%= role.capitalize %>
-                  </button>
-                <% else %>
+                <% if editable_for user %>
                   <%= link_to role.capitalize,
                               update_role_user_path(user, role: role),
                               method: :patch,
@@ -44,6 +36,14 @@
                               class: "btn
                                       btn-#{if user.role == role then 'primary' else 'light' end}"
                   %>
+                <% else %>
+                  <button class="btn
+                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
+                                 disabled"
+                          id= "btn-<%= role %>-<%= user.id %>"
+                  >
+                    <%= role.capitalize %>
+                  </button>
                 <% end %>
               <% end %>
             </div>

@@ -13,7 +13,7 @@ module UsersHelper
     user == current_user
   end
 
-  def is_not_editable_for(user)
-    (last_admin?(user) && current_user?(user)) && !Rails.env.development?
+  def editable_for(user)
+    !last_admin?(user) || Rails.env.development?
   end
 end
