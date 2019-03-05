@@ -46,7 +46,7 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
     it 'does link to users list' do
       allow(Rails.env).to receive(:development?).and_return(true)
       render
-      expect(rendered).to have_link('Users', href: users_path)
+      expect(rendered).to have_link(href: users_path)
     end
   end
 
