@@ -1,10 +1,4 @@
-$primary: #0C415F;
-$danger: #a80833;
-$success: #d7e76f;
-$primary-active: #1f6993;
-$primary-hover: #1a5b82;
-
-@import "bootstrap";
+@import "application/custom_bootstrap";
 
 html, body {
   height: 100%;
