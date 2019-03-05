@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   before_action :authenticate_current_user, only: %i[edit update]
   before_action :authenticate_current_user_or_admin, only: %i[show]
+  # While the application is run in development mode, all users are granted access to the user settings
   before_action :authenticate_admin, only: %i[index update_role], unless: -> { Rails.env.development? }
 
   def index
