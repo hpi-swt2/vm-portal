@@ -111,10 +111,14 @@ module VSphere
     end
 
     def shutdown_guest_os
+      # Do not `wait_for_completion` here, as `ShutdownGuest` does not offer a useful return value
+      # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html#shutdownGuest
       @vm.ShutdownGuest if powered_on?
     end
 
     def reboot_guest_os
+      # Do not `wait_for_completion` here, as `RebootGuest` does not offer a useful return value
+      # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html#rebootGuest
       @vm.RebootGuest
     end
 
