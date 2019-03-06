@@ -43,4 +43,8 @@ module VmsHelper
       User.find(user_id).notify('User rights granted', "You have been made user on VM '#{vm_name}'") unless sudo_lists
     end
   end
+
+  def should_be_shown(vms_array)
+    !vms_array.nil? && !vms_array.empty?
+  end
 end

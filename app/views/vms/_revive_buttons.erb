@@ -1,0 +1,11 @@
+<% if current_user.admin? %>
+  <%= link_to '',
+              {controller: :vms, action: 'revive_vm', id: vm.name},
+              method: :post,
+              class: "btn-manage float-right arrow-up" %>
+<% else %>
+  <%= link_to '',
+              {controller: :vms, action: 'request_vm_revive', id: vm.name},
+              method: :post,
+              class: "btn-manage float-right arrow-up" %>
+<% end %>

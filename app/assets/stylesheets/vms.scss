@@ -39,9 +39,9 @@ h2{
   height: 1rem;
   width: 1rem;
   border-radius: 0.5rem;
-  float: left;
   vertical-align: middle;
   margin-right: 0.5rem;
+  display: inline-block;
 }
 
 .boot-time {
@@ -94,11 +94,4 @@ h2{
   text-decoration: none;
   color: black;
   filter: drop-shadow(2px 2px 1px $secondary);
-}
-
-.filter-box {
-  padding: 0.3rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  width: 20%;
 }
