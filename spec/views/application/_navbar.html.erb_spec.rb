@@ -40,6 +40,16 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
     end
   end
 
+  context 'when the current user is not an admin but in development mode' do
+    let(:current_user) { FactoryBot.create :user }
+
+    it 'does link to users list' do
+      allow(Rails.env).to receive(:development?).and_return(true)
+      render
+      expect(rendered).to have_link(href: users_path)
+    end
+  end
+
   context 'when the current user is an employee' do
     let(:current_user) { FactoryBot.create :employee }
 
