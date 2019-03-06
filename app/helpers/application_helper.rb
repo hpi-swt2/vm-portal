@@ -10,4 +10,8 @@ module ApplicationHelper
     type = :danger  if type == :error
     type
   end
+
+  def viewable_for(user)
+    user.admin? || Rails.env.development?
+  end
 end
