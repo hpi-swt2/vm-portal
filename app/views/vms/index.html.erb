@@ -13,8 +13,3 @@
 <%= render 'section', {header: 'To be archived vms', id: 'to_be_archived', vms: @pending_archivation_vms, buttons: 'archive_buttons'} %>
 <%= render 'section', {header: 'To be revived vms', id: 'to_be_revived', vms: @pending_reviving_vms, buttons: 'to_revive_buttons'} %>
 <%= render 'section', {header: 'Archived vms', id: 'archived', vms: @archived_vms, buttons: 'revive_buttons'} %>
-
-<!-- Minified script sources for sortable tables -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
-      xmlns="http://www.w3.org/1999/html">
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
