@@ -38,11 +38,6 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
   end
 
-  it 'renders the boot times' do
-    expect(rendered).to include mock_vms.first.boot_time.to_s
-    expect(rendered).not_to include mock_vms.second.boot_time
-  end
-
   it 'links to vm detail pages' do
     mock_vms.each do |vm|
       expect(rendered).to have_link(vm.name)
@@ -87,11 +82,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :user }
 
     it 'does not link to new vm page' do
-      expect(rendered).not_to have_button('New Request')
-    end
-
-    it 'does not link to requests overview page' do
-      expect(rendered).not_to have_button('All Requests')
+      expect(rendered).not_to have_button('+')
     end
   end
 
@@ -99,11 +90,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New Request')
-    end
-
-    it 'links to requests overview page' do
-      expect(rendered).to have_button('All Requests')
+      expect(rendered).to have_button('+')
     end
   end
 
@@ -132,11 +119,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('New Request')
-    end
-
-    it 'links to requests overview page' do
-      expect(rendered).to have_button('All Requests')
+      expect(rendered).to have_button('+')
     end
   end
 end

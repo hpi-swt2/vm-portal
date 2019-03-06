@@ -1,0 +1,5 @@
+<%if current_user.admin? && vm.archivable? %>
+  <%= link_to '',
+              {controller: :vms, action: 'revive_vm', id: vm.name}, method: :post,
+              class: "btn-manage float-right checkmark" %>
+<% end %>

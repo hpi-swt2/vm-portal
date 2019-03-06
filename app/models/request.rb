@@ -32,12 +32,15 @@ class Request < ApplicationRecord
     request.validates :application_name, presence: true
   end
 
-  def description_text(host_name)
+  def description_text
     description  = "- VM Name: #{name}\n"
     description += "- Responsible: #{responsible_users.first.name}\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
-    description += url(host_name) + "\n"
     description
+  end
+
+  def description_url(host_name)
+    Rails.application.routes.url_helpers.request_url self, host: host_name
   end
 
   def accept!
@@ -126,10 +129,6 @@ class Request < ApplicationRecord
   end
 
   private
-
-  def url(host_name)
-    Rails.application.routes.url_helpers.request_url self, host: host_name
-  end
 
   def gibi_to_mibi(gibi)
     gibi * 1024
