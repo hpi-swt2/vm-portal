@@ -45,7 +45,7 @@ class VmsController < ApplicationController
 
     @sudo_user_ids = @vm.sudo_users.map(&:id)
     @non_sudo_user_ids = @vm.users.map(&:id)
-    @description = @vm.ensure_config.description
+    @configuration = @vm.ensure_config
   end
 
   def update
@@ -54,8 +54,8 @@ class VmsController < ApplicationController
     notify_changed_users(@vm.users.map(&:id), info_params[:non_sudo_user_ids].map(&:to_i), false, @vm.name)
     @vm.sudo_users = info_params[:sudo_user_ids]
     @vm.users = info_params[:non_sudo_user_ids]
-    @vm.ensure_config.description = info_params[:description]
-    unless @vm.config.save
+
+    unless @vm.ensure_config.update config_params
       flash[:error] = 'Description couldn\'t be saved.'
       redirect_to edit_vm_path(@vm.name)
     end
@@ -153,10 +153,6 @@ class VmsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
-  # This controller doesn't use strong parameters
-  # https://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html
-  # Because no Active Record model is being wrapped
-
   private
 
   def prepare_info_params
@@ -189,11 +185,11 @@ class VmsController < ApplicationController
   end
 
   def info_params
-    params.require(:vm_info).permit(:description, sudo_user_ids: [], non_sudo_user_ids: [])
+    params.require(:vm_info).permit(sudo_user_ids: [], non_sudo_user_ids: [])
   end
 
   def config_params
-    params.require(:virtual_machine_config).permit(:ip, :dns)
+    params.require(:vm_info).permit(:description, :ip, :dns)
   end
 
   def authenticate_root_user_or_admin
