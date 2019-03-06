@@ -55,6 +55,8 @@ def associate_users_with_vms(users: [], admins: [], vms: [])
 end
 
 RSpec.configure do |config|
+  config.include(RedirectBack, type: :controller)
+
   config.before do
     cluster_mock = vim_cluster_mock('MockCluster', [])
     allow(VSphere::VirtualMachine).to receive(:user_vms).and_return []

@@ -33,9 +33,9 @@ class RequestsController < ApplicationController
     @request_templates = RequestTemplate.all
   end
 
-  def notify_users(title, message)
+  def notify_users(title, message, link)
     ([@request.user] + @request.users + User.admin).uniq.each do |each|
-      each.notify(title, message)
+      each.notify(title, message, link)
     end
   end
 
@@ -147,21 +147,21 @@ class RequestsController < ApplicationController
 
     if @request.accepted?
       ([@request.user] + User.admin).uniq.each do |each|
-        each.notify('Request has been accepted', @request.description_text(host_url))
+        each.notify('Request has been accepted', @request.description_text, @request.description_url(host_url))
       end
       @request.users.uniq.each do |each|
         rights = @request.sudo_users.include?(each) ? 'sudo access' : 'access'
-        each.notify("You have #{rights} rights on a new VM", @request.description_text(host_url))
+        each.notify("You have #{rights} rights on a new VM", @request.description_text, @request.description_url(host_url))
       end
     elsif @request.rejected?
-      message = @request.description_text host_url
+      message = @request.description_text
       message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
-      notify_users('Request has been rejected', message)
+      notify_users('Request has been rejected', message, @request.description_url(host_url))
     end
   end
 
   def successful_save(format)
-    notify_users('New VM request', @request.description_text(host_url))
+    notify_users('New VM request', @request.description_text, @request.description_url(host_url))
     format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
     format.json { render :show, status: :created, location: @request }
   end

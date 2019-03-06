@@ -37,12 +37,6 @@ describe 'Dashboard', type: :feature do
       expect(page).to have_text(@notifications.first.message)
     end
 
-    it 'does not redirect after marking notification as read' do
-      visit dashboard_path
-      all(:css, '.check.icon-link').first.click
-      expect(current_path).to eql(dashboard_path)
-    end
-
     it 'does not redirect after deleting notification' do
       visit dashboard_path
       all(:css, '.delete.icon-link').first.click
@@ -51,7 +45,7 @@ describe 'Dashboard', type: :feature do
 
     it 'does not display more than 3 notifications' do
       visit dashboard_path
-      expect(page).to have_selector('.check.icon-link', count: 3)
+      expect(page).to have_selector('.card-title', count: 3)
     end
   end
 
