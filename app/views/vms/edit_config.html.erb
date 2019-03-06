@@ -1,6 +1,6 @@
 <h1>Editing configuration of VM '<%= @vm.name %>'</h1>
 
-<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config.name }, local: true) do |form| %>
+<%= form_with(scope: :vm_info, model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config.name }, local: true) do |form| %>
   <div class="field">
     <p>Network Adapters</p>
     <table class="table">
