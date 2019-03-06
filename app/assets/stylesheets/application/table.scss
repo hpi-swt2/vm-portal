@@ -1,0 +1,6 @@
+@import "custom_bootstrap";
+
+th{
+  @extend .text-white;
+  @extend .bg-primary;
+}

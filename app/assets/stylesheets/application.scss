@@ -14,7 +14,8 @@
  *= require_self
  *= require_tree .
  */
-
+@import "application/filter-box";
+@import "application/table";
 
 .bulletless {
   list-style-type: none;
@@ -23,3 +24,4 @@
 #menu-profile-dropdown {
   padding-top: 3px;
 }
+

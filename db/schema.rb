@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_24_103931) do
+ActiveRecord::Schema.define(version: 2019_02_27_101842) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_103931) do
     t.boolean "read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "link"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 

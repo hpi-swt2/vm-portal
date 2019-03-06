@@ -25,7 +25,7 @@
     <%= form.select 'responsible',
                     options_from_collection_for_select(User.all,
                                                        :id,
-                                                       :email),
+                                                       :human_readable_identifier),
                     {},
                     { multiple: false, class: "selecttwo", style: 'width: 50%' } %>
   </div>

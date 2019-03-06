@@ -25,7 +25,7 @@
   <%= form.select 'responsible_user_ids',
                   options_from_collection_for_select(User.all,
                                                      :id,
-                                                     :email,
+                                                     :human_readable_identifier,
                                                      selected: selected_user_ids),
                   {},
                   { multiple: true, class: "selecttwo form-group", data: { placeholder: 'Responsible users' }}

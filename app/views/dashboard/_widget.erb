@@ -1,0 +1,14 @@
+<% unless vms.empty? %>
+  <div class="card mb-4">
+    <%= link_to vms_path, method: :get, class: "dashboard-header-link" do %>
+      <div class="card-header bg-primary text-white">
+        <div class="btn-group">
+          <h3><i class="fa fa-desktop fa-fw"></i> <%= header %></h3>
+        </div>
+      </div>
+    <% end %>
+    <div class="card-body">
+      <%= render 'vms/table', {vms: vms, id: id, buttons: buttons} %>
+    </div>
+  </div>
+<% end %>

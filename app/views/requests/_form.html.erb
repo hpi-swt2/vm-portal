@@ -40,7 +40,7 @@
           <%= form.select 'responsible_user_ids',
                           options_from_collection_for_select(User.all,
                                                       :id,
-                                                      :email,
+                                                      :human_readable_identifier,
                                                       @request.responsible_users.collect(&:id)),
                           {},
                           { multiple: true, class: "form-control selecttwo"} %>
@@ -93,7 +93,7 @@
           <%= form.select 'sudo_user_ids',
                           options_from_collection_for_select(User.all,
                                                             :id,
-                                                            :email,
+                                                            :human_readable_identifier,
                                                             @request.sudo_users.collect(&:id)),
                           { },
                           { class: 'form-control selecttwo', multiple: true} %>
@@ -103,7 +103,7 @@
           <%= form.select 'user_ids',
                           options_from_collection_for_select(User.all,
                                                               :id,
-                                                              :email,
+                                                              :human_readable_identifier,
                                                               (@request.users - @request.sudo_users).collect(&:id)),
                           { },
                           { class: ' selecttwo', multiple: true} %>
@@ -136,7 +136,7 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
 
   <% if locals[:updating] %>
     <div id="acceptAndReject">
@@ -147,7 +147,7 @@
   <% else %>
     <div class="actions">
       <%= form.submit class: "btn btn-primary"%>
-      <%= button_to 'Back', requests_path, class:"btn" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 <% end %>
@@ -160,7 +160,7 @@
     </div>
     <div class="actions">
       <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-      <%= button_to 'Back', requests_path, class:"btn" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 <% end %>

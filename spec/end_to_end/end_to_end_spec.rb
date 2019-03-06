@@ -27,15 +27,15 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to request a new VM' do
     sign_in @employee
     visit '/vms/vm'
-    click_on 'New Request'
+    click_on '+'
     expect(page).to have_current_path('/vms/requests/new')
     fill_in('Name', with: @requestname)
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
-    select(@employee.email, from: 'request_responsible_user_ids')
-    select(@employee.email, from: 'request_sudo_user_ids')
-    select(@user.email, from: 'request_user_ids')
+    select(@employee.human_readable_identifier, from: 'request_responsible_user_ids')
+    select(@employee.human_readable_identifier, from: 'request_sudo_user_ids')
+    select(@user.human_readable_identifier, from: 'request_user_ids')
     select('none', from: 'operating_system')
     select(@project.name, from: 'request_project_id')
     fill_in('Description', with: 'test')
@@ -49,14 +49,14 @@ RSpec.describe 'End to End testing', type: :feature do
   it 'is possible to accept a VM request' do
     sign_in @admin
     visit '/vms/vm'
-    click_on 'New Request'
+    click_on '+'
     fill_in('Name', with: @requestname)
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
-    select(@admin.email, from: 'request_responsible_user_ids')
-    select(@admin.email, from: 'request_sudo_user_ids')
-    select(@user.email, from: 'request_user_ids')
+    select(@admin.human_readable_identifier, from: 'request_responsible_user_ids')
+    select(@admin.human_readable_identifier, from: 'request_sudo_user_ids')
+    select(@user.human_readable_identifier, from: 'request_user_ids')
     select(@project.name, from: 'request_project_id')
     select('none', from: 'operating_system')
     fill_in('Description', with: 'test')
@@ -88,9 +88,9 @@ RSpec.describe 'End to End testing', type: :feature do
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
-    select(@admin.email, from: 'request_responsible_user_ids')
-    select(@admin.email, from: 'request_sudo_user_ids')
-    select(@user.email, from: 'request_user_ids')
+    select(@admin.human_readable_identifier, from: 'request_responsible_user_ids')
+    select(@admin.human_readable_identifier, from: 'request_sudo_user_ids')
+    select(@user.human_readable_identifier, from: 'request_user_ids')
     select('none', from: 'operating_system')
     fill_in('Description', with: 'test')
     click_on 'Create Request'
