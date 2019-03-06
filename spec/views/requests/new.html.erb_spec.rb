@@ -57,7 +57,7 @@ RSpec.describe 'requests/new', type: :view do
       assert_select 'textarea[name=?]', 'request[comment]'
     end
 
-    expect(rendered).to match(user.email)
+    expect(rendered).to match(user.human_readable_identifier)
   end
 
   # regression test for #320
