@@ -24,9 +24,9 @@ class Request < ApplicationRecord
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
   validate :name_uniqueness
   validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
-  validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
-  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
-  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
+  validates :cpu_cores, numericality: { only_integer: true, greater_than_or_equal_to: AppSetting.instance.min_cpu_cores, less_than_or_equal_to: AppSetting.instance.max_ram_size }
+  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: AppSetting.instance.max_ram_size }
+  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: AppSetting.instance.max_storage_size }
   with_options if: :port_forwarding do |request|
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true

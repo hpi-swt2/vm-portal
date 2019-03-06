@@ -31,6 +31,22 @@
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
+        <h5>VM Settings</h5>
+      </div>
+      <div class="col-6">
+        <%= form.labeled_text_field 'Minimum cpu core count(GB)', :min_cpu_cores %>
+
+        <%= form.labeled_text_field 'Maximum cpu core count(GB)', :max_cpu_cores %>
+
+        <%= form.labeled_text_field 'Maximum ram size(GB)', :max_ram_size %>
+
+        <%= form.labeled_text_field 'Maximum storage size(GB)', :max_storage_size %>
+      </div>
+    </div>
+
+
+    <div class="row border-bottom mb-4 pb-4">
+      <div class="col">
         <h5>Git Settings</h5>
       </div>
       <div class="col-6">

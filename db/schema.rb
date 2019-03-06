@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_27_101842) do
+ActiveRecord::Schema.define(version: 2019_03_06_220207) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
@@ -33,6 +33,10 @@ ActiveRecord::Schema.define(version: 2019_02_27_101842) do
     t.string "puppet_init_path", default: "/"
     t.string "puppet_classes_path", default: "/Name"
     t.string "puppet_nodes_path", default: "/Node"
+    t.integer "min_cpu_cores", default: 1
+    t.integer "max_cpu_cores", default: 64
+    t.integer "max_ram_size", default: 256
+    t.integer "max_storage_size", default: 1000
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 
@@ -174,8 +178,6 @@ ActiveRecord::Schema.define(version: 2019_02_27_101842) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|
