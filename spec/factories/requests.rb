@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :request do
-    name { 'myvm' }
+    name { Faker::Alphanumeric.unique.alphanumeric 10 }
     cpu_cores { 2 }
     ram_gb { 1 }
     storage_gb { 3 }

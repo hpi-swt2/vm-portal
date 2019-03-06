@@ -2,7 +2,6 @@
 
 class RequestsController < ApplicationController
   include OperatingSystemsHelper
-  include RequestsHelper
   before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
@@ -178,7 +177,6 @@ class RequestsController < ApplicationController
     request_parameters = params[:request]
     return unless request_parameters
 
-    request_parameters[:name] &&= replace_whitespaces(request_parameters[:name])
     request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
 
     # the user_ids must contain the ids of ALL users, sudo or not
