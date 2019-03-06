@@ -6,9 +6,7 @@
   <thead>
     <th scope="col" data-sortable="true" class="rounded-left"><%= User.human_attribute_name('name') %></th>
     <th scope="col" data-sortable="true"><%= User.human_attribute_name('email') %></th>
-    <% if current_user.admin? %>
-      <th scope="col" data-sortable="true"><%= User.human_attribute_name('role') %></th>
-    <% end %>
+    <th scope="col" data-sortable="true"><%= User.human_attribute_name('role') %></th>
     <th scope="col" data-sortable="true" class="rounded-right"><%= User.human_attribute_name('last_sign_in_at') %></th>
   </thead>
   <tbody>
@@ -16,25 +14,16 @@
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
-        <% if current_user.admin? %>
           <td data-filter-value="<%= user.role %>">
             <!-- add a hidden HTML element as the first element that will be used for sorting -->
             <p class="d-none"><%= user.role %></p>
-
             <div class="btn-group
                         border
-                        border-<%= if last_admin?(user) && current_user?(user) then 'secondary' else 'primary' end%>
+                        border-<%= if editable_for user then 'primary' else 'secondary' end%>
                         rounded"
                  role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if last_admin?(user) && current_user?(user) %>
-                  <button class="btn
-                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
-                                 disabled"
-                          id= "btn-<%= role %>-<%= user.id %>">
-                    <%= role.capitalize %>
-                  </button>
-                <% else %>
+                <% if editable_for user %>
                   <%= link_to role.capitalize,
                               update_role_user_path(user, role: role),
                               method: :patch,
@@ -42,10 +31,17 @@
                               class: "btn
                                       btn-#{if user.role == role then 'primary' else 'light' end}"
                   %>
+                <% else %>
+                  <button class="btn
+                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
+                                 disabled"
+                          id= "btn-<%= role %>-<%= user.id %>"
+                  >
+                    <%= role.capitalize %>
+                  </button>
                 <% end %>
               <% end %>
             </div>
-        <% end %>
         <td><%= user.current_sign_in_at %></td>
       </tr>
     <% end %>
