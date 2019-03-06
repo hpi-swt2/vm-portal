@@ -215,7 +215,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'create_vm' do
-    let(:request) { FactoryBot.create(:request) }
+    let(:request) { FactoryBot.create :request, name: 'myvm' }
 
     it 'saves the responsible users in the VM' do
       request.responsible_users = [FactoryBot.create(:admin)]
@@ -225,7 +225,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'puppet script helper methods' do
-    let(:request) { FactoryBot.create(:request_with_users) }
+    let(:request) { FactoryBot.create :request_with_users, name: 'myvm' }
 
     it 'returns correct declaration script for a given request' do
       script = request.generate_puppet_name_script
@@ -262,7 +262,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'push to git' do
-    let(:request) { FactoryBot.build :request }
+    let(:request) { FactoryBot.build :request, name: 'myvm' }
 
     before do
       @git_stub = create_git_stub

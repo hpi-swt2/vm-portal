@@ -34,7 +34,7 @@ class Request < ApplicationRecord
 
   def name_uniqueness
     errors.add(:name, ': vSphere already has a VM with the same name') if VSphere::VirtualMachine.all.map(&:name).include?(name)
-    errors.add(:name, ': There is already a request with the same name') if (Request.pending + Request.accepted).map(&:name).include?(name)
+    errors.add(:name, ': There is already a request with the same name') if (Request.pending + Request.accepted - [self]).map(&:name).include?(name)
   end
 
   def description_text(host_name)
