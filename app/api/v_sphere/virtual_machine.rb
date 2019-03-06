@@ -119,7 +119,7 @@ module VSphere
     def reboot_guest_os
       # Do not `wait_for_completion` here, as `RebootGuest` does not offer a useful return value
       # https://code.vmware.com/apis/196/vsphere#/doc/vim.VirtualMachine.html#rebootGuest
-      @vm.RebootGuest
+      @vm.RebootGuest if powered_on?
     end
 
     # Power state testing
