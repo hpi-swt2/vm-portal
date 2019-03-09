@@ -16,7 +16,7 @@
     <tr>
       <td class="table-active">
         <% vm.powered_on? %>
-        <p class="d-none"><%= vm.archived ? 'archived' : vm.powered_on? ? 'online' : 'offline' %></p>
+        <p class="d-none"><%= vm.archived? ? 'archived' : vm.powered_on? ? 'online' : 'offline' %></p>
         <%= render 'vms/vm_status', vm: vm %>
       </td>
       <td class="table-active">
