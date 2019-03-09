@@ -16,8 +16,7 @@
     <tr>
       <td class="table-active">
         <% vm.powered_on? %>
-        <!-- We don't care about archived VMs here, because we will never have a column with archived and  online/offline VMs in one table -->
-        <p class="d-none"><%= vm.powered_on? ? 'online' : 'offline' %></p>
+        <p class="d-none"><%= vm.archived ? 'archived' : vm.powered_on? ? 'online' : 'offline' %></p>
         <%= render 'vms/vm_status', vm: vm %>
       </td>
       <td class="table-active">
