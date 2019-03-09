@@ -1,9 +1,13 @@
 <table data-toggle="table" class="table" id=<%= id %>>
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="rounded-left">Name</th>
+    <th scope="col" data-sortable="true" class="rounded-left">Status</th>
+    <th scope="col" data-sortable="true">Name</th>
     <th scope="col" data-sortable="true">Project</th>
-    <th scope="col" data-sortable="true" class="rounded-right">Responsible</th>
+    <th scope="col" data-sortable="true">Responsible</th>
+    <% unless buttons.nil? %>
+      <th scope="col" class="rounded-right">Actions</th>
+    <% end %>
     <th scope="col" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
   </tr>
   </thead>
@@ -11,10 +15,14 @@
   <% vms&.slice(0...10)&.each do |vm| %>
     <tr>
       <td class="table-active">
-        <%= render 'vms/vm_status', vm: vm%>
+        <% vm.powered_on? %>
+        <p class="d-none"><%= vm.powered_on? ? 'online' : 'offline' %></p>
+        <%= render 'vms/vm_status', vm: vm %>
+      </td>
+      <td class="table-active">
         <%= link_to vm.name,
                     {controller: :vms, action: 'show', id: vm.name},
-                    method: :get, class: "btn btn-link"  %>
+                    method: :get, class: "btn btn-link" %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
@@ -33,11 +41,12 @@
             <% end %>
           </ul>
         <% end %>
-
-        <% unless buttons.nil? %>
-          <%= render buttons.to_s, vm: vm %>
-        <%  end %>
       </td>
+      <% unless buttons.nil? %>
+        <td class="table-active">
+          <%= render buttons.to_s, vm: vm %>
+        </td>
+      <% end %>
       <td class="d-none"> <!-- Also not intended to be shown! -->
         <%= vm.config&.description %>
       </td>

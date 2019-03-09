@@ -4,13 +4,13 @@
                 {controller: :vms, action: 'change_power_state', id: vm.name},
                 method: :post,
                 data: {confirm: 'Are you sure?'},
-                class: "btn-manage float-right #{ vm.powered_on? ? 'stop' : 'play' }" %>
+                class: "btn-manage float-right fa #{ vm.powered_on? ? 'fa-stop' : 'fa-play' }" %>
     <% if vm.powered_on? %>
       <%= link_to '',
                   {controller: :vms, action: 'reboot_guest_os', id: vm.name},
                   method: :post,
                   data: {confirm: 'Are you sure?'},
-                  class: "btn-manage float-right replay" %>
+                  class: "btn-manage float-right fa fa-repeat" %>
     <% end %>
   <% end %>
 <% end %>
