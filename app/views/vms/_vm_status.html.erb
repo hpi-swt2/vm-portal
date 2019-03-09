@@ -1,4 +1,3 @@
-<div class="round <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>"></div>
 <% if current_user.admin? || vm.sudo_users.include?(current_user) %>
   <% if vm.vm_ware_tools? %>
     <%= link_to '',

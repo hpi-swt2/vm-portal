@@ -11,7 +11,7 @@
   <% vms&.slice(0...10)&.each do |vm| %>
     <tr>
       <td class="table-active">
-        <%= render 'vms/vm_status', vm: vm %>
+        <div class="round <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>"></div>
         <%= link_to vm.name,
                     {controller: :vms, action: 'show', id: vm.name},
                     method: :get, class: "btn btn-link"  %>
