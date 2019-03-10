@@ -1,7 +1,6 @@
 @import "custom_bootstrap";
 
 .button {
-  background-color: #4CAF50; /* Green */
   border: none;
   color: white;
   text-align: center;
@@ -12,6 +11,7 @@
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   cursor: pointer;
+  border-radius: 15%;
 }
 
 .button-blue {
