@@ -19,6 +19,7 @@
 //= require doughnut_chart
 //= require filter_table
 //= require sort_table
+//= require copy
 //= require prevent_anchor_reload
 //= require_tree .
 //= require select2

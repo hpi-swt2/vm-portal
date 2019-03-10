@@ -26,7 +26,7 @@
       <% @vm.macs.each do |each| %>
         <tr>
           <td><%= each.first %></td>
-          <td><%= each.second %></td>
+          <td><span id="macAddress"><%= each.second %></span><button style="border: none; outline: none;" class="fa fa-copy" onclick="copy(event)"></button></td>
         </tr>
       <% end %>
     </table>
