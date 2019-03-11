@@ -26,20 +26,24 @@ Rails.application.routes.draw do
   patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
 
   # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
-  post '/vms/vm/:id/change_power_state' => 'vms#change_power_state', constraints: { id: /.*/ }
-  post '/vms/vm/:id/suspend_vm' => 'vms#suspend_vm', constraints: { id: /.*/ }
-  post '/vms/vm/:id/shutdown_guest_os' => 'vms#shutdown_guest_os', constraints: { id: /.*/ }
-  post '/vms/vm/:id/reboot_guest_os' => 'vms#reboot_guest_os', constraints: { id: /.*/ }
-  post '/vms/vm/:id/reset_vm' => 'vms#reset_vm', constraints: { id: /.*/ }
-  post '/vms/vm/:id/request_vm_archivation' => 'vms#request_vm_archivation', constraints: { id: /.*/ }
-  post '/vms/vm/:id/archive_vm' => 'vms#archive_vm', constraints: { id: /.*/ }
-  post '/vms/vm/:id/request_vm_revive' => 'vms#request_vm_revive', constraints: { id: /.*/ }
-  post '/vms/vm/:id/revive_vm' => 'vms#revive_vm', constraints: { id: /.*/ }
-  post '/vms/vm/:id/stop_archiving' => 'vms#stop_archiving', constraints: { id: /.*/ }
-  resources :vms, except: %i[new create], path: 'vms/vm'
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
+  resources :vms, except: [:new, :create], path: 'vms/vm' do
+    # https://guides.rubyonrails.org/routing.html#adding-member-routes
+    member do
+      post 'change_power_state'
+      post 'suspend_vm'
+      post 'shutdown_guest_os'
+      post 'reboot_guest_os'
+      post 'reset_vm'
+      post 'request_vm_archivation'
+      post 'archive_vm'
+      post 'request_vm_revive'
+      post 'revive_vm'
+      post 'stop_archiving'
+    end
+  end
 
   devise_for :users,
              path: 'users',
