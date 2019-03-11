@@ -40,9 +40,9 @@ Rails.application.routes.draw do
     resources :requests do
       post :push_to_git, on: :member
       patch :reject, on: :collection
-      # '/vms/requests/operating_systems/...'
-      resources :operating_systems, except: :show
     end
+    # '/vms/requests/operating_systems/...'
+    resources :operating_systems, path: 'requests/operating_systems', except: :show
     # '/vms/configs/:id'
     scope 'configs' do
       get ':id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
@@ -67,6 +67,7 @@ Rails.application.routes.draw do
     end
   end
 
+  # '/users/...'
   # https://github.com/plataformatec/devise#configuring-routes
   devise_for :users,
     path: 'users',
