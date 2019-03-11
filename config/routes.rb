@@ -6,9 +6,14 @@ Rails.application.routes.draw do
   # https://guides.rubyonrails.org/routing.html#using-root
   root 'landing#index'
 
+  resources :hosts, :servers
+  resources :projects, only: %i[index show new edit create update]
   resources :app_settings, only: %i[update edit]
-  resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
+  resources :users do
+    patch :update_role, on: :member
+  end
 
+  resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
   resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests' do
     post :push_to_git, on: :member
@@ -59,10 +64,4 @@ Rails.application.routes.draw do
       registrations: 'users/registrations',
       omniauth_callbacks: 'users/omniauth_callbacks'
   }
-
-  resources :hosts, :servers
-  resources :projects, only: %i[index show new edit create update]
-  resources :users do
-    patch :update_role, on: :member
-  end
 end
