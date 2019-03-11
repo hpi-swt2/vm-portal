@@ -2,6 +2,10 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  # You can specify what Rails should route '/' to with the root method
+  # https://guides.rubyonrails.org/routing.html#using-root
+  root 'landing#index'
+
   resources :app_settings, only: %i[update edit]
   resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
 
@@ -18,7 +22,6 @@ Rails.application.routes.draw do
   end
 
   get '/dashboard' => 'dashboard#index', as: :dashboard
-  root to: 'landing#index'
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
@@ -61,6 +64,4 @@ Rails.application.routes.draw do
   end
 
   resources :projects, only: %i[index show new edit create update]
-
-  root 'landing#index'
 end
