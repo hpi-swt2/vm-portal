@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
   get 'slack/new' => 'slack#new', as: :new_slack
   get 'slack/auth' => 'slack#update', as: :update_slack
-  resources :vms, except: [:new, :create], path: 'vms/vm' do
+  resources :vms, except: [:new, :create], path: 'vms/vm', constraints: { id: /.*/ } do
     # https://guides.rubyonrails.org/routing.html#adding-member-routes
     member do
       post 'change_power_state'
