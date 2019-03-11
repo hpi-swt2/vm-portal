@@ -12,14 +12,14 @@ RSpec.describe LandingController, type: :controller do
 
       it 'redirects to dashboard' do
         get(:index)
-        response.should redirect_to('/dashboard')
+        expect(response).to redirect_to(dashboard_path)
       end
     end
 
     context 'when logged out' do
       it 'redirects to login page' do
         get(:index)
-        response.should redirect_to('/users/sign_in')
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
