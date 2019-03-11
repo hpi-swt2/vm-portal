@@ -11,12 +11,12 @@ Rails.application.routes.draw do
   resources :app_settings, only: %i[update edit]
 
   # https://guides.rubyonrails.org/routing.html#prefixing-the-named-route-helpers
-  # '/vms/'
+  # '/vms'
   scope 'vms' do
-    resources :request_templates, path: 'request_templates', except: :show
+    resources :request_templates, except: :show
     # '/vms/requests'
     scope 'requests' do
-      resources :operating_systems, path: 'operating_systems', except: :show
+      resources :operating_systems, except: :show
       resources :requests do
         post :push_to_git, on: :member
         patch :reject, on: :collection
