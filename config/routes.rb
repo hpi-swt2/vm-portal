@@ -61,9 +61,8 @@ Rails.application.routes.draw do
   }
 
   resources :hosts, :servers
+  resources :projects, only: %i[index show new edit create update]
   resources :users do
     patch :update_role, on: :member
   end
-
-  resources :projects, only: %i[index show new edit create update]
 end
