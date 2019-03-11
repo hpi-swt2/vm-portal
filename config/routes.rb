@@ -5,30 +5,18 @@ Rails.application.routes.draw do
   # You can specify what Rails should route '/' to with the root method
   # https://guides.rubyonrails.org/routing.html#using-root
   root 'landing#index'
-
-  resources :hosts, :servers
+  
+  # '/dashboard'
+  get '/dashboard' => 'dashboard#index', as: :dashboard
+  # '/projects/...'
   resources :projects, only: %i[index show new edit create update]
+  # '/app_settings/...'
   resources :app_settings, only: %i[update edit]
-
-  # https://guides.rubyonrails.org/routing.html#prefixing-the-named-route-helpers
-  # '/vms'
-  scope 'vms' do
-    resources :request_templates, except: :show
-    # '/vms/requests'
-    scope 'requests' do
-      resources :operating_systems, except: :show
-      resources :requests do
-        post :push_to_git, on: :member
-        patch :reject, on: :collection
-      end
-    end
-    # '/vms/configs'
-    scope 'configs' do
-      get ':id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
-      patch ':id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
-    end
-  end
-
+  # '/hosts/...', '/servers/...'
+  resources :hosts, :servers
+  get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
+  
+  # '/notifications/...'
   resources :notifications, only: %i[index new create destroy] do
     member do
       get :mark_as_read
@@ -36,32 +24,47 @@ Rails.application.routes.draw do
     end
     get :has_any, on: :collection, to: 'notifications#any?'
   end
-
-  get '/dashboard' => 'dashboard#index', as: :dashboard
-
-  get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
-
-
-  # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
-  resources :vms, except: [:new, :create], path: 'vms/vm', constraints: { id: /.*/ } do
-    # https://guides.rubyonrails.org/routing.html#adding-member-routes
-    member do
-      post 'change_power_state'
-      post 'suspend_vm'
-      post 'shutdown_guest_os'
-      post 'reboot_guest_os'
-      post 'reset_vm'
-      post 'request_vm_archivation'
-      post 'archive_vm'
-      post 'request_vm_revive'
-      post 'revive_vm'
-      post 'stop_archiving'
-    end
-  end
-
+  
+  # '/slack/...'
   scope 'slack' do
     get 'new' => 'slack#new', as: :new_slack
     get 'auth' => 'slack#update', as: :update_slack
+  end
+
+  # https://guides.rubyonrails.org/routing.html#prefixing-the-named-route-helpers
+  # '/vms/...'
+  scope 'vms' do
+    # '/vms/request_templates/...'
+    resources :request_templates, except: :show
+    # '/vms/requests/...'
+    resources :requests do
+      post :push_to_git, on: :member
+      patch :reject, on: :collection
+      # '/vms/requests/operating_systems/...'
+      resources :operating_systems, except: :show
+    end
+    # '/vms/configs/:id'
+    scope 'configs' do
+      get ':id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
+      patch ':id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
+    end
+    # '/vms/vm'
+    # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
+    resources :vms, except: [:new, :create], path: 'vm', constraints: { id: /.*/ } do
+      # https://guides.rubyonrails.org/routing.html#adding-member-routes
+      member do
+        post 'change_power_state'
+        post 'suspend_vm'
+        post 'shutdown_guest_os'
+        post 'reboot_guest_os'
+        post 'reset_vm'
+        post 'request_vm_archivation'
+        post 'archive_vm'
+        post 'request_vm_revive'
+        post 'revive_vm'
+        post 'stop_archiving'
+      end
+    end
   end
 
   # https://github.com/plataformatec/devise#configuring-routes
