@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can specify what Rails should route '/' to with the root method
   # https://guides.rubyonrails.org/routing.html#using-root
   root 'landing#index'
-  
+
   # '/dashboard'
   get '/dashboard' => 'dashboard#index', as: :dashboard
   # '/projects/...'
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   # '/hosts/...', '/servers/...'
   resources :hosts, :servers
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
-  
+
   # '/notifications/...'
   resources :notifications, only: %i[index new create destroy] do
     member do
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
     get :has_any, on: :collection, to: 'notifications#any?'
   end
-  
+
   # '/slack/...'
   scope 'slack' do
     get 'new' => 'slack#new', as: :new_slack
@@ -36,13 +36,15 @@ Rails.application.routes.draw do
   scope 'vms' do
     # '/vms/request_templates/...'
     resources :request_templates, except: :show
+    # '/vms/requests/operating_systems/...'
+    # Order matters here, as routes are matched from top to bottom
+    # If 'resources :requests' is first, it will attempt to match that
+    resources :operating_systems, path: 'requests/operating_systems', except: :show
     # '/vms/requests/...'
     resources :requests do
       post :push_to_git, on: :member
       patch :reject, on: :collection
     end
-    # '/vms/requests/operating_systems/...'
-    resources :operating_systems, path: 'requests/operating_systems', except: :show
     # '/vms/configs/:id'
     scope 'configs' do
       get ':id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
@@ -69,12 +71,11 @@ Rails.application.routes.draw do
 
   # '/users/...'
   # https://github.com/plataformatec/devise#configuring-routes
-  devise_for :users,
-    path: 'users',
+  devise_for :users, path: 'users',
     controllers: {
       registrations: 'users/registrations',
       omniauth_callbacks: 'users/omniauth_callbacks'
-  }
+    }
   resources :users do
     patch :update_role, on: :member
   end
