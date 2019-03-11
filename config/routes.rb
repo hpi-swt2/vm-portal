@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     end
     # '/vms/vm'
     # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
-    resources :vms, except: %i[new create], path: 'vm', constraints: { id: /.*/ } do
+    resources :vms, except: [:new, :create], path: 'vm', constraints: { id: /.*/ } do
       # https://guides.rubyonrails.org/routing.html#adding-member-routes
       member do
         post 'change_power_state'
@@ -72,10 +72,10 @@ Rails.application.routes.draw do
   # '/users/...'
   # https://github.com/plataformatec/devise#configuring-routes
   devise_for :users, path: 'users',
-                     controllers: {
-                       registrations: 'users/registrations',
-                       omniauth_callbacks: 'users/omniauth_callbacks'
-                     }
+    controllers: {
+      registrations: 'users/registrations',
+      omniauth_callbacks: 'users/omniauth_callbacks'
+    }
   resources :users do
     patch :update_role, on: :member
   end
