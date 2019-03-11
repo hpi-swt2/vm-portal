@@ -46,7 +46,8 @@ describe SlackController do
     auth_request = mock_auth_request
 
     error_message = 'My Error'
-    described_class.any_instance.stub(:authenticate_request).and_return('ok' => false, 'error' => error_message)
+    # https://www.rubydoc.info/github/rspec/rspec-mocks/RSpec/Mocks/ExampleMethods%3aallow_any_instance_of
+    allow_any_instance_of(described_class).to receive(:authenticate_request).and_return('ok' => false, 'error' => error_message)
     # see https://api.slack.com/methods/oauth.access for the protocol of the mocked api
 
     visit update_slack_path(state: auth_request.state, code: 'We must provide a code')
@@ -56,8 +57,7 @@ describe SlackController do
 
   it 'shows success message' do
     auth_request = mock_auth_request
-
-    described_class.any_instance.stub(:authenticate_request).and_return('incoming_webhook' => { 'url' => 'My URL' })
+    allow_any_instance_of(described_class).to receive(:authenticate_request).and_return('incoming_webhook' => { 'url' => 'My URL' })
     # see https://api.slack.com/methods/oauth.access for the protocol of the mocked api
 
     visit update_slack_path(state: auth_request.state, code: 'We must provide a code')
@@ -69,7 +69,7 @@ describe SlackController do
     auth_request = mock_auth_request
 
     webhook_url = 'My URL'
-    described_class.any_instance.stub(:authenticate_request).and_return('incoming_webhook' => { 'url' => webhook_url })
+    allow_any_instance_of(described_class).to receive(:authenticate_request).and_return('incoming_webhook' => { 'url' => webhook_url })
     # see https://api.slack.com/methods/oauth.access for the protocol of the mocked api
 
     visit update_slack_path(state: auth_request.state, code: 'We must provide a code')
