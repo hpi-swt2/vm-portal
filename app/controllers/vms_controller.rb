@@ -121,7 +121,7 @@ class VmsController < ApplicationController
       each.notify("VM #{@vm.name} has been revived", '', url_for(controller: :vms, action: 'show', id: @vm.name))
     end
 
-    redirect_to controller: :vms, action: 'index', id: @vm.name
+    redirect_to controller: :vms, action: :edit_config, id: @vm.name
   end
 
   def change_power_state
