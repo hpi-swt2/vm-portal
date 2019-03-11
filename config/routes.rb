@@ -9,12 +9,13 @@ Rails.application.routes.draw do
   resources :hosts, :servers
   resources :projects, only: %i[index show new edit create update]
   resources :app_settings, only: %i[update edit]
-  resources :users do
-    patch :update_role, on: :member
+
+  # https://guides.rubyonrails.org/routing.html#prefixing-the-named-route-helpers
+  scope 'vms' do
+    resources :operating_systems, path: 'requests/operating_systems', except: :show
+    resources :request_templates, path: 'request_templates', except: :show
   end
 
-  resources :operating_systems, path: '/vms/requests/operating_systems', except: :show
-  resources :request_templates, path: '/vms/request_templates', except: :show
   resources :requests, path: '/vms/requests' do
     post :push_to_git, on: :member
     patch 'reject', on: :collection
@@ -64,4 +65,7 @@ Rails.application.routes.draw do
       registrations: 'users/registrations',
       omniauth_callbacks: 'users/omniauth_callbacks'
   }
+  resources :users do
+    patch :update_role, on: :member
+  end
 end
