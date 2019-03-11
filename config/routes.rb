@@ -16,9 +16,11 @@ Rails.application.routes.draw do
   end
 
   resources :notifications, only: %i[index new create destroy] do
-    get :mark_as_read, on: :member
+    member do
+      get :mark_as_read
+      delete :destroy_and_redirect
+    end
     get :has_any, on: :collection, to: 'notifications#any?'
-    delete :destroy_and_redirect, on: :member
   end
 
   get '/dashboard' => 'dashboard#index', as: :dashboard
