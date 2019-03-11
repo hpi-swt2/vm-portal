@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       post :push_to_git, on: :member
       patch :reject, on: :collection
     end
+    get 'configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
+    patch 'configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
   end
 
   resources :notifications, only: %i[index new create destroy] do
@@ -32,8 +34,6 @@ Rails.application.routes.draw do
 
   get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
 
-  get '/vms/configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
-  patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
 
   # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
   resources :vms, except: [:new, :create], path: 'vms/vm', constraints: { id: /.*/ } do
