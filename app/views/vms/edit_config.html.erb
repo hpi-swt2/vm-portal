@@ -29,6 +29,13 @@
           <td>
             <span id="macAddress"><%= each.second %></span>
             <button class="button button-blue fa fa-copy" onclick="copy(event)"></button>
+            <!-- Target -->
+            <textarea id="bar">Mussum ipsum cacilds...</textarea>
+
+            <!-- Trigger -->
+            <button class="clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#bar">
+              Copy to clipboard
+            </button>
           </td>
         </tr>
       <% end %>

@@ -23,7 +23,15 @@
 //= require prevent_anchor_reload
 //= require_tree .
 //= require select2
+//= require clipboard
 
 document.addEventListener("turbolinks:load", function() {
   $('.selecttwo').select2();
+});
+
+$(document).ready(function(){
+
+    var clipboard = new Clipboard('.clipboard-btn');
+    console.log(clipboard);
+
 });
