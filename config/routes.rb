@@ -26,9 +26,6 @@ Rails.application.routes.draw do
   patch '/vms/configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
 
   # move all vm actions under /vms/vm because a VM named requests might otherwise lead to issues!
-
-  get 'slack/new' => 'slack#new', as: :new_slack
-  get 'slack/auth' => 'slack#update', as: :update_slack
   resources :vms, except: [:new, :create], path: 'vms/vm', constraints: { id: /.*/ } do
     # https://guides.rubyonrails.org/routing.html#adding-member-routes
     member do
@@ -45,6 +42,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope 'slack' do
+    get 'new' => 'slack#new', as: :new_slack
+    get 'auth' => 'slack#update', as: :update_slack
+  end
   devise_for :users,
              path: 'users',
              controllers: {
