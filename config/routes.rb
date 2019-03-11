@@ -11,15 +11,22 @@ Rails.application.routes.draw do
   resources :app_settings, only: %i[update edit]
 
   # https://guides.rubyonrails.org/routing.html#prefixing-the-named-route-helpers
+  # '/vms/'
   scope 'vms' do
     resources :request_templates, path: 'request_templates', except: :show
-    resources :operating_systems, path: 'requests/operating_systems', except: :show
-    resources :requests, path: 'requests' do
-      post :push_to_git, on: :member
-      patch :reject, on: :collection
+    # '/vms/requests'
+    scope 'requests' do
+      resources :operating_systems, path: 'operating_systems', except: :show
+      resources :requests do
+        post :push_to_git, on: :member
+        patch :reject, on: :collection
+      end
     end
-    get 'configs/:id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
-    patch 'configs/:id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
+    # '/vms/configs'
+    scope 'configs' do
+      get ':id' => 'vms#edit_config', constraints: { id: /.*/ }, as: :edit_config
+      patch ':id' => 'vms#update_config', constraints: { id: /.*/ }, as: :update_config
+    end
   end
 
   resources :notifications, only: %i[index new create destroy] do
