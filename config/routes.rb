@@ -46,12 +46,14 @@ Rails.application.routes.draw do
     get 'new' => 'slack#new', as: :new_slack
     get 'auth' => 'slack#update', as: :update_slack
   end
+
+  # https://github.com/plataformatec/devise#configuring-routes
   devise_for :users,
-             path: 'users',
-             controllers: {
-               registrations: 'users/registrations',
-               omniauth_callbacks: 'users/omniauth_callbacks'
-             }
+    path: 'users',
+    controllers: {
+      registrations: 'users/registrations',
+      omniauth_callbacks: 'users/omniauth_callbacks'
+  }
 
   resources :hosts, :servers
   resources :users do
