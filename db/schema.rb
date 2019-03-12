@@ -30,13 +30,13 @@ ActiveRecord::Schema.define(version: 2019_03_06_220207) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "vsphere_root_folder", default: ""
-    t.string "puppet_init_path", default: "/"
-    t.string "puppet_classes_path", default: "/Name"
-    t.string "puppet_nodes_path", default: "/Node"
-    t.integer "min_cpu_cores", default: 1
-    t.integer "max_cpu_cores", default: 64
-    t.integer "max_ram_size", default: 256
-    t.integer "max_storage_size", default: 1000
+    t.string "puppet_init_path"
+    t.string "puppet_classes_path"
+    t.string "puppet_nodes_path"
+    t.integer "min_cpu_cores"
+    t.integer "max_cpu_cores"
+    t.integer "max_ram_size"
+    t.integer "max_storage_size"
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 

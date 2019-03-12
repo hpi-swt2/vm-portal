@@ -10,3 +10,16 @@
 #
 
 OperatingSystem.create([{ name: 'CentOS 7' }, { name: 'SLES 11 SP3' }, { name: 'Ubuntu 18.04' }])
+AppSetting.create({singleton_guard: 0,
+                   github_user_name: 'MyUserName',
+                   github_user_email: 'example@email.com',
+                   git_repository_name: 'repository',
+                   git_repository_url: 'https://github.com/hpi-swt2/vm-portal.git',
+                   puppet_init_path: '/',
+                   puppet_nodes_path: '/Node',
+                   puppet_classes_path: '/Name',
+                   vm_archivation_timeout: 3,
+                   min_cpu_cores: 0,
+                   max_cpu_cores: 64,
+                   max_ram_size: 256,
+                   max_storage_size: 1000})
