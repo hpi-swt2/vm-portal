@@ -55,7 +55,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css "a.btn-manage[data-confirm]"
+      expect(rendered).to have_css 'a.btn-manage[data-confirm]'
     end
 
     context 'when vmwaretools are not installed' do
