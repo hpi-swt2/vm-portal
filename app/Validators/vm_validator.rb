@@ -14,6 +14,8 @@ class VmValidator < SimpleDelegator
     post.errors.messages.merge!(self.errors.messages)
   end
 
+  private
+
   def min_cpu_cores
     AppSetting.instance.min_cpu_cores
   end
