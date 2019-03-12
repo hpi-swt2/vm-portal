@@ -13,19 +13,19 @@ class Request < ApplicationRecord
 
   attr_accessor :sudo_user_ids
 
-  def min_cpu_cores
+  def self.min_cpu_cores
     AppSetting.instance.min_cpu_cores
   end
 
-  def max_cpu_cores
+  def self.max_cpu_cores
     AppSetting.instance.max_cpu_cores
   end
 
-  def max_ram_size
+  def self.max_ram_size
     AppSetting.instance.max_ram_size
   end
 
-  def max_storage_size
+  def self.max_storage_size
     AppSetting.instance.max_storage_size
   end
 
