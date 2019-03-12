@@ -49,7 +49,14 @@ describe 'Sign In Page', type: :feature do
       end
 
       context 'unsuccessful login' do
-        before do
+        before(:all) do
+          @omniauth_logger = OmniAuth.config.logger
+          # By default, OmniAuth will log to STDOUT
+          # https://github.com/omniauth/omniauth#logging
+          OmniAuth.config.logger = Rails.logger
+        end
+
+        before(:each) do
           page.click_link 'Sign in with HPI OpenID Connect'
         end
 
@@ -61,6 +68,10 @@ describe 'Sign In Page', type: :feature do
         it 'shows Danger Flash Message' do
           expect(page).to have_text('Could not authenticate')
           expect(page).to have_css('.alert-danger')
+        end
+
+        after(:all) do
+          OmniAuth.config.logger = @omniauth_logger
         end
       end
     end
