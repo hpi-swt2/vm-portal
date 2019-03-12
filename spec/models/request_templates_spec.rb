@@ -33,12 +33,12 @@ RSpec.describe RequestTemplate, type: :model do
       end
 
       it 'is invalid with negative cpu_cores specifiation' do
-        request_template.cpu_cores = -1
+        request_template.cpu_cores = AppSetting.instance.min_cpu_cores - 1
         expect(request_template).to be_invalid
       end
 
       it 'is invalid with too many cpu_cores ' do
-        request_template.cpu_cores = Request::MAX_CPU_CORES + 1
+        request_template.cpu_cores = AppSetting.instance.max_cpu_cores + 1
         expect(request_template).to be_invalid
       end
 
@@ -48,7 +48,7 @@ RSpec.describe RequestTemplate, type: :model do
       end
 
       it 'is invalid with to much ram' do
-        request_template.ram_gb = Request::MAX_RAM_GB + 1
+        request_template.ram_gb = AppSetting.instance.max_ram_size + 1
         expect(request_template).to be_invalid
       end
 
@@ -58,7 +58,7 @@ RSpec.describe RequestTemplate, type: :model do
       end
 
       it 'is invalid with to much storage' do
-        request_template.storage_gb = Request::MAX_STORAGE_GB + 1
+        request_template.storage_gb = AppSetting.instance.max_storage_size + 1
         expect(request_template).to be_invalid
       end
     end

@@ -13,22 +13,6 @@ class Request < ApplicationRecord
 
   attr_accessor :sudo_user_ids
 
-  def self.min_cpu_cores
-    AppSetting.instance.min_cpu_cores
-  end
-
-  def self.max_cpu_cores
-    AppSetting.instance.max_cpu_cores
-  end
-
-  def self.max_ram_size
-    AppSetting.instance.max_ram_size
-  end
-
-  def self.max_storage_size
-    AppSetting.instance.max_storage_size
-  end
-
   MAX_NAME_LENGTH = 20
 
   enum status: %i[pending accepted rejected]
@@ -37,9 +21,8 @@ class Request < ApplicationRecord
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
   validate :name_uniqueness
   validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
-  validates :cpu_cores, numericality: { only_integer: true, greater_than_or_equal_to: :min_cpu_cores, less_than_or_equal_to: :max_cpu_cores }
-  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: :max_ram_size }
-  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: :max_storage_size }
+  validates_with VmValidator
+
   with_options if: :port_forwarding do |request|
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true
