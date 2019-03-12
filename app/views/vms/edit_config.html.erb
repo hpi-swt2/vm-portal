@@ -9,10 +9,12 @@
         <strong>Operating System</strong> <br>
         <%= label "Operating System", @vm.request.operating_system %>
       </div>
-      <div>
-        <strong>Comment</strong><br>
-        <%= label "Comment", @vm.request.comment %>
-      </div>
+      <% unless @vm.request.comment eql? '' %>
+        <div>
+          <strong>Comment</strong><br>
+          <%= label "Comment", @vm.request.comment %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
@@ -43,11 +45,11 @@
   </div>
 
   <div class="field">
-    <%= form.labeled_text_field 'IP', :ip%>
+    <%= form.labeled_text_field 'IP', :ip %>
   </div>
 
   <div class="field">
-    <%= form.labeled_text_field 'DNS', :dns%>
+    <%= form.labeled_text_field 'DNS', :dns %>
   </div>
 
   <div class="actions">
