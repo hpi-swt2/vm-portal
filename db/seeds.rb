@@ -19,7 +19,7 @@ AppSetting.create({singleton_guard: 0,
                    puppet_nodes_path: '/Node',
                    puppet_classes_path: '/Name',
                    vm_archivation_timeout: 3,
-                   min_cpu_cores: 0,
+                   min_cpu_cores: 1,
                    max_cpu_cores: 64,
                    max_ram_size: 256,
                    max_storage_size: 1000})
