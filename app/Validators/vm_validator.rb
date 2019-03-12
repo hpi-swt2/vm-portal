@@ -8,10 +8,10 @@ class VmValidator < SimpleDelegator
   validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: :max_storage_size }
 
   def validate(post)
-    self.__setobj__(post)
+    __setobj__(post)
     super
 
-    post.errors.messages.merge!(self.errors.messages)
+    post.errors.messages.merge!(errors.messages)
   end
 
   private
