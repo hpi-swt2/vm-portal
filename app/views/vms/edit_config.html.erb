@@ -25,17 +25,17 @@
       </tr>
       <% @vm.macs.each do |each| %>
         <tr>
+          <%# Adapter name %>
           <td><%= each.first %></td>
           <td>
+            <%# MAC address %>
             <span id="macAddress"><%= each.second %></span>
-            <button class="button button-blue fa fa-copy" onclick="copy(event)"></button>
-            <!-- Target -->
-            <textarea id="bar">Mussum ipsum cacilds...</textarea>
-
-            <!-- Trigger -->
-            <button class="clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#bar">
-              Copy to clipboard
-            </button>
+            <%# Copy to clipboard button, JS matches on 'clipboard-btn' class %>
+            <span
+              class="btn btn-outline-primary btn-sm fa fa-copy clipboard-btn"
+              title="Copy MAC address to clipboard"
+              data-clipboard-text="<%= each.second %>">
+            </span>
           </td>
         </tr>
       <% end %>
