@@ -55,7 +55,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
+      expect(rendered).to have_css "a.btn-manage[data-confirm]"
     end
 
     context 'when vmwaretools are not installed' do
@@ -102,20 +102,14 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css('a.btn-manage[data-confirm="Are you sure?"]')
+      expect(rendered).to have_css('a.btn-manage[data-confirm]')
     end
 
-    context 'when vmwaretools are not installed' do
-      before do
-        assign(:vms, mock_vms_without_tools)
-        render
-      end
-
-      it 'shows no power buttons' do
-        rendered = render
-        expect(rendered).not_to have_css('a.fa-play')
-        expect(rendered).not_to have_css('a.fa-stop')
-      end
+    it 'shows no power buttons when vmwaretools are not installed' do
+      assign(:vms, mock_vms_without_tools)
+      rendered = render
+      expect(rendered).not_to have_css('a.fa-play')
+      expect(rendered).not_to have_css('a.fa-stop')
     end
 
     it 'links to new vm page' do
