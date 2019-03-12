@@ -9,7 +9,7 @@
         <strong>Operating System</strong> <br>
         <%= label "Operating System", @vm.request.operating_system %>
       </div>
-      <% unless @vm.request.comment eql? '' %>
+      <% unless @vm.request.comment.eql? '' %>
         <div>
           <strong>Comment</strong><br>
           <%= label "Comment", @vm.request.comment %>
