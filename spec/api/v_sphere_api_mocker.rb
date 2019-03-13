@@ -25,6 +25,9 @@ require './app/api/v_sphere/host'
 # has many messages that have to be chained which we want to mock.
 # rubocop:disable RSpec/MessageChain
 
+# Disable AbcSize and MethodLength as mocking is not really complex, but increases these 2 metrics very fast
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+
 def extract_vim_objects(collection)
   collection.map do |each|
     if [VSphere::Cluster, VSphere::Folder, VSphere::VirtualMachine].include? each.class
@@ -66,7 +69,6 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def vim_vm_summary_mock(power_state: 'poweredOn')
   summary_double = double
   allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
@@ -83,7 +85,6 @@ def vim_vm_summary_mock(power_state: 'poweredOn')
   allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
   summary_double
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def vim_disks_mock
   disk = double
@@ -98,7 +99,6 @@ def vim_guest_mock(tools_status: 'toolsNotInstalled')
   guest
 end
 
-# rubocop:disable Metrics/AbcSize
 def vim_vm_mock(
     name,
     power_state: 'poweredOn',
@@ -122,7 +122,6 @@ def vim_vm_mock(
 
   vm
 end
-# rubocop:enable Metrics/AbcSize
 
 def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24)
   VSphere::VirtualMachine.new vim_vm_mock(name,
@@ -164,7 +163,6 @@ def vim_host_mock(name)
                                                            power_state: 'poweredOn',
                                                            vm_ware_tools: 'toolsInstalled')])
 
-
   allow(host).to receive(:summary).and_return vim_host_summary_mock
 
   datastore = double
@@ -179,7 +177,6 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-# rubocop:disable Metrics/AbcSize
 def vim_cluster_mock(name, hosts)
   hosts = extract_vim_objects hosts
   cluster = double
@@ -193,7 +190,6 @@ def vim_cluster_mock(name, hosts)
   allow(cluster).to receive(:network).and_return [network]
   cluster
 end
-# rubocop:enable Metrics/AbcSize
 
 def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
@@ -220,4 +216,5 @@ def v_sphere_connection_mock(
   double_connection
 end
 
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:enable RSpec/MessageChain
