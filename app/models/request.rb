@@ -84,27 +84,33 @@ class Request < ApplicationRecord
     clusters = VSphere::Cluster.all
     return nil, 'VM could not be created, as there are no clusters available in vSphere!' if clusters.empty?
 
-    warning = nil
-    begin
-      push_to_git
-    rescue Git::GitExecuteError => e
-      logger.error(e)
-      warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
-    end
-    [create_vm_in_cluster(clusters.sample), warning]
+    cluster = clusters.sample
+    return nil, 'VM could not be created, there is no network available in the cluster' if cluster.networks.empty?
+
+    warning = push_to_git_with_warnings
+    [create_vm_in_cluster(cluster), warning]
   end
 
   def create_vm_in_cluster(cluster)
     vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
-    vm.ensure_config.responsible_users = responsible_users
-    vm.config.project = project
-    vm.config.description = description
-    vm.config.save
+    vm.ensure_config.update(
+      responsible_users: responsible_users,
+      project: project,
+      description: description
+    )
     vm.move_into_correct_subfolder
     vm
   end
 
-  # Error handling has been moved into create_vm to provide easier feedback for the user
+  def push_to_git_with_warnings
+    push_to_git
+    nil
+  rescue Git::GitExecuteError => error
+    logger.error error
+    "Your VM was created, but users could not be associated with the VM! Push to git failed, error:\n\"#{e.message}\""
+  end
+
+  # Error handling has been moved into push_to_git_with_warnings to provide easier feedback for the user
   def push_to_git
     GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
       git_writer.write_file(Puppetscript.node_file_name(name), generate_puppet_node_script)

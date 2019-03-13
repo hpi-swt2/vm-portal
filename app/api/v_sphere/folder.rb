@@ -70,7 +70,8 @@ module VSphere
     end
 
     def create_vm(cpu, ram, capacity, name, cluster)
-      vm_config = creation_config(cpu, ram, capacity, name)
+      return nil if cluster.networks.empty?
+      vm_config = creation_config(cpu, ram, capacity, name, cluster.networks.first)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
       VSphere::VirtualMachine.new vm
     end
@@ -81,7 +82,7 @@ module VSphere
       @folder
     end
 
-    def creation_config(cpu, ram, capacity, name) # rubocop:disable Metrics/MethodLength
+    def creation_config(cpu, ram, capacity, name, network) # rubocop:disable Metrics/MethodLength
       {
         name: name,
         guestId: 'otherGuest',
@@ -119,7 +120,7 @@ module VSphere
                 summary: 'VM Network'
               },
               backing: RbVmomi::VIM.VirtualEthernetCardNetworkBackingInfo(
-                deviceName: 'VM Network'
+                deviceName: network.name
               ),
               addressType: 'generated'
             )
