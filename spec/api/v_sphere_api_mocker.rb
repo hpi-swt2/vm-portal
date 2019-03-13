@@ -131,6 +131,21 @@ def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotIns
                                           boot_time: boot_time)
 end
 
+def vim_host_summary_mock
+  summary = double
+  allow(summary).to receive_message_chain(:runtime, :powerState)
+  allow(summary).to receive_message_chain(:config, :product, :osType).and_return('someOS')
+  allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(['someProduct'])
+  allow(summary).to receive_message_chain(:hardware, :cpuModel).and_return('someModel')
+  allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
+  allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
+  allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
+  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
+  allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
+  allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
+  summary
+end
+
 def vim_host_mock(name)
   host = double
   allow(host).to receive(:name).and_return name
@@ -149,18 +164,8 @@ def vim_host_mock(name)
                                                            power_state: 'poweredOn',
                                                            vm_ware_tools: 'toolsInstalled')])
 
-  summary = double
-  allow(summary).to receive_message_chain(:runtime, :powerState)
-  allow(summary).to receive_message_chain(:config, :product, :osType).and_return('someOS')
-  allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(['someProduct'])
-  allow(summary).to receive_message_chain(:hardware, :cpuModel).and_return('someModel')
-  allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
-  allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
-  allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
-  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
-  allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
-  allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
-  allow(host).to receive(:summary).and_return summary
+
+  allow(host).to receive(:summary).and_return vim_host_summary_mock
 
   datastore = double
   allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000 * 1024**3) # in bytes
@@ -183,6 +188,9 @@ def vim_cluster_mock(name, hosts)
   allow(cluster).to receive(:host).and_return hosts
   allow(cluster).to receive(:name).and_return name
   allow(cluster).to receive(:resourcePool).and_return nil
+  network = double
+  allow(network).to receive(:name).and_return 'MyNetwork'
+  allow(cluster).to receive(:network).and_return [network]
   cluster
 end
 # rubocop:enable Metrics/AbcSize

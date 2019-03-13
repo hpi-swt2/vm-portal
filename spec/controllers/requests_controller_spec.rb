@@ -221,7 +221,7 @@ RSpec.describe RequestsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    context 'with valid params' do
+    context 'accepts the request' do
       let(:new_attributes) do
         {
           name: 'mynewvm',
@@ -230,7 +230,6 @@ RSpec.describe RequestsController, type: :controller do
           storage_gb: 3,
           operating_system: 'MyNewOS',
           comment: 'newComment',
-          status: 'pending',
           user: user,
           sudo_user_ids: ['', sudo_user.id.to_s, user.id.to_s],
           user_ids: ['']
@@ -245,25 +244,41 @@ RSpec.describe RequestsController, type: :controller do
         request
       end
 
-      before do
+      it 'redirects to the index page if no cluster is available' do
+        allow(VSphere::Cluster).to receive(:all).and_return []
         patch :update, params: { id: the_request.to_param, request: new_attributes }
-        the_request.reload
+        expect(response).to redirect_to(requests_path)
       end
 
-      it 'updates the request' do
-        expect(the_request.name).to eq('mynewvm')
+      it 'redirects to the index page if the cluster does not have a network' do
+        cluster = double
+        allow(cluster).to receive(:networks).and_return []
+        allow(VSphere::Cluster).to receive(:all).and_return [cluster]
+        patch :update, params: { id: the_request.to_param, request: new_attributes }
+        expect(response).to redirect_to(requests_path)
       end
 
-      it 'redirects to the new VMS config' do
-        expect(response).to redirect_to(edit_config_path(the_request.name))
-      end
+      context 'update already performed' do
+        before do
+          patch :update, params: { id: the_request.to_param, request: new_attributes }
+          the_request.reload
+        end
 
-      it 'accepts the request' do
-        expect(the_request).to be_accepted
-      end
+        it 'updates the request' do
+          expect(the_request.name).to eq('mynewvm')
+        end
 
-      it 'correctly updates the sudo users' do
-        expect(the_request.sudo_users).to match_array([sudo_user, user])
+        it 'redirects to the new VMS config' do
+          expect(response).to redirect_to(edit_config_path(the_request.name))
+        end
+
+        it 'accepts the request' do
+          expect(the_request).to be_accepted
+        end
+
+        it 'correctly updates the sudo users' do
+          expect(the_request.sudo_users).to match_array([sudo_user, user])
+        end
       end
     end
 
