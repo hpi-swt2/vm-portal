@@ -12,7 +12,7 @@
   </tr>
   </thead>
   <tbody id="vms">
-  <% vms&.slice(0...10)&.each do |vm| %>
+  <% vms&.each do |vm| %>
     <tr>
       <td class="table-active">
         <% vm.powered_on? %>
