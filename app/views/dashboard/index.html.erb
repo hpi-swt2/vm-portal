@@ -5,9 +5,9 @@
 </div>
 <div class="row">
   <div class="col-8">
-    <%= render 'widget', {vms: @vms, id: 'vms_active', header: 'Active machines', buttons: nil} %>
-    <%= render 'widget', {vms: @archivable, id: 'vms_to_be_archived', header: 'Archivable Machines', buttons: 'vms/archive_buttons'} %>
-    <%= render 'widget', {vms: @revivable, id: 'vms_to_be_revived', header: 'Revivable Machines', buttons: 'vms/to_revive_buttons'} %>
+    <%= render 'widget', {vms: @vms, id: 'vms_active', header: 'Active VMs', buttons: nil} %>
+    <%= render 'widget', {vms: @archivable, id: 'vms_to_be_archived', header: 'Archivable VMs', buttons: nil} %>
+    <%= render 'widget', {vms: @revivable, id: 'vms_to_be_revived', header: 'Revivable VMs', buttons: nil} %>
   </div>
 
 

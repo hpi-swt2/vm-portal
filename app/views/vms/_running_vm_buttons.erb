@@ -1,17 +1,16 @@
-<div class="round <%= vm.powered_on? ? 'bg-success' : 'bg-warning mt-1'  %>"></div>
 <% if current_user.admin? || vm.sudo_users.include?(current_user) %>
   <% if vm.vm_ware_tools? %>
     <%= link_to '',
                 {controller: :vms, action: 'change_power_state', id: vm.name},
                 method: :post,
-                data: { confirm: 'Are you sure?' },
-                class: "btn-manage float-right #{ vm.powered_on? ? 'stop' : 'play' }" %>
+                data: {confirm: "Are you sure you want to #{ vm.powered_on? ? 'stop' : 'start' } '#{vm.name}'?"},
+                class: "btn-manage float-right fa #{ vm.powered_on? ? 'fa-stop' : 'fa-play' }" %>
     <% if vm.powered_on? %>
       <%= link_to '',
                   {controller: :vms, action: 'reboot_guest_os', id: vm.name},
                   method: :post,
-                  data: { confirm: 'Are you sure?' },
-                  class: "btn-manage float-right replay" %>
+                  data: {confirm: "Are you sure you want to reboot the guest OS of '#{vm.name}'?"},
+                  class: "btn-manage float-right fa fa-repeat" %>
     <% end %>
   <% end %>
 <% end %>
