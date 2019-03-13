@@ -70,12 +70,16 @@ module VSphere
     end
 
     def create_vm(cpu, ram, capacity, name, cluster)
-      vm_config = creation_config(cpu, ram, capacity, name)
+      vm_config = creation_config(cpu, ram, capacity, prefix(name))
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
       VSphere::VirtualMachine.new vm
     end
 
     private
+
+    def prefix(name)
+      "#{Time.now.strftime('%Y%m%d')}_vm-#{name}"
+    end
 
     def managed_folder_entry
       @folder
