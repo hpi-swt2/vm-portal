@@ -104,7 +104,7 @@ class Request < ApplicationRecord
 
   def push_to_git_with_warnings
     push_to_git
-    nil
+    nil # no warning
   rescue Git::GitExecuteError => error
     logger.error error
     "Your VM was created, but users could not be associated with the VM! Push to git failed, error:\n\"#{error.message}\""
