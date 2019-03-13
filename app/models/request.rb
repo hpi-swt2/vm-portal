@@ -107,7 +107,7 @@ class Request < ApplicationRecord
     nil
   rescue Git::GitExecuteError => error
     logger.error error
-    "Your VM was created, but users could not be associated with the VM! Push to git failed, error:\n\"#{e.message}\""
+    "Your VM was created, but users could not be associated with the VM! Push to git failed, error:\n\"#{error.message}\""
   end
 
   # Error handling has been moved into push_to_git_with_warnings to provide easier feedback for the user

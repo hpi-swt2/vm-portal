@@ -71,6 +71,7 @@ module VSphere
 
     def create_vm(cpu, ram, capacity, name, cluster)
       return nil if cluster.networks.empty?
+
       vm_config = creation_config(cpu, ram, capacity, name, cluster.networks.first)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
       VSphere::VirtualMachine.new vm
