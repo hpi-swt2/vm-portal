@@ -31,6 +31,11 @@ document.addEventListener("turbolinks:load", function() {
   // Initialize 'Select2', jQuery based replacement for select boxes
   // https://github.com/argerim/select2-rails#usage
   $('.selecttwo').select2();
+
+  // Initialize Boostrap tooltips for all elements having data-toggle
+  // attribute set to 'tooltip'. Uses the title attr as tooltip.
+  // https://getbootstrap.com/docs/4.0/components/tooltips
+  $('[data-toggle="tooltip"]').tooltip()
 });
 
 $(document).ready(function(){
