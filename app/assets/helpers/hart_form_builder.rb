@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class HartFormBuilder < ActionView::Helpers::FormBuilder
+  def labeled_text_area(name, attribute, args = {})
+    @template.content_tag(:div, class: 'field form-group') do
+      label(attribute, name) + text_area(attribute, args)
+    end
+  end
+
+  def text_area(attribute, args = {})
+    args = add_control_class args
+    super(attribute, args)
+  end
+
   def labeled_number_field(name, attribute, args = {})
     @template.content_tag(:div, class: 'field form-group') do
       label(attribute, name) + number_field(attribute, args)
