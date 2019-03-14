@@ -35,7 +35,7 @@ document.addEventListener("turbolinks:load", function() {
   // Initialize Boostrap tooltips for all elements having data-toggle
   // attribute set to 'tooltip'. Uses the title attr as tooltip.
   // https://getbootstrap.com/docs/4.0/components/tooltips
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).ready(function(){
