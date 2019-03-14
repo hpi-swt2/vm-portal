@@ -25,6 +25,9 @@ require './app/api/v_sphere/host'
 # has many messages that have to be chained which we want to mock.
 # rubocop:disable RSpec/MessageChain
 
+# Disable AbcSize and MethodLength as mocking is not really complex, but increases these 2 metrics very fast
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+
 def extract_vim_objects(collection)
   collection.map do |each|
     if [VSphere::Cluster, VSphere::Folder, VSphere::VirtualMachine].include? each.class
@@ -66,7 +69,6 @@ def v_sphere_folder_mock(name, subfolders: [], vms: [], clusters: [])
   VSphere::Folder.new vim_folder_mock(name, subfolders, vms, clusters)
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def vim_vm_summary_mock(power_state: 'poweredOn')
   summary_double = double
   allow(summary_double).to receive_message_chain(:storage, :committed).and_return(100)
@@ -83,7 +85,6 @@ def vim_vm_summary_mock(power_state: 'poweredOn')
   allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
   summary_double
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def vim_disks_mock
   disk = double
@@ -98,7 +99,6 @@ def vim_guest_mock(tools_status: 'toolsNotInstalled')
   guest
 end
 
-# rubocop:disable Metrics/AbcSize
 def vim_vm_mock(
     name,
     power_state: 'poweredOn',
@@ -122,13 +122,27 @@ def vim_vm_mock(
 
   vm
 end
-# rubocop:enable Metrics/AbcSize
 
 def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24)
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
                                           vm_ware_tools: vm_ware_tools,
                                           boot_time: boot_time)
+end
+
+def vim_host_summary_mock
+  summary = double
+  allow(summary).to receive_message_chain(:runtime, :powerState)
+  allow(summary).to receive_message_chain(:config, :product, :osType).and_return('someOS')
+  allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(['someProduct'])
+  allow(summary).to receive_message_chain(:hardware, :cpuModel).and_return('someModel')
+  allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
+  allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
+  allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
+  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
+  allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
+  allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
+  summary
 end
 
 def vim_host_mock(name)
@@ -149,18 +163,7 @@ def vim_host_mock(name)
                                                            power_state: 'poweredOn',
                                                            vm_ware_tools: 'toolsInstalled')])
 
-  summary = double
-  allow(summary).to receive_message_chain(:runtime, :powerState)
-  allow(summary).to receive_message_chain(:config, :product, :osType).and_return('someOS')
-  allow(summary).to receive_message_chain(:config, :product, :fullName).and_return(['someProduct'])
-  allow(summary).to receive_message_chain(:hardware, :cpuModel).and_return('someModel')
-  allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
-  allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
-  allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
-  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
-  allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
-  allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
-  allow(host).to receive(:summary).and_return summary
+  allow(host).to receive(:summary).and_return vim_host_summary_mock
 
   datastore = double
   allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000 * 1024**3) # in bytes
@@ -174,7 +177,6 @@ def v_sphere_host_mock(name)
   VSphere::Host.new vim_host_mock(name)
 end
 
-# rubocop:disable Metrics/AbcSize
 def vim_cluster_mock(name, hosts)
   hosts = extract_vim_objects hosts
   cluster = double
@@ -183,9 +185,11 @@ def vim_cluster_mock(name, hosts)
   allow(cluster).to receive(:host).and_return hosts
   allow(cluster).to receive(:name).and_return name
   allow(cluster).to receive(:resourcePool).and_return nil
+  network = double
+  allow(network).to receive(:name).and_return 'MyNetwork'
+  allow(cluster).to receive(:network).and_return [network]
   cluster
 end
-# rubocop:enable Metrics/AbcSize
 
 def v_sphere_cluster_mock(name, hosts)
   VSphere::Cluster.new vim_cluster_mock(name, hosts)
@@ -212,4 +216,5 @@ def v_sphere_connection_mock(
   double_connection
 end
 
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:enable RSpec/MessageChain

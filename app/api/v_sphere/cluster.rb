@@ -35,6 +35,10 @@ module VSphere
       equal? other
     end
 
+    def networks
+      @cluster.network
+    end
+
     private
 
     def managed_folder_entry
