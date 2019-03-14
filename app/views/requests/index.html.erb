@@ -18,19 +18,19 @@
 
 <h2 id="pending">Pending requests</h2>
 
-<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_pending" onkeyup="filter_table('filter_pending', 'requests_pending', document)" placeholder="Search">
+<input class="filter-box" type="text" id="filter_pending" onkeyup="filterTable('filter_pending', 'requests_pending')" placeholder="Search">
 
 <table data-toggle="table" class="table" id="requests_pending">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">VM Name</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">CPU Cores</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">RAM</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">HDD</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">OS</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Port</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Application Name</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Comment</th>
+    <th scope="col" data-sortable="true" class="rounded-left">VM Name</th>
+    <th scope="col" data-sortable="true">CPU Cores</th>
+    <th scope="col" data-sortable="true">RAM</th>
+    <th scope="col" data-sortable="true">HDD</th>
+    <th scope="col" data-sortable="true">OS</th>
+    <th scope="col" data-sortable="true">Port</th>
+    <th scope="col" data-sortable="true">Application Name</th>
+    <th scope="col" data-sortable="true" class="rounded-right">Comment</th>
   </tr>
   </thead>
   <tbody>
@@ -53,20 +53,20 @@
 
 <h2 id="resolved">Resolved requests</h2>
 
-<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter_resolved" onkeyup="filter_table('filter_resolved', 'requests_resolved', document)" placeholder="Search">
+<input class="filter-box" type="text" id="filter_resolved" onkeyup="filterTable('filter_resolved', 'requests_resolved')" placeholder="Search">
 
 <table data-toggle="table" class="table" id="requests_resolved">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">VM Name</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">CPU Cores</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">RAM</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">HDD</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">OS</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Port</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Application Name</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Comment</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
+    <th scope="col" data-sortable="true" class="rounded-left">VM Name</th>
+    <th scope="col" data-sortable="true">CPU Cores</th>
+    <th scope="col" data-sortable="true">RAM</th>
+    <th scope="col" data-sortable="true">HDD</th>
+    <th scope="col" data-sortable="true">OS</th>
+    <th scope="col" data-sortable="true">Port</th>
+    <th scope="col" data-sortable="true">Application Name</th>
+    <th scope="col" data-sortable="true">Comment</th>
+    <th scope="col" data-sortable="true" class="rounded-right">Status</th>
   </tr>
   </thead>
   <tbody>
@@ -117,8 +117,3 @@
     <% end %>
   </tbody>
 </table>
-
-<!-- Minified script sources for sortable tables -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
-      xmlns="http://www.w3.org/1999/html">
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

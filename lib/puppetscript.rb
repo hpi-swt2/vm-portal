@@ -14,12 +14,14 @@ module Puppetscript
     puppet_string = generic_node_script
     admins_string = generate_user_array(admin_users)
     users_string = generate_user_array(users)
-    format(puppet_string, name, admins_string, users_string)
+    vm_name_with_underscores = replace_dashes_with_underscores(name)
+    format(puppet_string, vm_name_with_underscores, admins_string, users_string)
   end
 
   def self.name_script(name)
     puppet_script = generic_name_script
-    format(puppet_script, name, name, name)
+    vm_name_with_underscores = replace_dashes_with_underscores(name)
+    format(puppet_script, name, vm_name_with_underscores, vm_name_with_underscores)
   end
 
   def self.generic_init_script
@@ -71,7 +73,7 @@ module Puppetscript
   end
 
   def self.node_file_correct?(vm_name, contents)
-    result =    contents.lines[0].chomp.eql?('class node_' + vm_name + ' {')
+    result =    contents.lines[0].chomp.eql?('class node_' + replace_dashes_with_underscores(vm_name) + ' {')
     result &&=  contents.lines[1].start_with?('        $admins = [')
     result &&=  contents.lines[2].start_with?('        $users = [')
     result &&=  contents.lines[4].chomp.eql?('        realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])')
@@ -121,5 +123,13 @@ module Puppetscript
 
   def self.classes_path
     File.join(Puppetscript.puppet_script_path, AppSetting.instance.puppet_classes_path)
+  end
+
+  def self.replace_dashes_with_underscores(vm_name)
+    vm_name.tr('-', '_')
+  end
+
+  def self.replace_underscores_with_dashes(vm_name)
+    vm_name.tr('_', '-')
   end
 end

@@ -92,6 +92,12 @@ gem 'coveralls', require: false
 # https://github.com/airbrake/airbrake
 gem 'airbrake', '~> 5.0'
 
+# Packaged clipboard.js JS library for copying text to clipboard
+# https://github.com/sadiqmmm/clipboard-rails
+gem 'clipboard-rails'
+# Deprecated! https://github.com/kossnocorp/jquery.turbolinks
+# gem 'jquery-turbolinks'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

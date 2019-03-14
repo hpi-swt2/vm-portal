@@ -18,10 +18,28 @@
 //= require bootstrap
 //= require doughnut_chart
 //= require filter_table
+//= require sort_table
 //= require prevent_anchor_reload
 //= require_tree .
 //= require select2
+//= require clipboard
 
 document.addEventListener("turbolinks:load", function() {
   $('.selecttwo').select2();
+});
+
+$(document).ready(function(){
+  // Initialize all copy to clipboard buttons
+  // https://github.com/sadiqmmm/clipboard-rails#usage
+  var clipboard = new Clipboard('.clipboard-btn');
+  // Show a success tooltip notification using Bootstrap tooltips
+  clipboard.on('success', function (e) {
+    var original_title = $(e.trigger).attr('title');
+    // https://getbootstrap.com/docs/4.0/components/tooltips/#tooltipoptions
+    $(e.trigger).attr('title', 'Copied!').tooltip('show');
+    // After a delay, destroy the success tooltip and restore original
+    setTimeout(function () {
+      $(e.trigger).attr('title', original_title).tooltip('dispose') 
+    }, 700)
+  });
 });

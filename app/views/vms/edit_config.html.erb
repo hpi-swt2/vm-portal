@@ -1,8 +1,25 @@
-<h1>Editing configuration of VM '<%= @vm.name %>'</h1>
+<% require './app/assets/helpers/hart_form_builder' %>
 
-<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config.name }, local: true) do |form| %>
+<h1>Configuring IP and DNS for VM '<%= @vm.name %>'</h1>
+
+<%= form_with(scope: :vm_info, model: @vm.config, url: {:controller => "vms", :action => "update_config", id: @vm.config.name}, local: true, builder: HartFormBuilder) do |form| %>
+  <% if @vm.request %>
+    <div class="field">
+      <div>
+        <strong>Operating System</strong> <br>
+        <%= label "Operating System", @vm.request.operating_system %>
+      </div>
+      <% unless @vm.request.comment.blank? %>
+        <div>
+          <strong>Comment</strong><br>
+          <%= label "Comment", @vm.request.comment %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="field">
-    <p>Network Adapters</p>
+    <p><strong>Network Adapters</strong></p>
     <table class="table">
       <tr>
         <th>Adapter</th>
@@ -10,40 +27,32 @@
       </tr>
       <% @vm.macs.each do |each| %>
         <tr>
+          <%# Adapter name %>
           <td><%= each.first %></td>
-          <td><%= each.second %></td>
+          <td>
+            <%# MAC address %>
+            <span id="macAddress"><%= each.second %></span>
+            <%# Copy to clipboard button, JS matches on 'clipboard-btn' class %>
+            <span
+              class="btn btn-outline-primary btn-sm fa fa-copy clipboard-btn"
+              title="Copy MAC address to clipboard"
+              data-clipboard-text="<%= each.second %>">
+            </span>
+          </td>
         </tr>
       <% end %>
     </table>
   </div>
 
   <div class="field">
-    <%= form.label :ip, "IP" %>
-    <%= form.text_field :ip, class: 'form-control' %>
+    <%= form.labeled_text_field 'IP', :ip %>
   </div>
 
   <div class="field">
-    <%= form.label :dns, "DNS" %>
-    <%= form.text_field :dns, class: 'form-control' %>
+    <%= form.labeled_text_field 'DNS', :dns %>
   </div>
 
-  <% if @vm.request %>
-    <table class="table table-fixed-columns table-flex-width">
-      <tbody>
-        <tr>
-          <td><strong>Operating System:</strong></td>
-          <td><%= @vm.request.operating_system %></td>
-        </tr>
-
-        <tr>
-          <td><strong>Comment:</strong></td>
-          <td class="col-md-4"><%= @vm.request.comment %></td>
-        </tr>
-      </tbody>
-    </table>
-  <% end %>
-
   <div class="actions">
-    <%= form.submit 'Update Configuration', class: "btn btn-primary" %>
+    <%= form.submit 'Update', class: "btn btn-primary" %>
   </div>
 <% end %>

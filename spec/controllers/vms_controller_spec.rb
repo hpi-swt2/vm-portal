@@ -122,7 +122,6 @@ RSpec.describe VmsController, type: :controller do
       context 'when current user is user' do
         context 'when user is associated to vm' do
           before do
-            FactoryBot.create :accepted_request, name: vm1.name, users: [current_user]
             associate_users_with_vms(users: [current_user], vms: [vm1])
           end
 

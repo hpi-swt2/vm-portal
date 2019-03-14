@@ -103,15 +103,15 @@ RSpec.describe User, type: :model do
   end
 
   context 'setting the user id' do
-    let(:user) { FactoryBot.create :user }
+    let!(:user) { FactoryBot.create :user }
 
-    it 'is set to 4000 when the first user is created' do
-      expect(user.user_id).to eq(4000)
+    it 'larger than or equal to 4000' do
+      expect(user.user_id).to be >= 4000
     end
 
     it 'increments the user id when more users are created' do
-      FactoryBot.create :user
-      expect(user.user_id).to eq(4001)
+      user2 = FactoryBot.create :user
+      expect(user2.user_id).to be > user.user_id
     end
   end
 end

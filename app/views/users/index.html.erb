@@ -1,45 +1,29 @@
 <h1>Users</h1>
-<small class="text-muted">This is the overview page for all currently existing users.</small><br /><br />
 
-<%= form_with url: users_path, method: :get, class: 'form-inline', local: true do |form|  %>
-  <%= form.text_field :search, value: params[:search] || '', placeholder: 'Name', class: 'form-control mb-2 mr-sm-2'%>
-  <%= form.select :role, options_for_select(User.roles.merge(all: ''), params[:role] || ''), {}, {class: 'form-control mb-2 mr-sm-2'} %>
-  <%= form.submit 'Search', class: 'btn btn-primary mb-2' %>
-<% end %>
+<input class="filter-box" type="text" id="filter_users" onkeyup="filterTable('filter_users', 'users')" placeholder="Search">
 
-
-<table class="table">
+<table data-toggle="table" class="table" id="users">
   <thead>
-    <th><%= User.human_attribute_name('name') %></th>
-    <th><%= User.human_attribute_name('email') %></th>
-    <% if current_user.admin? %>
-      <th><%= User.human_attribute_name('role') %></th>
-    <% end %>
-    <th><%= User.human_attribute_name('last_sign_in_at') %></th>
-    <th></th>
+    <th scope="col" data-sortable="true" class="rounded-left"><%= User.human_attribute_name('name') %></th>
+    <th scope="col" data-sortable="true"><%= User.human_attribute_name('email') %></th>
+    <th scope="col" data-sortable="true"><%= User.human_attribute_name('role') %></th>
+    <th scope="col" data-sortable="true" class="rounded-right"><%= User.human_attribute_name('last_sign_in_at') %></th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
-        <% if current_user.admin? %>
-          <td>
+          <td data-filter-value="<%= user.role %>">
+            <!-- add a hidden HTML element as the first element that will be used for sorting -->
+            <p class="d-none"><%= user.role %></p>
             <div class="btn-group
                         border
-                        border-<%= if last_admin?(user) && current_user?(user) then 'secondary' else 'primary' end%>
+                        border-<%= if editable_for user then 'primary' else 'secondary' end%>
                         rounded"
                  role="group">
               <% User.roles.map(&:first).each do |role| %>
-                <% if last_admin?(user) && current_user?(user) %>
-                  <button class="btn
-                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
-                                 disabled"
-                          id= "btn-<%= role %>-<%= user.id %>",
-                  >
-                    <%= role.capitalize %>
-                  </button>
-                <% else %>
+                <% if editable_for user %>
                   <%= link_to role.capitalize,
                               update_role_user_path(user, role: role),
                               method: :patch,
@@ -47,10 +31,17 @@
                               class: "btn
                                       btn-#{if user.role == role then 'primary' else 'light' end}"
                   %>
+                <% else %>
+                  <button class="btn
+                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
+                                 disabled"
+                          id= "btn-<%= role %>-<%= user.id %>"
+                  >
+                    <%= role.capitalize %>
+                  </button>
                 <% end %>
               <% end %>
             </div>
-        <% end %>
         <td><%= user.current_sign_in_at %></td>
       </tr>
     <% end %>

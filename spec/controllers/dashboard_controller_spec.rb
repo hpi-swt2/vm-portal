@@ -52,7 +52,7 @@ RSpec.describe DashboardController, type: :controller do
     context 'when logged out' do
       it 'redirects to the login page' do
         get(:index)
-        response.should redirect_to('/users/sign_in')
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end

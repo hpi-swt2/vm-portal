@@ -21,8 +21,8 @@ class Request < ApplicationRecord
   enum status: %i[pending accepted rejected]
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
-            format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
-            uniqueness: true
+            format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
+  validate :name_uniqueness
   validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
   validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
   validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
@@ -30,6 +30,11 @@ class Request < ApplicationRecord
   with_options if: :port_forwarding do |request|
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true
+  end
+
+  def name_uniqueness
+    errors.add(:name, ': vSphere already has a VM with the same name') if VSphere::VirtualMachine.all.map(&:name).include?(name)
+    errors.add(:name, ': There is already a request with the same name') if (Request.pending + Request.accepted - [self]).map(&:name).include?(name)
   end
 
   def description_text
