@@ -17,15 +17,7 @@ class AppSetting < ApplicationRecord
   after_commit :apply_settings, on: :update
 
   def self.instance
-    first_or_create!(singleton_guard: 0,
-                     github_user_name: 'MyUserName',
-                     github_user_email: 'example@email.com',
-                     git_repository_name: 'repository',
-                     git_repository_url: 'https://github.com/hpi-swt2/vm-portal.git',
-                     puppet_init_path: '/',
-                     puppet_nodes_path: '/Node',
-                     puppet_classes_path: '/Name',
-                     vm_archivation_timeout: 3) # in days
+    find(1)
   end
 
   private

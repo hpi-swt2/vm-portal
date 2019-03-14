@@ -53,12 +53,12 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with negative cpu_cores specifiation' do
-        request.cpu_cores = -1
+        request.cpu_cores = AppSetting.instance.min_cpu_cores - 1
         expect(request).to be_invalid
       end
 
       it 'is invalid with too many cpu_cores ' do
-        request.cpu_cores = Request::MAX_CPU_CORES + 1
+        request.cpu_cores = AppSetting.instance.max_cpu_cores + 1
         expect(request).to be_invalid
       end
 
@@ -68,8 +68,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with too much ram' do
-        request.ram_gb = Request::MAX_RAM_GB + 1
-        expect(request).to be_invalid
+        expect(request).not_to allow_value(AppSetting.instance.max_ram_size + 1).for(:ram_gb)
       end
 
       it 'is invalid with negative storage specifiation' do
@@ -78,7 +77,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with too much storage' do
-        request.storage_gb = Request::MAX_STORAGE_GB + 1
+        request.storage_gb = AppSetting.instance.max_storage_size + 1
         expect(request).to be_invalid
       end
 
