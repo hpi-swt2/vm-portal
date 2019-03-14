@@ -82,7 +82,7 @@ module VSphere
             vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
           end
         end
-      rescue Git::GitExecuteError => e
+      rescue Git::GitExecuteError, RuntimeError => e
         Rails.logger.error(e)
       end
       vms
@@ -296,7 +296,7 @@ module VSphere
           remote_users = Puppetscript.read_node_file(name)
           users = remote_users[:users] || []
         end
-      rescue Git::GitExecuteError => e
+      rescue Git::GitExecuteError, RuntimeError => e
         Rails.logger.error(e)
       end
       users
@@ -326,7 +326,7 @@ module VSphere
         name_script, node_script = user_name_and_node_script(ids)
         write_node_and_class_file(git_writer, name_script, node_script)
       end
-    rescue Git::GitExecuteError => e
+    rescue Git::GitExecuteError, RuntimeError => e
       Rails.logger.error(e)
     end
 
@@ -335,7 +335,7 @@ module VSphere
         name_script, node_script = sudo_name_and_node_script(ids)
         write_node_and_class_file(git_writer, name_script, node_script)
       end
-    rescue Git::GitExecuteError => e
+    rescue Git::GitExecuteError, RuntimeError => e
       logger.error(e)
     end
 
@@ -353,7 +353,7 @@ module VSphere
           users = Puppetscript.read_node_file(name)
           admins = users[:admins] || []
         end
-      rescue Git::GitExecuteError => e
+      rescue Git::GitExecuteError, RuntimeError => e
         Rails.logger.error(e)
       end
       admins
