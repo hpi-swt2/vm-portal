@@ -8,13 +8,14 @@ Rails.application.routes.draw do
 
   # '/dashboard'
   get '/dashboard' => 'dashboard#index', as: :dashboard
-  # '/projects/...'
-  resources :projects, only: %i[index show new edit create update]
   # '/app_settings/...'
   resources :app_settings, only: %i[update edit]
-  # '/hosts/...', '/servers/...'
-  resources :hosts, :servers
-  get '/hosts/:id' => 'hosts#show', constraints: { id: /.*/ }
+  # '/projects/...'
+  resources :projects, except: :destroy
+  # '/servers/...'
+  resources :servers
+  # '/hosts/...'
+  resources :hosts, only: %i[index show], constraints: { id: /.*/ }
 
   # '/notifications/...'
   resources :notifications, only: %i[index new create destroy] do
