@@ -55,7 +55,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css 'a.btn-manage[data-confirm]'
+      expect(rendered).to have_css 'a[data-confirm]'
     end
 
     context 'when vmwaretools are not installed' do
@@ -101,8 +101,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
       expect(rendered).to have_css('a.fa-play')
     end
 
-    it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css('a.btn-manage[data-confirm]')
+    it 'demands confirmation on shutdown and reboot' do
+      expect(rendered).to have_css('a[data-confirm]', minimum: 2)
     end
 
     it 'shows no power buttons when vmwaretools are not installed' do
