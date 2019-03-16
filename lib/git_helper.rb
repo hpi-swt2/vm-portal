@@ -76,19 +76,23 @@ module GitHelper
     end
 
     def pull
-      path = File.join(@path, '.last_pull')
+      path = last_pulled_path
       File.open(path, 'w') {|file| file.write(Time.now)}
       @git.pull(branch: @repository_branch)
     end
 
     def pulled_last_minute?
-      path = File.join(@path, '.last_pull')
+      path = last_pulled_path
       return false unless File.exist?(path)
 
       last_date = Time.parse(File.open(path, &:readline))
       difference = Time.now - last_date
 
       difference < 60
+    end
+
+    def last_pulled_path
+      File.join(@path, '.last_pull')
     end
 
     def commit_and_push(message)
