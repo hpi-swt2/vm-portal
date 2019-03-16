@@ -13,6 +13,7 @@ class AppSetting < ApplicationRecord
   validates :vsphere_root_folder,
             length: { maximum: VSphere::Folder::VSPHERE_FOLDER_NAME_CHARACTER_LIMIT },
             format: { without: %r{/%\/}, message: 'The vSphere root folder may not contain "/", "\" or "%"' }
+  validates :git_branch, allow_blank: false
 
   after_commit :apply_settings, on: :update
 
