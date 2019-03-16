@@ -16,7 +16,7 @@ class AppSetting < ApplicationRecord
 
   after_commit :apply_settings, on: :update
 
-  def refresh_instance
+  def self.refresh_instance
     @instance = nil
   end
 
