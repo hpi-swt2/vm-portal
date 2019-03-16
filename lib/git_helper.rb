@@ -29,8 +29,8 @@ module GitHelper
       else
         @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       end
-
       set_github_credentials
+
       @git.checkout(@repository_branch)
     end
 
