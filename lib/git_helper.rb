@@ -65,7 +65,6 @@ module GitHelper
       @user_email = AppSetting.instance.github_user_email
     end
 
-    # Why do we need to set dummy credentials?
     def set_github_credentials
       @git.config('user.name', @user_name)
       @git.config('user.email', @user_email)
