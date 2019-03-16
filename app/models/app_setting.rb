@@ -28,6 +28,7 @@ class AppSetting < ApplicationRecord
   private
 
   def apply_settings
+    self.class.refresh_instance
     apply_mail_settings
     GitHelper.reset
   end
