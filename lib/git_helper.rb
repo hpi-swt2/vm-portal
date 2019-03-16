@@ -78,7 +78,7 @@ module GitHelper
     def pull
       path = File.join(@path, '.last_pull')
       File.open(path, 'w') {|file| file.write(Time.now)}
-      @git.pull
+      @git.pull(branch: @repository_branch)
     end
 
     def pulled_last_minute?
