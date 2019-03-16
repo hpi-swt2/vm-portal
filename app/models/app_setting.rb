@@ -21,7 +21,7 @@ class AppSetting < ApplicationRecord
   end
 
   def self.instance
-    @instance = find(1) if @instance.nil
+    @instance = find(1) if @instance.nil?
     @instance
   end
 
