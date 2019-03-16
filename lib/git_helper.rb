@@ -26,7 +26,6 @@ module GitHelper
     def initialize(path, for_write)
       @path = path
       initialize_settings
-      set_github_credentials
 
       if File.exist?(File.join(@path, '.git'))
         @git = Git.open(@path)
@@ -35,6 +34,7 @@ module GitHelper
         @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       end
 
+      set_github_credentials
       @git.checkout(@repository_branch)
     end
 
