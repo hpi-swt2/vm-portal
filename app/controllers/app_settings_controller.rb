@@ -12,6 +12,7 @@ class AppSettingsController < ApplicationController
   def update
     respond_to do |format|
       if @app_setting.update(app_setting_params)
+        AppSetting.refresh_instance
         format.html { redirect_to edit_app_setting_path(@app_setting), notice: 'HART Settings were successfully updated.' }
         format.json { render :edit, status: :ok, location: @app_setting }
       else

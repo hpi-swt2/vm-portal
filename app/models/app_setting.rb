@@ -16,8 +16,13 @@ class AppSetting < ApplicationRecord
 
   after_commit :apply_settings, on: :update
 
+  def refresh_instance
+    @instance = nil
+  end
+
   def self.instance
-    find(1)
+    @instance = find(1) if @instance.nil
+    @instance
   end
 
   private
