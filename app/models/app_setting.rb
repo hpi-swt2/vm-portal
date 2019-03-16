@@ -5,7 +5,7 @@ require './app/api/v_sphere/folder'
 class AppSetting < ApplicationRecord
   validates_inclusion_of :singleton_guard, in: [0]
   validates_format_of :github_user_email, with: Devise.email_regexp
-  validates :github_user_name, :git_repository_name, :git_repository_url, presence: true
+  validates :github_user_name, :git_repository_name, :git_repository_url, :git_branch, presence: true
   validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
   validates :vm_archivation_timeout, numericality: { greater_than_or_equal_to: 0 }
   validates :puppet_init_path, :puppet_nodes_path, :puppet_classes_path,
@@ -13,7 +13,6 @@ class AppSetting < ApplicationRecord
   validates :vsphere_root_folder,
             length: { maximum: VSphere::Folder::VSPHERE_FOLDER_NAME_CHARACTER_LIMIT },
             format: { without: %r{/%\/}, message: 'The vSphere root folder may not contain "/", "\" or "%"' }
-  validates :git_branch, allow_blank: false
 
   after_commit :apply_settings, on: :update
 
