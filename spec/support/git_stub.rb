@@ -9,6 +9,7 @@ def create_git_stub
   allow(git).to receive(:commit_all)
   allow(git).to receive(:push)
   allow(git).to receive(:pull)
+  allow(git).to receive(:checkout)
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
 
