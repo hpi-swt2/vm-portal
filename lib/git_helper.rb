@@ -26,12 +26,13 @@ module GitHelper
     def initialize(path, for_write)
       @path = path
       initialize_settings
+      set_github_credentials
 
       if File.exist?(File.join(@path, '.git'))
-        open_git
+        @git = Git.open(@path)
         pull if for_write || !pulled_last_minute?
       else
-        setup_git
+        @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       end
     end
 
@@ -40,7 +41,7 @@ module GitHelper
       File.delete(path) if File.exist?(path)
       directory_path = File.dirname(path)
       FileUtils.mkdir_p(directory_path) unless File.exist?(directory_path)
-      File.open(path, 'w') { |f| f.write(file_content) }
+      File.open(path, 'w') {|f| f.write(file_content)}
       @git.add(path)
     end
 
@@ -68,21 +69,15 @@ module GitHelper
       @git.checkout(@repository_branch)
     end
 
-    def setup_git
-      @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
-      @git.config('user.name', @user_name)
-      @git.config('user.email', @user_email)
-    end
-
-    def open_git
-      @git = Git.open(@path)
+    # Why do we need to set dummy credentials?
+    def set_github_credentials
       @git.config('user.name', @user_name)
       @git.config('user.email', @user_email)
     end
 
     def pull
       path = File.join(@path, '.last_pull')
-      File.open(path, 'w') { |file| file.write(Time.now) }
+      File.open(path, 'w') {|file| file.write(Time.now)}
       @git.pull
     end
 
