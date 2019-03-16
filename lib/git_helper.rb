@@ -3,11 +3,7 @@
 require 'time'
 
 module GitHelper
-  def self.open_git_repository(for_write: false)
-    open_repository Puppetscript.puppet_script_path, for_write: for_write
-  end
-
-  def self.open_repository(path, for_write: false)
+  def self.open_git_repository(path: Puppetscript.puppet_script_path, for_write: false)
     FileUtils.mkdir_p(path) unless File.exist?(path)
     git_writer = GitWriter.new(path, for_write)
     yield git_writer
