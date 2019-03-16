@@ -34,6 +34,8 @@ module GitHelper
       else
         @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       end
+
+      @git.checkout(@repository_branch)
     end
 
     def write_file(file_name, file_content)
@@ -65,8 +67,6 @@ module GitHelper
       @repository_branch = AppSetting.instance.git_branch
       @user_name = AppSetting.instance.github_user_name
       @user_email = AppSetting.instance.github_user_email
-
-      @git.checkout(@repository_branch)
     end
 
     # Why do we need to set dummy credentials?
