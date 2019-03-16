@@ -4,7 +4,7 @@ def create_git_stub
   git = double
   status = double
   allow(git).to receive(:config)
-  allow(git).to receive(:status, &method(:status))
+  allow(git).to receive(:status).and_return status
   allow(git).to receive(:add)
   allow(git).to receive(:commit_all)
   allow(git).to receive(:push)
