@@ -61,8 +61,23 @@ module GitHelper
     def initialize_settings
       @repository_url = AppSetting.instance.git_repository_url
       @repository_name = AppSetting.instance.git_repository_name
+      @repository_branch = AppSetting.instance.git_branch
       @user_name = AppSetting.instance.github_user_name
       @user_email = AppSetting.instance.github_user_email
+
+      @git.checkout(@repository_branch)
+    end
+
+    def setup_git
+      @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
+      @git.config('user.name', @user_name)
+      @git.config('user.email', @user_email)
+    end
+
+    def open_git
+      @git = Git.open(@path)
+      @git.config('user.name', @user_name)
+      @git.config('user.email', @user_email)
     end
 
     def pull
@@ -79,18 +94,6 @@ module GitHelper
       difference = Time.now - last_date
 
       difference < 60
-    end
-
-    def setup_git
-      @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
-      @git.config('user.name', @user_name)
-      @git.config('user.email', @user_email)
-    end
-
-    def open_git
-      @git = Git.open(@path)
-      @git.config('user.name', @user_name)
-      @git.config('user.email', @user_email)
     end
 
     def commit_and_push(message)
