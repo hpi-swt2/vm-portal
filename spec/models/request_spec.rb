@@ -245,7 +245,7 @@ RSpec.describe Request, type: :model do
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_myvm {
-                $admins = []
+                $admins = ["#{emails[4]}"]
                 $users = ["#{emails[0]}", "#{emails[1]}", "#{emails[2]}", "#{emails[3]}", "#{emails[4]}"]
 
                 realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
