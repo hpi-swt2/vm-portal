@@ -83,8 +83,8 @@ RSpec.describe 'End to End testing', type: :feature do
     skip
     sign_in @admin
     visit '/vms/vm'
-    click_on 'New Request'
-    fill_in('VM Name', with: @requestname)
+    click_on '+'
+    fill_in('request_name', with: @requestname)
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
