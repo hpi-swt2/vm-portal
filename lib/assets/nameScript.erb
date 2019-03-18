@@ -1,0 +1,5 @@
+node \'<%= name %>\'{
+  if defined( node_<%= name %> ) {
+    class { node_<%= name %>: }
+  }
+}
