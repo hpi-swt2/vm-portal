@@ -126,10 +126,11 @@ class Request < ApplicationRecord
   end
 
   def generate_puppet_node_script
-    admin_users = users_assigned_to_requests.select(&:sudo).to_a
-    admin_users.map!(&:user)
-    admin_users += responsible_users
-    Puppetscript.node_script(name, admin_users.uniq, (users.to_a + responsible_users).uniq)
+    admin_users = users_assigned_to_requests.select(&:sudo).map(&:user)
+    # Every responsible person has sudo rights on the VM
+    admin_users = (admin_users + responsible_users).uniq
+    non_admin_users = (users + responsible_users).uniq
+    Puppetscript.node_script(name, admin_users, non_admin_users)
   end
 
   def generate_puppet_name_script
