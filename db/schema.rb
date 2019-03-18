@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_06_220207) do
+ActiveRecord::Schema.define(version: 2019_03_18_170254) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_220207) do
     t.integer "max_cpu_cores"
     t.integer "max_ram_size"
     t.integer "max_storage_size"
+    t.integer "max_shown_vms"
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 
@@ -161,12 +162,12 @@ ActiveRecord::Schema.define(version: 2019_03_06_220207) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
     t.string "provider"
     t.string "uid"
-    t.integer "user_id"
     t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "user_id"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

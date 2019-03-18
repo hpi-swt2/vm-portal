@@ -72,12 +72,16 @@ module VSphere
     def create_vm(cpu, ram, capacity, name, cluster)
       return nil if cluster.networks.empty?
 
-      vm_config = creation_config(cpu, ram, capacity, name, cluster.networks.first)
+      vm_config = creation_config(cpu, ram, capacity, add_prefix(name), cluster.networks.first)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
       VSphere::VirtualMachine.new vm
     end
 
     private
+
+    def add_prefix(name)
+      "#{Time.now.strftime('%Y%m%d')}_vm-#{name}"
+    end
 
     def managed_folder_entry
       @folder

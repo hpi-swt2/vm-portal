@@ -30,10 +30,6 @@ class DashboardController < ApplicationController
     @revivable = @revivable.select { |vm| user_vms.include?(vm) }
   end
 
-  def max_shown_vms
-    10
-  end
-
   def number_of_notifications
     3
   end

@@ -39,6 +39,7 @@ class AppSettingsController < ApplicationController
                                         :puppet_init_path, :puppet_classes_path, :puppet_nodes_path,
                                         :email_notification_smtp_address, :email_notification_smtp_port, :email_notification_smtp_domain,
                                         :email_notification_smtp_user, :email_notification_smtp_password,
-                                        :vm_archivation_timeout, :min_cpu_cores, :max_cpu_cores, :max_ram_size, :max_storage_size)
+                                        :vm_archivation_timeout, :min_cpu_cores, :max_cpu_cores, :max_ram_size, :max_storage_size,
+                                        :max_shown_vms)
   end
 end
