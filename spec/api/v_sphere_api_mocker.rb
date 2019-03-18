@@ -104,7 +104,7 @@ def vim_vm_mock(
     name,
     power_state: 'poweredOn',
     vm_ware_tools: 'toolsNotInstalled',
-    boot_time: 'Yesterday',
+    boot_time: Time.now,
     guest_heartbeat_status: 'green',
     macs: [['Network Adapter 1', 'My Mac address']]
   )
