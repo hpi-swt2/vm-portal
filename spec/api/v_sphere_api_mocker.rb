@@ -42,8 +42,9 @@ def vim_folder_mock(name, subfolders, vms, clusters) # rubocop:disable Metrics/A
   children = subfolders + vms + clusters
   children = extract_vim_objects children
   folder = double
-  allow(folder).to receive(:name).and_return(name)
-  allow(folder).to receive(:children).and_return(children)
+  allow(folder).to receive(:name).and_return name
+  allow(folder).to receive(:parent).and_return nil
+  allow(folder).to receive(:children).and_return children
   allow(folder).to receive(:is_a?).and_return false
   allow(folder).to receive(:is_a?).with(RbVmomi::VIM::Folder).and_return true
   allow(folder).to receive_message_chain(:MoveIntoFolder_Task, :wait_for_completion)

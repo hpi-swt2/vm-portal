@@ -101,6 +101,22 @@ module VSphere
       end
     end
 
+    def full_path
+      path = [name]
+      parent = parent_folder
+      until parent.nil?
+        path << parent.name
+        parent = parent.parent
+      end
+      path.reverse
+    end
+
+    def parent_folder
+      root_folder.subfolders(recursive: true).find do |folder|
+        folder.vms(recursive: false).include? self
+      end
+    end
+
     # Guest OS communication
     def vm_ware_tools?
       tool_status = @vm&.guest&.toolsStatus

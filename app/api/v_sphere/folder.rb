@@ -15,10 +15,17 @@ module VSphere
       @folder = rbvmomi_folder
     end
 
-    def subfolders
-      @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }.map do |each|
+    def parent
+      @folder.parent
+    end
+
+    def subfolders(recursive: false)
+      folders = @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }.map do |each|
         Folder.new each
       end
+
+      folders += folders.flat_map { |each| each.subfolders recursive: true } if recursive
+      folders
     end
 
     def vms(recursive: true)
