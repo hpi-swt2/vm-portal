@@ -5,6 +5,10 @@ module Puppetscript
     render_template 'initScript', binding
   end
 
+  def self.user_script(user)
+    render_template 'userScript', binding
+  end
+
   def self.node_script(vm_name, admins, users)
     render_template 'nodeScript', binding
   end
