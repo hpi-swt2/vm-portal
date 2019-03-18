@@ -1,15 +1,15 @@
 <div class="clearfix">
   <h1 class="float-left">Virtual Machines</h1>
+  <input class="filter-box ml-3 mt-2" type="text" id="filter_active" onkeyup="filterTables('filter_active', ['vms_active', 'vms_to_be_archived', 'vms_to_be_revived', 'vms_archived'])" placeholder="Search all VMs">
   <% if current_user.employee_or_admin? %>
     <%= button_to "+", new_request_path,
       method: :get,
       title: 'Request new VM',
       :data => { toggle: 'tooltip', placement: 'left' },
-      class: "btn btn-primary float-right mt-3" %>
+      form_class: "float-right",
+      class: "btn btn-primary" %>
   <% end %>
 </div>
-
-<input class="filter-box" type="text" id="filter_active" onkeyup="filterTables('filter_active', ['vms_active', 'vms_to_be_archived', 'vms_to_be_revived', 'vms_archived'])" placeholder="Search">
 
 <%= render 'section', {header: 'Active VMs', id: 'active', vms: @vms, buttons: 'running_vm_buttons'} %>
 <%= render 'section', {header: 'Archivable VMs', id: 'to_be_archived', vms: @pending_archivation_vms, buttons: 'archive_buttons'} %>
