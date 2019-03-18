@@ -101,7 +101,7 @@ RSpec.describe 'End to End testing', type: :feature do
     click_on 'Update'
     visit "/vms/vm/#{@requestname}"
     expect(page).to have_text('offline')
-    select('Power On', from: 'navbarDropdown')
+    click_on 'Power On'
     expect(page).to have_text('online')
   end
 end

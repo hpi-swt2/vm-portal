@@ -102,7 +102,7 @@ end
 
 def vim_vm_mock(
     name,
-    power_state: 'poweredOn',
+    power_state: 'poweredOff',
     vm_ware_tools: 'toolsNotInstalled',
     boot_time: Time.now,
     guest_heartbeat_status: 'green',
