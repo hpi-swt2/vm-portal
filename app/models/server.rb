@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Part of Ruby stdlib, used for IP regexes
+# https://www.rubydoc.info/stdlib/resolv/Resolv
 require 'resolv'
 
 class Server < ApplicationRecord
