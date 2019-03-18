@@ -69,6 +69,8 @@ module VSphere
       @folder.MoveIntoFolder_Task(list: [managed_entry]).wait_for_completion
     end
 
+    # vSphere's API-call to create Virtual Machines is only available on folders
+    # https://code.vmware.com/apis/196/vsphere#/doc/vim.Folder.html#createVm
     def create_vm(cpu, ram, capacity, name, cluster)
       vm_config = creation_config(cpu, ram, capacity, prefix(name))
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
