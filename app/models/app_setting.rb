@@ -16,7 +16,7 @@ class AppSetting < ApplicationRecord
 
   after_commit :apply_settings, on: :update
 
-  def self.refresh_instance
+  def self.clear_cache
     @instance = nil
   end
 
@@ -28,7 +28,7 @@ class AppSetting < ApplicationRecord
   private
 
   def apply_settings
-    self.class.refresh_instance
+    self.class.clear_cache
     apply_mail_settings
     GitHelper.reset
   end
