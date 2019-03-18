@@ -22,9 +22,7 @@
         </div>
       </td>
       <td class="table-active">
-        <%= link_to vm.name,
-                    {controller: :vms, action: 'show', id: vm.name},
-                    method: :get, class: "btn btn-link" %>
+        <%= link_to vm.name, {controller: :vms, action: 'show', id: vm.name}, method: :get %>
       </td>
       <td class="table-active">
         <% if vm.project.nil? %>
