@@ -16,13 +16,19 @@ class AppSetting < ApplicationRecord
 
   after_commit :apply_settings, on: :update
 
+  def self.clear_cache
+    @instance = nil
+  end
+
   def self.instance
-    find(1)
+    @instance = find(1) if @instance.nil?
+    @instance
   end
 
   private
 
   def apply_settings
+    self.class.clear_cache
     apply_mail_settings
     GitHelper.reset
   end

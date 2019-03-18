@@ -7,7 +7,13 @@
 end %>
 
 <div class="container mb-3 pl-0 pr-0 clearfix">
-  <h1 class="mb-0"><%= @vm.name unless @vm.nil? %></h1>
+  <ol class="breadcrumb" aria-label="The Virtual Machines full path">
+    <% @vm.full_path.each do |path_entry| %>
+      <li class="breadcrumb-item"><%= path_entry %></li>
+    <% end %>
+  </ol>
+
+  <h1 class="mb-0"><%= @vm.name %></h1>
   <% os = @vm.summary&.config&.guestFullName %>
   <% unless os.nil? || os.downcase.include?('other') %>
     <div class="text-right align-bottom pt-2"><h2 class="mb-0"><%= "(#{os})"%></h2></div>
@@ -92,7 +98,7 @@ end %>
 
   @hardware = {'IP Address' => @vm.ip,
                'DNS' => @vm.dns,
-               'Heartbeat Status' => @vm.guest_heartbeat_status }
+               'Heartbeat Status' => @vm.guest_heartbeat_status}
   %>
 
 <div class ="table-active container pt-3 pb-3 mb-3 text-center" style="width: 100%">
