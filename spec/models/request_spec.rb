@@ -229,11 +229,10 @@ RSpec.describe Request, type: :model do
     it 'returns correct declaration script for a given request' do
       script = request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
-        node \'myvm\'{
-
-            if defined( node_myvm) {
-                        class { node_myvm: }
-            }
+        node \'myvm\' {
+          if defined( node_myvm ) {
+            class { node_myvm: }
+          }
         }
       NAME_SCRIPT
       expect(script).to eq(expected_string)
@@ -248,11 +247,11 @@ RSpec.describe Request, type: :model do
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_myvm {
-                $admins = []
-                $users = ["#{email}", "#{email2}", "#{email3}", "#{email4}"]
+          $admins = []
+          $users = ["#{email}", "#{email2}", "#{email3}", "#{email4}"]
 
-                realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-                realize(Accounts::Virtual[$users])
+          realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+          realize(Accounts::Virtual[$users])
         }
       NODE_SCRIPT
       format(expected_string, email, email2, email3, email4)
