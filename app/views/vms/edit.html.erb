@@ -1,5 +1,3 @@
-<% require './app/assets/helpers/hart_form_builder' %>
-
 <h1>Edit VM information of <span style="font-style: italic;"><%= @vm.name %></span></h1>
 
 <%= form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @vm.name }, method: :patch, local: true, builder: HartFormBuilder) do |form| %>
