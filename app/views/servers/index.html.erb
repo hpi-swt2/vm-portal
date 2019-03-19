@@ -20,7 +20,7 @@
   <tbody>
   <% @servers.each do |server| %>
     <tr>
-      <td class="table-active"><%= link_to server.name, server, class: "btn btn-link" %></td>
+      <td class="table-active"><%= link_to server.name, server %></td>
       <td class="table-active"><%= server.vendor %></td>
       <td class="table-active"><%= server.model %></td>
       <td class="table-active"><%= server.responsible&.name %></td>
