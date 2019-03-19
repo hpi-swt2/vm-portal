@@ -4,11 +4,12 @@ def create_git_stub
   git = double
   status = double
   allow(git).to receive(:config)
-  allow(git).to receive(:status) { status }
+  allow(git).to receive(:status).and_return status
   allow(git).to receive(:add)
   allow(git).to receive(:commit_all)
   allow(git).to receive(:push)
   allow(git).to receive(:pull)
+  allow(git).to receive(:checkout)
   allow(status).to receive(:added).and_return([])
   allow(status).to receive(:changed).and_return([])
 
@@ -32,6 +33,7 @@ def create_git_stub
   AppSetting.instance.update!(
     git_repository_url: 'test_repository_url',
     git_repository_name: repository_name,
+    git_branch: 'master',
     github_user_name: 'test_user_name',
     github_user_email: 'test@email.com'
   )
