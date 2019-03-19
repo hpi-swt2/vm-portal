@@ -108,7 +108,7 @@ class Request < ApplicationRecord
 
   # Error handling has been moved into push_to_git_with_warnings to provide easier feedback for the user
   def push_to_git
-    GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
+    GitHelper.open_git_repository(for_write: true) do |git_writer|
       git_writer.write_file(Puppetscript.node_file_name(name), generate_puppet_node_script)
       git_writer.write_file(Puppetscript.class_file_name(name), generate_puppet_name_script)
       git_writer.save(commit_message(git_writer))
@@ -126,9 +126,11 @@ class Request < ApplicationRecord
   end
 
   def generate_puppet_node_script
-    admin_users = users_assigned_to_requests.select(&:sudo).to_a
-    admin_users.map!(&:user)
-    Puppetscript.node_script(name, admin_users, users.to_a)
+    admin_users = users_assigned_to_requests.select(&:sudo).map(&:user)
+    # Every responsible person has sudo rights on the VM
+    admin_users = (admin_users + responsible_users).uniq
+    non_admin_users = (users + responsible_users).uniq
+    Puppetscript.node_script(name, admin_users, non_admin_users)
   end
 
   def generate_puppet_name_script

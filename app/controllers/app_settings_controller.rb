@@ -34,11 +34,12 @@ class AppSettingsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def app_setting_params
-    params.require(:app_setting).permit(:git_repository_url, :git_repository_name, :github_user_name, :github_user_email,
+    params.require(:app_setting).permit(:git_repository_url, :git_repository_name, :git_branch, :github_user_name, :github_user_email,
                                         :vsphere_server_ip, :vsphere_server_user, :vsphere_server_password, :vsphere_root_folder,
                                         :puppet_init_path, :puppet_classes_path, :puppet_nodes_path,
                                         :email_notification_smtp_address, :email_notification_smtp_port, :email_notification_smtp_domain,
                                         :email_notification_smtp_user, :email_notification_smtp_password,
-                                        :vm_archivation_timeout, :min_cpu_cores, :max_cpu_cores, :max_ram_size, :max_storage_size)
+                                        :vm_archivation_timeout, :min_cpu_cores, :max_cpu_cores, :max_ram_size, :max_storage_size,
+                                        :max_shown_vms)
   end
 end
