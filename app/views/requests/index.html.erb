@@ -87,7 +87,7 @@
             <%= request.accepted? ? 'bg-success' : 'bg-danger'  %>">
           </div>
           <% if request.accepted? %>
-            <a class="btn-manage script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
+            <a class="btn btn-primary btn-sm script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
             </a>
             <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">

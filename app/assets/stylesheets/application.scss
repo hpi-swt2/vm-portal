@@ -14,7 +14,101 @@
  *= require_self
  *= require_tree .
  */
-@import "application/table";
+
+$primary: #0C415F;
+$danger: #a80833;
+$primary-active: #1f6993;
+$primary-hover: #1a5b82;
+
+@import "bootstrap";
+
+th {
+  @extend .text-white;
+  @extend .bg-primary;
+}
+
+html, body {
+  height: 100%;
+  min-width: 1000px;
+  width: 100%;
+}
+
+.page-container {
+  margin: 50px 0 0 50px;
+  width: calc(100% - 100px);
+}
+
+.btn-link, a {
+  color: $primary;
+}
+
+h1 {
+  color: $primary;
+  margin-bottom: .5em;
+}
+
+.dashboard-header-link {
+  text-decoration: none !important;
+}
+
+h3:hover {
+  text-decoration: none;
+  color: $primary-hover;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#content {
+  flex: 1 0 auto;
+}
+
+#footer {
+  flex-shrink: 0;
+
+  a {
+    color: white;
+  }
+
+  .footer-element {
+    padding-top: 20px;
+
+    &__left {
+      @extend .footer-element;
+      padding-left: 50px;
+    }
+  }
+}
+
+.dropdown-menu {
+  padding: 10px;
+  width: auto;
+}
+
+.empty-table-label {
+  text-align: center;
+  padding-top: 1.2em;
+}
+
+.table-bar {
+  width: auto;
+  border: 0;
+  margin: 1.5em 0 1em;
+
+  td {
+    padding-right: 20px;
+  }
+}
+
+.table-flex-width {
+  width: auto;
+}
+
+.unread {
+  background-color: #e6f3ff;
+}
 
 .bulletless {
   list-style-type: none;
