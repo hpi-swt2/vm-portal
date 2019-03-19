@@ -21,6 +21,7 @@ if AppSetting.all.empty?
                      puppet_nodes_path: '/Node',
                      puppet_classes_path: '/Name',
                      vm_archivation_timeout: 3,
+                     max_shown_vms: 10,
                      min_cpu_cores: 1,
                      max_cpu_cores: 64,
                      max_ram_size: 256,

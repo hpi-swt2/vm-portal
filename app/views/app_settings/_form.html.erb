@@ -93,10 +93,12 @@
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
-        <h5>Virtual Machine Archivation</h5>
+        <h5>General Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_number_field 'Archivation Timeout (in days)', :vm_archivation_timeout %>
+        <%= form.labeled_number_field 'Virtual Machine Archivation Timeout (in days)', :vm_archivation_timeout %>
+
+        <%= form.labeled_number_field 'Maximum number of VMs shown on the dashboard', :max_shown_vms %>
       </div>
     </div>
 
