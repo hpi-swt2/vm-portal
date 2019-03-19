@@ -9,7 +9,8 @@
     <% unless buttons.nil? %>
       <th scope="col">Actions</th>
     <% end %>
-    <th scope="col" class="d-none">Description</th> <!-- This is not intended to be shown, just important for the search functionality -->
+    <%# Element hidden, used for search %>
+    <th scope="col" class="d-none">Description</th>
   </tr>
   </thead>
   <tbody id="vms">
@@ -47,9 +48,8 @@
           <%= render buttons.to_s, vm: vm %>
         </td>
       <% end %>
-      <td class="d-none"> <!-- Also not intended to be shown! -->
-        <%= vm.config&.description %>
-      </td>
+      <%# Element hidden, used for search %>
+      <td class="d-none"><%= vm.config&.description %></td>
     </tr>
   <% end %>
   </tbody>
