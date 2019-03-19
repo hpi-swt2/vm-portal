@@ -1,5 +1,3 @@
-<% require './app/assets/helpers/hart_form_builder' %>
-
 <%= form_with(model: request, local: true) do |form| %>
   <% if request.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">

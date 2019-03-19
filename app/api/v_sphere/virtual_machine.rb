@@ -76,7 +76,7 @@ module VSphere
     def self.user_vms(user)
       vms = []
       begin
-        GitHelper.open_repository Puppetscript.puppet_script_path do
+        GitHelper.open_git_repository do
           vm_names = prepare_vm_names
           vm_names.each do |vm_name|
             vms.append(find_by_name(vm_name)) if includes_user?(vm_name, user)
@@ -313,7 +313,7 @@ module VSphere
     def users
       users = []
       begin
-        GitHelper.open_repository Puppetscript.puppet_script_path do
+        GitHelper.open_git_repository do
           remote_users = Puppetscript.read_node_file(name)
           users = remote_users[:users] || []
         end
@@ -343,7 +343,7 @@ module VSphere
     end
 
     def users=(ids)
-      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
+      GitHelper.open_git_repository(for_write: true) do |git_writer|
         name_script, node_script = user_name_and_node_script(ids)
         write_node_and_class_file(git_writer, name_script, node_script)
       end
@@ -352,7 +352,7 @@ module VSphere
     end
 
     def sudo_users=(ids)
-      GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
+      GitHelper.open_git_repository(for_write: true) do |git_writer|
         name_script, node_script = sudo_name_and_node_script(ids)
         write_node_and_class_file(git_writer, name_script, node_script)
       end
@@ -370,7 +370,7 @@ module VSphere
     def sudo_users
       admins = []
       begin
-        GitHelper.open_repository Puppetscript.puppet_script_path do
+        GitHelper.open_git_repository do
           users = Puppetscript.read_node_file(name)
           admins = users[:admins] || []
         end

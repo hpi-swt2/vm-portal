@@ -1,5 +1,3 @@
-<% require './app/assets/helpers/hart_form_builder' %>
-
 <%= form_with(model: app_setting, local: true, builder: HartFormBuilder) do |form| %>
   <% if app_setting.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">
@@ -53,6 +51,8 @@
         <%= form.labeled_text_field 'Repository URL', :git_repository_url %>
 
         <%= form.labeled_text_field 'Repository Name', :git_repository_name %>
+
+        <%= form.labeled_text_field 'Git Branch', :git_branch %>
 
         <%= form.labeled_text_field 'Github Username', :github_user_name %>
 
