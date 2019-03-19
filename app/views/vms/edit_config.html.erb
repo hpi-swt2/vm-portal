@@ -1,5 +1,3 @@
-<% require './app/assets/helpers/hart_form_builder' %>
-
 <h1>Configuring IP and DNS for VM '<%= @vm.name %>'</h1>
 
 <%= form_with(scope: :vm_info, model: @vm.config, url: {:controller => "vms", :action => "update_config", id: @vm.config.name}, local: true, builder: HartFormBuilder) do |form| %>
