@@ -1,19 +1,18 @@
-<h1>Projects</h1>
+<h1 class="float-left">Projects</h1>
 
-<table class="table-bar">
-  <tbody>
-    <tr>
-      <% if current_user.employee_or_admin? %>
-      <td>
-        <%=link_to(fa_icon('plus'),
-        {controller: :projects, action: 'new'},
-        method: :get, class: 'btn btn-primary', id: 'createNewProjectButton') %>
-      </td>
-      <% end %>
-    </tr></tbody></table>
+<div>
+  <% if current_user.employee_or_admin? %>
+    <td>
+      <%= link_to(fa_icon('plus'), new_project_path,
+        title: 'Create new project',
+        :data => { toggle: 'tooltip', placement: 'left' },
+        class: 'btn btn-primary float-right', id: 'createNewProjectButton') %>
+    </td>
+  <% end %>
+</div>
 
 <%= render 'list', projects: @projects %>
 
 <% if @projects.length == 0 %>
-<p class="empty-table-label">No projects created yet</p>
+  <p class="empty-table-label">No projects created yet</p>
 <% end %>

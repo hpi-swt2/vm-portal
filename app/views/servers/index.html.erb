@@ -1,20 +1,22 @@
+<h1 class="float-left">Servers</h1>
+
+<input class="filter-box float-left ml-3 mt-2" type="text" id="filter" onkeyup="filterTable('filter', 'servers')" placeholder="Search servers">
 <div class="clearfix">
-  <h1 class="float-left">Servers</h1>
   <% if current_user.admin? %>
-    <%= link_to(fa_icon('plus'), new_server_path,
-      method: :get, class: "btn btn-primary float-right mt-3") %>
+    <%= link_to fa_icon('plus'), new_server_path,
+      title: 'Create new server',
+      :data => { toggle: 'tooltip', placement: 'left' },
+      class: "btn btn-primary float-right" %>
   <% end %>
 </div>
-
-<input class="filter-box" type="text" id="filter" onkeyup="filterTable('filter', 'servers')" placeholder="Search">
 
 <table data-toggle="table" class="table" id="servers">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="rounded-left">Name</th>
+    <th scope="col" data-sortable="true">Name</th>
     <th scope="col" data-sortable="true">Vendor</th>
     <th scope="col" data-sortable="true">Model</th>
-    <th scope="col" data-sortable="true" class="rounded-right">Responsible</th>
+    <th scope="col" data-sortable="true">Responsible</th>
   </tr>
   </thead>
   <tbody>
