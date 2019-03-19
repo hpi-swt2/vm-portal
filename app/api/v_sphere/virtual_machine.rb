@@ -92,8 +92,13 @@ module VSphere
       @vm = rbvmomi_vm
     end
 
+    # handles name format YYYYMMDD_vm-name
     def name
-      @vm.name
+      if /^\d{8}_vm-/.match? @vm.name
+        @vm.name[12..-1]
+      else
+        @vm.name
+      end
     end
 
     def full_path
