@@ -81,8 +81,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   context 'when the user is a user' do
     let(:current_user) { FactoryBot.create :user }
 
-    it 'does not link to new vm page' do
-      expect(rendered).not_to have_button('+')
+    it 'does not link to new vm request page' do
+      expect(rendered).not_to have_link(nil, href: new_request_path)
     end
   end
 
@@ -90,7 +90,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('+')
+      expect(rendered).to have_link(nil, href: new_request_path)
     end
   end
 
@@ -113,7 +113,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('+')
+      expect(rendered).to have_link(nil, href: new_request_path)
     end
   end
 end
