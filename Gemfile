@@ -13,6 +13,8 @@ gem 'sqlite3', '~> 1.3.6' # development and testing
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
+# Gem integrates the C implementation of Sass, LibSass, into the asset pipeline
+# https://github.com/sass/sassc-rails
 gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

@@ -1,7 +1,6 @@
 // Place all the styles related to the vm controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-@import "layout";
 
 .half-screen-box {
     width: 49%;
@@ -27,14 +26,6 @@
   padding-bottom: 1.5em;
 }
 
-.filter_icon {
-  font-size: 2em;
-}
-
-h2{
-  margin-top: 40px;
-}
-
 .round {
   height: 1rem;
   width: 1rem;
@@ -42,16 +33,6 @@ h2{
   vertical-align: middle;
   margin-right: 0.5rem;
   display: inline-block;
-}
-
-.boot-time {
-  height: 1rem;
-  font-size: 0.75rem;
-  background-color: rgba($success, 0.3);
-  border-radius: 0.5rem;
-  width: 11rem;
-  vertical-align: middle;
-  float: left;
 }
 
 .arrow-up::before {
@@ -80,18 +61,4 @@ h2{
 
 .script-doc::before {
   content: "\1F4CE";
-}
-
-.btn-manage {
-  font-size: 1.25rem;
-  margin-left: 0.5rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-}
-
-.btn-manage:hover {
-  text-decoration: none;
-  color: black;
-  filter: drop-shadow(2px 2px 1px $secondary);
 }
