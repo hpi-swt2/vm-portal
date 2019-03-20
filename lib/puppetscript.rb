@@ -19,7 +19,7 @@ module Puppetscript
 
   # explicit parameter binding enables to capture parameters
   def self.render_template(template_name, binding)
-    template = File.open('./lib/assets/' + template_name + '.erb', encoding: 'utf-8', &:read)
+    template = File.open('./lib/templates/' + template_name + '.pp.erb', encoding: 'utf-8', &:read)
     ERB.new(template).result binding
   end
 
