@@ -2,69 +2,25 @@
 
 module Puppetscript
   def self.init_script(users)
-    users_string = ''.dup
-    users.each do |user|
-      # "  " for identation
-      users_string << user_script(user)
-    end
-    format(generic_init_script, users_string)
-  end
-
-  def self.node_script(name, admin_users, users)
-    puppet_string = generic_node_script
-    admins_string = generate_user_array(admin_users)
-    users_string = generate_user_array(users)
-    vm_name_with_underscores = replace_dashes_with_underscores(name)
-    format(puppet_string, vm_name_with_underscores, admins_string, users_string)
-  end
-
-  def self.name_script(name)
-    puppet_script = generic_name_script
-    vm_name_with_underscores = replace_dashes_with_underscores(name)
-    format(puppet_script, name, vm_name_with_underscores, vm_name_with_underscores)
-  end
-
-  def self.generic_init_script
-    <<~INIT_SCRIPT
-      class accounts {
-        %s
-      }
-    INIT_SCRIPT
+    render_template 'initScript', binding
   end
 
   def self.user_script(user)
-    <<-USER_SCRIPT
-
-  @accounts::virtual { '#{user.human_readable_identifier}':
-    uid             =>  #{user.user_id},
-    realname        =>  '#{user.first_name} #{user.last_name}',
-    sshkeytype      =>  'ssh-rsa',
-    sshkey          =>  '#{user.ssh_key.try(:sub!, 'ssh-rsa ', '')}'
-  }
-    USER_SCRIPT
+    render_template 'userScript', binding
   end
 
-  def self.generic_node_script
-    <<~NODE_SCRIPT
-      class node_%s {
-              $admins = [%s]
-              $users = [%s]
-
-              realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-              realize(Accounts::Virtual[$users])
-      }
-    NODE_SCRIPT
+  def self.node_script(vm_name, admins, users)
+    render_template 'nodeScript', binding
   end
 
-  def self.generic_name_script
-    <<~NAME_SCRIPT
-      node \'%s\'{
+  def self.name_script(name)
+    render_template 'nameScript', binding
+  end
 
-          if defined( node_%s) {
-                      class { node_%s: }
-          }
-      }
-    NAME_SCRIPT
+  # explicit parameter binding enables to capture parameters
+  def self.render_template(template_name, binding)
+    template = File.open('./lib/templates/' + template_name + '.pp.erb', encoding: 'utf-8', &:read)
+    ERB.new(template).result binding
   end
 
   def self.generate_user_array(users)
