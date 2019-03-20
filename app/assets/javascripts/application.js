@@ -24,8 +24,18 @@
 //= require select2
 //= require clipboard
 
+// With Turbolinks, jQuery $(document).ready events fire only in response
+// to the initial page load, not after any subsequent page changes
+// https://github.com/turbolinks/turbolinks#observing-navigation-events
 document.addEventListener("turbolinks:load", function() {
+  // Initialize 'Select2', jQuery based replacement for select boxes
+  // https://github.com/argerim/select2-rails#usage
   $('.selecttwo').select2();
+
+  // Initialize Boostrap tooltips for all elements having data-toggle
+  // attribute set to 'tooltip'. Uses the title attr as tooltip.
+  // https://getbootstrap.com/docs/4.0/components/tooltips
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).ready(function(){
