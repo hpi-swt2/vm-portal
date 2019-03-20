@@ -2,9 +2,9 @@
   <%= link_to '',
               {controller: :vms, action: 'archive_vm', id: vm.name},
               method: :post, data: { confirm: 'Are you sure you want to archive this VM?' },
-              class: "btn-manage float-right checkmark" %>
+              class: "btn btn-primary btn-sm float-right checkmark" %>
 <% end %>
 <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},
             method: :post,
-            class: "btn-manage float-right cross" %>
+            class: "btn btn-primary btn-sm float-right cross" %>

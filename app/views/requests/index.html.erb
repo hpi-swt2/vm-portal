@@ -36,9 +36,7 @@
   <tbody>
   <% @pending_requests&.each do |request| %>
     <tr>
-      <td class="table-active">
-        <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
-      </td>
+      <td class="table-active"><%= link_to request.name, request_path(request) %></td>
       <td class="table-active"><%= request.cpu_cores %></td>
       <td class="table-active"><%= request.ram_gb %> GB</td>
       <td class="table-active"><%= request.storage_gb %> GB</td>
@@ -72,9 +70,7 @@
   <tbody>
   <% @resolved_requests&.each do |request| %>
     <tr>
-      <td class="table-active">
-        <%= link_to request.name, request_path(request), class: "btn btn-link"  %>
-      </td>
+      <td class="table-active"><%= link_to request.name, request_path(request) %></td>
       <td class="table-active"><%= request.cpu_cores %></td>
       <td class="table-active"><%= request.ram_gb %> GB</td>
       <td class="table-active"><%= request.storage_gb %> GB</td>
@@ -87,7 +83,7 @@
             <%= request.accepted? ? 'bg-success' : 'bg-danger'  %>">
           </div>
           <% if request.accepted? %>
-            <a class="btn-manage script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
+            <a class="btn btn-primary btn-sm script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
             </a>
             <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
