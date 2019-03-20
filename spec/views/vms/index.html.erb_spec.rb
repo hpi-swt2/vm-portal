@@ -55,7 +55,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css 'a.btn-manage[data-confirm]'
+      expect(rendered).to have_css 'a[data-confirm]'
     end
 
     context 'when vmwaretools are not installed' do
@@ -81,8 +81,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
   context 'when the user is a user' do
     let(:current_user) { FactoryBot.create :user }
 
-    it 'does not link to new vm page' do
-      expect(rendered).not_to have_button('+')
+    it 'does not link to new vm request page' do
+      expect(rendered).not_to have_link(nil, href: new_request_path)
     end
   end
 
@@ -90,7 +90,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) { FactoryBot.create :employee }
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('+')
+      expect(rendered).to have_link(nil, href: new_request_path)
     end
   end
 
@@ -101,8 +101,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
       expect(rendered).to have_css('a.fa-play')
     end
 
-    it 'demands confirmation on shutdown' do
-      expect(rendered).to have_css('a.btn-manage[data-confirm]')
+    it 'demands confirmation on shutdown and reboot' do
+      expect(rendered).to have_css('a[data-confirm]', minimum: 2)
     end
 
     it 'shows no power buttons when vmwaretools are not installed' do
@@ -113,7 +113,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'links to new vm page' do
-      expect(rendered).to have_button('+')
+      expect(rendered).to have_link(nil, href: new_request_path)
     end
   end
 end
