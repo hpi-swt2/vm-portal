@@ -81,8 +81,8 @@ RSpec.describe 'End to End testing', type: :feature do
 
   it 'is possible to turn on a VM' do
     sign_in @admin
-    visit '/vms/vm'
-    click_on '+'
+    visit vms_path
+    find("a[href='#{new_request_path}']").click
     fill_in('request_name', with: @requestname)
     fill_in('Description', with: 'test')
     select(@project.name, from: 'request_project_id')
