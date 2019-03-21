@@ -36,9 +36,10 @@
         <% if vm.responsible_users.empty? %>
           No responsible users found!
         <% else %>
-          <ul class="list-unstyled">
+        <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
+          <ul class="list-inline mb-0">
             <% vm.responsible_users.each do |user| %>
-              <li><%= link_to user.name, user %></li>
+              <li class="list-inline-item"><%= link_to user.name, user %></li>
             <% end %>
           </ul>
         <% end %>

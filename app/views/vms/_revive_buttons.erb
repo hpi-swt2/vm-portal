@@ -2,10 +2,14 @@
   <%= link_to '',
               {controller: :vms, action: 'revive_vm', id: vm.name},
               method: :post,
-              class: "btn btn-primary btn-sm float-right arrow-up" %>
+              data: { confirm: "Are you sure you want to revive '#{vm.name}'?" },
+              title: "Revive VM",
+              class: "btn btn-primary btn-sm fa fa-arrow-circle-up" %>
 <% else %>
   <%= link_to '',
               {controller: :vms, action: 'request_vm_revive', id: vm.name},
               method: :post,
-              class: "btn btn-primary btn-sm float-right arrow-up" %>
+              data: { confirm: "Are you sure you want to request revival of '#{vm.name}'?" },
+              title: "Request revival",
+              class: "btn btn-primary btn-sm fa fa-arrow-circle-up" %>
 <% end %>
