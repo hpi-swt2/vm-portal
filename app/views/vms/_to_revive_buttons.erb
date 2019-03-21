@@ -2,7 +2,7 @@
   <%= link_to '',
               {controller: :vms, action: 'revive_vm', id: vm.name},
               method: :post,
-              data: { confirm: "Are you sure you want to revive the VM '#{vm.name}'?" },
+              data: { confirm: "Are you sure you want to revive '#{vm.name}'?" },
               title: "Revive VM",
-              class: "btn btn-primary btn-sm checkmark" %>
+              class: "btn btn-primary btn-sm fa fa-arrow-circle-up" %>
 <% end %>

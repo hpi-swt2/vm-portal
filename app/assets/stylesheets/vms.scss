@@ -35,26 +35,6 @@
   display: inline-block;
 }
 
-.checkmark::before {
-  content: "\2713";
-}
-
-.cross::before {
-  content: "\2715";
-}
-
-.replay::before {
-  content: "\21BB";
-}
-
-.play::before {
-  content: "\25B6";
-}
-
-.stop::before {
-  content: "\25A0 ";
-}
-
 .script-doc::before {
   content: "\1F4CE";
 }
