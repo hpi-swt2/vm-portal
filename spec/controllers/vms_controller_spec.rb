@@ -9,11 +9,11 @@ RSpec.describe VmsController, type: :controller do
   let(:admin) { FactoryBot.create :admin }
 
   let(:vm1) do
-    v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm2) do
-    v_sphere_vm_mock 'myVM', power_state: 'poweredOff', boot_time: 'now', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'myVM', power_state: 'poweredOff', vm_ware_tools: 'toolsInstalled'
   end
 
   let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }

@@ -6,13 +6,13 @@ RSpec.describe DashboardController, type: :controller do
   let(:user) { FactoryBot.create :user }
 
   let(:vm1) do
-    vm = v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    vm = v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled'
     associate_users_with_vms(users: [user], vms: [vm])
     vm
   end
 
   let(:vm2) do
-    v_sphere_vm_mock 'not-my-vm', power_state: 'poweredOn', boot_time: 'Thursday', vm_ware_tools: 'toolsInstalled'
+    v_sphere_vm_mock 'not-my-vm', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled'
   end
 
   before do
