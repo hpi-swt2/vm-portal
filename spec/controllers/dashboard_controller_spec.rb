@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DashboardController, type: :controller do
-  let(:user) { FactoryBot.create :user }
+  let(:user) {FactoryBot.create :user}
 
   let(:vm1) do
     vm = v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled'
@@ -37,7 +37,7 @@ RSpec.describe DashboardController, type: :controller do
     end
 
     context 'when logged in as an admin' do
-      let(:user) { FactoryBot.create :admin }
+      let(:user) {FactoryBot.create :admin}
 
       before do
         sign_in(user)
