@@ -6,7 +6,7 @@ FactoryBot.define do
     vsphere_server_ip { '127.0.0.1' }
     vsphere_server_user { 'user@domain.tld' }
     vsphere_server_password { 'verySecure' }
-    vsphere_root_folder { '/' }
+    vsphere_root_folder { '' }
     min_cpu_cores { 1 }
     max_cpu_cores { 64 }
     max_ram_size { 128 }
