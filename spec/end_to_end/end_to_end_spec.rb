@@ -99,6 +99,7 @@ RSpec.describe 'End to End testing', type: :feature do
     fill_in('vm_info_ip', with: '123.0.0.23')
     fill_in('vm_info_dns', with: 'www.example.com')
     click_on 'Update'
+    click_on @requestname
     visit "/vms/vm/#{@requestname}"
     expect(page).to have_text('offline')
     click_on 'Power On'
