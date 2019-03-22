@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :app_setting do
-    singleton_guard { 1 }
+    singleton_guard { 0 }
     vsphere_server_ip { '127.0.0.1' }
     vsphere_server_user { 'user@domain.tld' }
     vsphere_server_password { 'verySecure' }
