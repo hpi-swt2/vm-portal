@@ -21,6 +21,7 @@
             <% User.roles.map(&:first).each do |role| %>
               <%= link_to role.capitalize,
                           update_role_user_path(user, role: role),
+                          id: "btn-#{role}-#{user.id}",
                           method: :patch, 
                           class: "btn btn-#{if user.role == role then 'primary' else 'light' end}" %>
             <% end %>
