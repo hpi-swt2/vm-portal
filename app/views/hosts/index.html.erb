@@ -15,10 +15,10 @@
       <td><%= link_to host.name, host_path(host.name) %></td>
       <td><%= host.vendor %></td>
       <td><%= host.model %></td>
-      <td>
-        <%= content_tag(:div, nil,
+      <td data-order="<%= host.connection_state %>" data-search="<%= host.connection_state %>">
+        <%= content_tag :div, nil,
           title: host.connection_state,
-          class: ["round", "#{host.connection_state == 'connected' ? 'bg-success' : 'bg-warning'}"]) %>
+          class: "round #{host.connection_state == 'connected' ? 'bg-success' : 'bg-warning'}" %>
       </td>
     </tr>
   <% end %> <%# @hosts.each %>
