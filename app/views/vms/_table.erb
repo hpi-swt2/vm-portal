@@ -19,8 +19,8 @@
             :data => { toggle: 'tooltip', placement: 'right' },
             class: "round #{vm.archived? ? 'bg-secondary' : (vm.powered_on? ? 'bg-success' : 'bg-danger')}" %>
         </td>
-        <%# Allow searching for description %>
-        <td data-search="<%= vm.config.description if vm.config %>">
+        <%# Allow also searching for description %>
+        <td data-search='<%= "#{vm.name} #{vm.config.description if vm.config}" %>'>
           <%= link_to vm.name, vm_path(vm.name) %>
         </td>
         <td>
