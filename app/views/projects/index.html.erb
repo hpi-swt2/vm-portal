@@ -1,10 +1,10 @@
 <h1>Projects</h1>
 
 <% if current_user.employee_or_admin? %>
-  <%= link_to(fa_icon('plus'), new_project_path,
+  <%= link_to fa_icon('plus'), new_project_path,
     title: 'Create new project',
     :data => { toggle: 'tooltip', placement: 'left' },
-    class: 'btn btn-primary float-right', id: 'createNewProjectButton') %>
+    class: 'btn btn-primary float-right', id: 'createNewProjectButton' %>
 <% end %>
 
 <%= render 'table', projects: @projects %>
