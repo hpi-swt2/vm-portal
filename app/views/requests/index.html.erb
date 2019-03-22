@@ -76,6 +76,7 @@
         <td data-order="<%= request.status %>" data-search="<%= request.status %>">
           <%= content_tag :div, nil,
             title: request.status,
+            :data => { toggle: 'tooltip', placement: 'right' },
             class: "round #{request.accepted? ? 'bg-success' : 'bg-warning'}" %>
         </td>
         <td>

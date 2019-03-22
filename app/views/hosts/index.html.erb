@@ -18,6 +18,7 @@
       <td data-order="<%= host.connection_state %>" data-search="<%= host.connection_state %>">
         <%= content_tag :div, nil,
           title: host.connection_state,
+          :data => { toggle: 'tooltip', placement: 'right' },
           class: "round #{host.connection_state == 'connected' ? 'bg-success' : 'bg-warning'}" %>
       </td>
     </tr>
