@@ -28,7 +28,9 @@
             <%= user.role.capitalize %>
           <% end %>
           </div>
-        <td><%= user.current_sign_in_at %></td>
+        <td data-order="<%= user.current_sign_in_at.to_i %>">
+          <%= I18n.l(user.current_sign_in_at, format: :long) %>
+        </td>
       </tr>
     <% end %>
   </tbody>
