@@ -17,12 +17,13 @@
 //= require popper
 //= require bootstrap
 //= require doughnut_chart
-//= require filter_table
-//= require sort_table
 //= require prevent_anchor_reload
-//= require_tree .
 //= require select2
 //= require clipboard
+// Contains code for initializing and configuring datatables
+// app/assets/javascripts/datatables.js
+//= require datatables
+//= require_tree .
 
 // With Turbolinks, jQuery $(document).ready events fire only in response
 // to the initial page load, not after any subsequent page changes
