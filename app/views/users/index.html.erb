@@ -29,7 +29,7 @@
           <% end %>
           </div>
         <td data-order="<%= user.current_sign_in_at.to_i %>">
-          <%= I18n.l(user.current_sign_in_at, format: :long) %>
+          <%= I18n.l(user.current_sign_in_at, format: :long) if user.current_sign_in_at %>
         </td>
       </tr>
     <% end %>
