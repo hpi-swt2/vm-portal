@@ -1,5 +1,5 @@
 <% if should_be_shown vms %>
-  <h2 id=<%= id %>><%= header %></h2>
+  <h2 class="mt-4" id=<%= id %>><%= header %></h2>
 
   <%= render 'table', {id: 'vms_' + id, vms: vms, buttons: buttons, datatable_options: {}} %>
 
