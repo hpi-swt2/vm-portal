@@ -1,4 +1,4 @@
-<table data-toggle="datatable" class="table" id=<%= id %>>
+<table data-toggle="datatable" class="table" id=<%= id %> <%= datatable_options.map{ |k,v| "data-#{k}=#{v}" }.join(' ') %>> 
   <thead>
   <tr>
     <th>Status</th>
