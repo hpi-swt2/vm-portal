@@ -31,7 +31,7 @@ require './app/api/v_sphere/host'
 def extract_vim_objects(collection)
   collection.map do |each|
     if [VSphere::Cluster, VSphere::Folder, VSphere::VirtualMachine].include? each.class
-      each.instance_exec { managed_folder_entry }
+      each.instance_exec {managed_folder_entry}
     else
       each
     end
@@ -84,12 +84,13 @@ def vim_vm_summary_mock(power_state: 'poweredOn')
   allow(summary_double).to receive_message_chain(:config, :numCpu).and_return(2)
   allow(summary_double).to receive_message_chain(:runtime, :powerState).and_return(power_state)
   allow(summary_double).to receive_message_chain(:runtime, :host, :name).and_return 'aHost'
+  allow(summary_double).to receive_message_chain(:runtime, :bootTime).and_return Time.now
   summary_double
 end
 
 def vim_disks_mock
   disk = double
-  allow(disk).to receive(:capacityInKB).and_return(100 * (1024**2))
+  allow(disk).to receive(:capacityInKB).and_return(100 * (1024 ** 2))
   [disk]
 end
 
@@ -102,33 +103,31 @@ end
 
 def vim_vm_mock(
     name,
-    power_state: 'poweredOn',
+    power_state: 'poweredOff',
     vm_ware_tools: 'toolsNotInstalled',
-    boot_time: 'Yesterday',
     guest_heartbeat_status: 'green',
     macs: [['Network Adapter 1', 'My Mac address']]
-  )
+)
   vm = double
   allow(vm).to receive(:name).and_return(name)
   allow(vm).to receive(:guestHeartbeatStatus).and_return(guest_heartbeat_status)
   allow(vm).to receive(:is_a?).and_return false
   allow(vm).to receive(:is_a?).with(RbVmomi::VIM::VirtualMachine).and_return true
-  allow(vm).to receive_message_chain(:runtime, :powerState).and_return power_state
-  allow(vm).to receive_message_chain(:runtime, :bootTime).and_return boot_time
   allow(vm).to receive(:guest).and_return vim_guest_mock(tools_status: vm_ware_tools)
   allow(vm).to receive(:macs).and_return macs
-  allow(vm).to receive(:boot_time). and_return 0
   allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: power_state)
   allow(vm).to receive(:disks).and_return vim_disks_mock
+  allow(vm).to receive_message_chain(:PowerOnVM_Task, :wait_for_completion) do
+    allow(vm).to receive(:summary).and_return vim_vm_summary_mock(power_state: 'poweredOn')
+  end
 
   vm
 end
 
-def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled', boot_time: Time.now - 60 * 60 * 24)
+def v_sphere_vm_mock(name, power_state: 'poweredOn', vm_ware_tools: 'toolsNotInstalled')
   VSphere::VirtualMachine.new vim_vm_mock(name,
                                           power_state: power_state,
-                                          vm_ware_tools: vm_ware_tools,
-                                          boot_time: boot_time)
+                                          vm_ware_tools: vm_ware_tools)
 end
 
 def vim_host_summary_mock
@@ -140,7 +139,7 @@ def vim_host_summary_mock
   allow(summary).to receive_message_chain(:hardware, :numCpuCores).and_return(4)
   allow(summary).to receive_message_chain(:hardware, :numCpuThreads).and_return(4)
   allow(summary).to receive_message_chain(:hardware, :cpuMhz).and_return(1000)
-  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024**3) # in bytes
+  allow(summary).to receive_message_chain(:hardware, :memorySize).and_return(1000 * 1024 ** 3) # in bytes
   allow(summary).to receive_message_chain(:quickStats, :overallMemoryUsage).and_return(0)
   allow(summary).to receive_message_chain(:quickStats, :overallCpuUsage).and_return(0)
   summary
@@ -167,8 +166,8 @@ def vim_host_mock(name)
   allow(host).to receive(:summary).and_return vim_host_summary_mock
 
   datastore = double
-  allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000 * 1024**3) # in bytes
-  allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(1000 * 1024**3) # in bytes
+  allow(datastore).to receive_message_chain(:summary, :capacity).and_return(1000 * 1024 ** 3) # in bytes
+  allow(datastore).to receive_message_chain(:summary, :freeSpace).and_return(1000 * 1024 ** 3) # in bytes
   allow(host).to receive(:datastore).and_return([datastore])
 
   host
@@ -202,7 +201,7 @@ def v_sphere_connection_mock(
     pending_archivation_vms: [],
     pending_revivings_vms: [],
     clusters: []
-  )
+)
   archived_vms_folder = v_sphere_folder_mock 'Archived VMs', vms: archived_vms
   pending_archivation_vms_folder = v_sphere_folder_mock 'Pending archivings', vms: pending_archivation_vms
   pending_reviving_vms_folder = v_sphere_folder_mock 'Pending revivings', vms: pending_revivings_vms

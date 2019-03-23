@@ -266,7 +266,7 @@ module VSphere
 
     # Information about the vm
     def boot_time
-      @vm.runtime.bootTime
+      @vm.summary.runtime.bootTime
     end
 
     def summary

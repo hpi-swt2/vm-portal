@@ -207,14 +207,6 @@ describe VSphere do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2').users).to be_empty
     end
 
-    it 'has users if a fitting request exists' do
-      skip 'git will not be tested, should have users when a fitting puppet script exists'
-      request = FactoryBot.create :accepted_request
-      request.users << FactoryBot.create(:user)
-      vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
-      expect(vm.users).to match_array(request.users)
-    end
-
     it 'does not have responsible users if there is no fitting config' do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2').responsible_users).to be_empty
     end

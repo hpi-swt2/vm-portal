@@ -80,11 +80,12 @@ RSpec.describe 'End to End testing', type: :feature do
   end
 
   it 'is possible to turn on a VM' do
-    skip
     sign_in @admin
-    visit '/vms/vm'
-    click_on 'New Request'
-    fill_in('VM Name', with: @requestname)
+    visit vms_path
+    find("a[href='#{new_request_path}']").click
+    fill_in('request_name', with: @requestname)
+    fill_in('Description', with: 'test')
+    select(@project.name, from: 'request_project_id')
     fill_in('cpu', with: 4)
     fill_in('ram', with: 8)
     fill_in('storage', with: 126)
@@ -92,18 +93,16 @@ RSpec.describe 'End to End testing', type: :feature do
     select(@admin.human_readable_identifier, from: 'request_sudo_user_ids')
     select(@user.human_readable_identifier, from: 'request_user_ids')
     select('none', from: 'operating_system')
-    fill_in('Description', with: 'test')
     click_on 'Create Request'
     click_on @requestname
     click_on 'acceptButton'
-    page.reload
-    fill_in('virtual_machine_config_ip', with: '123.0.0.23')
-    fill_in('virtual_machine_config_dns', with: 'www.example.com')
-    click_on 'Update Configuration'
+    fill_in('vm_info_ip', with: '123.0.0.23')
+    fill_in('vm_info_dns', with: 'www.example.com')
+    click_on 'Update'
     click_on @requestname
     visit "/vms/vm/#{@requestname}"
     expect(page).to have_text('offline')
-    select('Power On', from: 'navbarDropdown')
+    click_on 'Power On'
     expect(page).to have_text('online')
   end
 end
