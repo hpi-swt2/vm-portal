@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :notifications, only: %i[index new create destroy] do
     member do
       get :mark_as_read
-      delete :destroy_and_redirect
+      delete :mark_as_read_and_redirect
     end
     get :has_any, on: :collection, to: 'notifications#any?'
   end

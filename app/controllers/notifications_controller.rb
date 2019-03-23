@@ -40,16 +40,12 @@ class NotificationsController < ApplicationController
     end
   end
 
-  def destroy_and_redirect
-    link = @notification.link
-    @notification.destroy
-    respond_to do |format|
-      if link.nil? || link.empty?
-        format.html { redirect_back fallback_location: notifications_url }
-      else
-        format.html { redirect_to link }
-      end
-      format.json { head :no_content }
+  def mark_as_read_and_redirect
+    @notification.update(read: true)
+    if @notification.link.present?
+      redirect_to @notification.link
+    else
+      redirect_back fallback_location: notifications_url
     end
   end
 

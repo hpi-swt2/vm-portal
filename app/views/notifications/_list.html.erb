@@ -14,7 +14,7 @@
           data: { toggle: 'tooltip', placement: 'top'},
           class: "float-right mr-2" unless notification.read %>
         <h5 class="card-title">
-          <%= link_to notification.title, notification.link %>
+          <%= link_to notification.title, mark_as_read_and_redirect_notification_path(notification) %>
           <br>
           <span class="small">
             <%= I18n.l notification.created_at,format: :short%> (<%= time_ago_in_words notification.created_at %> ago)
