@@ -38,7 +38,7 @@ describe 'Dashboard', type: :feature do
 
     it 'does not redirect after deleting notification' do
       visit dashboard_path
-      all(:css, "a[data-method='delete']").first.click
+      find(:css, "a[data-method='delete'][href='#{notification_path(@notifications.second)}']").click
       expect(current_path).to eql(dashboard_path)
     end
 
