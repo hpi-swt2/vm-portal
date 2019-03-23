@@ -14,19 +14,22 @@
         <td><%= user.email %></td>
         <%# https://datatables.net/manual/data/orthogonal-data#HTML-5 %>
         <td data-order="<%= user.role %>" data-search="<%= user.role %>">
-          <% if editable_for user %>
-            <div role="group"
-                 class="btn-group border rounded
-                        border-<%= if editable_for user then 'primary' else 'secondary' end %>">
-            <% User.roles.map(&:first).each do |role| %>
+          <div role="group"
+               class="btn-group border rounded
+                      border-<%= if editable_for user then 'primary' else 'secondary' end %>">
+          <% User.roles.map(&:first).each do |role| %>
+            <% if editable_for user %>
               <%= link_to role.capitalize,
                           update_role_user_path(user, role: role),
-                          id: "btn-#{role}-#{user.id}",
                           method: :patch, 
+                          id: "btn-#{role}-#{user.id}",
                           class: "btn btn-#{if user.role == role then 'primary' else 'light' end}" %>
+            <% else %>
+              <span id= "btn-<%= role %>-<%= user.id %>"
+                    class="btn btn-<%= if user.role == role then 'secondary' else 'light' end %> disabled">
+                <%= role.capitalize %>
+              </span>
             <% end %>
-          <% else %>
-            <%= user.role.capitalize %>
           <% end %>
           </div>
         <td data-order="<%= user.current_sign_in_at.to_i %>">
