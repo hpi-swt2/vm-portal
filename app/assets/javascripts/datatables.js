@@ -24,9 +24,6 @@ $(document).on('turbolinks:load', function() {
 // Turbolinks cache fix
 // https://stackoverflow.com/questions/41070556
 $(document).on('turbolinks:before-cache', function() {
-  var tables = $.fn.dataTable.tables(true);
-  if (tables.length > 0) {
-    $(tables).DataTable().destroy();
-  }
+  $($.fn.dataTable.tables(true)).DataTable().destroy();
 });
 
