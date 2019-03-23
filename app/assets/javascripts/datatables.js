@@ -21,14 +21,12 @@ $(document).on('turbolinks:load', function() {
   }
 });
 
-// https://stackoverflow.com/questions/41070556/how-can-i-prevent-duplicate-wrappers-on-a-jquery-datatable-when-navigating-back
 // Turbolinks cache fix
+// https://stackoverflow.com/questions/41070556
 $(document).on('turbolinks:before-cache', function() {
-  var dataTable = $($.fn.dataTable.tables(true)).DataTable();
-  if (dataTable !== null) {
-    dataTable.clear();
-    dataTable.destroy();
-    return dataTable = null;
+  var tables = $.fn.dataTable.tables(true);
+  if (tables.length > 0) {
+    $(tables).DataTable().destroy();
   }
 });
 
