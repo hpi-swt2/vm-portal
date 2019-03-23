@@ -3,20 +3,27 @@
   <th><%= User.human_attribute_name('name') %></th>
   <th><%= User.human_attribute_name('description') %></th>
   <th><%= User.human_attribute_name('responsible_users') %></th>
+  <th><%= User.human_attribute_name('actions') %></th>
   </thead>
   <tbody>
-    <% projects.each do |project| %>
-      <tr>
-        <td><%= link_to project.name, project_path(project) %></td>
-        <td><%= project.description %></td>
-        <td>
-          <ul class="bulletless pl-1">
-            <% project.responsible_users.each do |user| %>
-                <li><%= user.name %></li>
-            <% end %>
-          </ul>
-        </td>
-      </tr>
-    <% end %>
+  <% projects.each do |project| %>
+    <tr>
+      <td><%= link_to project.name, project_path(project) %></td>
+      <td><%= project.description %></td>
+      <td>
+        <ul class="bulletless pl-1">
+          <% project.responsible_users.each do |user| %>
+            <li><%= user.name %></li>
+          <% end %>
+        </ul>
+      </td>
+      <td>
+        <% if project.responsible_users.include? current_user %>
+          <%= link_to 'Delete',
+                      {controller: :projects, action: 'destroy', id: project.id}, method: :delete, data: {confirm: 'Are you sure? The following VMs loose their project: '}, class: "btn btn-danger" %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
   </tbody>
 </table>

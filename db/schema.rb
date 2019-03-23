@@ -37,8 +37,8 @@ ActiveRecord::Schema.define(version: 2019_03_18_170254) do
     t.integer "max_cpu_cores"
     t.integer "max_ram_size"
     t.integer "max_storage_size"
-    t.integer "max_shown_vms"
     t.string "git_branch", default: "master"
+    t.integer "max_shown_vms", default: 10
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 
@@ -163,12 +163,12 @@ ActiveRecord::Schema.define(version: 2019_03_18_170254) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "provider"
-    t.string "uid"
-    t.string "ssh_key"
     t.string "first_name"
     t.string "last_name"
+    t.string "provider"
+    t.string "uid"
     t.integer "user_id"
+    t.string "ssh_key"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
