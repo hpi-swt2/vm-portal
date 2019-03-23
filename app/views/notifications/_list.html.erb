@@ -3,7 +3,7 @@
   <% @notifications.each do |notification| %>
     <div class="card mb-3 <%= "bg-primary-light" if not notification.read %>">
       <div class="card-body">
-        <%= link_to fa_icon('trash lg'), notification,
+        <%= link_to fa_icon('trash lg'), notification_path(notification),
           method: :delete,
           title: 'Delete',
           data: { toggle: 'tooltip', placement: 'top',
