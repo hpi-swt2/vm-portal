@@ -1,21 +1,26 @@
 <% unless @notifications.empty? %>
 
   <% @notifications.each do |notification| %>
-    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
-    <div class="<%= class_names %>" style="width:100%">
+    <div class="card mb-3 <%= "bg-primary-light" if not notification.read %>">
       <div class="card-body">
-        <%= link_to destroy_and_redirect_notification_path(notification), {controller: notification, action: 'destroy_and_redirect', method: :delete} do %>
-          <h5 class="card-title">
-            <%= notification.title %>
-          </h5>
-          <%= simple_format(notification.message).html_safe%>
-        <% end %>
-
-        <div class="pull-right">
-          <%= link_to notification, method: :delete, data: { confirm: 'Are you sure you want to delete this notification?' }, class: 'icon-link delete'  do %>
-            <%= fa_icon('trash', class: 'big-icon') %>
-          <% end %>
-        </div>
+        <%= link_to fa_icon('trash lg'), notification,
+          method: :delete,
+          title: 'Delete',
+          data: { toggle: 'tooltip', placement: 'top',
+                  confirm: 'Are you sure you want to delete this notification?' },
+          class: "float-right" %>
+        <%= link_to fa_icon('check lg'), mark_as_read_notification_path(notification),
+          title: 'Mark as read',
+          data: { toggle: 'tooltip', placement: 'top'},
+          class: "float-right mr-2" unless notification.read %>
+        <h5 class="card-title">
+          <%= link_to notification.title, notification.link %>
+          <br>
+          <span class="small">
+            <%= I18n.l notification.created_at,format: :short%> (<%= time_ago_in_words notification.created_at %> ago)
+          </span>
+        </h5>
+        <%= simple_format(notification.message).html_safe %>
       </div>
     </div>
   <% end %>
