@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
-  before_action :set_notification, only: %i[show edit update destroy mark_as_read destroy_and_redirect]
+  before_action :set_notification, only: %i[show edit update destroy mark_as_read mark_as_read_and_redirect]
 
   # GET /notifications
   # GET /notifications.json
@@ -41,7 +41,7 @@ class NotificationsController < ApplicationController
   end
 
   def mark_as_read_and_redirect
-    @notification.update(read: true)
+    @notification.update(read: true) unless @notification.read
     if @notification.link.present?
       redirect_to @notification.link
     else
