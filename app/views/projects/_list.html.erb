@@ -11,16 +11,20 @@
       <td><%= link_to project.name, project_path(project) %></td>
       <td><%= project.description %></td>
       <td>
-        <ul class="bulletless pl-1">
+        <ul class="list-inline mb-0">
           <% project.responsible_users.each do |user| %>
-            <li><%= user.name %></li>
+            <li class="list-inline-item"><%= link_to user.name, user %></li>
           <% end %>
         </ul>
       </td>
       <td>
         <% if project.responsible_users.include? current_user %>
           <%= link_to 'Delete',
-                      {controller: :projects, action: 'destroy', id: project.id}, method: :delete, data: {confirm: 'Are you sure? The following VMs loose their project: '}, class: "btn btn-danger" %>
+                      { controller: :projects,
+                        action: 'destroy', id: project.id},
+                        method: :delete,
+                        data: {confirm: "Are you sure that you want to delte this VM?\nThe following VMs will loose their project: "},
+                        class: "btn btn-danger" %>
         <% end %>
       </td>
     </tr>
