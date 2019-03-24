@@ -159,13 +159,16 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when no vm found' do
+      let(:back) { 'http://google.com' }
+
       before do
         allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return nil
+        request.env['HTTP_REFERER'] = back
       end
 
       it 'redirects back' do
         get :show, params: { id: 5 }
-        expect(response).to redirect_to :back
+        expect(response).to redirect_to back
       end
     end
   end
