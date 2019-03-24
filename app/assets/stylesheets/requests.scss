@@ -13,23 +13,6 @@ label {
   display: block;
 }
 
-#content{
-  padding-bottom: 5em;
-}
-
-.table-fixed-columns{
-  table-layout: fixed;
-  word-wrap: break-word;
-}
-
-.test{
-  width: 30%;
-}
-
-.right-buffer{
-  margin-right: 5px;
-}
-
 /* Selected items on top */
 .select2-selection__choice {
 	background-color: #0C415F !important;
