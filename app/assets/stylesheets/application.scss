@@ -10,9 +10,15 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
 
- *= require font-awesome
- *= require_self
  *= require_tree .
+ */
+ 
+ /*
+ * Remove all the *= require and *= require_tree statements from the Sass file.
+ * Instead, use @import to import Sass files.
+ * Do not use *= require in Sass or your other stylesheets will not be 
+ * able to access the Bootstrap mixins and variables.
+ * See: https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
  */
 
 $primary: #0C415F;
@@ -20,6 +26,8 @@ $danger: #a80833;
 $primary-active: #1f6993;
 $primary-hover: #1a5b82;
 
+// https://github.com/bokmann/font-awesome-rails#sass-support
+@import "font-awesome";
 // https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
 // Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";

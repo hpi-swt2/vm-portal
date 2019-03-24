@@ -5,7 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.0'
 
-# Gems to install: faker, shoulda matchers
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use sqlite3 and postgres as the database for Active Record
@@ -20,8 +19,6 @@ gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'mini_racer', platforms: :ruby
-# See https://github.com/bokmann/font-awesome-rails for details
-gem 'font-awesome-rails'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -52,6 +49,9 @@ gem 'jquery-rails'
 # Jquery datatables ruby gems for assets pipeline, https://datatables.net/
 # https://github.com/mkhairi/jquery-datatables
 gem 'jquery-datatables'
+# The font-awesome font bundled as an asset for the rails asset pipeline
+# See https://github.com/bokmann/font-awesome-rails
+gem 'font-awesome-rails'
 
 # Ruby interface to the VMware vSphere API
 # https://github.com/vmware/rbvmomi
