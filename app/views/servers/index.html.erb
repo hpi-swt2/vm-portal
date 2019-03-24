@@ -1,32 +1,29 @@
-<h1 class="float-left">Servers</h1>
+<h1>Servers</h1>
 
-<input class="filter-box float-left ml-3 mt-2" type="text" id="filter" onkeyup="filterTable('filter', 'servers')" placeholder="Search servers">
-<div class="clearfix">
-  <% if current_user.admin? %>
-    <%= link_to fa_icon('plus'), new_server_path,
-      title: 'Create new server',
-      :data => { toggle: 'tooltip', placement: 'left' },
-      class: "btn btn-primary float-right" %>
-  <% end %>
-</div>
+<% if current_user.admin? %>
+  <%= link_to fa_icon('plus'), new_server_path,
+    title: 'Create new server',
+    :data => { toggle: 'tooltip', placement: 'left' },
+    class: "btn btn-primary float-right" %>
+<% end %>
 
-<table data-toggle="table" class="table" id="servers">
+<table data-toggle="datatable" class="table" id="servers">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true">Name</th>
-    <th scope="col" data-sortable="true">Vendor</th>
-    <th scope="col" data-sortable="true">Model</th>
-    <th scope="col" data-sortable="true">Responsible</th>
+    <th>Name</th>
+    <th>Vendor</th>
+    <th>Model</th>
+    <th>Responsible</th>
   </tr>
   </thead>
   <tbody>
   <% @servers.each do |server| %>
     <tr>
-      <td class="table-active"><%= link_to server.name, server %></td>
-      <td class="table-active"><%= server.vendor %></td>
-      <td class="table-active"><%= server.model %></td>
-      <td class="table-active"><%= server.responsible&.name %></td>
+      <td><%= link_to server.name, server_path(server) %></td>
+      <td><%= server.vendor %></td>
+      <td><%= server.model %></td>
+      <td><%= server.responsible.name %></td>
     </tr>
-  <% end %>
+  <% end %> <%# @servers.each %>
   </tbody>
 </table>
