@@ -163,13 +163,9 @@ RSpec.describe VmsController, type: :controller do
         allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return nil
       end
 
-      it 'returns http status not found when no vm found' do
+      it 'redirects back' do
         get :show, params: { id: 5 }
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it 'renders not found page when no vm found' do
-        expect(get(:show, params: { id: vm1.name })).to render_template('errors/not_found')
+        expect(response).to redirect_to :back
       end
     end
   end
