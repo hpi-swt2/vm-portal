@@ -165,7 +165,7 @@ class VmsController < ApplicationController
     configuration = VirtualMachineConfig.find_by_name params[:id]
 
     redirect_to vms_path unless current_user.admin? ||
-                                configuration && (@vm.sudo_users.include?(current_user) || @vm.responsible_users.include?(current_user))
+                                configuration && (configuration.sudo_users.include?(current_user) || configuration.responsible_users.include?(current_user))
   end
 
   def not_enough_resources(exception)
