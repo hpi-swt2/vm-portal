@@ -5,6 +5,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.0'
 
+# 
+# Rails essentials
+# 
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use sqlite3 and postgres as the database for Active Record
@@ -19,57 +23,47 @@ gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'mini_racer', platforms: :ruby
-
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
+# Flexible authentication solution for Rails with Warden
+# https://github.com/plataformatec/devise
+gem 'devise'
+gem 'devise-bootstrap-views', '~> 1.0'
+gem 'devise-i18n'
+# Provides different authentication strategies
+gem 'omniauth'
+gem 'omniauth_openid_connect'
+# Role management, minimal authorization through OO design and pure Ruby classes
+# https://github.com/varvet/pundit
+gem 'pundit'
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
-# Flexible authentication solution for Rails with Warden
-# https://github.com/plataformatec/devise
-gem 'devise'
-# Role management, minimal authorization through OO design and pure Ruby classes
-# https://github.com/varvet/pundit
-gem 'pundit'
-
-# Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
-gem 'bootstrap', '~> 4.3.1'
-gem 'devise-bootstrap-views', '~> 1.0'
-gem 'devise-i18n'
-gem 'jquery-rails'
-# Jquery datatables ruby gems for assets pipeline, https://datatables.net/
-# https://github.com/mkhairi/jquery-datatables
-gem 'jquery-datatables'
-# The font-awesome font bundled as an asset for the rails asset pipeline
-# See https://github.com/bokmann/font-awesome-rails
-gem 'font-awesome-rails'
+#
+# Application
+#
 
 # Ruby interface to the VMware vSphere API
 # https://github.com/vmware/rbvmomi
 gem 'rbvmomi'
-
-# Provides form.select extensions
-gem 'select2-rails'
-
-# Provides different authentication strategies
-gem 'omniauth'
-gem 'omniauth_openid_connect'
-
-# Allow locks on database
-gem 'with_advisory_lock'
-
 # Ruby Git
 gem 'git'
-
+# Allow locks on database
+# https://github.com/ClosureTree/with_advisory_lock
+gem 'with_advisory_lock'
+# SSH private and public key generator in pure Ruby (RSA & DSA)
+# https://github.com/bensie/sshkey
+gem 'sshkey', '~> 1.9'
 # Mina for deployment
 # Have a look in the tutorial:
 # https://github.com/lnikell/wiki/wiki/Deploy-rails-application-with-Mina,-Nginx-and-Puma
@@ -83,20 +77,32 @@ gem 'mina-logs', require: false
 # Announce Mina deploys to Slack channels, https://github.com/krichly/mina-slack
 gem 'execjs', require: false
 gem 'mina-slack', require: false, github: 'krichly/mina-slack'
-
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
-
 # Coveralls is a web service to help you track your code coverage
 # over time, and ensure that all your new code is fully covered
 # https://coveralls.io/github/hpi-swt2/vm-portal
 gem 'coveralls', require: false
-
 # Report errors in production to central Errbit system
 # https://github.com/errbit/errbit
 # https://github.com/airbrake/airbrake
 gem 'airbrake', '~> 5.0'
 
+#
+# Packaged JS & CSS libraries
+#
+
+# Fancy default views and javascript helpers https://github.com/twbs/bootstrap-rubygem
+gem 'bootstrap', '~> 4.3.1'
+# jQuery for Rails https://github.com/rails/jquery-rails
+gem 'jquery-rails'
+# Jquery datatables ruby gems for assets pipeline, https://datatables.net/
+# https://github.com/mkhairi/jquery-datatables
+gem 'jquery-datatables'
+# The font-awesome font bundled as an asset for the rails asset pipeline
+# See https://github.com/bokmann/font-awesome-rails
+gem 'font-awesome-rails'
+# Integrate Select2 javascript library with Rails asset pipeline
+# https://github.com/argerim/select2-rails
+gem 'select2-rails'
 # Packaged clipboard.js JS library for copying text to clipboard
 # https://github.com/sadiqmmm/clipboard-rails
 gem 'clipboard-rails'
@@ -149,4 +155,3 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-gem 'sshkey', '~> 1.9'
