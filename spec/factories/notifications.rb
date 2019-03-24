@@ -6,5 +6,6 @@ FactoryBot.define do
     title { 'Test Notification' }
     message { 'This is a test' }
     read { false }
+    link { 'https://example.com' }
   end
 end

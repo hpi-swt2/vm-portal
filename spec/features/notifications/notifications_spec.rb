@@ -37,8 +37,7 @@ describe 'Index page', type: :feature do
 
     it 'informs about no notifications' do
       visit notifications_path
-
-      expect(page).to have_text('You don\'t have any notifications at the moment.')
+      expect(page).to have_css('#no-notifications', count: 1)
     end
   end
 end

@@ -11,13 +11,11 @@
   <%# right column - notifications %>
   <div class="col-4">
     <div class="card mb-4">
-      <%= link_to notifications_path, method: :get, class: "dashboard-header-link" do %>
-        <div class="card-header bg-primary text-white">
-          <div class="btn-group">
-            <h3><i class="fa fa-bell"></i> Notifications</h3>
-          </div>
-        </div>
-      <% end %>
+      <div class="card-header bg-primary">
+        <%= link_to notifications_path, class: "dashboard-header-link text-white" do %>
+          <h3><%= fa_icon('bell') %> Notifications</h3>
+        <% end %>
+      </div>
       <div class="card-body">
         <%= render 'notifications/list' %>
       </div>
