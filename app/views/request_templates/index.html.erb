@@ -1,58 +1,53 @@
-<h1>Request Templates</h1>
+<h1 class="float-left">Request Templates</h1>
 
-<table class="table-bar">
-  <tbody>
-    <tr>
-      <td>
-        <%=link_to(fa_icon('plus'),
-         new_request_template_path, class: 'btn btn-primary') %>
-      </td>
-      <td>
-        <%= link_to 'Requests', requests_path, class: 'btn btn-primary' %>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="clearfix">
+  <%= link_to fa_icon('plus'), new_request_template_path,
+    title: 'Add request template',
+    :data => { toggle: 'tooltip', placement: 'bottom' },
+    class: "btn btn-primary float-right mt-3" %>
 
-<table class="table">
+  <% if current_user.admin? %>
+    <%= link_to "Requests", requests_path,
+      class: "btn btn-primary float-right mt-3 mr-3" %>
+    <%= link_to 'Operating Systems', operating_systems_path,
+      class: 'btn btn-primary float-right mt-3 mr-3' %>
+  <% end %>
+</div>
+
+<table class="table" data-toggle="datatable">
   <thead>
     <tr>
       <th>Template name</th>
       <th>CPU cores</th>
-      <th>RAM in GB</th>
-      <th>Storage in GB</th>
-      <th colspan="2">Operating system</th>
+      <th>RAM</th>
+      <th>Storage</th>
+      <th>Operating system</th>
+      <th data-orderable="false">Actions</th>
     </tr>
   </thead>
 
   <tbody>
     <% @request_templates.each do |request_template| %>
       <tr>
-        <% if current_user.admin? %>
-          <td><%= link_to request_template.name, edit_request_template_path(request_template) %></td>
-        <% else %>
-          <td><%= request_template.name %></td>
-        <% end %>
+        <td><%= request_template.name %></td>
         <td><%= request_template.cpu_cores %></td>
-        <td><%= request_template.ram_gb %></td>
-        <td><%= request_template.storage_gb %></td>
+        <td><%= request_template.ram_gb %> GB</td>
+        <td><%= request_template.storage_gb %> GB</td>
         <td><%= request_template.operating_system %></td>
-        <% if current_user.admin? %>
-          <td>
-            <%= link_to 'Delete',
-                        request_template,
-                        method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        id: "deleteRequestTemplateButton-#{request_template.id}",
-                        class: 'btn btn-danger'
-            %>
-          </td>
-        <% end %>
+        <td>
+          <% if current_user.admin? %>
+            <%= link_to fa_icon('pencil'), edit_request_template_path(request_template),
+              title: 'Edit',
+              class: "btn btn-sm btn-primary" %>
+            <%= link_to fa_icon('trash'), request_template, method: :delete,
+              title: 'Delete',
+              data: { confirm: "Are you sure you want to delete '#{request_template.name}'?" },
+              id: "deleteRequestTemplateButton-#{request_template.id}",
+              class: "btn btn-sm btn-danger" %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<% if @request_templates.length == 0 %>
-<p class="empty-table-label">No templates created yet</p>
-<% end %>

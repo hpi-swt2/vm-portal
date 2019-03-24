@@ -1,0 +1,25 @@
+<table class="table" data-toggle="datatable">
+  <thead>
+    <tr>
+      <th><%= User.human_attribute_name('name') %></th>
+      <th><%= User.human_attribute_name('description') %></th>
+      <th><%= User.human_attribute_name('responsible_users') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% projects.each do |project| %>
+      <tr>
+        <td><%= link_to project.name, project_path(project) %></td>
+        <td><%= truncate(project.description, length: 100) %></td>
+        <td>
+          <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
+          <ul class="list-inline">
+            <% project.responsible_users.each do |user| %>
+              <li class="list-inline-item"><%= user.name %></li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% end %> <%# projects.each %>
+  </tbody>
+</table>

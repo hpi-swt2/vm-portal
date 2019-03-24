@@ -1,89 +1,87 @@
+<h1 class="float-left">Requests</h1>
+
 <div class="clearfix">
-  <h1 class="float-left">Requests</h1>
   <%= link_to fa_icon('plus'), new_request_path,
-    method: :get,
+    title: 'New VM request',
+    :data => { toggle: 'tooltip', placement: 'bottom' },
     class: "btn btn-primary float-right mt-3" %>
   <% if current_user.admin? %>
-  <%= button_to "Templates", request_templates_path,
-    method: :get,
-    class: "btn btn-primary float-right mt-3 mr-3" %>
-  <%= button_to 'Operating Systems', operating_systems_path,
-    method: :get,
-    class: 'btn btn-primary float-right mt-3 mr-3' %>
+    <%= link_to "Templates", request_templates_path,
+      class: "btn btn-primary float-right mt-3 mr-3" %>
+    <%= link_to 'Operating Systems', operating_systems_path,
+      class: 'btn btn-primary float-right mt-3 mr-3' %>
   <% end %>
 </div>
 
-<%= link_to "Pending requests (#{@pending_requests&.size}) <small>&#x25bc;</small>".html_safe, '#pending' %><br />
-<%= link_to "Resolved requests (#{@resolved_requests&.size}) <small>&#x25bc;</small>".html_safe, '#resolved' %><br />
-
 <h2 id="pending">Pending requests</h2>
 
-<input class="filter-box" type="text" id="filter_pending" onkeyup="filterTable('filter_pending', 'requests_pending')" placeholder="Search">
-
-<table data-toggle="table" class="table" id="requests_pending">
+<table data-toggle="datatable" class="table" id="requests_pending">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="rounded-left">VM Name</th>
-    <th scope="col" data-sortable="true">CPU Cores</th>
-    <th scope="col" data-sortable="true">RAM</th>
-    <th scope="col" data-sortable="true">HDD</th>
-    <th scope="col" data-sortable="true">OS</th>
-    <th scope="col" data-sortable="true">Port</th>
-    <th scope="col" data-sortable="true">Application Name</th>
-    <th scope="col" data-sortable="true" class="rounded-right">Comment</th>
+    <th>VM Name</th>
+    <th>CPU Cores</th>
+    <th>RAM</th>
+    <th>HDD</th>
+    <th>OS</th>
+    <th>Port</th>
+    <th>Application Name</th>
+    <th>Comment</th>
   </tr>
   </thead>
   <tbody>
-  <% @pending_requests&.each do |request| %>
-    <tr>
-      <td class="table-active"><%= link_to request.name, request_path(request) %></td>
-      <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= request.ram_gb %> GB</td>
-      <td class="table-active"><%= request.storage_gb %> GB</td>
-      <td class="table-active"><%= request.operating_system %></td>
-      <td class="table-active"><%= request.port %></td>
-      <td class="table-active"><%= request.application_name %></td>
-      <td class="table-active"><%= request.comment %></td>
-    </tr>
-  <% end %>
+    <% @pending_requests&.each do |request| %>
+      <tr>
+        <td><%= link_to request.name, request_path(request) %></td>
+        <td><%= request.cpu_cores %></td>
+        <td><%= request.ram_gb %> GB</td>
+        <td><%= request.storage_gb %> GB</td>
+        <td><%= request.operating_system %></td>
+        <td><%= request.port %></td>
+        <td><%= request.application_name %></td>
+        <td><%= request.comment %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 
-<h2 id="resolved">Resolved requests</h2>
+<h2 class="mt-4" id="resolved">Resolved requests</h2>
 
-<input class="filter-box" type="text" id="filter_resolved" onkeyup="filterTable('filter_resolved', 'requests_resolved')" placeholder="Search">
-
-<table data-toggle="table" class="table" id="requests_resolved">
+<table data-toggle="datatable" class="table" id="requests_resolved">
   <thead>
   <tr>
-    <th scope="col" data-sortable="true" class="rounded-left">VM Name</th>
-    <th scope="col" data-sortable="true">CPU Cores</th>
-    <th scope="col" data-sortable="true">RAM</th>
-    <th scope="col" data-sortable="true">HDD</th>
-    <th scope="col" data-sortable="true">OS</th>
-    <th scope="col" data-sortable="true">Port</th>
-    <th scope="col" data-sortable="true">Application Name</th>
-    <th scope="col" data-sortable="true">Comment</th>
-    <th scope="col" data-sortable="true" class="rounded-right">Status</th>
+    <th>VM Name</th>
+    <th>CPU Cores</th>
+    <th>RAM</th>
+    <th>HDD</th>
+    <th>OS</th>
+    <th>Port</th>
+    <th>Application Name</th>
+    <th>Comment</th>
+    <th>Status</th>
+    <th data-orderable="false">Actions</th>
   </tr>
   </thead>
   <tbody>
-  <% @resolved_requests&.each do |request| %>
-    <tr>
-      <td class="table-active"><%= link_to request.name, request_path(request) %></td>
-      <td class="table-active"><%= request.cpu_cores %></td>
-      <td class="table-active"><%= request.ram_gb %> GB</td>
-      <td class="table-active"><%= request.storage_gb %> GB</td>
-      <td class="table-active"><%= request.operating_system %></td>
-      <td class="table-active"><%= request.port %></td>
-      <td class="table-active"><%= request.application_name %></td>
-      <td class="table-active"><%= request.comment %></td>
-      <td class="table-active">
-          <div class="round mt-2
-            <%= request.accepted? ? 'bg-success' : 'bg-danger'  %>">
-          </div>
+    <% @resolved_requests&.each do |request| %>
+      <tr>
+        <td><%= link_to request.name, request_path(request) %></td>
+        <td><%= request.cpu_cores %></td>
+        <td><%= request.ram_gb %> GB</td>
+        <td><%= request.storage_gb %> GB</td>
+        <td><%= request.operating_system %></td>
+        <td><%= request.port %></td>
+        <td><%= request.application_name %></td>
+        <td><%= request.comment %></td>
+        <%# https://datatables.net/manual/data/orthogonal-data#HTML-5 %>
+        <td data-order="<%= request.status %>" data-search="<%= request.status %>">
+          <%= content_tag :div, nil,
+            title: request.status,
+            :data => { toggle: 'tooltip', placement: 'right' },
+            class: "round #{request.accepted? ? 'bg-success' : 'bg-warning'}" %>
+        </td>
+        <td>
           <% if request.accepted? %>
-            <a class="btn btn-primary btn-sm script-doc float-right" data-toggle="modal" title="Puppet Script" data-target=<%= '#puppet-script-' + request.name %>>
+            <a class="btn btn-primary btn-sm fa fa-code text-white" data-toggle="modal" title="Puppet script" data-target=<%= '#puppet-script-' + request.name %>>
             </a>
             <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -110,6 +108,6 @@
           <% end %>
         </td>
       </tr>
-    <% end %>
+    <% end %> <%# @resolved_requests&.each %>
   </tbody>
 </table>

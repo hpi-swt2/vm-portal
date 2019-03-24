@@ -20,7 +20,24 @@ $danger: #a80833;
 $primary-active: #1f6993;
 $primary-hover: #1a5b82;
 
+// https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
+// Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";
+// Bootstrap styling for datatables
+// https://github.com/mkhairi/jquery-datatables#stylesheets
+@import 'datatables/dataTables.bootstrap4';
+// optional datatables styles for extensions, include when used
+//@import 'datatables/extensions/AutoFill/autoFill.bootstrap4';
+//@import 'datatables/extensions/Buttons/buttons.bootstrap4';
+//@import 'datatables/extensions/ColReorder/colReorder.bootstrap4';
+//@import 'datatables/extensions/FixedColumns/fixedColumns.bootstrap4';
+//@import 'datatables/extensions/FixedHeader/fixedHeader.bootstrap4';
+//@import 'datatables/extensions/KeyTable/keyTable.bootstrap4';
+//@import 'datatables/extensions/Responsive/responsive.bootstrap4';
+//@import 'datatables/extensions/RowGroup/rowGroup.bootstrap4';
+//@import 'datatables/extensions/RowReorder/rowReorder.bootstrap4';
+//@import 'datatables/extensions/Scroller/scroller.bootstrap4';
+//@import 'datatables/extensions/Select/select.bootstrap4';
 
 th {
   @extend .text-white;
@@ -34,13 +51,12 @@ html, body {
 }
 
 .page-container {
-  margin: 50px 0 0 50px;
+  margin: 25px 0 0 50px;
   width: calc(100% - 100px);
 }
 
 h1 {
   color: $primary;
-  margin-bottom: .5em;
 }
 
 .dashboard-header-link {
@@ -83,31 +99,8 @@ body {
   width: auto;
 }
 
-.empty-table-label {
-  text-align: center;
-  padding-top: 1.2em;
-}
-
-.table-bar {
-  width: auto;
-  border: 0;
-  margin: 1.5em 0 1em;
-
-  td {
-    padding-right: 20px;
-  }
-}
-
-.table-flex-width {
-  width: auto;
-}
-
 .unread {
   background-color: #e6f3ff;
-}
-
-.bulletless {
-  list-style-type: none;
 }
 
 #menu-profile-dropdown {

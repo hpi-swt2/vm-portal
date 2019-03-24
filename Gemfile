@@ -49,6 +49,9 @@ gem 'bootstrap', '~> 4.3.1'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'jquery-rails'
+# Jquery datatables ruby gems for assets pipeline, https://datatables.net/
+# https://github.com/mkhairi/jquery-datatables
+gem 'jquery-datatables'
 
 # Ruby interface to the VMware vSphere API
 # https://github.com/vmware/rbvmomi
