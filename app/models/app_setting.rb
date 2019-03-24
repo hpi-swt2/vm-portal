@@ -12,7 +12,7 @@ class AppSetting < ApplicationRecord
             format: { with: %r{\A\/?(?:[0-9a-zA-Z_-]+\/?)*\z}, message: 'has to be a valid UNIX file path' }
   validates :vsphere_root_folder,
             length: { maximum: VSphere::Folder::VSPHERE_FOLDER_NAME_CHARACTER_LIMIT },
-            format: { without: %r{/%\/}, message: 'The vSphere root folder may not contain "/", "\" or "%"' }
+            format: { without: %r{.*[%\/\\].*}, message: 'The vSphere root folder may not contain "/", "\" or "%"' }
 
   after_commit :apply_settings, on: :update
 

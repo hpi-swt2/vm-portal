@@ -1,10 +1,14 @@
 <%if current_user.admin? && vm.archivable? %>
   <%= link_to '',
               {controller: :vms, action: 'archive_vm', id: vm.name},
-              method: :post, data: { confirm: 'Are you sure you want to archive this VM?' },
-              class: "btn-manage float-right checkmark" %>
+              method: :post,
+              data: { confirm: "Are you sure you want to archive '#{vm.name}'?" },
+              title: "Archive VM",
+              class: "btn btn-primary btn-sm fa fa-archive" %>
 <% end %>
 <%= link_to '',
             {controller: :vms, action: 'revive_vm', id: vm.name},
             method: :post,
-            class: "btn-manage float-right cross" %>
+            data: { confirm: "Are you sure you want to revive '#{vm.name}'?" },
+            title: "Revive VM",
+            class: "btn btn-primary btn-sm fa fa-arrow-circle-up" %>
