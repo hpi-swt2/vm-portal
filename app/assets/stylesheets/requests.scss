@@ -13,15 +13,15 @@ label {
   display: block;
 }
 
-/* Selected items on top */
+/* Selected items have Bootstrap primary background */
 .select2-selection__choice {
-	background-color: #0C415F !important;
-	color: #FFFFFF !important;
+  @extend .text-white;
+  @extend .bg-primary;
 }
 
-.select2-container {
-  width: 100% !important;
-}
+// .select2-container {
+//   width: 100% !important;
+// }
 
 .styled-form {
   h5 {
