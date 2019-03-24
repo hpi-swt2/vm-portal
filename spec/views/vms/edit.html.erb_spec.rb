@@ -3,13 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'vms/edit.html.erb', type: :view do
-  let(:configuration) do
-    FactoryBot.create(:virtual_machine_config,
-                      name: 'VM',
-                      description: 'hello world',
-                      ip: '127.0.0.1',
-                      dns: '8.8.8.8')
-  end
+  let(:configuration) { FactoryBot.create :virtual_machine_config }
 
   let(:current_user) { FactoryBot.create :user }
 
