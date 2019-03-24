@@ -9,8 +9,6 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
-
- *= require_tree .
  */
  
  /*
@@ -20,7 +18,8 @@
  * able to access the Bootstrap mixins and variables.
  * See: https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
  */
-
+ 
+ // Custom bootstrap variables must be set or *before* bootstrap is imported
 $primary: #0C415F;
 $danger: #a80833;
 $primary-active: #1f6993;
@@ -29,8 +28,10 @@ $primary-hover: #1a5b82;
 // https://github.com/bokmann/font-awesome-rails#sass-support
 @import "font-awesome";
 // https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
-// Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";
+// https://github.com/argerim/select2-rails/issues/135
+@import "select2.css";
+@import "select2-bootstrap";
 // Bootstrap styling for datatables
 // https://github.com/mkhairi/jquery-datatables#stylesheets
 @import 'datatables/dataTables.bootstrap4';
@@ -46,6 +47,12 @@ $primary-hover: #1a5b82;
 //@import 'datatables/extensions/RowReorder/rowReorder.bootstrap4';
 //@import 'datatables/extensions/Scroller/scroller.bootstrap4';
 //@import 'datatables/extensions/Select/select.bootstrap4';
+
+@import 'notifications';
+@import 'operating_systems';
+@import 'requests';
+@import 'resource_allocation';
+@import 'vms';
 
 th {
   @extend .text-white;
