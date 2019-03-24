@@ -8,6 +8,8 @@ class VmsController < ApplicationController
   attr_reader :vms
 
   include VmsHelper
+  before_action :assign_vm, except: %i[update_config update edit index]
+  before_action :assign_config, only: %i[update_config update edit edit_config ]
   before_action :authenticate_admin, only: %i[archive_vm edit_config update_config]
   before_action :authorize_vm_access, only: %i[show edit update]
   before_action :authenticate_root_user_or_admin, only: %i[change_power_state suspend_vm shutdown_guest_os reboot_guest_os reset_vm]
@@ -17,55 +19,42 @@ class VmsController < ApplicationController
     filter_vm_categories current_user unless current_user.admin?
   end
 
-  def show
-    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
-  end
+  def show; end
 
   def edit_config
-    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     @vm.ensure_config
   end
 
   def update_config
-    @config = VirtualMachineConfig.find_by_name params[:id]
-    if @config
-      if @config.update(config_params)
-        redirect_to requests_path, notice: 'Successfully updated configuration'
-      else
-        redirect_to requests_path, notice: 'Could not update the configuration'
-      end
+    if @vm_config.update(config_params)
+      redirect_to requests_path, notice: 'Successfully updated configuration'
     else
-      flash[:alert] = 'Configuration could not be found!'
-      redirect_to controller: :vms, action: 'index'
+      redirect_to requests_path, notice: 'Could not update the configuration'
     end
   end
 
   def edit
-    return render(template: 'errors/not_found', status: :not_found) if @vm.nil?
-
-    @sudo_user_ids = @vm.sudo_users.map(&:id)
-    @non_sudo_user_ids = @vm.users.map(&:id)
-    @configuration = @vm.ensure_config
+    @sudo_user_ids = @vm_config.sudo_users.map(&:id)
+    @non_sudo_user_ids = @vm_config.users.map(&:id)
+    @configuration = @vm_config
   end
 
   def update
-    prepare_info_params
-    notify_changed_users(@vm.sudo_users.map(&:id), info_params[:sudo_user_ids].map(&:to_i), true, @vm.name)
-    notify_changed_users(@vm.users.map(&:id), info_params[:non_sudo_user_ids].map(&:to_i), false, @vm.name)
-    @vm.sudo_users = info_params[:sudo_user_ids]
-    @vm.users = info_params[:non_sudo_user_ids]
+    old_users = @vm_config.all_users
+    old_sudo_users = @vm_config.sudo_users
 
-    unless @vm.ensure_config.update config_params
+    if @vm_config.update config_params
+      notify_changed_users(old_sudo_users, @vm_config.sudo_users, true, @vm_config.name)
+      notify_changed_users(old_users, @vm_config.users, false, @vm_config.name)
+      redirect_to vm_path(@vm_config.name)
+    else
       flash[:error] = 'Description couldn\'t be saved.'
-      redirect_to edit_vm_path(@vm.name)
+      redirect_to edit_vm_path(@vm_config.name)
     end
-
-    redirect_to vm_path(@vm.name)
   end
 
   def request_vm_archivation
-    @vm = VSphere::VirtualMachine.find_by_name params[:id]
-    return if !@vm || @vm.archived? || @vm.pending_archivation?
+    return if @vm.archived? || @vm.pending_archivation?
 
     @vm.users.each do |each|
       each.notify("Your VM #{@vm.name} has been requested to be archived",
@@ -80,8 +69,7 @@ class VmsController < ApplicationController
   end
 
   def request_vm_revive
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
-    return if !@vm || @vm.pending_reviving?
+    return if @vm.pending_reviving?
 
     User.admin.each do |each|
       each.notify("VM #{@vm.name} has been requested to be revived",
@@ -94,13 +82,11 @@ class VmsController < ApplicationController
   end
 
   def stop_archiving
-    @vm = VSphere::VirtualMachine.find_by_name params[:id]
     @vm.set_revived
   end
 
   def archive_vm
-    @vm = VSphere::VirtualMachine.find_by_name params[:id]
-    return if !@vm || @vm.archived?
+    return if @vm.archived?
 
     @vm.set_archived
 
@@ -113,7 +99,6 @@ class VmsController < ApplicationController
   end
 
   def revive_vm
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.set_revived
     @vm.power_on
 
@@ -125,42 +110,34 @@ class VmsController < ApplicationController
   end
 
   def change_power_state
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.change_power_state
     redirect_back(fallback_location: root_path)
   end
 
   def suspend_vm
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.suspend_vm
     redirect_back(fallback_location: root_path)
   end
 
   def shutdown_guest_os
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.shutdown_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reboot_guest_os
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.reboot_guest_os
     redirect_back(fallback_location: root_path)
   end
 
   def reset_vm
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
     @vm.reset_vm
     redirect_back(fallback_location: root_path)
   end
 
   private
 
-  def prepare_info_params
-    return unless params[:vm_info]
-
-    params[:vm_info][:sudo_user_ids] ||= @vm.sudo_users.map(&:id)
-    params[:vm_info][:non_sudo_user_ids] ||= (@vm.users - @vm.sudo_users).map(&:id)
+  def config_params
+    params.require(:vm_info).permit(:description, :ip, :dns, :sudo_user_ids, :user_ids)
   end
 
   def initialize_vm_categories
@@ -179,29 +156,30 @@ class VmsController < ApplicationController
   end
 
   def authorize_vm_access
-    @vm = VSphere::VirtualMachine.find_by_name params[:id]
-    return unless @vm
+    configuration = VirtualMachineConfig.find_by_name params[:id]
 
-    redirect_to vms_path unless current_user.admin? || @vm.users.include?(current_user)
-  end
-
-  def info_params
-    params.require(:vm_info).permit(sudo_user_ids: [], non_sudo_user_ids: [])
-  end
-
-  def config_params
-    params.require(:vm_info).permit(:description, :ip, :dns)
+    redirect_to vms_path unless current_user.admin? || (configuration&.all_users&.include?(current_user))
   end
 
   def authenticate_root_user_or_admin
-    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
-    return unless @vm
+    configuration = VirtualMachineConfig.find_by_name params[:id]
 
-    redirect_to vms_path unless current_user.admin? || @vm.sudo_users.include?(current_user)
+    redirect_to vms_path unless current_user.admin? ||
+                                configuration && (@vm.sudo_users.include?(current_user) || @vm.responsible_users.include?(current_user))
   end
 
   def not_enough_resources(exception)
     redirect_back(fallback_location: root_path)
     flash[:alert] = exception.message
+  end
+
+  def assign_vm
+    @vm = VSphere::VirtualMachine.find_by_name(params[:id])
+    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+  end
+
+  def assign_config
+    @vm_config = VirtualMachineConfig.find_by_name params[:id]
+    redirect_to vms_path, alert: 'Error: Virtual machine could not be found!' if @vm_config.nil?
   end
 end
