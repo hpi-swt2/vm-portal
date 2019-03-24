@@ -175,11 +175,11 @@ class VmsController < ApplicationController
 
   def assign_vm
     @vm = VSphere::VirtualMachine.find_by_name(params[:id])
-    render(template: 'errors/not_found', status: :not_found) if @vm.nil?
+    redirect_back fallback_location: vms_path, alert: 'This Virtual machine could not be found!' if @vm.nil?
   end
 
   def assign_config
     @vm_config = VirtualMachineConfig.find_by_name params[:id]
-    redirect_to vms_path, alert: 'Error: Virtual machine could not be found!' if @vm_config.nil?
+    redirect_back fallback_location: vms_path, alert: 'This virtual machine could not be found in the database!' if @vm_config.nil?
   end
 end
