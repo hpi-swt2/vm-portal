@@ -1,0 +1,8 @@
+// Place all the styles related to styling select2 elements here
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* Selected items have Bootstrap primary background */
+.select2-selection__choice {
+  @extend .text-white;
+  @extend .bg-primary;
+}

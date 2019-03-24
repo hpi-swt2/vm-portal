@@ -19,7 +19,7 @@
  * See: https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
  */
  
- // Custom bootstrap variables must be set or *before* bootstrap is imported
+// Custom bootstrap variables must be set or *before* bootstrap is imported
 $primary: #0C415F;
 $danger: #a80833;
 $primary-active: #1f6993;
@@ -32,6 +32,8 @@ $primary-hover: #1a5b82;
 // https://github.com/argerim/select2-rails/issues/135
 @import "select2.css";
 @import "select2-bootstrap";
+// Custom styles for select2: app/assets/stylesheets/custom.scss
+@import "select2-custom";
 // Bootstrap styling for datatables
 // https://github.com/mkhairi/jquery-datatables#stylesheets
 @import 'datatables/dataTables.bootstrap4';
@@ -48,77 +50,6 @@ $primary-hover: #1a5b82;
 //@import 'datatables/extensions/Scroller/scroller.bootstrap4';
 //@import 'datatables/extensions/Select/select.bootstrap4';
 
-@import 'notifications';
-@import 'requests';
-@import 'resource_allocation';
-@import 'vms';
-
-th {
-  @extend .text-white;
-  @extend .bg-primary;
-}
-
-html, body {
-  height: 100%;
-  min-width: 1000px;
-  width: 100%;
-}
-
-.page-container {
-  margin: 25px 0 0 50px;
-  width: calc(100% - 100px);
-}
-
-h1 {
-  color: $primary;
-}
-
-.dashboard-header-link {
-  text-decoration: none !important;
-}
-
-h3:hover {
-  text-decoration: none;
-  color: $primary-hover;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-#content {
-  flex: 1 0 auto;
-  padding-bottom: 5em;
-}
-
-#footer {
-  flex-shrink: 0;
-
-  a {
-    color: white;
-  }
-
-  .footer-element {
-    padding-top: 20px;
-
-    &__left {
-      @extend .footer-element;
-      padding-left: 50px;
-    }
-  }
-}
-
-.dropdown-menu {
-  padding: 10px;
-  width: auto;
-}
-
-.unread {
-  background-color: #e6f3ff;
-}
-
-#menu-profile-dropdown {
-  padding-top: 3px;
-}
+// All custom CSS: app/assets/stylesheets/custom.scss
+@import 'custom';
 
