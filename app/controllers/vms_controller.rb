@@ -137,7 +137,7 @@ class VmsController < ApplicationController
   private
 
   def config_params
-    params.require(:vm_info).permit(:description, :ip, :dns, :sudo_user_ids, :user_ids)
+    params.require(:vm_info).permit(:description, :ip, :dns, sudo_user_ids: [], user_ids: [])
   end
 
   def initialize_vm_categories

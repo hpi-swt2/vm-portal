@@ -51,8 +51,8 @@ def associate_users_with_vms(users: [], admins: [], vms: [])
   end
   vms.each do |vm|
     # force reload of cached users
-    vm.config.users = nil
-    vm.config.sudo_users = nil
+    vm.config.users = nil if vm.config
+    vm.config.sudo_users = nil if vm.config
     allow(Puppetscript).to receive(:read_node_file).with(vm.name).and_return(admins: admins, users: users)
   end
 end
