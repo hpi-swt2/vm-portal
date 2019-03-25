@@ -68,8 +68,8 @@ class VmsController < ApplicationController
     return if !@vm || @vm.archived? || @vm.pending_archivation?
 
     @vm.users.each do |each|
-      each.notify("Your VM #{@vm.name} has been requested to be archived",
-                  "The VM will soon be archived and for that it will then be shut down.\nIf you still need this VM you can stop the archiving of this VM within #{ArchivationRequest.timeout_readable}.",
+      each.notify("VM #{@vm.name} archiving requested",
+                  "The VM will soon be archived and it will be shut down.\nIf you still need this VM you can stop the archiving of this VM within #{ArchivationRequest.timeout_readable}.",
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
     @vm.set_pending_archivation
@@ -84,7 +84,7 @@ class VmsController < ApplicationController
     return if !@vm || @vm.pending_reviving?
 
     User.admin.each do |each|
-      each.notify("VM #{@vm.name} has been requested to be revived",
+      each.notify("VM #{@vm.name} revival requested",
                   'The VM has to be revived.',
                   url_for(controller: :vms, action: 'show', id: @vm.name))
     end
