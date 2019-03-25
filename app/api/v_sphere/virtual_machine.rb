@@ -88,16 +88,18 @@ module VSphere
       vms
     end
 
-    def initialize(rbvmomi_vm)
+    def initialize(rbvmomi_vm, folder)
       @vm = rbvmomi_vm
+      @folder = folder
     end
 
     # handles name format YYYYMMDD_vm-name
     def name
-      if /^\d{8}_vm-/.match? @vm.name
-        @vm.name[12..-1]
+      @vsphere_name ||= @vm.name
+      if /^\d{8}_vm-/.match? @vsphere_name
+        @vsphere_name[12..-1]
       else
-        @vm.name
+        @vsphere_name
       end
     end
 
@@ -112,9 +114,7 @@ module VSphere
     end
 
     def parent_folder
-      root_folder.subfolders(recursive: true).find do |folder|
-        folder.vms(recursive: false).include? self
-      end
+      @folder
     end
 
     # Guest OS communication
@@ -147,11 +147,11 @@ module VSphere
     # We do not provide a power_state? method which just returns a boolean, because vSphere can internally handle
     # more than just two power states and we might later need to respond to more states than just two
     def powered_on?
-      @vm.summary.runtime.powerState == 'poweredOn'
+      summary.runtime.powerState == 'poweredOn'
     end
 
     def powered_off?
-      @vm.summary.runtime.powerState == 'poweredOff'
+      summary.runtime.powerState == 'poweredOff'
     end
 
     # Power state
@@ -176,11 +176,11 @@ module VSphere
     # Therefore we can check those folders to receive the current VM state
     # Archiving then moves a VM into the corresponding folder
     def pending_archivation?
-      pending_archivation_folder.vms.any? { |vm| vm.equal? self }
+      parent_folder.name == 'Pending archivings'
     end
 
     def archived?
-      archived_folder.vms.any? { |vm| vm.equal? self }
+      parent_folder.name == 'Archived VMs'
     end
 
     def set_pending_archivation
@@ -212,7 +212,7 @@ module VSphere
 
     # Reviving
     def pending_reviving?
-      pending_revivings_folder.vms.any? { |vm| vm.equal? self }
+      parent_folder.name == 'Pending revivings'
     end
 
     def set_pending_reviving
@@ -229,7 +229,11 @@ module VSphere
     # Config methods
     # All the properties that HART saves internally
     def config
-      @config ||= VirtualMachineConfig.find_by_name name
+      unless @searched_config
+        @config = VirtualMachineConfig.find_by_name name
+        @searched_config = true
+      end
+      @config
     end
 
     def ensure_config
@@ -266,11 +270,11 @@ module VSphere
 
     # Information about the vm
     def boot_time
-      @vm.summary.runtime.bootTime
+      summary.runtime.bootTime
     end
 
     def summary
-      @vm.summary
+      @summary ||= @vm.summary
     end
 
     def macs
@@ -290,7 +294,7 @@ module VSphere
     end
 
     def host_name
-      @vm.summary.runtime.host.name
+      summary.runtime.host.name
     end
 
     def active?
@@ -410,7 +414,7 @@ module VSphere
       @request ||= Request.accepted.find_by name: name
     end
 
-    private
+    #private
 
     def target_subfolder
       path = [] << case status

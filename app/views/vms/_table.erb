@@ -1,4 +1,4 @@
-<table data-toggle="datatable" class="table" id=<%= id %> <%= datatable_options.map{ |k,v| "data-#{k}=#{v}" }.join(' ') %>> 
+<table data-toggle="datatable" class="table" id=<%= id %> <%= datatable_options.map{ |k,v| "data-#{k}=#{v}" }.join(' ') %>>
   <thead>
   <tr>
     <th>Status</th>
@@ -17,7 +17,7 @@
           <%= content_tag :div, nil,
             title: vm.status,
             :data => { toggle: 'tooltip', placement: 'right' },
-            class: "round #{vm.archived? ? 'bg-secondary' : (vm.powered_on? ? 'bg-success' : 'bg-danger')}" %>
+            class: "round #{status_color vm}" %>
         </td>
         <%# Allow also searching for description %>
         <td data-search='<%= "#{vm.name} #{vm.config.description if vm.config}" %>'>

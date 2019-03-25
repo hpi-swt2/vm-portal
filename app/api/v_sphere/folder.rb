@@ -30,7 +30,7 @@ module VSphere
 
     def vms(recursive: true)
       vms = @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }.map do |each|
-        VSphere::VirtualMachine.new each
+        VSphere::VirtualMachine.new each, self
       end
 
       vms += subfolders.flat_map(&:vms) if recursive
@@ -53,7 +53,7 @@ module VSphere
     end
 
     def name
-      @folder.name
+      @folder_name ||= @folder.name
     end
 
     # Ensure that a subfolder exists and return it
@@ -83,7 +83,7 @@ module VSphere
 
       vm_config = creation_config(cpu, ram, capacity, add_prefix(name), cluster.networks.first)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
-      VSphere::VirtualMachine.new vm
+      VSphere::VirtualMachine.new vm, self
     end
 
     private
