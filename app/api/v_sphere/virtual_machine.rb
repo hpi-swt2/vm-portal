@@ -315,82 +315,11 @@ module VSphere
 
     # this method should return all users, including the sudo users
     def users
-      users = []
-      begin
-        GitHelper.open_git_repository do
-          remote_users = Puppetscript.read_node_file(name)
-          users = remote_users[:users] || []
-        end
-      rescue Git::GitExecuteError, RuntimeError => e
-        Rails.logger.error(e)
-      end
-      users
-    end
-
-    def commit_message(git_writer)
-      if git_writer.added?
-        'Add ' + name
-      elsif git_writer.updated?
-        'Update ' + name
-      else
-        ''
-      end
-    end
-
-    def user_name_and_node_script(ids)
-      all_users = Puppetscript.read_node_file(name)
-      sudo_users = all_users[:admins]
-      new_users = User.where(id: ids)
-      name_script = Puppetscript.name_script(name)
-      node_script = Puppetscript.node_script(name, sudo_users, new_users)
-      [name_script, node_script]
-    end
-
-    def users=(ids)
-      GitHelper.open_git_repository(for_write: true) do |git_writer|
-        name_script, node_script = user_name_and_node_script(ids)
-        write_node_and_class_file(git_writer, name_script, node_script)
-      end
-    rescue Git::GitExecuteError, RuntimeError => e
-      Rails.logger.error(e)
-    end
-
-    def sudo_users=(ids)
-      GitHelper.open_git_repository(for_write: true) do |git_writer|
-        name_script, node_script = sudo_name_and_node_script(ids)
-        write_node_and_class_file(git_writer, name_script, node_script)
-      end
-    rescue Git::GitExecuteError, RuntimeError => e
-      logger.error(e)
-    end
-
-    def write_node_and_class_file(git_writer, name_script, node_script)
-      git_writer.write_file(Puppetscript.class_file_name(name), name_script)
-      git_writer.write_file(Puppetscript.node_file_name(name), node_script)
-      message = commit_message(git_writer)
-      git_writer.save(message)
+      ensure_config.all_users
     end
 
     def sudo_users
-      admins = []
-      begin
-        GitHelper.open_git_repository do
-          users = Puppetscript.read_node_file(name)
-          admins = users[:admins] || []
-        end
-      rescue Git::GitExecuteError, RuntimeError => e
-        Rails.logger.error(e)
-      end
-      admins
-    end
-
-    def sudo_name_and_node_script(ids)
-      all_users = Puppetscript.read_node_file(name)
-      users = all_users[:users]
-      new_sudo_users = User.where(id: ids)
-      name_script = Puppetscript.name_script(name)
-      node_script = Puppetscript.node_script(name, new_sudo_users, users)
-      [name_script, node_script]
+      ensure_config.sudo_users
     end
 
     # fine to use for a single vm. If you need to check multiple vms for a user, check with user_vms

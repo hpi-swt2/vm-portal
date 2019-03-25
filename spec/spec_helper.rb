@@ -50,6 +50,9 @@ def associate_users_with_vms(users: [], admins: [], vms: [])
     allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)
   end
   vms.each do |vm|
+    # force reload of cached users
+    vm.ensure_config.users = nil
+    vm.ensure_config.sudo_users = nil
     allow(Puppetscript).to receive(:read_node_file).with(vm.name).and_return(admins: admins, users: users)
   end
 end
