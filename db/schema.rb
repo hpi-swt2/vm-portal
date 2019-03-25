@@ -37,8 +37,8 @@ ActiveRecord::Schema.define(version: 2019_03_18_170254) do
     t.integer "max_cpu_cores"
     t.integer "max_ram_size"
     t.integer "max_storage_size"
-    t.integer "max_shown_vms"
     t.string "git_branch", default: "master"
+    t.integer "max_shown_vms", default: 10
     t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
   end
 
