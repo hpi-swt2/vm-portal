@@ -51,10 +51,7 @@ class ProjectsController < ApplicationController
 
   def destroy
     @project.destroy
-    respond_to do |format|
-      format.html { redirect_back fallback_location: projects_url, notice: 'Project was successfully deleted.' }
-      format.json { head :no_content }
-    end
+    redirect_back fallback_location: projects_url, notice: 'Project was successfully deleted.'
   end
 
   private
