@@ -12,7 +12,7 @@ class DashboardController < ApplicationController
     redirect_to '/users/sign_in' if current_user.nil?
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-    @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
+    @notifications = Notification.where(user: current_user, read: false).slice(0, number_of_notifications)
   end
 
   private
