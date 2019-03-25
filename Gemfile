@@ -126,6 +126,9 @@ group :development do
   gem 'binding_of_caller'
   # Continous execution of unit tests
   gem 'guard'
+  # Benchmarking
+  gem 'meta_request'
+  gem 'ruby-prof'
 end
 
 group :test do
