@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :hosts, only: %i[index show], constraints: { id: /.*/ }
 
   # '/notifications/...'
-  resources :notifications, only: %i[index new create destroy] do
+  resources :notifications, only: %i[index destroy] do
     member do
       get :mark_as_read
       get :mark_as_read_and_redirect

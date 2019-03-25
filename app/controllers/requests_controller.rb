@@ -146,7 +146,7 @@ class RequestsController < ApplicationController
 
     if @request.accepted?
       ([@request.user] + User.admin).uniq.each do |each|
-        each.notify('Request has been accepted', @request.description_text, @request.description_url(host_url))
+        each.notify('VM request has been accepted', @request.description_text, @request.description_url(host_url))
       end
       @request.users.uniq.each do |each|
         rights = @request.sudo_users.include?(each) ? 'sudo access' : 'access'
@@ -155,7 +155,7 @@ class RequestsController < ApplicationController
     elsif @request.rejected?
       message = @request.description_text
       message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
-      notify_users('Request has been rejected', message, @request.description_url(host_url))
+      notify_users('VM request has been rejected', message, @request.description_url(host_url))
     end
   end
 

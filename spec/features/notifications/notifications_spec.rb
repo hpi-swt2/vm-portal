@@ -2,39 +2,48 @@
 
 require 'rails_helper'
 
-describe 'Index page', type: :feature do
+describe 'Notifications index page', type: :feature do
+  before do
+    @user = create(:user)
+    login_as(@user)
+  end
+
   context 'with notifications' do
     before do
-      user = create(:user)
-      login_as(user, scope: :user)
-      @notification = FactoryBot.create(:notification, user: user)
-    end
-
-    it 'has notifications with title' do
+      @notification = FactoryBot.create(:notification, user: @user)
       visit notifications_path
-
+    end
+    
+    it 'displays title' do
       expect(page).to have_text(@notification.title)
     end
-
-    it 'has notifications with messages' do
-      visit notifications_path
-
+    
+    it 'displays messages' do
       expect(page).to have_text(@notification.message)
     end
+    
+    it 'allows marking notification as read' do
+      expect{
+        find("a[href='#{mark_as_read_and_redirect_notification_path(@notification)}']").click
+      }.to change{@notification.reload.read}.from(false).to(true)
+    end
+    
+    it 'redirects to notification links within the application' do
+      @notification.update(link: user_path(@user))
+      visit notifications_path
+      find("a[href='#{mark_as_read_and_redirect_notification_path(@notification)}']").click
+      expect(page).to have_current_path(@notification.link)
+    end
 
-    it 'marks notification as read' do
-      visit mark_as_read_notification_path(@notification)
-
-      expect(@notification.reload.read).to be(true)
+    it 'deals with empty notification links' do
+      @notification.update(link: nil)
+      visit notifications_path
+      find("a[href='#{mark_as_read_and_redirect_notification_path(@notification)}']").click
+      expect(page).to have_current_path(notifications_path)
     end
   end
 
   context 'without notifications' do
-    before do
-      user = create(:user)
-      login_as(user, scope: :user)
-    end
-
     it 'informs about no notifications' do
       visit notifications_path
       expect(page).to have_css('#no-notifications', count: 1)
@@ -42,37 +51,22 @@ describe 'Index page', type: :feature do
   end
 end
 
-describe 'Nav header', type: :feature do
-  before do
-    user = create(:user)
-    login_as(user, scope: :user)
-    @notification = FactoryBot.create(:notification, user: user)
-  end
-
-  it 'has a link to notifications' do
-    visit requests_path
-
-    click_link 'header-notification-bell'
-    expect(page).to have_text(@notification.message)
-  end
-end
-
 describe 'Notification sending', type: :feature do
-  let(:user) do
-    user = create(:user)
-    login_as(user, scope: :user)
-    user
+  before do
+    @user = create(:user)
+    login_as(@user)
+    @attrs = FactoryBot.attributes_for(:notification)
   end
 
   it 'notifies slack' do
-    allow(user).to receive(:notify_slack)
-    user.notify('Notification title', 'The notification message', '')
-    expect(user).to have_received(:notify_slack)
+    allow(@user).to receive(:notify_slack)
+    @user.notify(@attrs['title'], @attrs['message'], @attrs['link'])
+    expect(@user).to have_received(:notify_slack)
   end
 
-  it 'creates a notification object' do
-    notification_count = Notification.all.length
-    user.notify('Notification title', 'The notification message', '')
-    expect(Notification.all.length).to equal(notification_count + 1)
+  it 'creates a notification object when calling notify' do
+    expect{
+      @user.notify(@attrs['title'], @attrs['message'], @attrs['link'])
+    }.to change{Notification.count}.by(1)
   end
 end
