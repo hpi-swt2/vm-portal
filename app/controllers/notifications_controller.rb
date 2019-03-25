@@ -11,9 +11,9 @@ class NotificationsController < ApplicationController
   # DELETE /notifications/1
   def destroy
     if @notification.destroy
-      notice = 'Notification was successfully deleted.'
+      notice = "Notification '#{@notification.title}' was successfully deleted."
     else
-      alert = 'Error while deleting notification.'
+      alert = "Error while deleting notification '#{@notification.title}'."
     end
     redirect_back fallback_location: notifications_path, notice: notice, alert: alert
   end
@@ -34,7 +34,7 @@ class NotificationsController < ApplicationController
     if @notification.save
       redirect_back fallback_location: notifications_path
     else
-      redirect_back fallback_location: notifications_path, alert: 'Something went wrong.'
+      redirect_back fallback_location: notifications_path, alert: 'Error while marking notifcation as read.'
     end
   end
 
