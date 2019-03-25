@@ -35,7 +35,7 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to dashboard_path }
+      format.html { redirect_back fallback_location: notifications_url }
       format.json { head :no_content }
     end
   end
@@ -45,7 +45,7 @@ class NotificationsController < ApplicationController
     if @notification.link.present?
       redirect_to @notification.link
     else
-      redirect_to dashboard_path
+      redirect_back fallback_location: notifications_url
     end
   end
 
