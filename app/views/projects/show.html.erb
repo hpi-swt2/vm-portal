@@ -13,9 +13,10 @@
     <tr>
       <th><%= Project.human_attribute_name('responsible_users') %></th>
       <td>
-        <ul class="bulletless pl-1">
+        <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
+        <ul class="list-inline">
           <% @project.responsible_users.each do |user| %>
-            <li><%= user.name %></li>
+            <li class="list-inline-item"><%= user.name %></li>
           <% end %>
         </ul>
       </td>

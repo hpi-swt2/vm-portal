@@ -1,8 +1,9 @@
 <%if current_user.admin? && vm.archivable? %>
-  <%= link_to '',
+  <%= link_to fa_icon('arrow-circle-up'),
               {controller: :vms, action: 'revive_vm', id: vm.name},
               method: :post,
-              data: { confirm: "Are you sure you want to revive '#{vm.name}'?" },
+              data: { confirm: "Are you sure you want to revive '#{vm.name}'?",
+                      toggle: 'tooltip', placement: 'top' },
               title: "Revive VM",
-              class: "btn btn-primary btn-sm fa fa-arrow-circle-up" %>
+              class: "btn btn-primary btn-sm" %>
 <% end %>
