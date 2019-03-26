@@ -10,7 +10,7 @@
     <% projects.each do |project| %>
       <tr>
         <td><%= link_to project.name, project_path(project) %></td>
-        <td><%= truncate(project.description, length:100) %></td>
+        <td><%= truncate(project.description, length: 100) %></td>
         <td>
           <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
           <ul class="list-inline">
