@@ -39,6 +39,15 @@ $primary-hover: #1a5b82;
 //@import 'datatables/extensions/Scroller/scroller.bootstrap4';
 //@import 'datatables/extensions/Select/select.bootstrap4';
 
+// https://guides.rubyonrails.org/v3.2/active_record_validations_callbacks.html#customizing-error-messages-css
+.field_with_errors > label {
+  color: $danger;
+}
+
+.field_with_errors > * {
+  @extend .is-invalid;
+}
+
 th {
   @extend .text-white;
   @extend .bg-primary;
