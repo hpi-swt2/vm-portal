@@ -4,32 +4,12 @@ require 'rails_helper'
 
 RSpec.describe ServersController, type: :controller do
   let(:valid_attributes) do
-    {
-      name: 'SpecServer',
-      cpu_cores: 4,
-      ram_gb: 1024,
-      storage_gb: 4096,
-      mac_address: 'C0:FF:EE:C4:11:42',
-      fqdn: 'arrrr.speck.de',
-      ipv4_address: '8.8.8.8',
-      ipv6_address: '::1',
-      installed_software: ['SpeckTester'],
-      responsible_id: FactoryBot.create(:user).id
-    }
+    employee = FactoryBot.create(:employee)
+    FactoryBot.attributes_for(:server, responsible_id: employee.id)
   end
-
+  
   let(:invalid_attributes) do
-    {
-      name: 'SpecServer',
-      cpu_cores: '',
-      ram_gb: 1024,
-      storage_gb: 4096,
-      mac_address: 'EE:C4:11:42',
-      fqdn: 'arrrr.speck.de',
-      ipv4_address: 'c8.a8.d8.b8',
-      ipv6_address: 42,
-      installed_software: ['SpeckTester']
-    }
+    { cpu_cores: 'twelve-hundred', mac_address: 1234 }
   end
 
   let(:valid_session) { {} }
@@ -98,25 +78,14 @@ RSpec.describe ServersController, type: :controller do
   describe 'PUT #update' do
     context 'with valid params' do
       let(:new_attributes) do
-        {
-          name: 'SpeckServer',
-          cpu_cores: 2,
-          ram_gb: 1024,
-          storage_gb: 4096,
-          mac_address: 'C0:FF:EE:C4:11:42',
-          fqdn: 'arrrr.speck.de',
-          ipv4_address: '8.8.8.8',
-          ipv6_address: '::1',
-          installed_software: ['SpeckTester'],
-          responsible: FactoryBot.create(:admin)
-        }
+        FactoryBot.attributes_for(:server, name: 'Changed')
       end
 
       it 'updates the requested server' do
-        server = Server.create! valid_attributes
+        server = Server.create! valid_attributes.update(name: 'Original')
         put :update, params: { id: server.to_param, server: new_attributes }, session: valid_session
         server.reload
-        expect(server.name).to eq('SpeckServer')
+        expect(server.name).to eq(new_attributes[:name])
       end
 
       it 'redirects to the server' do
