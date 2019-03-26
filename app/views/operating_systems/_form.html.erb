@@ -1,22 +1,6 @@
-<%= form_with(model: operating_system, local: true) do |form| %>
-  <% if operating_system.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(operating_system.errors.count, "error") %> prohibited this operating_system from being saved:</h2>
-
-      <ul>
-      <% operating_system.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
-  </div>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: operating_system, local: true) do |form| %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
+  <%= form.text_field :name %>
+  <%= form.submit class: "btn btn-primary" %>
 <% end %>

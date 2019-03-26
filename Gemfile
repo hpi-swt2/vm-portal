@@ -52,6 +52,9 @@ gem 'jquery-rails'
 # Jquery datatables ruby gems for assets pipeline, https://datatables.net/
 # https://github.com/mkhairi/jquery-datatables
 gem 'jquery-datatables'
+# Rails form builder for creating forms using Bootstrap 4
+# https://github.com/bootstrap-ruby/bootstrap_form
+gem "bootstrap_form", ">= 4.2.0"
 
 # Ruby interface to the VMware vSphere API
 # https://github.com/vmware/rbvmomi

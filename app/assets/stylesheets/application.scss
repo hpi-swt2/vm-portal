@@ -39,6 +39,9 @@ $primary-hover: #1a5b82;
 //@import 'datatables/extensions/Scroller/scroller.bootstrap4';
 //@import 'datatables/extensions/Select/select.bootstrap4';
 
+// https://github.com/bootstrap-ruby/bootstrap_form#installation
+@import 'rails_bootstrap_forms';
+
 th {
   @extend .text-white;
   @extend .bg-primary;
