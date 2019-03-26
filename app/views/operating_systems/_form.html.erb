@@ -1,15 +1,5 @@
 <%= form_with(model: operating_system, local: true) do |form| %>
-  <% if operating_system.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(operating_system.errors.count, "error") %> prohibited this operating_system from being saved:</h2>
-
-      <ul>
-      <% operating_system.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'layouts/form_errors', model: form.object %>
 
   <div class="field">
     <%= form.label :name %>

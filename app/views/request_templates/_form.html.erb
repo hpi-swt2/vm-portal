@@ -1,15 +1,5 @@
 <%= form_with(model: request_template, local: true) do |form| %>
-  <% if request_template.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(request_template.errors.count, "error") %> prohibited this request template from being saved:</h2>
-
-      <ul>
-      <% request_template.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'layouts/form_errors', model: form.object %>
 
   <div class="field form-group">
     <%= form.label 'Template name' %>

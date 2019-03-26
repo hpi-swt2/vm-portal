@@ -1,14 +1,5 @@
 <%= form_with(model: request, local: true) do |form| %>
-  <% if request.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(request.errors.count, "error") %> prohibited this request from being saved:</h2>
-      <ul>
-        <% request.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'layouts/form_errors', model: form.object %>
 
   <div class="container-fluid styled-form">
     <div class="row border-bottom mb-4 pb-4">
