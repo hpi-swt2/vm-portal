@@ -28,10 +28,6 @@ RSpec.describe 'projects/show', type: :view do
       expect(rendered).to include project.responsible_users[1].name
     end
 
-    it 'has a link to go to the all projects page' do
-      expect(rendered).to have_link('All Projects', href: projects_path)
-    end
-
     it 'shows a link to edit the project' do
       expect(rendered).to have_link('Edit', href: edit_project_path(project))
     end
