@@ -21,13 +21,10 @@
   </div>
 
   <div class="field form-group">
-    <%= form.label :responsible, "Responsible" %> <br>
-    <%= form.select 'responsible',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :human_readable_identifier),
-                    {},
-                    { multiple: false, class: "selecttwo", style: 'width: 50%' } %>
+    <%= form.label :responsible, "Responsible" %>
+    <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+    <%= form.collection_select(:responsible_id, User.all, :id, :human_readable_identifier,
+                              options={prompt: true}, html_options={class: "selecttwo"}) %>
   </div>
 
   <div class="field">
@@ -85,32 +82,30 @@
     <h5>Software Information</h5>
   </div>
 
-<span id="response"></span>
-<script>
-var countBox = 1;
-var boxName = 0;
+  <script>
+    function addInput()
+    {
+      var input = document.createElement("div");
+      input.setAttribute("class", "field");
 
-function addInput()
-{
-  var boxName="software" + countBox;
-  var input = document.createElement("div");
-  input.setAttribute("class", "field");
+      var inputKind = document.createElement("INPUT");
+      inputKind.setAttribute("type", "text");
+      inputKind.setAttribute("placeholder", "Software");
+      inputKind.setAttribute("class", "form-control");
+      // Adhere to RoR naming convention for fields
+      inputKind.setAttribute("name", "server[installed_software][]");
+      input.appendChild(inputKind);
+      document.getElementById('anchor').appendChild(input);
+    }
+  </script>
 
-  var inputKind = document.createElement("INPUT");
-  inputKind.setAttribute("type", "text");
-  inputKind.setAttribute("placeholder", "Software " + countBox);
-  inputKind.setAttribute("class", "form-control");
-  inputKind.setAttribute("name", boxName);
-  inputKind.setAttribute("id", boxName);
+  <div class="field form-group">
+    <%= form.label :installed_software, "Installed Software" %>
+    <% server.installed_software.each do |software| %>
+      <%= form.text_field :installed_software, multiple: true, value: software, class: 'form-control' %>
+    <% end %>
 
-  input.appendChild(inputKind);
-  document.getElementById('response').appendChild(input);
-
-  countBox += 1;
-}
-</script>
-
-  <div class="field">
+    <span id="anchor"></span>
     <input type="button" onclick="addInput()" value="Add Software" />
   </div>
 
