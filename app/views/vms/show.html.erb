@@ -135,3 +135,30 @@ end %>
     </table>
   </div>
 </div>
+
+<% if @vm_config.present? %>
+  <a class="btn btn-primary fa fa-code text-white" data-toggle="modal" title="Puppet script" data-target="puppetscript">
+  </a>
+  <div class="modal fade" id="puppetscript" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <pre>
+              <%= debug @vm_config.node_script %>
+              <%= debug Puppetscript.name_script @vm.name %>
+            </pre>
+        </div>
+        <div class="modal-footer">
+          <%# <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %> %>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
