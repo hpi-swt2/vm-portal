@@ -1,8 +1,10 @@
 <table class="table" data-toggle="datatable">
   <thead>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Responsible</th>
+    <tr>
+      <th><%= User.human_attribute_name('name') %></th>
+      <th><%= User.human_attribute_name('description') %></th>
+      <th><%= User.human_attribute_name('responsible_users') %></th>
+    </tr>
   </thead>
   <tbody>
     <% projects.each do |project| %>
