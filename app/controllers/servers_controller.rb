@@ -30,7 +30,7 @@ class ServersController < ApplicationController
       render :new
     end
   end
-  
+
   # PATCH/PUT /servers/1
   def update
     if @server.update(server_params)
@@ -39,7 +39,7 @@ class ServersController < ApplicationController
       render :edit
     end
   end
-  
+
   # DELETE /servers/1
   def destroy
     @server.destroy
@@ -47,7 +47,7 @@ class ServersController < ApplicationController
   end
 
   private
-  
+
   # Use callbacks to share common setup or constraints between actions.
   def set_server
     @server = Server.find(params[:id])
