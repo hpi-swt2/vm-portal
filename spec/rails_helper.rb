@@ -34,6 +34,9 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 # Configure shoulda matchers
+# Shoulda Matchers provides RSpec- and Minitest-compatible one-liners that test common Rails functionality.
+# These tests, if written by hand, would be much longer, more complex, and error-prone.
+# https://github.com/thoughtbot/shoulda-matchers#rails-apps
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
