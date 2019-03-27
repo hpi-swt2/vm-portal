@@ -1,29 +1,21 @@
-<div class="col-lg-12">
-  <div class="pb-2 mt-4 mb-2 border-bottom">
-    <h1>Dashboard</h1>
-  </div>
-</div>
+<h1>Dashboard</h1>
+
 <div class="row">
+  <%# left column - VMs %>
   <div class="col-8">
     <%= render 'widget', {vms: @vms.slice(0...max_shown_vms), id: 'vms_active', header: 'Active VMs', buttons: nil} %>
     <%= render 'widget', {vms: @archivable.slice(0...max_shown_vms), id: 'vms_to_be_archived', header: 'Archivable VMs', buttons: nil} %>
     <%= render 'widget', {vms: @revivable.slice(0...max_shown_vms), id: 'vms_to_be_revived', header: 'Revivable VMs', buttons: nil} %>
   </div>
 
-
-
-
-  <!-- end left column -->
-
+  <%# right column - notifications %>
   <div class="col-4">
     <div class="card mb-4">
-      <%= link_to notifications_path, method: :get, class: "dashboard-header-link" do %>
-        <div class="card-header bg-primary text-white">
-          <div class="btn-group">
-            <h3><i class="fa fa-bell"></i> Notifications</h3>
-          </div>
-        </div>
-      <% end %>
+      <div class="card-header bg-primary">
+        <%= link_to notifications_path, class: "text-white" do %>
+          <h3><%= fa_icon('bell') %> Notifications</h3>
+        <% end %>
+      </div>
       <div class="card-body">
         <%= render 'notifications/list' %>
       </div>
