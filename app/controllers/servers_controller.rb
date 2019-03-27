@@ -43,7 +43,7 @@ class ServersController < ApplicationController
   # DELETE /servers/1
   def destroy
     @server.destroy
-    redirect_to servers_url, notice: 'Server was successfully destroyed.'
+    redirect_to servers_path, notice: 'Server was successfully deleted.'
   end
 
   private
