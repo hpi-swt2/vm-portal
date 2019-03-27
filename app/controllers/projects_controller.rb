@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  before_action :set_project, only: %i[show edit update destroy]
   before_action :authenticate_employee, only: %i[new create]
   before_action :authenticate_responsible_user, only: %i[edit update destroy]
 
@@ -10,16 +11,14 @@ class ProjectsController < ApplicationController
   end
 
   # GET /projects/1
-  def show
-    @project = Project.find(params[:id])
-  end
+  def show; end
 
   # GET /projects/new
   def new
     @project = Project.new
   end
 
-  # POST /requests
+  # POST /projects
   def create
     @project = Project.new(project_params)
     if @project.save
@@ -34,12 +33,11 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def edit
-    @project = Project.find(params[:id])
-  end
+  # GET /projects/1/edit
+  def edit; end
 
+  # PATCH/PUT /projects/1
   def update
-    @project = Project.find(params[:id])
     if @project.update(project_params)
       redirect_to @project, notice: 'Project was successfully updated.'
     else
@@ -47,12 +45,18 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # DELETE /projects/1
   def destroy
     @project.destroy
     redirect_to projects_path, notice: 'Project was successfully deleted.'
   end
 
   private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_project
+    @project = Project.find(params[:id])
+  end
 
   def authenticate_responsible_user
     @project = Project.find(params[:id])
