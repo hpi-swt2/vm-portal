@@ -39,7 +39,7 @@ class RequestTemplatesController < ApplicationController
   # DELETE /request_templates/1
   def destroy
     @request_template.destroy
-    redirect_to request_templates_path, notice: 'Request template was successfully destroyed.'
+    redirect_to request_templates_path, notice: 'Request template was successfully deleted.'
   end
 
   private

@@ -39,7 +39,7 @@ class OperatingSystemsController < ApplicationController
   # DELETE /operating_systems/1
   def destroy
     @operating_system.destroy
-    redirect_to operating_systems_url, notice: 'Operating system was successfully destroyed.'
+    redirect_to operating_systems_url, notice: 'Operating system was successfully deleted.'
   end
 
   private
