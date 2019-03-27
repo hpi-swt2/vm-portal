@@ -60,6 +60,7 @@ class ServersController < ApplicationController
                                    :ipv6_address, :mac_address, :fqdn, {installed_software: []},
                                    :model, :vendor, :description, :responsible_id)
     # Remove empty software form fields
+    # https://api.rubyonrails.org/classes/ActionController/Parameters.html#method-i-each_pair
     params[:server].each { |k,v| v.reject!(&:blank?) if k.eql?('installed_software') }
   end
 end
