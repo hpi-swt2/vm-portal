@@ -1,6 +1,5 @@
 <h1 class="float-left">Virtual Machines</h1>
 
-<input class="filter-box float-left ml-3 mt-2" type="text" id="filter_active" onkeyup="filterTables('filter_active', ['vms_active', 'vms_to_be_archived', 'vms_to_be_revived', 'vms_archived'])" placeholder="Search all VMs">
 <div class="clearfix">
   <% if current_user.employee_or_admin? %>
     <%= link_to fa_icon('plus'), new_request_path,

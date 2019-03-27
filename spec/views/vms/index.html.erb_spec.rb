@@ -49,7 +49,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     end
 
     it 'shows correct power on / off button' do
-      expect(rendered).to have_css('a.fa-play')
+      expect(rendered).to have_css 'i.fa-play', count: 1
     end
 
     it 'demands confirmation on shutdown' do
@@ -63,16 +63,16 @@ RSpec.describe 'vms/index.html.erb', type: :view do
 
       it 'shows no power buttons' do
         rendered = render
-        expect(rendered).not_to have_css('a.fa-play')
-        expect(rendered).not_to have_css('a.fa-stop')
+        expect(rendered).not_to have_css 'i.fa-play'
+        expect(rendered).not_to have_css 'i.fa-play'
       end
     end
   end
 
   context 'when the user is not a root user for the vms' do
     it 'does not show any manage buttons' do
-      expect(rendered).not_to have_css('a.fa-play')
-      expect(rendered).not_to have_css('a.fa-stop')
+      expect(rendered).not_to have_css 'i.fa-play'
+      expect(rendered).not_to have_css 'i.fa-play'
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     let(:current_user) {FactoryBot.create :admin}
 
     it 'shows correct power on / off button' do
-      expect(rendered).to have_css('a.fa-play')
+      expect(rendered).to have_css 'i.fa-play', count: 1
     end
 
     it 'demands confirmation on shutdown and reboot' do
@@ -106,8 +106,8 @@ RSpec.describe 'vms/index.html.erb', type: :view do
     it 'shows no power buttons when vmwaretools are not installed' do
       assign(:vms, mock_vms_without_tools)
       rendered = render
-      expect(rendered).not_to have_css('a.fa-play')
-      expect(rendered).not_to have_css('a.fa-stop')
+      expect(rendered).not_to have_css 'i.fa-play'
+      expect(rendered).not_to have_css 'i.fa-play'
     end
 
     it 'links to new vm page' do

@@ -33,14 +33,14 @@ module VmsHelper
 
   def notify_changed_users(old_list, new_list, sudo_lists, vm_name)
     removed_users = old_list - new_list
-    removed_users.each do |user_id|
-      User.find(user_id).notify('Sudo rights revoked', "Your sudo rights on VM '#{vm_name}' have been revoked.") if sudo_lists
-      User.find(user_id).notify('User rights revoked', "Your user rights on VM '#{vm_name}' have been revoked.") unless sudo_lists
+    removed_users.each do |user|
+      user.notify('Sudo rights revoked', "Your sudo rights on VM '#{vm_name}' have been revoked.") if sudo_lists
+      user.notify('User rights revoked', "Your user rights on VM '#{vm_name}' have been revoked.") unless sudo_lists
     end
     added_users = new_list - old_list
-    added_users.each do |user_id|
-      User.find(user_id).notify('Sudo rights granted', "You have been made sudo user on VM '#{vm_name}'") if sudo_lists
-      User.find(user_id).notify('User rights granted', "You have been made user on VM '#{vm_name}'") unless sudo_lists
+    added_users.each do |user|
+      user.notify('Sudo rights granted', "You have been made sudo user on VM '#{vm_name}'") if sudo_lists
+      user.notify('User rights granted', "You have been made user on VM '#{vm_name}'") unless sudo_lists
     end
   end
 
