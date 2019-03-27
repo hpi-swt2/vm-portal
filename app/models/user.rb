@@ -51,12 +51,12 @@ class User < ApplicationRecord
   end
 
   # notifications
-  def notify(title, message, link = '')
+  def notify(title, message, link = '', type: :default)
     notify_slack("*#{title}*\n#{message}\n#{link}")
 
     NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
 
-    notification = Notification.new title: title, message: message
+    notification = Notification.new title: title, message: message, notification_type: type
     notification.user_id = id
     notification.read = false
     notification.link = link

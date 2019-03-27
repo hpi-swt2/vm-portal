@@ -11,7 +11,7 @@ class HartLogger
 
   def error(progname = nil, &block)
     User.admin.each do |admin|
-      admin.notify 'An Error occured!', progname.to_s + "\n\nPlease check the settings."
+      admin.notify 'An Error occured!', progname.to_s, type: :error
     end
 
     default_logger.error(progname, &block)
