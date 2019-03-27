@@ -55,13 +55,9 @@ en:
       create:
         notice: "%{resource} was successfully created."
         notice_detail: "%{resource} '%{model}' was successfully created."
-        alert: "%{resource} could not be created."
-        alert_detail: "%{resource} '%{model}' could not be created."
       update:
         notice: "%{resource} was successfully updated."
         notice_detail: "%{resource} '%{model}' was successfully updated."
-        alert: "%{resource} could not be updated."
-        alert_detail: "%{resource} '%{model}' could not be updated."
       destroy:
         notice: "%{resource} was successfully deleted."
         notice_detail: "%{resource} '%{model}' was successfully deleted."
