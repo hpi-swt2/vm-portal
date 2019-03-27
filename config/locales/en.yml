@@ -49,3 +49,21 @@ en:
     successfully_updated_and_vm_created: "Request was successfully updated and the vm was successfully created."
   project:
     title: "Project Overview"
+  # Flash messages common to most controllers
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name} was successfully created."
+        notice_detail: "%{resource_name} '%{model_name}' was successfully created."
+        alert: "%{resource_name} could not be created."
+        alert_detail: "%{resource_name} '%{model_name}' could not be created."
+      update:
+        notice: "%{resource_name} was successfully updated."
+        notice_detail: "%{resource_name} '%{model_name}' was successfully updated."
+        alert: "%{resource_name} could not be updated."
+        alert_detail: "%{resource_name} '%{model_name}' could not be updated."
+      destroy:
+        notice: "%{resource_name} was successfully deleted."
+        notice_details: "%{resource_name} '%{model_name}' was successfully deleted."
+        alert: "%{resource_name} could not be deleted."
+        alert_detail: "%{resource_name} '%{model_name}' could not be deleted."
