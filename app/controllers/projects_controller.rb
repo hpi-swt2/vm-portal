@@ -2,7 +2,7 @@
 
 class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
-  before_action :authenticate_responsible_user, only: %i[edit update]
+  before_action :authenticate_responsible_user, only: %i[edit update destroy]
 
   def index
     @projects = Project.all
@@ -47,6 +47,11 @@ class ProjectsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @project.destroy
+    redirect_back fallback_location: projects_url, notice: 'Project was successfully deleted.'
   end
 
   private
