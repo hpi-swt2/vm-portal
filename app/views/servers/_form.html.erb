@@ -99,7 +99,7 @@ function addInput()
   var inputKind = document.createElement("INPUT");
   inputKind.setAttribute("type", "text");
   inputKind.setAttribute("placeholder", "Software " + countBox);
-  inputKind.setAttribute("class", "form-control");
+  inputKind.setAttribute("class", "form-control mt-1");
   inputKind.setAttribute("name", boxName);
   inputKind.setAttribute("id", boxName);
 
@@ -110,11 +110,10 @@ function addInput()
 }
 </script>
 
-  <div class="field">
-    <input type="button" onclick="addInput()" value="Add Software" />
+  <div class="field form-group">
+    <input type="button" onclick="addInput()" value="Add Software" class="btn btn-secondary mt-1"/>
   </div>
 
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
-  </div>
+  <%= form.submit class: "btn btn-primary" %>
 <% end %>
+
