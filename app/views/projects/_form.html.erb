@@ -1,5 +1,5 @@
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
-<%= bootstrap_form_with(model: project, local: true) do |form| %>
+<%= bootstrap_form_with(model: project, local: true, layout: :horizontal) do |form| %>
   <%= form.alert_message "Please fix the errors below.", error_summary: true %>
   <%= form.text_field :name %>
   <%= form.text_area :description %>
