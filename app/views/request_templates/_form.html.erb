@@ -1,12 +1,12 @@
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
-<%= bootstrap_form_with(model: request_template, local: true) do |form| %>
+<%= bootstrap_form_with(model: request_template, local: true, layout: :horizontal) do |form| %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-  <%= form.text_field :name %>
-  <%= form.number_field :cpu_cores, min: 0 %>
-  <%= form.number_field :ram_gb, min: 0 %>
-  <%= form.number_field :storage_gb, min: 0 %>
-  <%= form.select :operating_system, operating_system_options, {}, {} %>
+  <%= form.text_field :name, label: 'Template Name' %>
+  <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
+  <%= form.number_field :ram_gb, min: 0, label: 'RAM in GB' %>
+  <%= form.number_field :storage_gb, min: 0, label: 'Storage in GB' %>
+  <%= form.select :operating_system, operating_system_options, {label: 'Operating System'}, {} %>
   
   <%= form.submit class: "btn btn-primary" %>
 <% end %>
