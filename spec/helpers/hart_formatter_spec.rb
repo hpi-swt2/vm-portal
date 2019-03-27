@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe HartLogger do
+describe HartFormatter do
 
   it 'notifies admins when an error is logged' do
     # ensure we have at least one admin
