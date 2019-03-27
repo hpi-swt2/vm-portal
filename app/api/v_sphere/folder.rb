@@ -11,17 +11,23 @@ module VSphere
     # see: https://code.vmware.com/apis/196/vsphere#/doc/vim.Folder.html#createFolder
     VSPHERE_FOLDER_NAME_CHARACTER_LIMIT = 79
 
-    def initialize(rbvmomi_folder)
+    def initialize(rbvmomi_folder, parent: nil)
       @folder = rbvmomi_folder
+      @parent = parent
     end
 
     def parent
-      @folder.parent
+      if @parent.nil?
+        parent = @folder.parent
+        parent.nil? ? nil : VSphere::Folder.new(parent)
+      else
+        @parent
+      end
     end
 
     def subfolders(recursive: false)
       folders = @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::Folder }.map do |each|
-        Folder.new each
+        Folder.new each, parent: self
       end
 
       folders += folders.flat_map { |each| each.subfolders recursive: true } if recursive
@@ -30,7 +36,7 @@ module VSphere
 
     def vms(recursive: true)
       vms = @folder.children.select { |folder_entry| folder_entry.is_a? RbVmomi::VIM::VirtualMachine }.map do |each|
-        VSphere::VirtualMachine.new each, self
+        VSphere::VirtualMachine.new each, folder: self
       end
 
       vms += subfolders.flat_map(&:vms) if recursive
@@ -72,6 +78,7 @@ module VSphere
     end
 
     def move_here(folder_entry)
+      folder_entry.parent_folder = self
       managed_entry = folder_entry.instance_exec { managed_folder_entry }
       @folder.MoveIntoFolder_Task(list: [managed_entry]).wait_for_completion
     end
@@ -83,7 +90,11 @@ module VSphere
 
       vm_config = creation_config(cpu, ram, capacity, add_prefix(name), cluster.networks.first)
       vm = @folder.CreateVM_Task(config: vm_config, pool: cluster.resource_pool).wait_for_completion
-      VSphere::VirtualMachine.new vm, self
+      VSphere::VirtualMachine.new vm, folder: self
+    end
+
+    def equal?(other)
+      (other.is_a? VSphere::Folder) && other.name == name
     end
 
     private

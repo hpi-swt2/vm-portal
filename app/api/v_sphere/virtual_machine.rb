@@ -88,7 +88,7 @@ module VSphere
       vms
     end
 
-    def initialize(rbvmomi_vm, folder)
+    def initialize(rbvmomi_vm, folder: nil)
       @vm = rbvmomi_vm
       @folder = folder
     end
@@ -114,7 +114,13 @@ module VSphere
     end
 
     def parent_folder
-      @folder
+      @folder ||= root_folder.subfolders(recursive: true).find do |folder|
+        folder.vms(recursive: false).include? self
+      end
+    end
+
+    def parent_folder=(folder)
+      @folder = folder
     end
 
     # Guest OS communication
@@ -172,15 +178,15 @@ module VSphere
     end
 
     # Archiving
-    # The archiving process actually just moves the VM into different folders to communicate their state
+    # The archiving process actually pending_revivings_folder.vms.any? { |vm| vm.equal? self }just moves the VM into different folders to communicate their state
     # Therefore we can check those folders to receive the current VM state
     # Archiving then moves a VM into the corresponding folder
     def pending_archivation?
-      parent_folder.name == 'Pending archivings'
+      has_ancestor_folder pending_archivation_folder
     end
 
     def archived?
-      parent_folder.name == 'Archived VMs'
+      has_ancestor_folder archived_folder
     end
 
     def set_pending_archivation
@@ -212,7 +218,7 @@ module VSphere
 
     # Reviving
     def pending_reviving?
-      parent_folder.name == 'Pending revivings'
+      has_ancestor_folder pending_revivings_folder
     end
 
     def set_pending_reviving
@@ -430,6 +436,19 @@ module VSphere
 
     def archivation_request
       ArchivationRequest.find_by_name(name)
+    end
+
+    def has_ancestor_folder(ancestor_folder)
+      folder = parent_folder
+      until folder.equal?(ancestor_folder)
+        if folder.nil? || folder.equal?(root_folder)
+          return false
+        end
+
+        folder = folder.parent
+      end
+
+      true
     end
 
     def managed_folder_entry
