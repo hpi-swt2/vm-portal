@@ -39,7 +39,7 @@ class ServersController < ApplicationController
       render :edit
     end
   end
-
+  
   # DELETE /servers/1
   def destroy
     @server.destroy
@@ -47,7 +47,7 @@ class ServersController < ApplicationController
   end
 
   private
-
+  
   # Use callbacks to share common setup or constraints between actions.
   def set_server
     @server = Server.find(params[:id])
@@ -55,6 +55,8 @@ class ServersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def server_params
+    # Remove empty software form fields
+    params[:server][:installed_software].reject!(&:blank?) if params[:server][:installed_software]
     # `installed_software: []` permits arrays
     params.require(:server).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :ipv4_address,
                                    :ipv6_address, :mac_address, :fqdn, {installed_software: []},

@@ -58,12 +58,20 @@ RSpec.describe ServersController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Server' do
-        expect { post :create, params: { server: valid_attributes }, session: valid_session }.to change(Server, :count).by(1)
+        expect {
+          post :create, params: { server: valid_attributes }, session: valid_session
+        }.to change(Server, :count).by(1)
       end
 
       it 'redirects to the created server' do
         post :create, params: { server: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Server.last)
+      end
+
+      it 'creates a new Server without saving empty software fields' do
+        valid_attributes.update(installed_software: ['software','',''])
+        post :create, params: { server: valid_attributes }, session: valid_session
+        expect(Server.last.installed_software).to eq(['software'])
       end
     end
 
@@ -77,21 +85,26 @@ RSpec.describe ServersController, type: :controller do
 
   describe 'PUT #update' do
     context 'with valid params' do
-      let(:new_attributes) do
-        FactoryBot.attributes_for(:server, name: 'Changed')
-      end
-
       it 'updates the requested server' do
-        server = Server.create! valid_attributes.update(name: 'Original')
-        put :update, params: { id: server.to_param, server: new_attributes }, session: valid_session
-        server.reload
-        expect(server.name).to eq(new_attributes[:name])
+        server = FactoryBot.create(:server, name: 'Original')
+        valid_attributes.update(name: 'Changed')
+        expect{
+          put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
+        }.to change{ server.reload.name }.from(server.name).to(valid_attributes[:name])
       end
 
       it 'redirects to the server' do
         server = Server.create! valid_attributes
         put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
         expect(response).to redirect_to(server)
+      end
+      
+      it 'updates the requested server without saving empty software fields' do
+        server = FactoryBot.create(:server, installed_software: [])
+        valid_attributes.update(installed_software: ['software','',''])
+        expect{
+          put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
+        }.to change{ server.reload.installed_software }.from(server.installed_software).to(['software'])
       end
     end
 
