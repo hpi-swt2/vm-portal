@@ -23,7 +23,7 @@
             <%= I18n.l notification.created_at,format: :short%> (<%= time_ago_in_words notification.created_at %> ago)
           </span>
         </h5>
-        <div class="<%= 'text-danger' if notification.error? %>"
+        <div class="<%= 'text-danger' if notification.error? %>">
           <%= simple_format(notification.message).html_safe %>
         </div>
       </div>
