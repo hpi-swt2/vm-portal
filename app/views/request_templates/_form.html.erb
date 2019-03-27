@@ -1,36 +1,12 @@
-<%= form_with(model: request_template, local: true) do |form| %>
-  <% if request_template.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(request_template.errors.count, "error") %> prohibited this request template from being saved:</h2>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: request_template, local: true) do |form| %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-      <ul>
-      <% request_template.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field form-group">
-    <%= form.label 'Template name' %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
-  <div class="field form-group">
-    <%= form.label :cpu_cores, "CPU cores" %>
-    <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
-  </div>
-  <div class="field form-group">
-    <%= form.label :ram_gb, "RAM in GB" %>
-    <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
-  </div>
-  <div class="field form-group">
-    <%= form.label :storage_gb, "Storage in GB" %>
-    <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
-  </div>
-  <div class="field form-group">
-    <%= form.label :operating_system, "Operating System" %>
-    <%= form.select :operating_system, operating_system_options, {}, {class: 'form-control'}%>
-  </div>
-
+  <%= form.text_field :name %>
+  <%= form.number_field :cpu_cores, min: 0 %>
+  <%= form.number_field :ram_gb, min: 0 %>
+  <%= form.number_field :storage_gb, min: 0 %>
+  <%= form.select :operating_system, operating_system_options, {}, {} %>
+  
   <%= form.submit class: "btn btn-primary" %>
 <% end %>
