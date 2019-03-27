@@ -55,11 +55,11 @@ class ServersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def server_params
-    # Remove empty software form fields
-    params[:server][:installed_software].reject!(&:blank?) if params[:server][:installed_software]
     # `installed_software: []` permits arrays
     params.require(:server).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :ipv4_address,
                                    :ipv6_address, :mac_address, :fqdn, {installed_software: []},
                                    :model, :vendor, :description, :responsible_id)
+    # Remove empty software form fields
+    params[:server].each { |k,v| v.reject!(&:blank?) if k.eql?('installed_software') }
   end
 end
