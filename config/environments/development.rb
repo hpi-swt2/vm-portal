@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require './app/helpers/hart_formatter'
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -81,4 +83,6 @@ Rails.application.configure do
       email: 'max.mustermann@student.hpi.de'
     }
   )
+
+  config.log_formatter = HartFormatter.new
 end

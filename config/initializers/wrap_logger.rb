@@ -1,1 +1,0 @@
-Rails.logger = HartLogger.new Rails.logger
