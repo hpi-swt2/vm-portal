@@ -1,48 +1,40 @@
-<h1 class="float-left">Users</h1>
+<h1>Users</h1>
 
-<input class="filter-box float-left ml-3 mt-2" type="text" id="filter_users" onkeyup="filterTable('filter_users', 'users')" placeholder="Search users">
-
-<table data-toggle="table" class="table" id="users">
+<table data-toggle="datatable" class="table" id="users">
   <thead>
-    <th scope="col" data-sortable="true"><%= User.human_attribute_name('name') %></th>
-    <th scope="col" data-sortable="true"><%= User.human_attribute_name('email') %></th>
-    <th scope="col" data-sortable="true"><%= User.human_attribute_name('role') %></th>
-    <th scope="col" data-sortable="true"><%= User.human_attribute_name('last_sign_in_at') %></th>
+    <th><%= User.human_attribute_name('name') %></th>
+    <th><%= User.human_attribute_name('email') %></th>
+    <th><%= User.human_attribute_name('role') %></th>
+    <th><%= User.human_attribute_name('last_sign_in_at') %></th>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.email %></td>
-          <td data-filter-value="<%= user.role %>">
-            <!-- add a hidden HTML element as the first element that will be used for sorting -->
-            <p class="d-none"><%= user.role %></p>
-            <div class="btn-group
-                        border
-                        border-<%= if editable_for user then 'primary' else 'secondary' end%>
-                        rounded"
-                 role="group">
-              <% User.roles.map(&:first).each do |role| %>
-                <% if editable_for user %>
-                  <%= link_to role.capitalize,
-                              update_role_user_path(user, role: role),
-                              method: :patch,
-                              id: "btn-#{role}-#{user.id}",
-                              class: "btn
-                                      btn-#{if user.role == role then 'primary' else 'light' end}"
-                  %>
-                <% else %>
-                  <button class="btn
-                                 btn-<%= if user.role == role then 'secondary' else 'light' end %>
-                                 disabled"
-                          id= "btn-<%= role %>-<%= user.id %>"
-                  >
-                    <%= role.capitalize %>
-                  </button>
-                <% end %>
-              <% end %>
-            </div>
-        <td><%= user.current_sign_in_at %></td>
+        <%# https://datatables.net/manual/data/orthogonal-data#HTML-5 %>
+        <td data-order="<%= user.role %>" data-search="<%= user.role %>">
+          <div role="group"
+               class="btn-group border rounded
+                      border-<%= if editable_for user then 'primary' else 'secondary' end %>">
+          <% User.roles.map(&:first).each do |role| %>
+            <% if editable_for user %>
+              <%= link_to role.capitalize,
+                          update_role_user_path(user, role: role),
+                          method: :patch, 
+                          id: "btn-#{role}-#{user.id}",
+                          class: "btn btn-#{if user.role == role then 'primary' else 'light' end}" %>
+            <% else %>
+              <span id= "btn-<%= role %>-<%= user.id %>"
+                    class="btn btn-<%= if user.role == role then 'secondary' else 'light' end %> disabled">
+                <%= role.capitalize %>
+              </span>
+            <% end %>
+          <% end %>
+          </div>
+        <td data-order="<%= user.current_sign_in_at.to_i %>">
+          <%= I18n.l(user.current_sign_in_at, format: :long) if user.current_sign_in_at %>
+        </td>
       </tr>
     <% end %>
   </tbody>

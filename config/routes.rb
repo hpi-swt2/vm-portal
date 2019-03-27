@@ -11,17 +11,17 @@ Rails.application.routes.draw do
   # '/app_settings/...'
   resources :app_settings, only: %i[update edit]
   # '/projects/...'
-  resources :projects, except: :destroy
+  resources :projects
   # '/servers/...'
   resources :servers
   # '/hosts/...'
   resources :hosts, only: %i[index show], constraints: { id: /.*/ }
 
   # '/notifications/...'
-  resources :notifications, only: %i[index new create destroy] do
+  resources :notifications, only: %i[index destroy] do
     member do
       get :mark_as_read
-      delete :destroy_and_redirect
+      get :mark_as_read_and_redirect
     end
     get :has_any, on: :collection, to: 'notifications#any?'
   end

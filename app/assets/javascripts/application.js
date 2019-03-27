@@ -17,21 +17,21 @@
 //= require popper
 //= require bootstrap
 //= require doughnut_chart
-//= require filter_table
-//= require sort_table
 //= require prevent_anchor_reload
-//= require_tree .
 //= require select2
 //= require clipboard
+// Contains code for initializing and configuring datatables
+// app/assets/javascripts/datatables.js
+//= require datatables
+//= require_tree .
 
 // With Turbolinks, jQuery $(document).ready events fire only in response
 // to the initial page load, not after any subsequent page changes
 // https://github.com/turbolinks/turbolinks#observing-navigation-events
 document.addEventListener("turbolinks:load", function() {
   // Initialize 'Select2', jQuery based replacement for select boxes
-  // https://github.com/argerim/select2-rails#usage
-  $('.selecttwo').select2();
-
+  // https://github.com/argerim/select2-rails#include-select2-rails-stylesheet-assets
+  $('.selecttwo').select2({ theme: "bootstrap" });
   // Initialize Boostrap tooltips for all elements having data-toggle
   // attribute set to 'tooltip'. Uses the title attr as tooltip.
   // https://getbootstrap.com/docs/4.0/components/tooltips

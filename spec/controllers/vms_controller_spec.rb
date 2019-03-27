@@ -5,8 +5,8 @@ require './spec/api/v_sphere_api_mocker'
 
 # rubocop:disable RSpec/NestedGroups
 RSpec.describe VmsController, type: :controller do
-  let(:current_user) {FactoryBot.create :user}
-  let(:admin) {FactoryBot.create :admin}
+  let(:current_user) { FactoryBot.create :user }
+  let(:admin) { FactoryBot.create :admin }
 
   let(:vm1) do
     v_sphere_vm_mock 'my-insanely-cool-vm', power_state: 'poweredOn', vm_ware_tools: 'toolsInstalled'
@@ -16,8 +16,8 @@ RSpec.describe VmsController, type: :controller do
     v_sphere_vm_mock 'myVM', power_state: 'poweredOff', vm_ware_tools: 'toolsInstalled'
   end
 
-  let(:vm_request) {FactoryBot.create :accepted_request, users: [current_user]}
-  let(:old_path) {'old_path'}
+  let(:vm_request) { FactoryBot.create :accepted_request, users: [current_user] }
+  let(:old_path) { 'old_path' }
 
   let(:config) do
     config = FactoryBot.create :virtual_machine_config
@@ -51,7 +51,7 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current user is an employee' do
-      let(:current_user) {FactoryBot.create :employee}
+      let(:current_user) { FactoryBot.create :employee }
 
       it 'returns http success' do
         get :index
@@ -69,7 +69,7 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current user is an admin' do
-      let(:current_user) {FactoryBot.create :admin}
+      let(:current_user) { FactoryBot.create :admin }
 
       it 'returns http success' do
         get :index
@@ -90,22 +90,25 @@ RSpec.describe VmsController, type: :controller do
   describe 'PATCH #update' do
     before do
       sign_in admin
-      allow(vm1).to receive(:users=)
-      allow(vm1).to receive(:sudo_users=)
-      allow(vm1).to receive(:config).and_return config
-      allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return vm1
+      allow(config).to receive(:user_ids=)
+      allow(config).to receive(:sudo_user_ids=)
+      allow(VirtualMachineConfig).to receive(:find_by_name).with(config.name).and_return config
       @description = 'oh how nice is panama'
       @sudo_user_ids = [admin.id.to_s]
       @non_sudo_user_ids = [current_user.id.to_s]
-      patch :update, params: {id: vm1.name, vm_info: {sudo_user_ids: @sudo_user_ids, non_sudo_user_ids: @non_sudo_user_ids, description: @description}}
+      patch :update, params: { id: config.name, vm_info: { sudo_user_ids: @sudo_user_ids, user_ids: @non_sudo_user_ids, description: @description } }
     end
 
-    it 'calls set_sudo_users on vm' do
-      expect(vm1).to have_received(:sudo_users=).with(@sudo_user_ids)
+    it 'does not redirect' do
+      expect(response).not_to redirect_to(vms_path)
     end
 
-    it 'calls set_users on vm' do
-      expect(vm1).to have_received(:users=).with(@non_sudo_user_ids)
+    it 'assigns the sudo users to the config' do
+      expect(config).to have_received(:sudo_user_ids=).with(@sudo_user_ids)
+    end
+
+    it 'assigns the users to the config' do
+      expect(config).to have_received(:user_ids=).with(@non_sudo_user_ids)
     end
 
     it 'saves the new description in config' do
@@ -126,47 +129,46 @@ RSpec.describe VmsController, type: :controller do
           end
 
           it 'renders show page' do
-            expect(get(:show, params: {id: vm1.name})).to render_template('vms/show')
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
 
         context 'when user is not associated to vm' do
           it 'redirects' do
-            get :show, params: {id: vm1.name}
+            get :show, params: { id: vm1.name }
             expect(response).to have_http_status :redirect
           end
         end
       end
 
       context 'when current user is admin' do
-        let(:current_user) {FactoryBot.create :admin}
+        let(:current_user) { FactoryBot.create :admin }
 
         context 'when user is associated to vm' do
           it 'renders show page' do
-            expect(get(:show, params: {id: vm2.name})).to render_template('vms/show')
+            expect(get(:show, params: { id: vm2.name })).to render_template('vms/show')
           end
         end
 
         context 'when user is not associated to vm' do
           it 'renders show page' do
-            expect(get(:show, params: {id: vm1.name})).to render_template('vms/show')
+            expect(get(:show, params: { id: vm1.name })).to render_template('vms/show')
           end
         end
       end
     end
 
     context 'when no vm found' do
+      let(:back) { 'http://google.com' }
+
       before do
         allow(VSphere::VirtualMachine).to receive(:find_by_name).and_return nil
+        request.env['HTTP_REFERER'] = back
       end
 
-      it 'returns http status not found when no vm found' do
-        get :show, params: {id: 5}
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it 'renders not found page when no vm found' do
-        expect(get(:show, params: {id: vm1.name})).to render_template('errors/not_found')
+      it 'redirects back' do
+        get :show, params: { id: 5 }
+        expect(response).to redirect_to back
       end
     end
   end
@@ -185,7 +187,7 @@ RSpec.describe VmsController, type: :controller do
       before do
         associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:change_power_state)
-        post :change_power_state, params: {id: vm1.name}
+        post :change_power_state, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -202,11 +204,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current_user is an admin' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         allow(vm1).to receive(:change_power_state)
-        post :change_power_state, params: {id: vm1.name}
+        post :change_power_state, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -224,7 +226,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is not a root_user' do
       before do
-        post :change_power_state, params: {id: vm1.name}
+        post :change_power_state, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -237,7 +239,7 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the vm requires more resouces than any host can provide' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         summary_double = double
@@ -246,11 +248,11 @@ RSpec.describe VmsController, type: :controller do
         allow(vm2).to receive(:summary).and_return(summary_double)
         allow(vm2).to receive(:change_power_state).and_raise(RbVmomi::Fault.new('NotEnoughCpus:', nil))
 
-        post :change_power_state, params: {id: vm2.name}
+        post :change_power_state, params: { id: vm2.name }
       end
 
       it 'catches the error' do
-        expect {post :change_power_state, params: {id: vm2.name}}.not_to raise_error
+        expect { post :change_power_state, params: { id: vm2.name } }.not_to raise_error
       end
 
       it 'redirects to the details page of the vm' do
@@ -274,7 +276,7 @@ RSpec.describe VmsController, type: :controller do
       before do
         associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:suspend_vm)
-        post :suspend_vm, params: {id: vm1.name}
+        post :suspend_vm, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -291,11 +293,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current_user is an admin' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         allow(vm1).to receive(:suspend_vm)
-        post :suspend_vm, params: {id: vm1.name}
+        post :suspend_vm, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -313,7 +315,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is not a root_user' do
       before do
-        post :suspend_vm, params: {id: vm1.name}
+        post :suspend_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -336,7 +338,7 @@ RSpec.describe VmsController, type: :controller do
       before do
         associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:shutdown_guest_os)
-        post :shutdown_guest_os, params: {id: vm1.name}
+        post :shutdown_guest_os, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -353,11 +355,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current_user is an admin' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         allow(vm1).to receive(:shutdown_guest_os)
-        post :shutdown_guest_os, params: {id: vm1.name}
+        post :shutdown_guest_os, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -375,7 +377,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is not a root_user' do
       before do
-        post :shutdown_guest_os, params: {id: vm1.name}
+        post :shutdown_guest_os, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -398,7 +400,7 @@ RSpec.describe VmsController, type: :controller do
       before do
         associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:reboot_guest_os)
-        post :reboot_guest_os, params: {id: vm1.name}
+        post :reboot_guest_os, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -415,11 +417,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current_user is an admin' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         allow(vm1).to receive(:reboot_guest_os)
-        post :reboot_guest_os, params: {id: vm1.name}
+        post :reboot_guest_os, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -437,7 +439,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is not a root_user' do
       before do
-        post :reboot_guest_os, params: {id: vm1.name}
+        post :reboot_guest_os, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do
@@ -460,7 +462,7 @@ RSpec.describe VmsController, type: :controller do
       before do
         associate_users_with_vms(admins: [current_user], vms: [vm1])
         allow(vm1).to receive(:reset_vm)
-        post :reset_vm, params: {id: vm1.name}
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -477,11 +479,11 @@ RSpec.describe VmsController, type: :controller do
     end
 
     context 'when the current_user is an admin' do
-      let(:current_user) {admin}
+      let(:current_user) { admin }
 
       before do
         allow(vm1).to receive(:reset_vm)
-        post :reset_vm, params: {id: vm1.name}
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'calls the vms action' do
@@ -499,7 +501,7 @@ RSpec.describe VmsController, type: :controller do
 
     context 'when the current_user is not a root_user' do
       before do
-        post :reset_vm, params: {id: vm1.name}
+        post :reset_vm, params: { id: vm1.name }
       end
 
       it 'returns http redirect and redirects to vms_path' do

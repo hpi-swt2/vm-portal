@@ -38,7 +38,7 @@ describe 'Dashboard', type: :feature do
 
     it 'does not redirect after deleting notification' do
       visit dashboard_path
-      all(:css, '.delete.icon-link').first.click
+      find(:css, "a[data-method='delete'][href='#{notification_path(@notifications.second)}']").click
       expect(current_path).to eql(dashboard_path)
     end
 
@@ -51,7 +51,7 @@ describe 'Dashboard', type: :feature do
   context 'without notifications' do
     it 'informs about no notifications' do
       visit dashboard_path
-      expect(page).to have_text('You don\'t have any notifications at the moment.')
+      expect(page).to have_css('#no-notifications', count: 1)
     end
   end
 end
