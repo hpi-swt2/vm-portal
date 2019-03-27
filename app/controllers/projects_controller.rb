@@ -4,12 +4,12 @@ class ProjectsController < ApplicationController
   before_action :authenticate_employee, only: %i[new create]
   before_action :authenticate_responsible_user, only: %i[edit update destroy]
 
+  # GET /projects
   def index
     @projects = Project.all
   end
 
   # GET /projects/1
-  # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
   end
@@ -17,21 +17,19 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   def new
     @project = Project.new
-    @selected_user_ids = [current_user.id]
   end
 
-  # POST /requests.json
+  # POST /requests
   def create
     @project = Project.new(project_params)
     if @project.save
-      redirect_to action: :index
+      redirect_to @project, notice: 'Project was successfully created.'
       @project.responsible_users.each do |each|
         each.notify('Project created',
                     "The project #{@project.name} with you as the responsible has been created.",
                     url_for(controller: :projects, action: 'show', id: @project.id))
       end
     else
-      @selected_user_ids = project_params[:responsible_user_ids]
       render :new
     end
   end
@@ -43,7 +41,7 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     if @project.update(project_params)
-      redirect_to action: :show
+      redirect_to @project, notice: 'Project was successfully updated.'
     else
       render :edit
     end
@@ -51,7 +49,7 @@ class ProjectsController < ApplicationController
 
   def destroy
     @project.destroy
-    redirect_back fallback_location: projects_url, notice: 'Project was successfully deleted.'
+    redirect_to projects_path, notice: 'Project was successfully deleted.'
   end
 
   private
@@ -62,6 +60,9 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:name, :description, responsible_user_ids: [])
+    p = params.require(:project).permit(:name, :description, responsible_users_ids: [])
+    # The projects form returns a list of ids of responsible_users, turn them into user objects
+    responsible_users = p.delete(:responsible_users_ids).map { |id| User.find_by_id(id) }.reject(&:nil?)
+    p.merge(responsible_users: responsible_users)
   end
 end
