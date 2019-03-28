@@ -23,7 +23,7 @@ class OperatingSystemsController < ApplicationController
   def create
     @operating_system = OperatingSystem.new(operating_system_params)
     if @operating_system.save
-      redirect_to operating_systems_path, notice: t('flash.actions.create.notice_detail',
+      redirect_to operating_systems_path, notice: t('flash.create.notice',
         resource: @@resource_name, model: @operating_system.name)
     else
       render :new
@@ -33,7 +33,7 @@ class OperatingSystemsController < ApplicationController
   # PATCH/PUT /operating_systems/1
   def update
     if @operating_system.update(operating_system_params)
-      redirect_to operating_systems_path, notice: t('flash.actions.update.notice_detail',
+      redirect_to operating_systems_path, notice: t('flash.update.notice',
         resource: @@resource_name, model: @operating_system.name)
     else
       render :edit
@@ -43,9 +43,9 @@ class OperatingSystemsController < ApplicationController
   # DELETE /operating_systems/1
   def destroy
     if @operating_system.destroy
-      notice = t('flash.actions.destroy.notice_detail', resource: @@resource_name, model: @operating_system.name)
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @operating_system.name)
     else
-      alert = t('flash.actions.destroy.alert_detail', resource: @@resource_name, model: @operating_system.name)
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @operating_system.name)
     end
     redirect_to operating_systems_path, notice: notice, alert: alert
   end

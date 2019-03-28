@@ -51,15 +51,14 @@ en:
     title: "Project Overview"
   # Flash messages common to most controllers
   flash:
-    actions:
-      create:
-        notice: "%{resource} was successfully created."
-        notice_detail: "%{resource} '%{model}' was successfully created."
-      update:
-        notice: "%{resource} was successfully updated."
-        notice_detail: "%{resource} '%{model}' was successfully updated."
-      destroy:
-        notice: "%{resource} was successfully deleted."
-        notice_detail: "%{resource} '%{model}' was successfully deleted."
-        alert: "%{resource} could not be deleted."
-        alert_detail: "%{resource} '%{model}' could not be deleted."
+    create:
+      notice: "%{resource} '%{model}' was successfully created."
+      notice_simple: "%{resource} was successfully created."
+    update:
+      notice: "%{resource} '%{model}' was successfully updated."
+      notice_simple: "%{resource} was successfully updated."
+    destroy:
+      notice: "%{resource} '%{model}' was successfully deleted."
+      notice_simple: "%{resource} was successfully deleted."
+      alert: "%{resource} '%{model}' could not be deleted."
+      alert_simple: "%{resource} could not be deleted."
