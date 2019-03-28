@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ServersController < ApplicationController
+  @@resource_name = Server.model_name.human.titlecase
+
   before_action :set_server, only: %i[show edit update destroy]
   before_action :authenticate_employee, only: %i[show index]
   before_action :authenticate_admin, only: %i[new create edit update destroy]
@@ -57,7 +59,7 @@ class ServersController < ApplicationController
 
     respond_to do |format|
       if @server.save
-        format.html { redirect_to @server, notice: 'Server was successfully created.' }
+        format.html { redirect_to @server, notice: t('flash.create.notice', resource: @@resource_name, model: @server.name) }
         format.json { render :show, status: :created, location: @server }
       else
         format.html { render :new }
@@ -103,7 +105,7 @@ class ServersController < ApplicationController
                           :description,
                           :responsible_id
                         ))
-        format.html { redirect_to @server, notice: 'Server was successfully updated.' }
+        format.html { redirect_to @server, notice: t('flash.update.notice', resource: @@resource_name, model: @server.name) }
         format.json { render :show, status: :ok, location: @server }
       else
         format.html { render :edit }
@@ -117,7 +119,7 @@ class ServersController < ApplicationController
   def destroy
     @server.destroy
     respond_to do |format|
-      format.html { redirect_to servers_path, notice: 'Server was successfully deleted.' }
+      format.html { redirect_to servers_path, notice: t('flash.destroy.notice', resource: @@resource_name, model: @server.name) }
       format.json { head :no_content }
     end
   end
