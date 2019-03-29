@@ -1,53 +1,32 @@
-<%= form_with(model: request, local: true) do |form| %>
-  <% if request.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(request.errors.count, "error") %> prohibited this request from being saved:</h2>
-      <ul>
-        <% request.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= bootstrap_form_with(model: request, local: true) do |form| %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-  <div class="container-fluid styled-form">
+  <div class="container-fluid mt-4">
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>General Information</h5>
         Please enter a short description of the VM and how you are planning to use it.
       </div>
       <div class="col-6">
-        <div class="field form-group">
-          <%= form.label :name, "Name *" %>
-          <%= form.text_field :name, class: 'form-control' %>
-        </div>
-        <div class="field form-group">
-          <%= form.label :description, "Description *" %>
-          <%= form.text_area :description, rows: "4", class: 'form-control' %>
-        </div>
-        <div class="field form-group">
-          <p>Project *</p>
-          <%= form.select :project_id,
-                          options_from_collection_for_select(Project.all,
-                                                             :id,
-                                                             :name,
-                                                             :selected => form.object.project_id),
-                          {:include_blank => true},
-                          {class: 'form-control'} %>
-        </div>
-        <div class="field form-group">
-          <p>Responsible Users *</p>
-          <%= form.select 'responsible_user_ids',
-                          options_from_collection_for_select(User.all,
-                                                      :id,
-                                                      :human_readable_identifier,
-                                                      @request.responsible_users.collect(&:id)),
-                          {},
-                          {multiple: true, class: "form-control selecttwo"} %>
-          <small class="form-text text-muted">Note: All responsible users will automatically have sudo access rights on the VM.</small>
-        </div>
+        <%= form.text_field :name, label: 'Name *' %>
+        <%= form.text_area :description, rows: 4, label: 'Description *' %>
+      
+        <%= form.select :project_id,
+                        options_from_collection_for_select(Project.all,
+                                                            :id,
+                                                            :name,
+                                                            :selected => form.object.project_id),
+                        {include_blank: '(none)', label: 'Project *'},
+                        {class: 'selecttwo'} %>
+        <%= form.select 'responsible_user_ids',
+                        options_from_collection_for_select(User.all,
+                                                    :id,
+                                                    :human_readable_identifier,
+                                                    @request.responsible_users.collect(&:id)),
+                        {label: 'Responsible Users *', help: 'Note: All responsible users will automatically have sudo access rights on the VM.'},
+                        {multiple: true, class: 'selecttwo'} %>
       </div>
-    </div>
+    </div> <%# div class="row" %>
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>Hardware Information</h5>
@@ -55,35 +34,29 @@
         system that is not in the list you can use the comment field at the bottom of this page.
       </div>
       <div class="col-6">
-        <div class="form-group pb-4 mb-2 border-bottom">
-          <%= form.label "Template" %>
-          <%= form.select :template_id,
-                          options_for_select(@request_templates.map {|request_template|
-                            ["#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}",
-                             "[#{request_template.cpu_cores}, #{request_template.ram_gb}, #{request_template.storage_gb}, '#{request_template.operating_system}']"]}),
-                          {:include_blank => 'None'},
-                          {class: "form-control"} %>
-        </div>
-        <div class="form-group row full-width pt-3">
-          <div class="col">
-            <%= form.label :cpu_cores, "CPU cores *" %>
-            <%= form.number_field :cpu_cores, min: 0, class: 'form-control', id: 'cpu' %>
+        <%= form.select :template_id,
+                        options_for_select(@request_templates.map {|request_template|
+                          ["#{request_template.name}: #{request_template.cpu_cores} CPU cores, #{request_template.ram_gb} GB RAM, #{request_template.storage_gb} GB Storage, #{request_template.operating_system}",
+                          "[#{request_template.cpu_cores}, #{request_template.ram_gb}, #{request_template.storage_gb}, '#{request_template.operating_system}']"]}),
+                        {include_blank: '(none)', label: 'Template',
+                          help: 'Note: Selecting a template will populate the other hardware information fields.'} %>
+        <div class="row pt-3">
+          <div class="col-lg-4">
+            <%= form.number_field :cpu_cores, min: 0, id: 'cpu', label: 'CPU Cores *' %>
           </div>
-          <div class="col">
-            <%= form.label :ram_gb, "RAM in GB *" %>
-            <%= form.number_field :ram_gb, min: 0, class: 'form-control', id: 'ram' %>
+          <div class="col-lg-4">
+            <%= form.number_field :ram_gb, min: 0, id: 'ram', label: 'RAM in GB *' %>
           </div>
-          <div class="col">
-            <%= form.label :storage_gb, "Storage in GB *" %>
-            <%= form.number_field :storage_gb, min: 0, class: 'form-control', id: 'storage' %>
+          <div class="col-lg-4">
+            <%= form.number_field :storage_gb, min: 0, id: 'storage', label: 'Storage in GB *' %>
           </div>
         </div>
-        <div class="form-group pt-3">
-          <%= form.label :operating_system, "Operating System *" %>
-          <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
-        </div>
+        <%= form.select :operating_system, 
+          operating_system_options,
+          {label: 'Operating System *'},
+          {id: 'operating_system'} %>
       </div>
-    </div>
+    </div> <%# div class="row" %>
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>Users</h5>
@@ -93,29 +66,23 @@
         need access to the VM.
       </div>
       <div class="col-6">
-        <div class="form-group">
-          Users with sudo rights
-          <%= form.select 'sudo_user_ids',
-                          options_from_collection_for_select(User.all,
-                                                             :id,
-                                                             :human_readable_identifier,
-                                                             @request.sudo_users.collect(&:id)),
-                          {},
-                          {class: 'form-control selecttwo', multiple: true} %>
-          <small class="form-text text-muted">All responsible users will automatically be users with sudo rights.</small>
-        </div>
-        <div class="form-group">
-          Regular users
-          <%= form.select 'user_ids',
-                          options_from_collection_for_select(User.all,
-                                                             :id,
-                                                             :human_readable_identifier,
-                                                             (@request.users - @request.sudo_users).collect(&:id)),
-                          {},
-                          {class: 'form-control selecttwo', multiple: true} %>
-        </div>
+        <%= form.select 'sudo_user_ids',
+                        options_from_collection_for_select(User.all,
+                                                            :id,
+                                                            :human_readable_identifier,
+                                                            @request.sudo_users.collect(&:id)),
+                        {label: 'Users with sudo rights',
+                          help: 'All responsible users will automatically be users with sudo rights.'},
+                        {class: 'selecttwo', multiple: true} %>
+        <%= form.select 'user_ids',
+                        options_from_collection_for_select(User.all,
+                                                            :id,
+                                                            :human_readable_identifier,
+                                                            (@request.users - @request.sudo_users).collect(&:id)),
+                        {label: 'Regular users'},
+                        {class: 'selecttwo', multiple: true} %>
       </div>
-    </div>
+    </div> <%# div class="row" %>
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>Other Information</h5>
@@ -123,51 +90,41 @@
         Any comment or additional information can be entered in the comment field.
       </div>
       <div class="col-6">
-        <div class="field form-group pb-3 mb-3 border-bottom">
-          <%= form.check_box :port_forwarding, options = {id: "request_port_forwarding_checkbox", data: {toggle: "collapse", target: "#request_port_forwarding_info", port_forwarding: @request.persisted? ? @request.port_forwarding : nil}} %>
-          Enable port forwarding
+        <div class="pb-3 mb-3 border-bottom">
+          <%= form.check_box :port_forwarding,
+            options = {label: 'Enable port forwarding',
+                      id: "request_port_forwarding_checkbox",
+                      data: {
+                        toggle: "collapse",
+                        target: "#request_port_forwarding_info",
+                        port_forwarding: @request.persisted? ? @request.port_forwarding : nil }} %>
           <div id="request_port_forwarding_info" class="collapse">
-            <div class="field form-group">
-              <%= form.label :port, "Port" %>
-              <%= form.number_field :port, min: 0, max: 65535, class: 'form-control', id: 'port_field' %>
-            </div>
-            <div class="field form-group">
-              <%= form.label :application_name, "Application Name" %>
-              <%= form.text_field :application_name, class: 'form-control', id: 'application_name_field' %>
-            </div>
+            <%= form.number_field :port, min: 0, max: 65535, id: 'port_field', label: 'Port *' %>
+            <%= form.text_field :application_name, id: 'application_name_field', label: 'Application Name' %>
           </div>
         </div>
-        <div class="field form-group">
-          <%= form.label :comment %>
-          <%= form.text_area :comment, cols: "40", rows: "4", class: 'form-control' %>
-        </div>
+        <%= form.text_area :comment, cols: 40, rows: 4 %>
       </div>
-    </div>
+    </div> <%# div class="row" %>
 
     <% if locals[:updating] %>
-      <div class="row border-bottom mb-4 pb-2">
+      <div class="row mb-4 pb-2">
         <div class="col">
           <h5>Admin Review</h5>
           Accept will create VM...
         </div>
         <div class="col-6">
-          <div class="form-group pb-2 mb-2">
-            <div class="actions">
-              <%= form_with(model: request, url: {action: 'reject', id: request}, local: true, builder: HartFormBuilder) do |rejection_form| %>
-                <%= rejection_form.labeled_text_area 'Comment', :rejection_information %>
-                <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
-              <% end %>
-              <%= form.submit 'Accept', id: 'acceptButton', class: "btn btn-primary pull-left mr-1" %>
-              <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-            </div>
-          </div>
+          <%= bootstrap_form_with(model: request, url: {action: 'reject', id: request}, local: true) do |rejection_form| %>
+            <%= rejection_form.text_area :rejection_information, label: 'Comment' %>
+            <%= rejection_form.submit 'Reject', id: 'rejectButton', class: "btn btn-danger" %>
+          <% end %>
+          <%= form.submit 'Accept', id: 'acceptButton', class: "btn btn-primary pull-left mr-1" %>
+          <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
         </div>
       </div>
     <% else %>
-      <div class="actions">
-        <%= form.submit class: "btn btn-primary" %>
-        <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
-      </div>
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
     <% end %>
   </div>
 <% end %>

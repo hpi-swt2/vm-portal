@@ -80,8 +80,3 @@ body {
   flex: 1;
 }
 
-// https://github.com/bootstrap-ruby/bootstrap_form#required-fields
-label.required:after {
-  content:" *";
-}
-
