@@ -26,7 +26,7 @@ RSpec.describe 'requests/new', type: :view do
     end
 
     it 'has a select with \"none\" template as option' do
-      expect(rendered).to have_select 'request_template_id', with_options: ['None']
+      expect(rendered).to have_select 'request_template_id', with_options: ['(none)']
     end
 
     context 'when a new template is generated' do
