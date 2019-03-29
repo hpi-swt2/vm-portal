@@ -1,33 +1,27 @@
-<h1>Edit VM information of <span style="font-style: italic;"><%= @configuration.name %></span></h1>
+<h1>
+  Edit VM information of <span class="font-italic"><%= @configuration.name %></span>
+</h1>
 
-<%= form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @configuration.name }, method: :patch, local: true, builder: HartFormBuilder) do |form| %>
-  <div class="field">
-    <%= form.label :sudo_user_ids, "Users with sudo rights" %>
-    <%= form.select :sudo_user_ids,
-        options_from_collection_for_select(User.all, :id, :human_readable_identifier, @sudo_user_ids),
-        { include_hidden: false},
-        { multiple: true, class: 'selecttwo form-control'} %>
-  </div>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @configuration.name }, method: :patch, local: true, layout: :horizontal) do |form| %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-  <div class="field">
-    <%= form.label :user_ids, "Users without sudo rights" %>
-    <%= form.select :user_ids,
-        options_from_collection_for_select(User.all, :id, :human_readable_identifier, @non_sudo_user_ids),
-        { include_hidden: false },
-        { multiple: true, class: 'selecttwo form-control'} %>
-  </div>
+  <%= form.select :sudo_user_ids,
+      options_from_collection_for_select(User.all, :id, :human_readable_identifier, @sudo_user_ids),
+      { include_hidden: false, label: 'Users with sudo rights' },
+      { multiple: true, class: 'selecttwo' } %>
 
-  <div class="field">
-      <%= form.label :description, 'Description' %>
-      <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control', value: @configuration.description %>
-  </div>
+  <%= form.select :user_ids,
+      options_from_collection_for_select(User.all, :id, :human_readable_identifier, @non_sudo_user_ids),
+      { include_hidden: false, label: 'Users without sudo rights' },
+      { multiple: true, class: 'selecttwo'} %>
+
+  <%= form.text_area :description, cols: 40, rows: 4, value: @configuration.description %>
 
   <% if current_user.admin? %>
-    <%= form.labeled_text_field 'IP', :ip, value: @configuration.ip %>
-    <%= form.labeled_text_field 'DNS', :dns, value: @configuration.dns %>
+    <%= form.text_field :ip, label: 'IP', value: @configuration.ip %>
+    <%= form.text_field :dns, label: 'DNS', value: @configuration.dns %>
   <%end  %>
 
-  <div class="actions">
-    <%= form.submit 'Update VM information', class: "btn btn-primary" %>
-  </div>
+  <%= form.submit 'Update VM information', class: 'btn btn-primary' %>
 <% end %>
