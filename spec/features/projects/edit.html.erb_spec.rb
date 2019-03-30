@@ -44,11 +44,11 @@ describe 'projects/edit.html.erb', type: :feature do
     end
 
     it 'shows a field for the responsible users' do
-      expect(page).to have_select 'project[responsible_users_ids][]'
+      expect(page).to have_select 'project[responsible_user_ids][]'
     end
 
     it 'shows the current responsible users' do
-      expect(page).to have_select('project[responsible_users_ids][]', selected: [employee.human_readable_identifier, admin.human_readable_identifier])
+      expect(page).to have_select('project[responsible_user_ids][]', selected: [employee.human_readable_identifier, admin.human_readable_identifier])
     end
 
     context 'when the name is empty' do
@@ -79,8 +79,8 @@ describe 'projects/edit.html.erb', type: :feature do
 
     context 'when there is no responsible user selected' do
       before do
-        page.unselect employee.human_readable_identifier, from: 'project[responsible_users_ids][]'
-        page.unselect admin.human_readable_identifier, from: 'project[responsible_users_ids][]'
+        page.unselect employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
+        page.unselect admin.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
@@ -95,9 +95,9 @@ describe 'projects/edit.html.erb', type: :feature do
       before do
         fill_in 'project[name]', with: project_name
         fill_in 'project[description]', with: project_description
-        page.unselect employee.human_readable_identifier, from: 'project[responsible_users_ids][]'
-        page.unselect admin.human_readable_identifier, from: 'project[responsible_users_ids][]'
-        page.select user.human_readable_identifier, from: 'project[responsible_users_ids][]'
+        page.unselect employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
+        page.unselect admin.human_readable_identifier, from: 'project[responsible_user_ids][]'
+        page.select user.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do

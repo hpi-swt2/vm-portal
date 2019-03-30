@@ -64,8 +64,8 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    p = params.require(:project).permit(:name, :description, responsible_users_ids: [])
-    # The projects form returns a list of ids of responsible_users, turn them into user objects
-    p.merge(responsible_users: User.where(id: p.delete(:responsible_users_ids)))
+    p = params.require(:project).permit(:name, :description, responsible_user_ids: [])
+    # Form returns :responsible_user_ids, a list of ids, turn them into user objects
+    p.merge(responsible_users: User.where(id: p.delete(:responsible_user_ids)))
   end
 end

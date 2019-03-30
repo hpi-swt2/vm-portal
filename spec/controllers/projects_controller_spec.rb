@@ -62,7 +62,7 @@ RSpec.describe ProjectsController, type: :controller do
         {
           name: 'Super new Project',
           description: 'Super Awesome Description',
-          responsible_users_ids: [other_user.id]
+          responsible_user_ids: [other_user.id]
         }
       end
 
@@ -75,7 +75,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
 
       it 'updates the requested project responsible user' do
-        expect(project.responsible_users.map(&:id)).to eq(new_attributes[:responsible_users_ids])
+        expect(project.responsible_users.map(&:id)).to eq(new_attributes[:responsible_user_ids])
       end
 
       it 'redirects to the project' do
@@ -88,7 +88,7 @@ RSpec.describe ProjectsController, type: :controller do
         {
           name: '',
           description: 'Super Awesome Description',
-          responsible_users_ids: [other_user.id]
+          responsible_user_ids: [other_user.id]
         }
       end
 

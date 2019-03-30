@@ -6,7 +6,7 @@
 
   <% selected = project.responsible_users.collect(&:id) %>
   <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
-  <%= form.collection_select :responsible_users_ids, User.all, :id, :human_readable_identifier,
+  <%= form.collection_select :responsible_user_ids, User.all, :id, :human_readable_identifier,
     options = {label: "Responsible Users", selected: selected.present? ? selected : current_user.id},
     html_options = {multiple: true, class: "selecttwo"} %>
 
