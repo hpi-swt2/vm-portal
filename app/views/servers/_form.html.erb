@@ -4,13 +4,10 @@
 
   <%= form.text_field :name %>
   <%= form.text_area :description %>
-  <%= form.select 'responsible',
-                  options_from_collection_for_select(User.all,
-                                                      :id,
-                                                      :human_readable_identifier),
-                  {},
-                  { multiple: false, class: "selecttwo"} %>
-
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :responsible, User.all, :id, :human_readable_identifier,
+    options = {},
+    html_options = {multiple: false, class: 'selecttwo'} %>
   <div class="field">
     <h5>Hardware Information</h5>
   </div>

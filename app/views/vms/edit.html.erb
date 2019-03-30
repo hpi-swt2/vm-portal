@@ -6,15 +6,13 @@
 <%= bootstrap_form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @configuration.name }, method: :patch, local: true, layout: :horizontal) do |form| %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-  <%= form.select :sudo_user_ids,
-      options_from_collection_for_select(User.all, :id, :human_readable_identifier, @sudo_user_ids),
-      { include_hidden: false, label: 'Users with sudo rights' },
-      { multiple: true, class: 'selecttwo' } %>
-
-  <%= form.select :user_ids,
-      options_from_collection_for_select(User.all, :id, :human_readable_identifier, @non_sudo_user_ids),
-      { include_hidden: false, label: 'Users without sudo rights' },
-      { multiple: true, class: 'selecttwo'} %>
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :sudo_user_ids, User.all, :id, :human_readable_identifier,
+    options = {selected: @sudo_user_ids, include_hidden: false, label: 'Users with sudo rights'},
+    html_options = {multiple: true, class: 'selecttwo'} %>
+  <%= form.collection_select :user_ids, User.all, :id, :human_readable_identifier,
+    options = {selected: @non_sudo_user_ids, include_hidden: false, label: 'Users without sudo rights'},
+    html_options = {multiple: true, class: 'selecttwo'} %>
 
   <%= form.text_area :description, cols: 40, rows: 4, value: @configuration.description %>
 
