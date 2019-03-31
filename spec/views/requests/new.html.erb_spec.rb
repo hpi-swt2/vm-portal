@@ -9,29 +9,29 @@ RSpec.describe 'requests/new', type: :view do
     FactoryBot.build(:request, user: FactoryBot.create(:employee))
   end
 
+  let(:request_template) do
+    FactoryBot.build(:request_template)
+  end
+
   before do
     assign(:user, user)
     assign(:request, request)
-    assign(:request_templates, [FactoryBot.build(:request_template)])
+    assign(:request_templates, [request_template])
     render
   end
 
   context 'when a template should be selected' do
     it 'has a dropdown for selecting templates' do
-      expect(rendered).to have_select 'request_template_id'
-    end
-
-    it 'has a dropdown labelled \"Template\"' do
-      expect(rendered).to have_text('Template')
+      expect(rendered).to have_select 'request[template_id]'
     end
 
     it 'has a select with \"none\" template as option' do
-      expect(rendered).to have_select 'request_template_id', with_options: ['(none)']
+      expect(rendered).to have_select 'request[template_id]', with_options: ['(none)']
     end
 
     context 'when a new template is generated' do
       it 'has a list with this pre-generated template' do
-        expect(rendered).to have_select 'request_template_id', with_options: ['My Template: 1 CPU cores, 1 GB RAM, 1 GB Storage, MyString']
+        expect(rendered).to have_select 'request[template_id]', with_options: [request_template.text_summary]
       end
     end
   end

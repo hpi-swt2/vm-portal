@@ -1,29 +1,15 @@
 $('#request_template_id').change(function (){
-    cpus = document.getElementById('cpu');
-    ram = document.getElementById('ram');
-    storage = document.getElementById('storage');
-    os = document.getElementById('operating_system');
-
-    if(this.value === 'none') {
-        cpus.value = "";
-        ram.value = "";
-        storage.value = "";
-        os.value = "none";
+    // The 'none' option is selected
+    if(this.value === '') {
+        var params = {cpu_cores: '', ram_gb: '', storage_gb: '', operating_system: 'none'};
     }
     else {
-        value = this.value;
-        clean_value = value.replace(/[[\]']+/g,'');
-        requirements = clean_value.split(/, /);
-        cpu_cores = requirements[0];
-        ram_mb = requirements[1];
-        storage_mb = requirements[2];
-        operating_system = requirements[3];
-        operating_system_clean = operating_system.replace(/[""]+/g,'');
-        cpus.value = cpu_cores;
-        ram.value = ram_mb;
-        storage.value = storage_mb;
-        os.value = operating_system_clean;
+        var params = JSON.parse(this.value);
     }
+    document.getElementById('cpu').value = params.cpu_cores;
+    document.getElementById('ram').value = params.ram_gb;
+    document.getElementById('storage').value = params.storage_gb;
+    document.getElementById('operating_system').value = params.operating_system;
  });
 
  if($('#request_port_forwarding_checkbox').prop("data-port_forwarding") == "true" ||
