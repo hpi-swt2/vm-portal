@@ -187,7 +187,8 @@ class RequestsController < ApplicationController
   def request_params
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment, :project_id, :port_forwarding,
-                                    :rejection_information, responsible_user_ids: [], user_ids: [], sudo_user_ids: [])
+                                    :rejection_information, responsible_user_ids: [],
+                                    user_ids: [], sudo_user_ids: []).except(:template_id)
   end
 
   def rejection_params
