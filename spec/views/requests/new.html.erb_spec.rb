@@ -36,6 +36,20 @@ RSpec.describe 'requests/new', type: :view do
     end
   end
 
+  context 'Operating Systems select' do
+    it 'has a "none" option' do
+      expect(rendered).to have_select 'request[operating_system]', with_options: ['none']
+    end
+
+    it 'has an "other" option' do
+      expect(rendered).to have_select 'request[operating_system]', with_options: ['other (Specify in Comments)']
+    end
+
+    it 'lists OS names as options' do
+      expect(rendered).to have_select 'request[operating_system]', with_options: OperatingSystem.all.map(&:name)
+    end
+  end
+
   it 'renders new request form' do
     assert_select 'form[action=?][method=?]', requests_path, 'post' do
       assert_select 'input[name=?]', 'request[name]'

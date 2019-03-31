@@ -14,7 +14,7 @@ RSpec.describe 'operating_system selection for request', type: :feature do
 
   it 'has none and other as options' do
     visit new_request_path
-    select('other (write in Comment)', from: 'operating_system')
+    select('other (Specify in Comment)', from: 'operating_system')
     select('none', from: 'operating_system')
   end
 

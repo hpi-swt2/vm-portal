@@ -49,8 +49,8 @@
           </div>
         </div>
         <%= form.select :operating_system, 
-          operating_system_options,
-          options = {label: 'Operating System *'},
+          OperatingSystem.all.map(&:name).push('other (Specify in Comments)'),
+          options = {include_blank: 'none', label: 'Operating System *'},
           html_options = {id: 'operating_system'} %>
       </div>
     </div> <%# div class="row" %>

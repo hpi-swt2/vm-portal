@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
-  include OperatingSystemsHelper
   before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]

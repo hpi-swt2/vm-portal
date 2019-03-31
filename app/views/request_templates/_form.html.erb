@@ -7,7 +7,10 @@
   <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
   <%= form.number_field :ram_gb, min: 0, label: 'RAM in GB' %>
   <%= form.number_field :storage_gb, min: 0, label: 'Storage in GB' %>
-  <%= form.select :operating_system, operating_system_options, {label: 'Operating System'}, {} %>
-  
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :operating_system, OperatingSystem.all, :name, :name,
+    options = {include_blank: 'none', label: 'Operating System'},
+    html_options = {class: 'selecttwo'} %>
+
   <%= form.submit class: "btn btn-primary" %>
 <% end %>
