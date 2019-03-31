@@ -21,13 +21,10 @@
   </div>
 
   <div class="field form-group">
-    <%= form.label :responsible, "Responsible" %> <br>
-    <%= form.select 'responsible',
-                    options_from_collection_for_select(User.all,
-                                                       :id,
-                                                       :human_readable_identifier),
-                    {},
-                    { multiple: false, class: "selecttwo", style: 'width: 50%' } %>
+    <%= form.label :responsible, "Responsible" %>
+    <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+    <%= form.collection_select(:responsible_id, User.all, :id, :human_readable_identifier,
+                              options={prompt: true}, html_options={class: "selecttwo"}) %>
   </div>
 
   <div class="field">
@@ -85,33 +82,24 @@
     <h5>Software Information</h5>
   </div>
 
-<span id="response"></span>
-<script>
-var countBox = 1;
-var boxName = 0;
-
-function addInput()
-{
-  var boxName="software" + countBox;
-  var input = document.createElement("div");
-  input.setAttribute("class", "field");
-
-  var inputKind = document.createElement("INPUT");
-  inputKind.setAttribute("type", "text");
-  inputKind.setAttribute("placeholder", "Software " + countBox);
-  inputKind.setAttribute("class", "form-control mt-1");
-  inputKind.setAttribute("name", boxName);
-  inputKind.setAttribute("id", boxName);
-
-  input.appendChild(inputKind);
-  document.getElementById('response').appendChild(input);
-
-  countBox += 1;
-}
-</script>
+  <script>
+    function addInput() {
+      $('<input/>', {
+        type: 'text', placeholder: 'Software',
+        class: 'form-control mb-1',
+        name: 'server[installed_software][]'
+      }).appendTo('#anchor');
+    }
+  </script>
 
   <div class="field form-group">
-    <input type="button" onclick="addInput()" value="Add Software" class="btn btn-secondary mt-1"/>
+    <%= form.label :installed_software, "Installed Software" %>
+    <% server.installed_software.each do |software| %>
+      <%= form.text_field :installed_software, multiple: true, value: software, class: 'form-control mb-1' %>
+    <% end %>
+
+    <span id="anchor"></span>
+    <input type="button" onclick="addInput()" value="Add Software" />
   </div>
 
   <%= form.submit class: "btn btn-primary" %>
