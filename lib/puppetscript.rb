@@ -30,11 +30,11 @@ module Puppetscript
 
   def self.node_file_correct?(vm_name, contents)
     result =    contents.lines[0].chomp.eql?('class node_' + replace_dashes_with_underscores(vm_name) + ' {')
-    result &&=  contents.lines[1].start_with?('        $admins = [')
-    result &&=  contents.lines[2].start_with?('        $users = [')
-    result &&=  contents.lines[4].chomp.eql?('        realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])')
-    result &&=  contents.lines[5].chomp.eql?('        realize(Accounts::Virtual[$users])')
-    result &&=  contents.lines[6].chomp.eql?('}')
+    result &&=  contents.lines[1].strip.start_with?('$admins = [')
+    result &&=  contents.lines[2].strip.start_with?('$users = [')
+    result &&=  contents.lines[4].strip.eql?('realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])')
+    result &&=  contents.lines[5].strip.eql?('realize(Accounts::Virtual[$users])')
+    result &&=  contents.lines[6].strip.eql?('}')
     result
   end
 

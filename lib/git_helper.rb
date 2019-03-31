@@ -30,8 +30,6 @@ module GitHelper
         @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
       end
       set_github_credentials
-
-      @git.checkout(@repository_branch)
     end
 
     def write_file(file_name, file_content)
@@ -73,7 +71,7 @@ module GitHelper
     def pull
       path = last_pulled_path
       File.open(path, 'w') {|file| file.write(Time.now)}
-      @git.pull(branch: @repository_branch)
+      @git.pull
     end
 
     def pulled_last_minute?
