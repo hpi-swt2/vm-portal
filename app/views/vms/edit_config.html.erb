@@ -18,8 +18,8 @@
     <dt><%= adapter_name %></dt>
     <dd>
       <%= mac_address %>
-      <span
-        class="btn btn-outline-primary btn-sm fa fa-copy clipboard-btn"
+      <%# Copy to clipboard button, JS matches on 'clipboard-btn' class %>
+      <span class="btn btn-outline-primary btn-sm fa fa-copy clipboard-btn"
         title="Copy MAC address to clipboard"
         data-clipboard-text="<%= mac_address %>">
       </span>
