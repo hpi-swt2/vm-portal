@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ServersController < ApplicationController
+  @@resource_name = Server.model_name.human.titlecase
+
   before_action :set_server, only: %i[show edit update destroy]
   before_action :authenticate_employee, only: %i[show index]
   before_action :authenticate_admin, only: %i[new create edit update destroy]

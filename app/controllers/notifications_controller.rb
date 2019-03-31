@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
+  @@resource_name = Notification.model_name.human.titlecase
+
   before_action :set_notification, only: %i[destroy mark_as_read mark_as_read_and_redirect]
 
   # GET /notifications
@@ -11,9 +13,9 @@ class NotificationsController < ApplicationController
   # DELETE /notifications/1
   def destroy
     if @notification.destroy
-      notice = "Notification '#{@notification.title}' was successfully deleted."
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @notification.title)
     else
-      alert = "Error while deleting notification '#{@notification.title}'."
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @notification.title)
     end
     redirect_back fallback_location: notifications_path, notice: notice, alert: alert
   end
@@ -34,7 +36,7 @@ class NotificationsController < ApplicationController
     if @notification.save
       redirect_back fallback_location: notifications_path
     else
-      redirect_back fallback_location: notifications_path, alert: 'Error while marking notifcation as read.'
+      redirect_back fallback_location: notifications_path, alert: 'Error while marking notification as read.'
     end
   end
 
