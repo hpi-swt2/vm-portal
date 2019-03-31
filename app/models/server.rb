@@ -15,6 +15,10 @@ class Server < ApplicationRecord
   validates :ram_gb, numericality: { greater_than: 0 }
   validates :storage_gb, numericality: { greater_than: 0 }
 
+  MAX_NAME_LENGTH = 20
+  validates :name,
+            length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
+            format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
   validates :ipv4_address, format: {
     with: Resolv::IPv4::Regex,
     message: 'is not a valid IPv4 address'
@@ -57,10 +61,15 @@ class Server < ApplicationRecord
   end
 
   def all_users
-    (users + sudo_users + [responsible]).uniq
+    (users + sudo_users + responsible_users).uniq
   end
 
   private
+
+  # This makes a few things easier, for example when adding arrays together
+  def responsible_users
+    [responsible]
+  end
 
   def read_users
     begin
