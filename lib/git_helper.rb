@@ -28,6 +28,7 @@ module GitHelper
         pull if for_write || !pulled_last_minute?
       else
         @git = Git.clone(@repository_url, @repository_name, path: File.dirname(@path))
+        pull # this will set the correct branch
       end
       set_github_credentials
     end
@@ -69,9 +70,10 @@ module GitHelper
     end
 
     def pull
+      @git.checkout(@repository_branch)
       path = last_pulled_path
       File.open(path, 'w') {|file| file.write(Time.now)}
-      @git.pull
+      @git.pull('origin', @repository_branch)
     end
 
     def pulled_last_minute?
