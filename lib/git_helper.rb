@@ -92,7 +92,7 @@ module GitHelper
 
     def commit_and_push(message)
       @git.commit_all(message)
-      @git.push
+      @git.push('origin', @repository_branch)
     end
   end
 end
