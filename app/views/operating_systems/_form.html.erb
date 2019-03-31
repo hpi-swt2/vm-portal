@@ -1,6 +1,9 @@
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
 <%= bootstrap_form_with(model: operating_system, local: true) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
+
   <%= form.text_field :name %>
+
   <%= form.submit class: "btn btn-primary" %>
 <% end %>

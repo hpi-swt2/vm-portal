@@ -4,6 +4,7 @@
 
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
 <%= bootstrap_form_with(scope: :vm_info, url: { :controller => "vms", :action => "update", id: @configuration.name }, method: :patch, local: true, layout: :horizontal) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
   <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>

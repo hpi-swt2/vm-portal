@@ -1,5 +1,6 @@
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
 <%= bootstrap_form_with(model: server, local: true, layout: :horizontal) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
   <%= form.text_field :name %>
@@ -8,28 +9,21 @@
   <%= form.collection_select :responsible, User.all, :id, :human_readable_identifier,
     options = {},
     html_options = {multiple: false, class: 'selecttwo'} %>
-  <div class="field">
-    <h5>Hardware Information</h5>
-  </div>
 
+  <h5>Hardware Information</h5>
   <%= form.text_field :vendor %>
   <%= form.text_field :model %>
   <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
   <%= form.number_field :ram_gb, min: 0, label: 'RAM in GB' %>
   <%= form.number_field :storage_gb, min: 0, label: 'Storage in GB' %>
 
-  <div class="field">
-    <h5>Network Information</h5>
-  </div>
-
+  <h5>Network Information</h5>
   <%= form.text_field :ipv4_address, label: 'IPv4 Address' %>
   <%= form.text_field :ipv6_address, label: 'IPv6 Address' %>
   <%= form.text_field :mac_address, label: 'MAC Address' %>
   <%= form.text_field :fqdn, label: 'Fully Qualified Domain Name (FQDN)' %>
 
-  <div class="field">
-    <h5>Software Information</h5>
-  </div>
+  <h5>Software Information</h5>
 
 <span id="response"></span>
 <script>

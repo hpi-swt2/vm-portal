@@ -2,6 +2,7 @@
 
 <%# https://github.com/bootstrap-ruby/bootstrap_form %>
 <%= bootstrap_form_for @user do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %> 
 
   <table class="table">
