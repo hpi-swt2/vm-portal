@@ -123,8 +123,10 @@ group :development do
   # Continous execution of unit tests
   gem 'guard' # https://github.com/guard/guard
   # Benchmarking
-  gem 'meta_request'
-  gem 'ruby-prof'
+  # Supporting gem for Rails Panel (Google Chrome extension for Rails development)
+  gem 'meta_request' # https://github.com/dejan/rails_panel
+  # code profiler for MRI Ruby
+  gem 'ruby-prof' # https://github.com/ruby-prof/ruby-prof
 
 end
 
