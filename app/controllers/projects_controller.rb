@@ -24,7 +24,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     if @project.save
-      redirect_to projects_path, notice: t('flash.create.notice', resource: @@resource_name, model: @project.name)
+      redirect_to @project, notice: t('flash.create.notice', resource: @@resource_name, model: @project.name)
       @project.responsible_users.each do |each|
         each.notify('Project created',
                     "The project #{@project.name} with you as the responsible has been created.",
