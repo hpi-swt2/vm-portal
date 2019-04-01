@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class RequestTemplatesController < ApplicationController
+  @@resource_name = RequestTemplate.model_name.human.titlecase
+
   before_action :set_request_template, only: %i[show edit update destroy]
   before_action :authenticate_admin
 
   # GET /request_templates
-  # GET /request_templates.json
   def index
     @request_templates = RequestTemplate.all
   end
@@ -19,48 +20,37 @@ class RequestTemplatesController < ApplicationController
   def edit; end
 
   # POST /request_templates
-  # POST /request_templates.json
   def create
     @request_template = RequestTemplate.new(request_template_params)
-
-    respond_to do |format|
-      if @request_template.save
-        respond format, 'Request template was successfully created.'
-      else
-        format.html { render :new }
-        format.json { render json: @request_template.errors, status: :unprocessable_entity }
-      end
+    if @request_template.save
+      redirect_to request_templates_path, notice: t('flash.create.notice',
+        resource: @@resource_name, model: @request_template.name)
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /request_templates/1
-  # PATCH/PUT /request_templates/1.json
   def update
-    respond_to do |format|
-      if @request_template.update(request_template_params)
-        respond format, 'Request template was successfully updated.'
-      else
-        format.html { render :edit }
-        format.json { render json: @request_template.errors, status: :unprocessable_entity }
-      end
+    if @request_template.update(request_template_params)
+      redirect_to request_templates_path, notice: t('flash.update.notice',
+        resource: @@resource_name, model: @request_template.name)
+    else
+      render :edit
     end
   end
 
   # DELETE /request_templates/1
-  # DELETE /request_templates/1.json
   def destroy
-    @request_template.destroy
-    respond_to do |format|
-      respond format, 'Request template was successfully destroyed.'
+    if @request_template.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @request_template.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @request_template.name)
     end
+    redirect_to request_templates_path, notice: notice, alert: alert
   end
 
   private
-
-  def respond(format, notice)
-    format.html { redirect_to request_templates_path, notice: notice }
-    format.json { head :no_content }
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_request_template

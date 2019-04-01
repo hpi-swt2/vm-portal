@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  @@resource_name = Project.model_name.human.titlecase
+
   before_action :authenticate_employee, only: %i[new create]
-  before_action :authenticate_responsible_user, only: %i[edit update]
+  before_action :authenticate_responsible_user, only: %i[edit update destroy]
 
   def index
     @projects = Project.all
@@ -24,7 +26,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     if @project.save
-      redirect_to action: :index
+      redirect_to projects_path, notice: t('flash.create.notice', resource: @@resource_name, model: @project.name)
       @project.responsible_users.each do |each|
         each.notify('Project created',
                     "The project #{@project.name} with you as the responsible has been created.",
@@ -43,10 +45,20 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     if @project.update(project_params)
-      redirect_to action: :show
+      redirect_to @project, notice: t('flash.update.notice', resource: @@resource_name, model: @project.name)
     else
       render :edit
     end
+  end
+
+  # DELETE /projects/1
+  def destroy
+    if @project.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @project.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @project.name)
+    end
+    redirect_to projects_path, notice: notice, alert: alert
   end
 
   private
