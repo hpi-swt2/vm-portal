@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RequestTemplatesController < ApplicationController
+  @@resource_name = RequestTemplate.model_name.human.titlecase
+
   before_action :set_request_template, only: %i[show edit update destroy]
   before_action :authenticate_admin
 
@@ -21,7 +23,8 @@ class RequestTemplatesController < ApplicationController
   def create
     @request_template = RequestTemplate.new(request_template_params)
     if @request_template.save
-      redirect_to request_templates_path, notice: 'Request template was successfully created.'
+      redirect_to request_templates_path, notice: t('flash.create.notice',
+        resource: @@resource_name, model: @request_template.name)
     else
       render :new
     end
@@ -30,7 +33,8 @@ class RequestTemplatesController < ApplicationController
   # PATCH/PUT /request_templates/1
   def update
     if @request_template.update(request_template_params)
-      redirect_to request_templates_path, notice:'Request template was successfully updated.'
+      redirect_to request_templates_path, notice: t('flash.update.notice',
+        resource: @@resource_name, model: @request_template.name)
     else
       render :edit
     end
@@ -38,8 +42,12 @@ class RequestTemplatesController < ApplicationController
 
   # DELETE /request_templates/1
   def destroy
-    @request_template.destroy
-    redirect_to request_templates_path, notice: 'Request template was successfully deleted.'
+    if @request_template.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @request_template.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @request_template.name)
+    end
+    redirect_to request_templates_path, notice: notice, alert: alert
   end
 
   private
