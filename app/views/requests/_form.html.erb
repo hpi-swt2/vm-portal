@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="form-group pt-3">
-          <%= form.label :operating_system, "Operating System *" %> <br>
+          <%= form.label :operating_system, "Operating System *" %>
           <%= form.select :operating_system, operating_system_options, {}, id: 'operating_system', class: 'form-control' %>
         </div>
       </div>
@@ -112,7 +112,7 @@
                                                              :human_readable_identifier,
                                                              (@request.users - @request.sudo_users).collect(&:id)),
                           {},
-                          {class: ' selecttwo', multiple: true} %>
+                          {class: 'form-control selecttwo', multiple: true} %>
         </div>
       </div>
     </div>

@@ -8,16 +8,11 @@ class AppSettingsController < ApplicationController
   def edit; end
 
   # PATCH/PUT /app_settings/1
-  # PATCH/PUT /app_settings/1.json
   def update
-    respond_to do |format|
-      if @app_setting.update(app_setting_params)
-        format.html { redirect_to edit_app_setting_path(@app_setting), notice: 'HART Settings were successfully updated.' }
-        format.json { render :edit, status: :ok, location: @app_setting }
-      else
-        format.html { render :edit }
-        format.json { render json: @app_setting.errors, status: :unprocessable_entity }
-      end
+    if @app_setting.update(app_setting_params)
+      redirect_to edit_app_setting_path(@app_setting), notice: t('flash.update.notice_simple', resource: 'Settings object')
+    else
+      render :edit
     end
   end
 

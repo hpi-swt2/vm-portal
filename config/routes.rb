@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # '/app_settings/...'
   resources :app_settings, only: %i[update edit]
   # '/projects/...'
-  resources :projects, except: :destroy
+  resources :projects
   # '/servers/...'
   resources :servers
   # '/hosts/...'
