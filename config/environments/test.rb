@@ -53,6 +53,4 @@ Rails.application.configure do
 
   # The first user id
   config.start_user_id = 4000
-
-  config.log_formatter = HartFormatter.new
 end
