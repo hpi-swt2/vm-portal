@@ -14,8 +14,8 @@
   <%= form.text_field :vendor %>
   <%= form.text_field :model %>
   <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
-  <%= form.number_field :ram_gb, min: 0, label: 'RAM in GB' %>
-  <%= form.number_field :storage_gb, min: 0, label: 'Storage in GB' %>
+  <%= form.number_field :ram_gb, min: 0, label: 'RAM', append: 'GB' %>
+  <%= form.number_field :storage_gb, min: 0, label: 'Storage', append: 'GB' %>
 
   <h5>Network Information</h5>
   <%= form.text_field :ipv4_address, label: 'IPv4 Address' %>
@@ -42,7 +42,7 @@
     <% end %>
 
     <span id="anchor"></span>
-    <input type="button" onclick="addInput()" value="Add Software" />
+    <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
   </div>
 
   <%= form.submit class: "btn btn-primary" %>
