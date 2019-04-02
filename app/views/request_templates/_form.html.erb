@@ -9,7 +9,7 @@
   <%= form.number_field :storage_gb, min: 0, label: 'Storage in GB' %>
   <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
   <%= form.collection_select :operating_system, OperatingSystem.all, :name, :name,
-    options = {include_blank: 'none', label: 'Operating System'},
+    options = {include_blank: t('blank_text'), label: 'Operating System'},
     html_options = {class: 'selecttwo'} %>
 
   <%= form.submit class: "btn btn-primary" %>

@@ -1,7 +1,7 @@
 $('#request_template_id').change(function (){
-    // The 'none' option is selected
+    // The '(none)' option is selected
     if(this.value === '') {
-        var params = {cpu_cores: '', ram_gb: '', storage_gb: '', operating_system: 'none'};
+        var params = {cpu_cores: '', ram_gb: '', storage_gb: '', operating_system: '(none)'};
     }
     else {
         var params = JSON.parse(this.value);

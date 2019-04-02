@@ -15,7 +15,7 @@ RSpec.describe 'operating_system selection for request', type: :feature do
   it 'has none and other as options' do
     visit new_request_path
     select('other (Specify in Comments)', from: 'operating_system')
-    select('none', from: 'operating_system')
+    select(I18n.t('blank_text'), from: 'operating_system')
   end
 
   context 'when operating systems have been created' do

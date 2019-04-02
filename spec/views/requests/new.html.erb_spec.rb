@@ -25,8 +25,8 @@ RSpec.describe 'requests/new', type: :view do
       expect(rendered).to have_select 'request[template_id]'
     end
 
-    it 'has a select with \"none\" template as option' do
-      expect(rendered).to have_select 'request[template_id]', with_options: ['(none)']
+    it 'has a select with "(none)" template as option' do
+      expect(rendered).to have_select 'request[template_id]', with_options: [I18n.t('blank_text')]
     end
 
     context 'when a new template is generated' do
@@ -37,8 +37,8 @@ RSpec.describe 'requests/new', type: :view do
   end
 
   context 'Operating Systems select' do
-    it 'has a "none" option' do
-      expect(rendered).to have_select 'request[operating_system]', with_options: ['none']
+    it 'has a "(none)" option' do
+      expect(rendered).to have_select 'request[operating_system]', with_options: [I18n.t('blank_text')]
     end
 
     it 'has an "other" option' do

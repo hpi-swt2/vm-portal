@@ -36,7 +36,7 @@ RSpec.describe 'End to End testing', type: :feature do
     select(@employee.human_readable_identifier, from: 'request_responsible_user_ids')
     select(@employee.human_readable_identifier, from: 'request_sudo_user_ids')
     select(@user.human_readable_identifier, from: 'request_user_ids')
-    select('none', from: 'operating_system')
+    select(I18n.t('blank_text'), from: 'operating_system')
     select(@project.name, from: 'request_project_id')
     fill_in('Description', with: 'test')
     click_on 'Create Request'
@@ -58,7 +58,7 @@ RSpec.describe 'End to End testing', type: :feature do
     select(@admin.human_readable_identifier, from: 'request_sudo_user_ids')
     select(@user.human_readable_identifier, from: 'request_user_ids')
     select(@project.name, from: 'request_project_id')
-    select('none', from: 'operating_system')
+    select(I18n.t('blank_text'), from: 'operating_system')
     fill_in('Description', with: 'test')
     click_on 'Create Request'
     click_on @requestname
@@ -92,7 +92,7 @@ RSpec.describe 'End to End testing', type: :feature do
     select(@admin.human_readable_identifier, from: 'request_responsible_user_ids')
     select(@admin.human_readable_identifier, from: 'request_sudo_user_ids')
     select(@user.human_readable_identifier, from: 'request_user_ids')
-    select('none', from: 'request[operating_system]')
+    select(I18n.t('blank_text'), from: 'request[operating_system]')
     click_on 'Create Request'
     click_on @requestname
     click_on 'acceptButton'
