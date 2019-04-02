@@ -78,7 +78,8 @@ class User < ApplicationRecord
   end
 
   def valid_ssh_key
-    errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
+    # https://api.rubyonrails.org/classes/ActiveModel/Errors.html#method-i-add
+    errors.add(:ssh_key, :invalid, message: "must be a valid SSH-Key") unless valid_ssh_key?
   end
 
   def self.from_omniauth(auth)

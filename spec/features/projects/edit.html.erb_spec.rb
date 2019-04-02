@@ -86,7 +86,7 @@ describe 'projects/edit.html.erb', type: :feature do
       context 'when clicking the submit button' do
         it 'shows an error' do
           submit_button.click
-          expect(page).to have_text '1 error'
+          expect(page).to have_css('.alert-danger')
         end
       end
     end

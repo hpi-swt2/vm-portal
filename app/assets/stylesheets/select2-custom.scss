@@ -6,3 +6,7 @@
   @extend .text-white;
   @extend .bg-primary;
 }
+
+.select2-container .select2-selection {
+  font-size: inherit;
+}
