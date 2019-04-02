@@ -27,11 +27,6 @@ RSpec.describe RequestTemplate, type: :model do
         expect(request_template).to be_invalid
       end
 
-      it 'is invalid with no operating_system specification' do
-        request_template.operating_system = ''
-        expect(request_template).to be_invalid
-      end
-
       it 'is invalid with negative cpu_cores specifiation' do
         request_template.cpu_cores = AppSetting.instance.min_cpu_cores - 1
         expect(request_template).to be_invalid
