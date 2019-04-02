@@ -10,7 +10,7 @@ class AppSettingsController < ApplicationController
   # PATCH/PUT /app_settings/1
   def update
     if @app_setting.update(app_setting_params)
-      redirect_to edit_app_setting_path(@app_setting), notice: 'HART Settings were successfully updated.'
+      redirect_to edit_app_setting_path(@app_setting), notice: t('flash.update.notice_simple', resource: 'Settings object')
     else
       render :edit
     end

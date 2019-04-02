@@ -38,7 +38,7 @@ RSpec.describe 'servers/new', type: :view do
 
       assert_select 'input[name=?]', 'server[ipv6_address]'
 
-      assert_select 'select[name=?]', 'server[responsible]'
+      assert_select 'select[name=?]', 'server[responsible_id]'
 
       expect(rendered).to have_button 'Add Software'
     end

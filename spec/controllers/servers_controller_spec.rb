@@ -4,33 +4,12 @@ require 'rails_helper'
 
 RSpec.describe ServersController, type: :controller do
   let(:valid_attributes) do
-    {
-      name: 'SpecServer',
-      cpu_cores: 4,
-      ram_gb: 1024,
-      storage_gb: 4096,
-      mac_address: 'C0:FF:EE:C4:11:42',
-      fqdn: 'arrrr.speck.de',
-      ipv4_address: '8.8.8.8',
-      ipv6_address: '::1',
-      installed_software: ['SpeckTester'],
-      responsible: FactoryBot.create(:user)
-    }
+    employee = FactoryBot.create(:employee)
+    FactoryBot.attributes_for(:server, responsible_id: employee.id)
   end
-
+  
   let(:invalid_attributes) do
-    {
-      name: 'SpecServer',
-      cpu_cores: '',
-      ram_gb: 1024,
-      storage_gb: 4096,
-      mac_address: 'EE:C4:11:42',
-      fqdn: 'arrrr.speck.de',
-      ipv4_address: 'c8.a8.d8.b8',
-      ipv6_address: 42,
-      installed_software: ['SpeckTester'],
-      responsible: 'Hans Würtschen'
-    }
+    { cpu_cores: 'twelve-hundred', mac_address: 1234 }
   end
 
   let(:valid_session) { {} }
@@ -79,12 +58,20 @@ RSpec.describe ServersController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Server' do
-        expect { post :create, params: { server: valid_attributes }, session: valid_session }.to change(Server, :count).by(1)
+        expect {
+          post :create, params: { server: valid_attributes }, session: valid_session
+        }.to change(Server, :count).by(1)
       end
 
       it 'redirects to the created server' do
         post :create, params: { server: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Server.last)
+      end
+
+      it 'creates a new Server without saving empty software fields' do
+        valid_attributes.update(installed_software: ['software','',''])
+        post :create, params: { server: valid_attributes }, session: valid_session
+        expect(Server.last.installed_software).to eq(['software'])
       end
     end
 
@@ -98,32 +85,26 @@ RSpec.describe ServersController, type: :controller do
 
   describe 'PUT #update' do
     context 'with valid params' do
-      let(:new_attributes) do
-        {
-          name: 'SpeckServer',
-          cpu_cores: 2,
-          ram_gb: 1024,
-          storage_gb: 4096,
-          mac_address: 'C0:FF:EE:C4:11:42',
-          fqdn: 'arrrr.speck.de',
-          ipv4_address: '8.8.8.8',
-          ipv6_address: '::1',
-          installed_software: ['SpeckTester'],
-          responsible: FactoryBot.create(:admin)
-        }
-      end
-
       it 'updates the requested server' do
-        server = Server.create! valid_attributes
-        put :update, params: { id: server.to_param, server: new_attributes }, session: valid_session
-        server.reload
-        expect(server.name).to eq('SpeckServer')
+        server = FactoryBot.create(:server, name: 'Original')
+        valid_attributes.update(name: 'Changed')
+        expect{
+          put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
+        }.to change{ server.reload.name }.from(server.name).to(valid_attributes[:name])
       end
 
       it 'redirects to the server' do
         server = Server.create! valid_attributes
         put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
         expect(response).to redirect_to(server)
+      end
+      
+      it 'updates the requested server without saving empty software fields' do
+        server = FactoryBot.create(:server, installed_software: [])
+        valid_attributes.update(installed_software: ['software','',''])
+        expect{
+          put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
+        }.to change{ server.reload.installed_software }.from(server.installed_software).to(['software'])
       end
     end
 
