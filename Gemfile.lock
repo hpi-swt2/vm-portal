@@ -86,6 +86,9 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bootstrap_form (4.2.0)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     builder (3.2.3)
     byebug (10.0.2)
     callsite (0.0.11)
@@ -411,6 +414,7 @@ DEPENDENCIES
   binding_of_caller
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.3.1)
+  bootstrap_form (>= 4.2.0)
   byebug
   capybara (>= 2.15)
   clipboard-rails

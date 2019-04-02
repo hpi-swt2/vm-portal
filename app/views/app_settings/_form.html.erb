@@ -1,29 +1,18 @@
-<%= form_with(model: app_setting, local: true, builder: HartFormBuilder) do |form| %>
-  <% if app_setting.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(app_setting.errors.count, "error") %> prohibited the Settings from being saved:</h2>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: app_setting, local: true) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-      <ul>
-        <% app_setting.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="container-fluid styled-form">
+  <div class="container-fluid">
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>vSphere Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'Server IP', :vsphere_server_ip %>
-
-        <%= form.labeled_text_field 'User', :vsphere_server_user %>
-
-        <%= form.labeled_password_field 'Password', :vsphere_server_password %>
-        
-        <%= form.labeled_text_field 'Root Folder', :vsphere_root_folder, description: 'Leave empty to use "/"' %>
+        <%= form.text_field :vsphere_server_ip, label: 'Server IP' %>
+        <%= form.text_field :vsphere_server_user, label: 'User' %>
+        <%= form.password_field :vsphere_server_password, label: 'Password' %>
+        <%= form.text_field :vsphere_root_folder, label: 'Root Folder', help: 'Leave empty to use "/"' %>
       </div>
     </div>
 
@@ -32,31 +21,23 @@
         <h5>VM Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'Minimum cpu core count', :min_cpu_cores %>
-
-        <%= form.labeled_text_field 'Maximum cpu core count', :max_cpu_cores %>
-
-        <%= form.labeled_text_field 'Maximum ram size(GB)', :max_ram_size %>
-
-        <%= form.labeled_text_field 'Maximum storage size(GB)', :max_storage_size %>
+        <%= form.text_field :min_cpu_cores, label: 'Minimum CPU Core Count' %>
+        <%= form.text_field :max_cpu_cores, label: 'Maximum CPU Core Count' %>
+        <%= form.text_field :max_ram_size, label: 'Maximum RAM Size', append: "GB" %>
+        <%= form.text_field :max_storage_size, label: 'Maximum Storage Size', append: "GB" %>
       </div>
     </div>
-
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
         <h5>Git Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'Repository URL', :git_repository_url %>
-
-        <%= form.labeled_text_field 'Repository Name', :git_repository_name %>
-
-        <%= form.labeled_text_field 'Git Branch', :git_branch %>
-
-        <%= form.labeled_text_field 'Github Username', :github_user_name %>
-
-        <%= form.labeled_text_field 'Github User E-Mail', :github_user_email %>
+        <%= form.text_field :git_repository_url, label: 'Repository URL' %>
+        <%= form.text_field :git_repository_name, label: 'Repository Name' %>
+        <%= form.text_field :git_branch, label: 'Git Branch' %>
+        <%= form.text_field :github_user_name, label: 'GitHub Username' %>
+        <%= form.text_field :github_user_email, label: 'GitHub User E-Mail' %>
       </div>
     </div>
 
@@ -66,28 +47,22 @@
         Please specify the path relative to the git root
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'Init.pp Path', :puppet_init_path %>
-
-        <%= form.labeled_text_field 'Classes Path', :puppet_classes_path %>
-
-        <%= form.labeled_text_field 'Nodes Path', :puppet_nodes_path %>
+        <%= form.text_field :puppet_init_path, label: 'Init.pp Path' %>
+        <%= form.text_field :puppet_classes_path, label: 'Classes Path' %>
+        <%= form.text_field :puppet_nodes_path, label: 'Nodes Path' %>
       </div>
     </div>
 
     <div class="row border-bottom mb-4 pb-4">
       <div class="col">
-        <h5>Email Notifications Settings</h5>
+        <h5>E-Mail Notifications Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_text_field 'SMTP Server Address', :email_notification_smtp_address %>
-
-        <%= form.labeled_number_field 'SMTP Server Port', :email_notification_smtp_port %>
-
-        <%= form.labeled_text_field 'E-Mail Server Domain', :email_notification_smtp_domain %>
-
-        <%= form.labeled_text_field 'User', :email_notification_smtp_user %>
-
-        <%= form.labeled_password_field 'Password', :email_notification_smtp_password %>
+        <%= form.text_field :email_notification_smtp_address, label: 'SMTP Server Address' %>
+        <%= form.number_field :email_notification_smtp_port, label: 'SMTP Server Port' %>
+        <%= form.text_field :email_notification_smtp_domain, label: 'E-Mail Server Domain' %>
+        <%= form.text_field :email_notification_smtp_user, label: 'User' %>
+        <%= form.password_field :email_notification_smtp_password, label: 'Password' %>
       </div>
     </div>
 
@@ -96,15 +71,13 @@
         <h5>General Settings</h5>
       </div>
       <div class="col-6">
-        <%= form.labeled_number_field 'Virtual Machine Archivation Timeout (in days)', :vm_archivation_timeout %>
-
-        <%= form.labeled_number_field 'Maximum number of VMs shown on the dashboard', :max_shown_vms %>
+        <%= form.number_field :vm_archivation_timeout, label: 'Virtual Machine Archivation Timeout', append: 'days' %>
+        <%= form.number_field :max_shown_vms, label: 'Maximum number of VMs shown on the dashboard' %>
       </div>
     </div>
 
-    <div class="actions">
-      <%= form.accept %>
-    </div>
+    <%# https://github.com/bootstrap-ruby/bootstrap_form#submit-buttons %>
+    <%= form.submit class: 'btn btn-primary' %>
   </div>
 
 <% end %>
