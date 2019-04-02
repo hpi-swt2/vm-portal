@@ -34,6 +34,8 @@ $primary-hover: #1a5b82;
 @import "select2-bootstrap";
 // Custom styles for select2: app/assets/stylesheets/custom.scss
 @import "select2-custom";
+// https://github.com/bootstrap-ruby/bootstrap_form#installation
+@import 'rails_bootstrap_forms';
 // Bootstrap styling for datatables
 // https://github.com/mkhairi/jquery-datatables#stylesheets
 @import 'datatables/dataTables.bootstrap4';
