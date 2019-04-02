@@ -35,14 +35,16 @@
     }
   </script>
 
-  <div class="field form-group">
-    <%= form.label :installed_software, "Installed Software" %>
-    <% server.installed_software.each do |software| %>
-      <%= form.text_field :installed_software, multiple: true, value: software, class: 'form-control mb-1' %>
-    <% end %>
-
-    <span id="anchor"></span>
-    <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
+  <div class="form-group row">
+    <%= form.label :installed_software, "Installed Software", class:'col-form-label col-sm-2' %>
+    <div class="col-sm-10">
+      <% server.installed_software.each do |software| %>
+        <%= form.text_field_without_bootstrap :installed_software,
+          multiple: true, value: software, hide_label: true, class:'form-control mb-1' %>
+      <% end %>
+      <span id="anchor"></span>
+      <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
+    </div>
   </div>
 
   <%= form.submit class: "btn btn-primary" %>
