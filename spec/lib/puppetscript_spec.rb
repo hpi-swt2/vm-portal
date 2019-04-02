@@ -9,9 +9,9 @@ RSpec.describe Puppetscript do
     allow(described_class).to receive(:read_node_file).and_call_original
   end
 
-  let(:user) { FactoryBot.create :puppet_user }
-  let(:admin1) { FactoryBot.create :puppet_admin }
-  let(:admin2) { FactoryBot.create :puppet_admin2 }
+  let!(:user) { FactoryBot.create :puppet_user }
+  let!(:admin1) { FactoryBot.create :puppet_admin }
+  let!(:admin2) { FactoryBot.create :puppet_admin2 }
 
   describe 'generate node file' do
 
@@ -34,10 +34,6 @@ RSpec.describe Puppetscript do
   end
 
   describe 'read valid node file' do
-    # let won\t be saved in db, but we need the objects in db for testing
-    # let(:user) { FactoryBot.create :puppet_user }
-    # let(:admin1) { FactoryBot.create :puppet_admin }
-    # let(:admin2) { FactoryBot.create :puppet_admin2 }
     let(:puppet_file) { Puppetscript.read_node_file('example', path) }
 
     it 'returns the results as a Hash' do
