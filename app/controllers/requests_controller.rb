@@ -43,18 +43,14 @@ class RequestsController < ApplicationController
 
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
-    respond_to do |format|
-      # check for validity first, before checking enough_resources?
-      # this is neccessary to ensure that the request contains all information needed for enough_resources?
-      if @request.valid? && enough_resources? && @request.save
-        notify_users('New VM request', @request.description_text, @request.description_url(host_url))
-        format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-        format.json { render :show, status: :created, location: @request }
-      else
-        @request_templates = RequestTemplate.all
-        format.html { render :new }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
-      end
+    # check for validity first, before checking enough_resources?
+    # this is neccessary to ensure that the request contains all information needed for enough_resources?
+    if @request.valid? && enough_resources? && @request.save
+      notify_users('New VM request', @request.description_text, @request.description_url(host_url))
+      redirect_to requests_path, notice: t('flash.create.notice', resource: @@resource_name, model: @request.name)
+    else
+      @request_templates = RequestTemplate.all
+      render :new
     end
   end
 
