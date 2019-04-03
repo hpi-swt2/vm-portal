@@ -35,8 +35,6 @@ class RequestsController < ApplicationController
 
   # POST /requests
   def create
-    prepare_params
-
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     # check for validity first, before checking enough_resources?
@@ -51,7 +49,6 @@ class RequestsController < ApplicationController
 
   # PATCH/PUT /requests/1
   def update
-    prepare_params
     @request.assign_sudo_users(request_params[:sudo_user_ids])
     @request.accept!
     if @request.update(request_params)
@@ -139,21 +136,17 @@ class RequestsController < ApplicationController
     end
   end
 
-  # Storage and RAM are displayed in GB but internally stored in MB.
-  # sudo_user_ids always contain one empty element which must be removed
-  def prepare_params
-    request_parameters = params[:request]
-    return unless request_parameters
-
-    request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
-
-    # the user_ids must contain the ids of ALL users, sudo or not
-    request_parameters[:user_ids] ||= []
-    request_parameters[:user_ids] += request_parameters[:sudo_user_ids] if request_parameters[:sudo_user_ids]
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
+  # Modify parameters received from the request form
   def request_params
+    if params[:request]
+      # sudo_user_ids always contain one empty element which must be removed
+      params[:request][:sudo_user_ids].reject!(&:blank?)
+      # the user_ids must contain the ids of ALL users, sudo or not
+      params[:request][:user_ids] ||= []
+      params[:request][:user_ids] += params[:request][:sudo_user_ids] if params[:request][:sudo_user_ids]
+    end
+    
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment, :project_id, :port_forwarding,
                                     :rejection_information, responsible_user_ids: [],
