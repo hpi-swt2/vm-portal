@@ -2,6 +2,8 @@
 <%= bootstrap_form_with(model: request, local: true) do |form| %>
   <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
+  <%# Displays errors set in controllers on model.errors[:base] %>
+  <%= form.errors_on :base %>
 
   <div class="container-fluid mt-4">
     <div class="row border-bottom mb-4 pb-4">
