@@ -11,7 +11,8 @@ class RequestsController < ApplicationController
   # GET /requests
   def index
     requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
-    split_requests(requests)
+    @pending_requests = requests.select(&:pending?)
+    @resolved_requests = requests.reject(&:pending?)
   end
 
   # GET /requests/1
@@ -191,11 +192,6 @@ class RequestsController < ApplicationController
   end
 
   helper_method :puppet_name_script
-
-  def split_requests(requests)
-    @pending_requests = requests.select(&:pending?)
-    @resolved_requests = requests.reject(&:pending?)
-  end
 
   def enough_resources?
     hosts = VSphere::Host.all
