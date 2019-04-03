@@ -36,17 +36,17 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
 
       context 'with a filled in rejection information field' do
         before do
-          page.fill_in 'request[rejection_information]', with: 'Info'
+          page.fill_in 'request[rejection_information]', with: 'A rejection information'
           click_button('rejectButton')
         end
 
         it 'saves the rejection information' do
           request.reload
-          expect(request.rejection_information).to eq('Info')
+          expect(request.rejection_information).to eq('A rejection information')
         end
 
-        it 'shows rejection information' do
-          expect(page).to have_text('Info')
+        it 'redirects to the requests path' do
+          expect(page).to have_current_path(requests_path)
         end
       end
     end
