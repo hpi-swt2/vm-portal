@@ -105,7 +105,7 @@ class RequestsController < ApplicationController
     vm, warning = request.create_vm
     notices = notice_for vm, warning
     if vm
-      redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices))
+      redirect_to edit_config_path(vm.name), notices
     else
       redirect_to requests_path, notices
     end
