@@ -6,17 +6,34 @@ RSpec.describe Puppetscript do
   let(:path) { File.join('spec', 'lib') }
 
   before do
-    allow(Puppetscript).to receive(:read_node_file).and_call_original
-    @user = FactoryBot.create :puppet_user
-    @admin1 = FactoryBot.create :puppet_admin
-    @admin2 = FactoryBot.create :puppet_admin2
+    allow(described_class).to receive(:read_node_file).and_call_original
+  end
+
+  let!(:user) { FactoryBot.create :puppet_user }
+  let!(:admin1) { FactoryBot.create :puppet_admin }
+  let!(:admin2) { FactoryBot.create :puppet_admin2 }
+
+  describe 'generate node file' do
+
+    let(:admins) { [admin1, admin2] }
+    let(:users) { [user] }
+    let(:script) { Puppetscript.node_script 'MyVM', admins, users }
+
+    it 'returns a valid node file' do
+      expect(Puppetscript.node_file_correct?('MyVM', script)).to be true
+    end
+
+    it 'can read the admins out again' do
+      expect(Puppetscript.read_node_string(script)[:admins]).to match_array admins
+    end
+
+    it 'can read the users out again' do
+      expect(Puppetscript.read_node_string(script)[:users]).to match_array users
+    end
+
   end
 
   describe 'read valid node file' do
-    # let won\t be saved in db, but we need the objects in db for testing
-    # let(:user) { FactoryBot.create :puppet_user }
-    # let(:admin1) { FactoryBot.create :puppet_admin }
-    # let(:admin2) { FactoryBot.create :puppet_admin2 }
     let(:puppet_file) { Puppetscript.read_node_file('example', path) }
 
     it 'returns the results as a Hash' do
@@ -35,12 +52,12 @@ RSpec.describe Puppetscript do
 
     it 'contains the first admin in the admins\' Array' do
       admins = puppet_file[:admins]
-      expect(admins).to include(@admin1)
+      expect(admins).to include(admin1)
     end
 
     it 'contains the secondadmin in the admins\' Array' do
       admins = puppet_file[:admins]
-      expect(admins).to include(@admin2)
+      expect(admins).to include(admin2)
     end
 
     it 'returns the users as an Array' do
@@ -55,7 +72,7 @@ RSpec.describe Puppetscript do
 
     it 'contains the first user in the users\' Array' do
       users = puppet_file[:users]
-      expect(users).to include(@user)
+      expect(users).to include(user)
     end
 
     it 'raises an error if trying to read a puppet file with the node name not matching the file name' do
