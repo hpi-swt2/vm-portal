@@ -76,17 +76,13 @@ class RequestsController < ApplicationController
 
   def reject
     @request = Request.find params[:id]
-    respond_to do |format|
-      @request.reject!
-      if @request&.update(rejection_params)
-        notify_request_update
-        format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
-        format.json { render status: :ok, action: :index }
-      else
-        @request_templates = RequestTemplate.all
-        format.html { render :edit }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
-      end
+    @request.reject!
+    if @request.update(rejection_params)
+      notify_request_update
+      redirect_to requests_path, notice: "Request '#{@request.name}' rejected!"
+    else
+      @request_templates = RequestTemplate.all
+      render :edit
     end
   end
 
