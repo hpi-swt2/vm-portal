@@ -2,91 +2,94 @@
 
 <table class="table">
   <tbody>
-    <tr>
-      <td><strong>VM Name</strong></td>
-      <td><%= @request.name %></td>
-    </tr>
+  <tr>
+    <td><strong>VM Name</strong></td>
+    <td><%= @request.name %></td>
+  </tr>
 
-    <tr>
-      <td><strong>CPU cores</strong></td>
-      <td><%= @request.cpu_cores %></td>
-    </tr>
+  <tr>
+    <td><strong>CPU cores</strong></td>
+    <td><%= @request.cpu_cores %></td>
+  </tr>
 
-    <tr>
-      <td><strong>RAM in GB:</strong></td>
-      <td><%= @request.ram_gb %></td>
-    </tr>
+  <tr>
+    <td><strong>RAM in GB</strong></td>
+    <td><%= @request.ram_gb %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Storage in GB:</strong></td>
-      <td><%= @request.storage_gb %></td>
-    </tr>
+  <tr>
+    <td><strong>Storage in GB</strong></td>
+    <td><%= @request.storage_gb %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Operating System</strong></td>
-      <td><%= @request.operating_system %></td>
-    </tr>
+  <tr>
+    <td><strong>Operating System</strong></td>
+    <td><%= @request.operating_system %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Port</strong></td>
-      <td><%= @request.port %></td>
-    </tr>
+  <tr>
+    <td><strong>Port</strong></td>
+    <td><%= @request.port %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Application Name</strong></td>
-      <td><%= @request.application_name %></td>
-    </tr>
+  <tr>
+    <td><strong>Application Name</strong></td>
+    <td><%= @request.application_name %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Description</strong></td>
-      <td class="col-md-4"><%= @request.description %></td>
-    </tr>
+  <tr>
+    <td><strong>Description</strong></td>
+    <td class="col-md-4"><%= @request.description %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Comment</strong></td>
-      <td class="col-md-4"><%= @request.comment %></td>
-    </tr>
+  <tr>
+    <td><strong>Comment</strong></td>
+    <td class="col-md-4"><%= @request.comment %></td>
+  </tr>
 
-    <tr>
-      <td><strong>Status</strong></td>
-      <td><%= @request.status %></td>
-    </tr>
+  <tr>
+    <td><strong>Status</strong></td>
+    <td><%= @request.status %></td>
+  </tr>
 
+  <tr>
+    <td><strong>Responsible users</strong></td>
+    <td>
+      <% @request.responsible_users.each do |user| %>
+        <p><%= user.email %></p>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <td><strong>Users with sudo rights</strong></td>
+    <td>
+      <% @request.sudo_user_assignments.each do |assignment| %>
+        <p><%= assignment.user.email %></p>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <td><strong>Users</strong></td>
+    <td>
+      <% @request.non_sudo_user_assignments.each do |assignment| %>
+        <p><%= assignment.user.email %></p>
+      <% end %>
+    </td>
+  </tr>
+
+  <% if @request.rejected? %>
     <tr>
-      <td><strong>Responsible users</strong></td>
+      <td><strong>Rejection Information</strong></td>
       <td>
-        <% @request.responsible_users.each do |user| %>
-          <p><%= user.email %></p>
-        <% end %>
-      </td>
-    </tr>
-
-    <tr>
-      <td><strong>Users with sudo rights</strong></td>
+        <p><%= @request.rejection_information %><p>
       <td>
-        <% @request.sudo_user_assignments.each do |assignment| %>
-          <p><%= assignment.user.email %></p>
-        <% end %>
-      </td>
     </tr>
-
-    <tr>
-      <td><strong>Users</strong></td>
-      <td>
-        <% @request.non_sudo_user_assignments.each do |assignment| %>
-          <p><%= assignment.user.email %></p>
-        <% end %>
-      </td>
-    </tr>
+  <% end %>
 
   </tbody>
 </table>
 
-<% if @request.rejected? %>
-  <p>
-    <strong>Rejection Information:</strong>
-    <%= @request.rejection_information %>
-  </p>
-<% end %>
 
 <%= link_to 'Back', requests_path, class: "btn btn-secondary" %>
