@@ -50,8 +50,7 @@ class RequestsController < ApplicationController
   # PATCH/PUT /requests/1
   def update
     @request.assign_sudo_users(request_params[:sudo_user_ids])
-    @request.accept!
-    if @request.update(request_params)
+    if @request.accept!
       notify_request_update
       safe_create_vm_for @request
     else

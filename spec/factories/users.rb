@@ -11,7 +11,7 @@ FactoryBot.define do
     password_confirmation { password }
     first_name { 'Max' }
     last_name { 'Mustermann' }
-    ssh_key { SSHKey.generate.ssh_public_key }
+    ssh_key { SSHKey.generate(bits: 50).ssh_public_key }
     responsible_projects { [] }
   end
 

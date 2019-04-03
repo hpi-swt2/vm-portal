@@ -46,10 +46,12 @@ class Request < ApplicationRecord
 
   def accept!
     self.status = 'accepted'
+    self.save
   end
 
   def reject!
     self.status = 'rejected'
+    self.save
   end
 
   def assign_sudo_users(sudo_user_ids)

@@ -265,7 +265,7 @@ RSpec.describe RequestsController, type: :controller do
         end
 
         it 'updates the request' do
-          expect(the_request.name).to eq('mynewvm')
+          expect(the_request.reload.name).to eq(new_attributes[:name])
         end
 
         it 'redirects to the new VMS config' do

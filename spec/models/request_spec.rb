@@ -100,10 +100,15 @@ RSpec.describe Request, type: :model do
     let(:request) { FactoryBot.create :request }
     let(:user) { FactoryBot.create :user }
 
-    context 'when accepting a request' do
+    context 'when accepting or requesting a request' do
       it 'changes status to accepted' do
         request.accept!
-        expect(request.status).to eq('accepted')
+        expect(request.reload.status).to eq('accepted')
+      end
+
+      it 'changes status to rejected' do
+        request.reject!
+        expect(request.reload.status).to eq('rejected')
       end
     end
 
