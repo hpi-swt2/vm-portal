@@ -91,26 +91,15 @@ class RequestsController < ApplicationController
 
   private
 
-  def notice_for(vm, warning) # rubocop:disable Naming/UncommunicativeMethodParamName
-    if warning
-      { alert: warning }
-    elsif vm
-      { notice: 'VM was successfully created!' }
-    else
-      { alert: 'VM could not be created due to an unkown error! Please create it manually in vSphere' }
-    end
-  end
-
   def safe_create_vm_for(request)
     vm, warning = request.create_vm
-    notices = notice_for vm, warning
     if vm
-      redirect_to edit_config_path(vm.name), notices
+      redirect_to edit_config_path(vm.name), notice: 'VM was successfully created!'
     else
-      redirect_to requests_path, notices
+      redirect_to requests_path, alert: "Error while creating VM! #{warning || 'Please create it manually in vSphere'}"
     end
   rescue RbVmomi::Fault => fault
-    redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\""
+    redirect_to requests_path, alert: "Error while creating VM! #{fault.message}"
   end
 
   def host_url
