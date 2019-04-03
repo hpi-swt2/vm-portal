@@ -146,7 +146,7 @@ class RequestsController < ApplicationController
       params[:request][:user_ids] ||= []
       params[:request][:user_ids] += params[:request][:sudo_user_ids] if params[:request][:sudo_user_ids]
     end
-    
+
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment, :project_id, :port_forwarding,
                                     :rejection_information, responsible_user_ids: [],
