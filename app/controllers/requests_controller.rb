@@ -3,7 +3,7 @@
 class RequestsController < ApplicationController
   @@resource_name = Request.model_name.human.titlecase
 
-  before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
+  before_action :set_request, only: %i[show edit update push_to_git destroy]
   before_action :set_request_templates, only: %i[show new edit update create reject]
   before_action :authenticate_employee
 
@@ -62,6 +62,7 @@ class RequestsController < ApplicationController
     end
   end
 
+  # PATCH /requests/reject/1
   def reject
     @request = Request.find params[:id]
     @request.reject!
