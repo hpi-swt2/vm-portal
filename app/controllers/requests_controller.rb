@@ -46,19 +46,15 @@ class RequestsController < ApplicationController
   end
 
   # PATCH/PUT /requests/1
-  # PATCH/PUT /requests/1.json
   def update
-    respond_to do |format|
-      prepare_params
-      @request.assign_sudo_users(request_params[:sudo_user_ids])
-      @request.accept!
-      if @request.update(request_params)
-        notify_request_update
-        safe_create_vm_for format, @request
-      else
-        format.html { render :edit }
-        format.json { render json: @request.errors, status: :unprocessable_entity }
-      end
+    prepare_params
+    @request.assign_sudo_users(request_params[:sudo_user_ids])
+    @request.accept!
+    if @request.update(request_params)
+      notify_request_update
+      safe_create_vm_for @request
+    else
+      render :edit
     end
   end
 
@@ -101,16 +97,16 @@ class RequestsController < ApplicationController
     end
   end
 
-  def safe_create_vm_for(format, request)
+  def safe_create_vm_for(request)
     vm, warning = request.create_vm
     notices = notice_for vm, warning
     if vm
-      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices)) }
+      redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices))
     else
-      format.html { redirect_to requests_path, notices }
+      redirect_to requests_path, notices
     end
   rescue RbVmomi::Fault => fault
-    format.html { redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\"" }
+    redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\""
   end
 
   def host_url
