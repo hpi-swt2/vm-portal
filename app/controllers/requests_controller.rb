@@ -6,7 +6,6 @@ class RequestsController < ApplicationController
   before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :set_request_templates, only: %i[show new edit update create reject]
   before_action :authenticate_employee
-  before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
   def index
@@ -131,12 +130,6 @@ class RequestsController < ApplicationController
     ([@request.user] + @request.users + User.admin).uniq.each do |each|
       each.notify(title, message, link)
     end
-  end
-
-  def authenticate_state_change
-    @request = Request.find(params[:id])
-    authenticate_admin
-    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user && !current_user.admin?
   end
 
   def notify_request_update
