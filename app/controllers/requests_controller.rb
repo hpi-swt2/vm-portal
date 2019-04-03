@@ -30,12 +30,6 @@ class RequestsController < ApplicationController
     redirect_to @request unless @request.pending?
   end
 
-  def notify_users(title, message, link)
-    ([@request.user] + @request.users + User.admin).uniq.each do |each|
-      each.notify(title, message, link)
-    end
-  end
-
   # POST /requests
   def create
     prepare_params
@@ -131,6 +125,12 @@ class RequestsController < ApplicationController
 
   def set_request_templates
     @request_templates = RequestTemplate.all
+  end
+
+  def notify_users(title, message, link)
+    ([@request.user] + @request.users + User.admin).uniq.each do |each|
+      each.notify(title, message, link)
+    end
   end
 
   def authenticate_state_change
