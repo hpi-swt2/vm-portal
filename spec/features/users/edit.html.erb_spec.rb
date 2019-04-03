@@ -33,7 +33,7 @@ describe 'users/edit.html.erb', type: :feature do
       end
 
       it 'shows an error message' do
-        expect(page).to have_content('Invalid SSH-Key')
+        expect(page).to have_css '.alert-danger'
       end
 
       it 'does not let change the ssh key' do
