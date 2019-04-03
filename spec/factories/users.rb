@@ -11,7 +11,7 @@ FactoryBot.define do
     first_name { 'Max' }
     last_name { 'Mustermann' }
     # Dynamically generating SSH keys using the 'SSHKey' library is expensive
-    ssh_key { 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBBzYYubPSfjc6Q1zcZpzijq40QnPrjgOoXyNrzohREX0GOXe73g6/e4Atk/Y+MMOBO0tSOPrVHZT0BpPgtWvamJCjGW0+HmcSoa4XN/bsf2lsVtrDiUk4T+OxpipCIQEp+vizl+xscwTz4FCK5vFU+I97QFnzKrUmqqG4i2OEZ/Y8P3f7jedcRD9AZttU89WvOpmAm4DnFE1MvRr2gjyIIfuBBGI+tmIO4a+pZE8/xZlLuIFWQohUGtGCluhsn6QlYqy05dyqZNFlFfut7OxkgJmRxezIR42UgZcshh5LdiX7Vz5AsMlnJclr+lDWimTULYjF8FarVFJgchWoXFf9' }
+    ssh_key { 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAABwOmFJTGQfc=' }
     responsible_projects { [] }
   end
 
