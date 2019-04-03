@@ -36,13 +36,14 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
 
       context 'with a filled in rejection information field' do
         before do
-          page.fill_in 'request[rejection_information]', with: 'A rejection information'
+          @rejection_info = 'a reason why the VM request was rejected'
+          page.fill_in 'request[rejection_information]', with: @rejection_info
           click_button('rejectButton')
         end
 
         it 'saves the rejection information' do
           request.reload
-          expect(request.rejection_information).to eq('A rejection information')
+          expect(request.rejection_information).to eq(@rejection_info)
         end
 
         it 'redirects to the requests path' do
