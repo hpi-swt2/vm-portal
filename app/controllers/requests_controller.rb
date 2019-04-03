@@ -4,6 +4,7 @@ class RequestsController < ApplicationController
   @@resource_name = Request.model_name.human.titlecase
 
   before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
+  before_action :set_request_templates, only: %i[show new edit update create reject]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
 
@@ -16,19 +17,16 @@ class RequestsController < ApplicationController
   # GET /requests/1
   def show
     redirect_to edit_request_path(@request) if current_user.admin? && @request.pending?
-    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/new
   def new
     @request = Request.new
-    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/1/edit
   def edit
     redirect_to @request unless @request.pending?
-    @request_templates = RequestTemplate.all
   end
 
   def notify_users(title, message, link)
@@ -49,7 +47,6 @@ class RequestsController < ApplicationController
       notify_users('New VM request', @request.description_text, @request.description_url(host_url))
       redirect_to requests_path, notice: t('flash.create.notice', resource: @@resource_name, model: @request.name)
     else
-      @request_templates = RequestTemplate.all
       render :new
     end
   end
@@ -65,7 +62,6 @@ class RequestsController < ApplicationController
         notify_request_update
         safe_create_vm_for format, @request
       else
-        @request_templates = RequestTemplate.all
         format.html { render :edit }
         format.json { render json: @request.errors, status: :unprocessable_entity }
       end
@@ -79,7 +75,6 @@ class RequestsController < ApplicationController
       notify_request_update
       redirect_to requests_path, notice: "Request '#{@request.name}' rejected!"
     else
-      @request_templates = RequestTemplate.all
       render :edit
     end
   end
@@ -131,6 +126,10 @@ class RequestsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_request
     @request = Request.find(params[:id])
+  end
+
+  def set_request_templates
+    @request_templates = RequestTemplate.all
   end
 
   def authenticate_state_change
