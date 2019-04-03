@@ -6,14 +6,12 @@ class RequestsController < ApplicationController
   before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
-  # GET /requests.json
   def index
     requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
     split_requests(requests)
   end
 
   # GET /requests/1
-  # GET /requests/1.json
   def show
     redirect_to edit_request_path(@request) if current_user.admin? && @request.pending?
     @request_templates = RequestTemplate.all
@@ -38,7 +36,6 @@ class RequestsController < ApplicationController
   end
 
   # POST /requests
-  # POST /requests.json
   def create
     prepare_params
 
@@ -48,9 +45,13 @@ class RequestsController < ApplicationController
       # check for validity first, before checking enough_resources?
       # this is neccessary to ensure that the request contains all information needed for enough_resources?
       if @request.valid? && enough_resources? && @request.save
-        successful_save(format)
+        notify_users('New VM request', @request.description_text, @request.description_url(host_url))
+        format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
+        format.json { render :show, status: :created, location: @request }
       else
-        unsuccessful_action(format, :new)
+        @request_templates = RequestTemplate.all
+        format.html { render :new }
+        format.json { render json: @request.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -66,7 +67,9 @@ class RequestsController < ApplicationController
         notify_request_update
         safe_create_vm_for format, @request
       else
-        unsuccessful_action format, :edit
+        @request_templates = RequestTemplate.all
+        format.html { render :edit }
+        format.json { render json: @request.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -80,7 +83,9 @@ class RequestsController < ApplicationController
         format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
         format.json { render status: :ok, action: :index }
       else
-        unsuccessful_action format, :edit
+        @request_templates = RequestTemplate.all
+        format.html { render :edit }
+        format.json { render json: @request.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -156,18 +161,6 @@ class RequestsController < ApplicationController
       message += @request.rejection_information.empty? ? '' : "\nwith comment: #{@request.rejection_information}"
       notify_users('VM request has been rejected', message, @request.description_url(host_url))
     end
-  end
-
-  def successful_save(format)
-    notify_users('New VM request', @request.description_text, @request.description_url(host_url))
-    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-    format.json { render :show, status: :created, location: @request }
-  end
-
-  def unsuccessful_action(format, method)
-    @request_templates = RequestTemplate.all
-    format.html { render method }
-    format.json { render json: @request.errors, status: :unprocessable_entity }
   end
 
   # Storage and RAM are displayed in GB but internally stored in MB.
