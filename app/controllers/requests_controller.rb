@@ -9,7 +9,11 @@ class RequestsController < ApplicationController
 
   # GET /requests
   def index
-    requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
+    if current_user.admin?
+      requests = Request.all
+    else
+      requests = Request.where(user: current_user)
+    end
     @pending_requests = requests.select(&:pending?)
     @resolved_requests = requests.reject(&:pending?)
   end
