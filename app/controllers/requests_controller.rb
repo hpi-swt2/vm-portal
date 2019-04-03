@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
+  @@resource_name = Request.model_name.human.titlecase
+
   before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
   before_action :authenticate_employee
   before_action :authenticate_state_change, only: %i[request_change_state]
@@ -87,13 +89,13 @@ class RequestsController < ApplicationController
   end
 
   # DELETE /requests/1
-  # DELETE /requests/1.json
   def destroy
-    @request.destroy
-    respond_to do |format|
-      format.html { redirect_to requests_url, notice: 'Request was successfully destroyed.' }
-      format.json { head :no_content }
+    if @request.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @request.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @request.name)
     end
+    redirect_to requests_url, notice: notice, alert: alert
   end
 
   # Creates puppet files for request and pushes the created files into a git repository
