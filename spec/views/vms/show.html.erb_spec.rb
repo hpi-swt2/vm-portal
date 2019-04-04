@@ -34,7 +34,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
   end
 
   it 'shows status when online' do
-    expect(rendered).to include 'online'
+    expect(rendered).to include vm_on.status.to_s
   end
 
   it 'shows vm OS' do
@@ -87,14 +87,17 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     end
 
     it 'shows status' do
-      expect(rendered).to include 'offline'
+      expect(rendered).to include vm_on.status.to_s
     end
   end
 
   context 'when the current user is not a root user' do
     it 'does not have any links to manage power state' do
-      expect(rendered).not_to have_link 'Power On'
-      expect(rendered).not_to have_link 'Power Off'
+      expect(rendered).not_to have_link href: change_power_state_vm_path(vm_off.name)
+    end
+
+    it 'does not have links to Puppet Scripts on GitHub' do
+      expect(rendered).to_not have_css 'a[href*="github.com"]'
     end
   end
 
@@ -103,11 +106,15 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
     context 'when powered on' do
       it 'has power off links' do
-        expect(rendered).to have_link 'Suspend VM'
-        expect(rendered).to have_link 'Shutdown Guest OS'
-        expect(rendered).to have_link 'Restart Guest OS'
-        expect(rendered).to have_link 'Reset'
-        expect(rendered).to have_link 'Power Off'
+        expect(rendered).to have_link href: suspend_vm_vm_path(vm_on.name)
+        expect(rendered).to have_link href: shutdown_guest_os_vm_path(vm_on.name)
+        expect(rendered).to have_link href: reboot_guest_os_vm_path(vm_on.name)
+        expect(rendered).to have_link href: reset_vm_vm_path(vm_on.name)
+        expect(rendered).to have_link 'Power Off', href: change_power_state_vm_path(vm_on.name)
+      end
+
+      it 'has links to Puppet Scripts on GitHub' do
+        expect(rendered).to have_css 'a[href*="github.com"]', minimum: 1
       end
     end
 
@@ -118,7 +125,7 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'has power on link' do
-        expect(rendered).to have_link('Power On')
+        expect(rendered).to have_link 'Power On', href: change_power_state_vm_path(vm_off.name)
       end
     end
   end
@@ -130,34 +137,28 @@ RSpec.describe 'vms/show.html.erb', type: :view do
     end
 
     it 'has a link to edit information' do
-      expect(rendered).to have_link 'Edit'
+      expect(rendered).to have_link href: edit_vm_path(vm_on.name)
     end
 
     context 'when powered on' do
       it 'has power off links' do
-        expect(rendered).to have_link 'Suspend VM'
-        expect(rendered).to have_link 'Shutdown Guest OS'
-        expect(rendered).to have_link 'Restart Guest OS'
-        expect(rendered).to have_link 'Reset'
-        expect(rendered).to have_link 'Power Off'
+        expect(rendered).to have_link href: suspend_vm_vm_path(vm_on.name)
+        expect(rendered).to have_link href: shutdown_guest_os_vm_path(vm_on.name)
+        expect(rendered).to have_link href: reboot_guest_os_vm_path(vm_on.name)
+        expect(rendered).to have_link href: reset_vm_vm_path(vm_on.name)
+        expect(rendered).to have_link 'Power Off', href: change_power_state_vm_path(vm_on.name)
       end
 
       it 'demands confirmation on critical actions' do
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on.name)}'][data-confirm='Are you sure?']")
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'shutdown_guest_os', id: vm_on.name)}'][data-confirm='Are you sure?']"
-        )
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms,
-                                                             action: 'reboot_guest_os',
-                                                             id: vm_on.name)}'][data-confirm='Are you sure?']")
-        expect(rendered).to have_selector("a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on.name)}'][data-confirm='Are you sure?']")
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on.name)}'][data-confirm='Are you sure?']"
-        )
+        expect(rendered).to have_selector("a[href='#{suspend_vm_vm_path(vm_on.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{shutdown_guest_os_vm_path(vm_on.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{reboot_guest_os_vm_path(vm_on.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{reset_vm_vm_path(vm_on.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{change_power_state_vm_path(vm_on.name)}'][data-confirm]")
       end
 
       it 'has no power on link' do
-        expect(rendered).not_to have_link 'Power On'
+        expect(rendered).to_not have_link 'Power On', href: change_power_state_vm_path(vm_on.name)
       end
     end
 
@@ -168,16 +169,16 @@ RSpec.describe 'vms/show.html.erb', type: :view do
       end
 
       it 'has power on link' do
-        expect(rendered).to have_link('Power On')
+        expect(rendered).to have_link 'Power On', href: change_power_state_vm_path(vm_off.name)
       end
 
       it 'has no power off links' do
         rendered = render
-        expect(rendered).not_to have_link 'Suspend VM'
-        expect(rendered).not_to have_link 'Shutdown Guest OS'
-        expect(rendered).not_to have_link 'Restart Guest OS'
-        expect(rendered).not_to have_link 'Reset'
-        expect(rendered).not_to have_link 'Power Off'
+        expect(rendered).to_not have_link href: suspend_vm_vm_path(vm_off.name)
+        expect(rendered).to_not have_link href: shutdown_guest_os_vm_path(vm_off.name)
+        expect(rendered).to_not have_link href: reboot_guest_os_vm_path(vm_off.name)
+        expect(rendered).to_not have_link href: reset_vm_vm_path(vm_off.name)
+        expect(rendered).to_not have_link 'Power Off', href: change_power_state_vm_path(vm_off.name)
       end
     end
 
@@ -189,33 +190,17 @@ RSpec.describe 'vms/show.html.erb', type: :view do
 
       it 'displays info that they are not installed' do
         rendered = render
-        expect(rendered).not_to have_link 'Shutdown Guest OS'
-        expect(rendered).not_to have_link 'Restart Guest OS'
-        expect(rendered).to have_link 'Suspend VM'
-        expect(rendered).to have_link 'Reset'
-        expect(rendered).to have_link 'Power Off'
+        expect(rendered).to_not have_link href: shutdown_guest_os_vm_path(vm_on_without_tools.name)
+        expect(rendered).to_not have_link href: reboot_guest_os_vm_path(vm_on_without_tools.name)
+        expect(rendered).to have_link href: suspend_vm_vm_path(vm_on_without_tools.name)
+        expect(rendered).to have_link href: reset_vm_vm_path(vm_on_without_tools.name)
+        expect(rendered).to have_link 'Power Off', href: change_power_state_vm_path(vm_on_without_tools.name)
       end
 
       it 'demands confirmation on critical actions' do
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'suspend_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-        )
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'reset_vm', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-        )
-        expect(rendered).to have_selector(
-          "a[href='#{url_for(controller: :vms, action: 'change_power_state', id: vm_on_without_tools.name)}'][data-confirm='Are you sure?']"
-        )
-      end
-    end
-
-    context 'when vm_are_tools are installed' do
-      it 'displays info' do
-        expect(rendered).to have_link 'Suspend VM'
-        expect(rendered).to have_link 'Shutdown Guest OS'
-        expect(rendered).to have_link 'Restart Guest OS'
-        expect(rendered).to have_link 'Reset'
-        expect(rendered).to have_link 'Power Off'
+        expect(rendered).to have_selector("a[href='#{suspend_vm_vm_path(vm_on_without_tools.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{reset_vm_vm_path(vm_on_without_tools.name)}'][data-confirm]")
+        expect(rendered).to have_selector("a[href='#{change_power_state_vm_path(vm_on_without_tools.name)}'][data-confirm]")
       end
     end
   end
