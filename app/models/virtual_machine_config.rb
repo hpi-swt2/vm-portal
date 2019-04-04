@@ -28,13 +28,13 @@ class VirtualMachineConfig < ApplicationRecord
 
     @sudo_users
   end
-  
+
   def users
     read_users if @users.nil?
-    
+
     @users
   end
-  
+
   def all_users
     (users + sudo_users + responsible_users).uniq
   end
