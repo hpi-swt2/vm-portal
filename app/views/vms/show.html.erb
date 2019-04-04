@@ -116,7 +116,18 @@ end %>
     <table class="table table-borderless" style="width: 100%">
       <tbody class="table-active">
         <tr>
-          <th colspan="2" ><h4 class="mb-0">Users</h4></th>
+          <th colspan="2" >
+            <h4 class="mb-0">
+              Users 
+              <%# Button that shows the Puppet Script modal %>
+              <% if @vm.config.present? && current_user.admin? %>
+                <button class="btn btn-sm btn-secondary text-white float-right"
+                  data-toggle="modal" title="Show Puppet Scripts" data-target="#puppetscript">
+                  <%= fa_icon('code') %>
+                </button>
+              <% end %>
+            </h4>
+          </th>
         </tr>
         <% (@vm.users + @vm.sudo_users + @vm.responsible_users).uniq.each do |user| %>
         <tr>
@@ -137,9 +148,6 @@ end %>
 </div>
 
 <% if @vm.config.present? && current_user.admin? %>
-  <button type="button" class="btn btn-primary text-white" data-toggle="modal" title="Show Puppet Scripts" data-target="#puppetscript">
-    <%= fa_icon('code') %>
-  </button>
   <div class="modal fade" id="puppetscript" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -154,7 +162,7 @@ end %>
             <div class="card-header">
               Generated Node Script
               <small>
-                <%= link_to "File in '#{AppSetting.instance.git_repository_name}' repository",
+                <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
                   AppSetting.instance.github_base_file_url + Puppetscript.node_file_name(@vm.name) %>
               </small>
               </div>
@@ -166,7 +174,7 @@ end %>
             <div class="card-header">
               Generated Name Script
               <small>
-                <%= link_to "File in '#{AppSetting.instance.git_repository_name}' repository",
+                <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
                   AppSetting.instance.github_base_file_url + Puppetscript.class_file_name(@vm.name) %>
               </small>
             </div><%# card-header %>
