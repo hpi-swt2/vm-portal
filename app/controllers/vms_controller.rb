@@ -19,9 +19,7 @@ class VmsController < ApplicationController
     filter_vm_categories current_user unless current_user.admin?
   end
 
-  def show
-    @vm_config = VirtualMachineConfig.find_by_name params[:id]
-  end
+  def show; end
 
   def edit_config
     @vm.ensure_config
