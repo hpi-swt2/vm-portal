@@ -5,6 +5,12 @@
     title: 'New VM request',
     :data => { toggle: 'tooltip', placement: 'bottom' },
     class: "btn btn-primary float-right mt-3" %>
+    <% if current_user.admin? %>
+      <%= link_to "Templates", request_templates_path,
+        class: "btn btn-primary float-right mt-3 mr-3" %>
+      <%= link_to 'Operating Systems', operating_systems_path,
+        class: 'btn btn-primary float-right mt-3 mr-3' %>
+    <% end %>
 </div>
 
 <h2 id="pending">Pending requests</h2>
