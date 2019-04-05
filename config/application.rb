@@ -20,6 +20,10 @@ module VmPortal
     # set correct formatter for better error handling
     config.log_formatter = HartFormatter.new
 
+    # Use normal JS (default), not coffeescript
+    # https://guides.rubyonrails.org/configuring.html#configuring-generators
+    config.generators.javascript_engine = :js
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
