@@ -148,51 +148,37 @@ end %>
 </div>
 
 <% if @vm.config.present? && current_user.admin? %>
-  <%# Render content in location defined in app/views/layouts/application.html.erb %>
-  <% content_for :modals do %>
-    <%# Modal for Puppet Script display %>
-    <div class="modal fade" id="puppetscript" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="puppet-scriptTite">Puppet Scripts</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="card">
-              <div class="card-header">
-                Generated Node Script
-                <small>
-                  <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
-                    AppSetting.instance.github_base_file_url + Puppetscript.node_file_name(@vm.name) %>
-                </small>
-                </div>
-              <div class="card-body">
-                <pre class="mb-0"><%= @vm.config.node_script %></pre>
-              </div>
-            </div><%# card %>
-            <div class="card mt-4">
-              <div class="card-header">
-                Generated Name Script
-                <small>
-                  <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
-                    AppSetting.instance.github_base_file_url + Puppetscript.class_file_name(@vm.name) %>
-                </small>
-              </div><%# card-header %>
-              <div class="card-body">
-                <pre class="mb-0"><%= Puppetscript.name_script @vm.name %></pre>
-              </div>
-            </div><%# card %>
-          </div>
-          <div class="modal-footer">
-            <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
+  <%# Modal for Puppet Script display %>
+  <%= render 'application/modal', {title: 'Puppet Scripts', id: 'puppetscript', dialog_class: 'modal-lg'} do %>
+    <%# Main body of modal gets rendered into unnamed yield %>
+    <div class="card">
+      <div class="card-header">
+        Generated Node Script
+        <small>
+          <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
+            AppSetting.instance.github_base_file_url + Puppetscript.node_file_name(@vm.name) %>
+        </small>
       </div>
-    </div>
-  <% end %><%# content_for :modals %>
+      <div class="card-body">
+        <pre class="mb-0"><%= @vm.config.node_script %></pre>
+      </div>
+    </div><%# card %>
+    <div class="card mt-4">
+      <div class="card-header">
+        Generated Name Script
+        <small>
+          <%= link_to "File in '#{AppSetting.instance.git_repository_name}' GitHub repository",
+            AppSetting.instance.github_base_file_url + Puppetscript.class_file_name(@vm.name) %>
+        </small>
+      </div><%# card-header %>
+      <div class="card-body">
+        <pre class="mb-0"><%= Puppetscript.name_script @vm.name %></pre>
+      </div>
+    </div><%# card %>
+    <%# Additonal content in the modal footer %>
+    <% content_for :footer do %>
+      <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
+    <% end %><%# content_for :footer %>
+  <% end %>
 <% end %>
 
