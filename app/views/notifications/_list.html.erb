@@ -18,6 +18,7 @@
         <%# Notification title %>
         <h5 class="card-title">
           <%= link_to notification.title, mark_as_read_and_redirect_notification_path(notification) %>
+          <%= ' (' + notification.count.to_s + ' times)' if notification.count > 1 %>
           <%= fa_icon('exclamation-triangle') if notification.error? %>
           <br>
           <span class="small">

@@ -20,4 +20,15 @@ describe HartFormatter do
       Rails.logger.info('My Info')
     end.not_to change(Notification, :count)
   end
+
+  it 'does not notify admins multiple times when the same error occurs' do
+    expect do
+      3.times { Rails.logger.error('My Error') }
+    end.to change(Notification, :count).by(User.admin.size)
+  end
+
+  it 'sets the notification count correctly' do
+    3.times { Rails.logger.error('My Error') }
+    expect(Notification.all.first.count).to be == 3
+  end
 end

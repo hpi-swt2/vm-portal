@@ -114,4 +114,38 @@ RSpec.describe User, type: :model do
       expect(user2.user_id).to be > user.user_id
     end
   end
+
+  describe 'notifying the user' do
+    let(:user) { FactoryBot.create :user }
+
+    def notify_user
+      user.notify 'my notification', 'some message', 'https://www.google.com/'
+    end
+
+    it 'creates a notification object' do
+      expect { notify_user }.to change(Notification, :count).by(1)
+    end
+
+    it 'notifies slack' do
+      allow(user).to receive(:notify_slack)
+      notify_user
+      expect(user).to have_received(:notify_slack)
+    end
+
+    it 'does not create multiple duplicate notifications' do
+      3.times { notify_user }
+      expect(user.notifications.size).to be == 1
+    end
+
+    it 'sets the count of duplicate notifications correctly' do
+      4.times { notify_user }
+      expect(user.notifications.first.count).to be == 4
+    end
+
+    it 'does not notify slack for duplicate notifiations' do
+      allow(user).to receive(:notify_slack)
+      3.times { notify_user }
+      expect(user).to have_received(:notify_slack).once
+    end
+  end
 end

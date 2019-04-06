@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
   has_many :servers
+  has_many :notifications
   has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -52,15 +53,16 @@ class User < ApplicationRecord
 
   # notifications
   def notify(title, message, link = '', type: :default)
-    notify_slack("*#{title}*\n#{message}\n#{link}")
+    last_notification = notifications.first
+    notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link
 
-    NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
-
-    notification = Notification.new title: title, message: message, notification_type: type
-    notification.user_id = id
-    notification.read = false
-    notification.link = link
-    notification.save # saving might fail, but there is no useful way to handle the error.
+    if last_notification == notification
+      last_notification.update(count: last_notification.count + 1)
+    else
+      notify_slack("*#{title}*\n#{message}\n#{link}")
+      NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
+      notification.save # saving might fail, but there is no useful way to handle the error.
+    end
   end
 
   after_initialize :set_default_role, if: :new_record?
