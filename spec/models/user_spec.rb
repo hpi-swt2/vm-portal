@@ -147,5 +147,12 @@ RSpec.describe User, type: :model do
       3.times { notify_user }
       expect(user).to have_received(:notify_slack).once
     end
+
+    it 'does create notifications if the duplicates are one minute apart' do
+      notify_user
+      new_time = Time.now + 61 # seconds
+      allow(Time).to receive(:now).and_return new_time
+      expect { notify_user }.to change(Notification, :count).by(1)
+    end
   end
 end
