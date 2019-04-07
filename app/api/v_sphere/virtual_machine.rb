@@ -88,13 +88,16 @@ module VSphere
       vms
     end
 
-    def initialize(rbvmomi_vm, folder: nil)
+    def initialize(rbvmomi_vm, folder: nil, name: nil)
       @vm = rbvmomi_vm
       @folder = folder
+      @name = name
     end
 
     # handles name format YYYYMMDD_vm-name
     def name
+      return @name unless @name.nil?
+
       @vsphere_name ||= @vm.name
       if /^\d{8}_vm-/.match? @vsphere_name
         @vsphere_name[12..-1]
@@ -182,11 +185,11 @@ module VSphere
     # Therefore we can check those folders to receive the current VM state
     # Archiving then moves a VM into the corresponding folder
     def pending_archivation?
-      has_ancestor_folder pending_archivation_folder
+      has_ancestor_folder 'Pending archivings'
     end
 
     def archived?
-      has_ancestor_folder archived_folder
+      has_ancestor_folder 'Archived VMs'
     end
 
     def set_pending_archivation
@@ -218,7 +221,7 @@ module VSphere
 
     # Reviving
     def pending_reviving?
-      has_ancestor_folder pending_revivings_folder
+      has_ancestor_folder 'Pending revivings'
     end
 
     def set_pending_reviving
@@ -367,14 +370,16 @@ module VSphere
       ArchivationRequest.find_by_name(name)
     end
 
-    def has_ancestor_folder(ancestor_folder)
+    def has_ancestor_folder(ancestor_folder_name)
       folder = parent_folder
-      until folder.equal?(ancestor_folder)
-        if folder.nil? || folder.equal?(root_folder)
+      return false if folder.nil?
+
+      until folder.name == ancestor_folder_name
+        folder = folder.parent lookup: false
+
+        if folder.nil?
           return false
         end
-
-        folder = folder.parent
       end
 
       true

@@ -11,13 +11,14 @@ module VSphere
     # see: https://code.vmware.com/apis/196/vsphere#/doc/vim.Folder.html#createFolder
     VSPHERE_FOLDER_NAME_CHARACTER_LIMIT = 79
 
-    def initialize(rbvmomi_folder, parent: nil)
+    def initialize(rbvmomi_folder, parent: nil, name: nil)
       @folder = rbvmomi_folder
       @parent = parent
+      @folder_name = name
     end
 
-    def parent
-      if @parent.nil?
+    def parent(lookup: true)
+      if @parent.nil? && lookup
         parent = @folder.parent
         parent.nil? ? nil : VSphere::Folder.new(parent)
       else
@@ -66,7 +67,7 @@ module VSphere
     # folder_name is a string with the name of the subfolder
     def ensure_subfolder(folder_name)
       subfolder = subfolders.find { |each| each.name == folder_name }
-      subfolder || VSphere::Folder.new(@folder.CreateFolder(name: folder_name))
+      subfolder || VSphere::Folder.new(@folder.CreateFolder(name: folder_name), parent: self, name: folder_name)
     end
 
     # Ensure that the path relative to this folder is a valid folder and return it
