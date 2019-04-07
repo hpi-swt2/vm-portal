@@ -1,4 +1,3 @@
-<% RubyProf.start %>
 <table data-toggle="datatable" class="table" id=<%= id %> <%= datatable_options.map{ |k,v| "data-#{k}=#{v}" }.join(' ') %>>
   <thead>
   <tr>
@@ -50,10 +49,3 @@
     <% end %> <%# vms.each %>
   </tbody>
 </table>
-
-<%
-  results = RubyProf.stop
-  printer = RubyProf::CallStackPrinter.new(results)
-  # to save results to tmp/profile_data.html
-  File.open("tmp/profile_data.html", 'w') { |file| printer.print(file) }
-%>

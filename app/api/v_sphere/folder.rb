@@ -94,7 +94,7 @@ module VSphere
       VSphere::VirtualMachine.new vm, folder: self
     end
 
-    def equal?(other)
+    def eql?(other)
       (other.is_a? VSphere::Folder) && other.name == name
     end
 
