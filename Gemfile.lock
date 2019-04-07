@@ -9,14 +9,6 @@ GIT
       rake
 
 GIT
-  remote: https://github.com/stympy/faker.git
-  revision: acd8a719efc6af27a8bf9ca76277c350ec6b3865
-  branch: master
-  specs:
-    faker (1.9.3)
-      i18n (>= 0.7)
-
-GIT
   remote: https://github.com/untitledkingdom/mina-puma.git
   revision: 581a2048d82998328a5c9581a45883e0f3b28d06
   specs:
@@ -74,8 +66,6 @@ GEM
     airbrake (5.8.1)
       airbrake-ruby (~> 1.8)
     airbrake-ruby (1.8.0)
-    archive-zip (0.11.0)
-      io-like (~> 0.3.0)
     arel (9.0.0)
     ast (2.4.0)
     attr_required (1.0.1)
@@ -96,6 +86,9 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bootstrap_form (4.2.0)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     builder (3.2.3)
     byebug (10.0.2)
     callsite (0.0.11)
@@ -107,20 +100,8 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.2)
       xpath (~> 3.2)
-    childprocess (0.9.0)
-      ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (2.1.0)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
     clipboard-rails (1.7.1)
     coderay (1.1.2)
-    coffee-rails (4.2.2)
-      coffee-script (>= 2.2.0)
-      railties (>= 4.0.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     coveralls (0.8.22)
       json (>= 1.8, < 3)
@@ -148,6 +129,8 @@ GEM
     factory_bot_rails (5.0.1)
       factory_bot (~> 5.0.0)
       railties (>= 4.2.0)
+    faker (1.9.3)
+      i18n (>= 0.7)
     ffi (1.9.25)
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
@@ -168,7 +151,6 @@ GEM
     httpclient (2.8.3)
     i18n (1.5.3)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     jaro_winkler (1.5.2)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -341,7 +323,6 @@ GEM
     ruby-prof (0.17.0)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
-    rubyzip (1.2.2)
     sassc (2.0.0)
       ffi (~> 1.9.6)
       rake
@@ -353,9 +334,6 @@ GEM
       tilt
     select2-rails (4.0.3)
       thor (~> 0.14)
-    selenium-webdriver (3.141.0)
-      childprocess (~> 0.5)
-      rubyzip (~> 1.2, >= 1.2.2)
     shellany (0.0.1)
     shoulda-matchers (4.0.0.rc1)
       activesupport (>= 4.2.0)
@@ -429,18 +407,17 @@ DEPENDENCIES
   binding_of_caller
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.3.1)
+  bootstrap_form (>= 4.2.0)
   byebug
   capybara (>= 2.15)
-  chromedriver-helper
   clipboard-rails
-  coffee-rails (~> 4.2)
   coveralls
   devise
   devise-bootstrap-views (~> 1.0)
   devise-i18n
   execjs
   factory_bot_rails
-  faker!
+  faker
   font-awesome-rails
   git
   guard
@@ -470,7 +447,6 @@ DEPENDENCIES
   ruby-prof
   sassc-rails
   select2-rails
-  selenium-webdriver
   shoulda-matchers (= 4.0.0.rc1)
   simplecov
   spring

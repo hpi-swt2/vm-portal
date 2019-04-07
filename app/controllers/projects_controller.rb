@@ -1,60 +1,68 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  @@resource_name = Project.model_name.human.titlecase
+
   before_action :authenticate_employee, only: %i[new create]
   before_action :authenticate_responsible_user, only: %i[edit update destroy]
+  before_action :set_project, only: %i[show edit update destroy]
 
+  # GET /projects
   def index
     @projects = Project.all
   end
 
   # GET /projects/1
-  # GET /projects/1.json
-  def show
-    @project = Project.find(params[:id])
-  end
+  def show; end
 
   # GET /projects/new
   def new
     @project = Project.new
-    @selected_user_ids = [current_user.id]
   end
 
-  # POST /requests.json
+  # POST /projects
   def create
     @project = Project.new(project_params)
     if @project.save
-      redirect_to action: :index
+      redirect_to @project, notice: t('flash.create.notice', resource: @@resource_name, model: @project.name)
       @project.responsible_users.each do |each|
         each.notify('Project created',
                     "The project #{@project.name} with you as the responsible has been created.",
                     url_for(controller: :projects, action: 'show', id: @project.id))
       end
     else
-      @selected_user_ids = project_params[:responsible_user_ids]
       render :new
     end
   end
 
-  def edit
-    @project = Project.find(params[:id])
-  end
+  # GET /projects/1/edit
+  def edit; end
 
+  # PATCH/PUT /projects/1
   def update
-    @project = Project.find(params[:id])
     if @project.update(project_params)
-      redirect_to action: :show
+      redirect_to @project, notice: t('flash.update.notice', resource: @@resource_name, model: @project.name)
     else
       render :edit
     end
   end
 
+  # DELETE /projects/1
   def destroy
-    @project.destroy
-    redirect_back fallback_location: projects_url, notice: 'Project was successfully deleted.'
+    if @project.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @project.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @project.name)
+    end
+    redirect_to projects_path, notice: notice, alert: alert
   end
 
   private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_project
+    @project = Project.find(params[:id])
+  end
 
   def authenticate_responsible_user
     @project = Project.find(params[:id])

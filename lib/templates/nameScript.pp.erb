@@ -1,5 +1,5 @@
 node '<%= name %>' {
-  if defined( node_<%= name %> ) {
-    class { node_<%= name %>: }
+  if defined( node_<%= replace_dashes_with_underscores name %> ) {
+    class { node_<%= replace_dashes_with_underscores name %>: }
   }
 }

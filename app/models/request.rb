@@ -20,7 +20,7 @@ class Request < ApplicationRecord
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
   validate :name_uniqueness
-  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
+  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :description, presence: true
   validates_with VmValidator
 
   with_options if: :port_forwarding do |request|
