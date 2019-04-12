@@ -83,7 +83,7 @@ class VirtualMachineConfig < ApplicationRecord
     git_writer.save(message)
   end
 
-  def _save_users
+  def save_users
     GitHelper.open_git_repository for_write: true do |git_writer|
       name_script = Puppetscript.name_script name
       write_puppetscripts git_writer, name_script, node_script
@@ -93,9 +93,5 @@ class VirtualMachineConfig < ApplicationRecord
     # update local user assignments again to reflect the written status (if available)
     @users = @sudo_users = nil
     read_users
-  end
-
-  def save_users
-    _save_users if @users || @sudo_users
   end
 end
