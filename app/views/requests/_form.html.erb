@@ -16,7 +16,7 @@
         <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
         <%= form.collection_select :project_id, Project.all, :id, :name,
           options = {selected: form.object.project_id, include_blank: t('blank_text'), label: 'Project *'},
-          html_options = {class: 'selecttwo'} %>
+          html_options = {} %>
         <%= form.collection_select :responsible_user_ids, User.all, :id, :human_readable_identifier,
           options = {selected: @request.responsible_users.collect(&:id),
                     label: 'Responsible Users *',
