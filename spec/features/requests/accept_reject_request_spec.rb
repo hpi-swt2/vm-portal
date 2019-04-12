@@ -46,6 +46,11 @@ RSpec.describe 'accepting and rejecting requests', type: :feature do
           expect(request.rejection_information).to eq(@rejection_info)
         end
 
+        it 'shows the rejection information' do
+          request.reload
+          expect(page).to have_text(@rejection_info)
+        end
+
         it 'redirects to the requests path' do
           expect(page).to have_current_path(requests_path)
         end
