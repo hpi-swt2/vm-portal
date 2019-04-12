@@ -6,6 +6,7 @@ require 'resolv'
 
 class Server < ApplicationRecord
   belongs_to :responsible, class_name: :User
+
   validates :name, :cpu_cores, :ram_gb, :storage_gb, :mac_address, :fqdn, :responsible_id, presence: true
   validates :ipv4_address, presence: { unless: :ipv6_address? }
   validates :ipv6_address, presence: { unless: :ipv4_address? }
@@ -17,8 +18,9 @@ class Server < ApplicationRecord
 
   MAX_NAME_LENGTH = 20
   validates :name,
-            length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
-            format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
+            uniqueness: true,
+            length: { minimum: 1 },
+            format: { with: /\A[a-zA-Z0-9\-]+\z/, message: 'only allows letters, numbers and "-"' }
   validates :ipv4_address, format: {
     with: Resolv::IPv4::Regex,
     message: 'is not a valid IPv4 address'
