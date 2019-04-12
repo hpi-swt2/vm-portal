@@ -3,97 +3,97 @@
   <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
   <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-  <div class="container-fluid mt-4">
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>General Information</h5>
-        Please enter a short description of the Server and how you are planning to use it.
-      </div>
-      <div class="col-6">
-        <%= form.text_field :name %>
-        <%= form.text_area :description %>
-        <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
-      </div>
+  <div class="row border-bottom mb-4 pb-4">
+    <div class="col">
+      <h5>General Information</h5>
+      Please enter a short description of the Server and how you are planning to use it.
     </div>
-
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>User</h5>
-        Enter all users that need access to this server. If you can't find a user, that is most likely because they have
-        never logged into the HART system. Ask them to log in once so they are added to our list. You will be able to
-        change which users have access to your server at a later date. Make sure to enter yourself in the user list if you
-        need access.
-      </div>
-      <div class="col-6">
-        <%= form.collection_select :responsible_id, User.all, :id, :human_readable_identifier,
-          options = {selected: server.responsible_users.collect(&:id)},
-          html_options = {multiple: false, class: 'selecttwo'} %>
-
-        <%= form.collection_select :sudo_user_ids, User.all, :id, :human_readable_identifier,
-                                   options = {selected: server.sudo_users.collect(&:id),
-                                              label: 'Users with sudo rights',
-                                              help: 'All responsible users will automatically be users with sudo rights.'},
-                                   html_options = {class: 'selecttwo', multiple: true} %>
-        <%= form.collection_select :user_ids, User.all, :id, :human_readable_identifier,
-                                   options = {selected: server.users.collect(&:id),
-                                              label: 'Regular users'},
-                                   html_options = {class: 'selecttwo', multiple: true} %>
-      </div>
+    <div class="col-6">
+      <%= form.text_field :name %>
+      <%= form.text_area :description %>
+      <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
     </div>
-
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>Hardware Information</h5>
-        You can select a Template or enter custom requirements. If you have special requirements or need an operating
-        system that is not in the list you can use the comment field at the bottom of this page.
-      </div>
-      <div class="col-6">
-        <%= form.text_field :vendor %>
-        <%= form.text_field :model %>
-        <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
-        <%= form.number_field :ram_gb, min: 0, label: 'RAM', append: 'GB' %>
-        <%= form.number_field :storage_gb, min: 0, label: 'Storage', append: 'GB' %>
-      </div>
-    </div>
-
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>Network Information</h5>
-      </div>
-      <div class="col-6">
-        <%= form.text_field :ipv4_address, label: 'IPv4 Address' %>
-        <%= form.text_field :ipv6_address, label: 'IPv6 Address' %>
-        <%= form.text_field :mac_address, label: 'MAC Address' %>
-        <%= form.text_field :fqdn, label: 'Fully Qualified Domain Name (FQDN)' %>
-      </div>
-    </div>
-
-    <div class="row border-bottom mb-4 pb-4">
-      <div class="col">
-        <h5>Software Information</h5>
-      </div>
-      <div class="col-6">
-
-        <script>
-          function addInput() {
-            $('<input/>', {
-              type: 'text', placeholder: 'Software',
-              class: 'form-control',
-              name: 'server[installed_software][]'
-            }).appendTo('#anchor');
-          }
-        </script>
-
-        <%= form.label :installed_software, "Installed Software" %>
-        <% server.installed_software.each do |software| %>
-          <%= form.text_field :installed_software,
-            multiple: true, value: software, hide_label: true, class: 'form-control' %>
-        <% end %>
-        <div id="anchor"></div>
-        <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
-      </div>
-    </div>
-
-    <%= form.submit class: "btn btn-primary" %>
   </div>
+
+  <div class="row border-bottom mb-4 pb-4">
+    <div class="col">
+      <h5>User</h5>
+      Enter all users that need access to this server. If you can't find a user, that is most likely because they have
+      never logged into the HART system. Ask them to log in once so they are added to our list. You will be able to
+      change which users have access to your server at a later date. Make sure to enter yourself in the user list if you
+      need access.
+    </div>
+    <div class="col-6">
+      <%= form.collection_select :responsible_id, User.all, :id, :human_readable_identifier,
+        options = {selected: server.responsible_users.collect(&:id)},
+        html_options = {multiple: false, class: 'selecttwo'} %>
+
+      <%= form.collection_select :sudo_user_ids, User.all, :id, :human_readable_identifier,
+                                 options = {selected: server.sudo_users.collect(&:id),
+                                            include_hidden: false, # this must be false because otherwise an empty string will always be included in the post parameter
+                                            label: 'Users with sudo rights',
+                                            help: 'All responsible users will automatically be users with sudo rights.'},
+                                 html_options = {class: 'selecttwo', multiple: true} %>
+      <%= form.collection_select :user_ids, User.all, :id, :human_readable_identifier,
+                                 options = {selected: server.users.collect(&:id),
+                                            include_hidden: false, # this must be false because otherwise an empty string will always be included in the post parameter
+                                            label: 'Regular users'},
+                                 html_options = {class: 'selecttwo', multiple: true} %>
+    </div>
+  </div>
+
+  <div class="row border-bottom mb-4 pb-4">
+    <div class="col">
+      <h5>Hardware Information</h5>
+      You can select a Template or enter custom requirements. If you have special requirements or need an operating
+      system that is not in the list you can use the comment field at the bottom of this page.
+    </div>
+    <div class="col-6">
+      <%= form.text_field :vendor %>
+      <%= form.text_field :model %>
+      <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
+      <%= form.number_field :ram_gb, min: 0, label: 'RAM', append: 'GB' %>
+      <%= form.number_field :storage_gb, min: 0, label: 'Storage', append: 'GB' %>
+    </div>
+  </div>
+
+  <div class="row border-bottom mb-4 pb-4">
+    <div class="col">
+      <h5>Network Information</h5>
+    </div>
+    <div class="col-6">
+      <%= form.text_field :ipv4_address, label: 'IPv4 Address' %>
+      <%= form.text_field :ipv6_address, label: 'IPv6 Address' %>
+      <%= form.text_field :mac_address, label: 'MAC Address' %>
+      <%= form.text_field :fqdn, label: 'Fully Qualified Domain Name (FQDN)' %>
+    </div>
+  </div>
+
+  <div class="row border-bottom mb-4 pb-4">
+    <div class="col">
+      <h5>Software Information</h5>
+    </div>
+    <div class="col-6">
+
+      <script>
+        function addInput() {
+          $('<input/>', {
+            type: 'text', placeholder: 'Software',
+            class: 'form-control mb-1',
+            name: 'server[installed_software][]'
+          }).appendTo('#anchor');
+        }
+      </script>
+
+      <%= form.label :installed_software, "Installed Software" %>
+      <% server.installed_software.each do |software| %>
+        <%= form.text_field :installed_software,
+          multiple: true, value: software, hide_label: true, class: 'form-control mb-1' %>
+      <% end %>
+      <div id="anchor"></div>
+      <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
+    </div>
+  </div>
+
+  <%= form.submit class: "btn btn-primary" %>
 <% end %>
