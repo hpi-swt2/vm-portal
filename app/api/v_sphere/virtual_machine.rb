@@ -99,7 +99,7 @@ module VSphere
       return @name unless @name.nil?
 
       @vsphere_name ||= @vm.name
-      if /^\d{8}_vm-/.match? @vsphere_name
+      @name = if /^\d{8}_vm-/.match? @vsphere_name
         @vsphere_name[12..-1]
       else
         @vsphere_name

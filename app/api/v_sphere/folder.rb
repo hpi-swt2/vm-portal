@@ -20,7 +20,7 @@ module VSphere
     def parent(lookup: true)
       if @parent.nil? && lookup
         parent = @folder.parent
-        parent.nil? ? nil : VSphere::Folder.new(parent)
+        @parent = parent.nil? ? nil : VSphere::Folder.new parent
       else
         @parent
       end
