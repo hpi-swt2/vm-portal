@@ -60,7 +60,7 @@ class ServersController < ApplicationController
     # `installed_software: []` permits arrays
     params.require(:server).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :ipv4_address,
                                    :ipv6_address, :mac_address, :fqdn, {installed_software: []},
-                                   :model, :vendor, :description, :responsible_id)
+                                   :model, :vendor, :description, :responsible_id, sudo_user_ids: [], user_ids: [])
     # Remove empty software form fields
     # https://api.rubyonrails.org/classes/ActionController/Parameters.html#method-i-each_pair
     params[:server].each { |k,v| v.reject!(&:blank?) if k.eql?('installed_software') }
