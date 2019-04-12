@@ -33,6 +33,7 @@ class Server < ApplicationRecord
   }
 
   after_commit :save_users
+  after_initialize :assign_defaults
 
   attr_writer :sudo_users
   attr_writer :users
@@ -64,17 +65,21 @@ class Server < ApplicationRecord
     (users + sudo_users + responsible_users).uniq
   end
 
-  private
-
   # This makes a few things easier, for example when adding arrays together
   def responsible_users
-    [responsible]
+    responsible.nil? ? [] : [responsible]
   end
+
+  def assign_defaults
+    self.name = '' if name.nil?
+  end
+
+  private
 
   def read_users
     begin
       GitHelper.open_git_repository do
-        remote_users = Puppetscript.read_node_file(name)
+        remote_users = Puppetscript.read_node_file name
         @users = remote_users[:users] || [] if @users.nil?
         @sudo_users = remote_users[:admins] || [] if @sudo_users.nil?
       end
