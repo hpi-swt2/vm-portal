@@ -16,7 +16,6 @@ class Server < ApplicationRecord
   validates :ram_gb, numericality: { greater_than: 0 }
   validates :storage_gb, numericality: { greater_than: 0 }
 
-  MAX_NAME_LENGTH = 20
   validates :name,
             uniqueness: true,
             length: { minimum: 1 },
