@@ -200,7 +200,6 @@ GEM
     multi_json (1.13.1)
     nenv (0.3.0)
     net-ssh (5.1.0)
-    newrelic_rpm (6.2.0.354)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -432,7 +431,6 @@ DEPENDENCIES
   mina-puma!
   mina-slack!
   mini_racer
-  newrelic_rpm
   omniauth
   omniauth_openid_connect
   pg
