@@ -31,6 +31,15 @@ module VmsHelper
     end
   end
 
+  def status_color(vm)
+    status = vm.status
+    if status == :archived
+      'bg-secondary'
+    else
+      status == :online ? 'bg-success' : 'bg-danger'
+    end
+  end
+
   def notify_changed_users(old_list, new_list, sudo_lists, vm_name)
     removed_users = old_list - new_list
     removed_users.each do |user|

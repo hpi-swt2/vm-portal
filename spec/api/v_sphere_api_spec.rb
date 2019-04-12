@@ -254,21 +254,21 @@ describe VSphere do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_archived_vms_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_archived
-      expect(mock_archived_vms_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_archived_vms_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is pending_archivation' do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_pending_archivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_pending_archivation
-      expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is pending_reviving' do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_pending_revivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_pending_reviving
-      expect(mock_pending_revivings_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_pending_revivings_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is revived' do
