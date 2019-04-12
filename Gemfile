@@ -34,8 +34,6 @@ gem 'omniauth_openid_connect' # https://github.com/m0n9oose/omniauth_openid_conn
 gem 'pundit' # https://github.com/varvet/pundit
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false # https://github.com/Shopify/bootsnap
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2' # https://github.com/rails/coffee-rails
 # Build JSON APIs with ease.
 gem 'jbuilder', '~> 2.5' # https://github.com/rails/jbuilder
 # Use Redis adapter to run Action Cable in production
@@ -76,7 +74,7 @@ gem 'coveralls', require: false
 gem 'airbrake', '~> 5.0' # https://github.com/airbrake/airbrake
 
 #
-# Packaged JS & CSS libraries
+# Packaged JS, CSS libraries and helpers
 #
 
 # Fancy default views and javascript helpers
@@ -91,6 +89,8 @@ gem 'font-awesome-rails' # https://github.com/bokmann/font-awesome-rails
 gem 'select2-rails' # https://github.com/argerim/select2-rails
 # Packaged clipboard.js JS library for copying text to clipboard
 gem 'clipboard-rails' # https://github.com/sadiqmmm/clipboard-rails
+# Rails form builder for creating forms using Bootstrap 4
+gem "bootstrap_form", ">= 4.2.0" # https://github.com/bootstrap-ruby/bootstrap_form
 # Deprecated!
 # gem 'jquery-turbolinks' # https://github.com/kossnocorp/jquery.turbolinks
 

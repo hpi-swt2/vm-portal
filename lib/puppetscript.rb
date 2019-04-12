@@ -38,6 +38,16 @@ module Puppetscript
     result
   end
 
+  def self.read_node_string(script)
+    values = { admins: [], users: [] }
+
+    admins = script.lines[1][/\[.*?\]/].delete('"[]').split(', ')
+    users = script.lines[2][/\[.*?\]/].delete('"[]').split(', ')
+    values[:admins] = admins.map { |admin| User.from_mail_identifier(admin) }.compact
+    values[:users] = users.map { |user| User.from_mail_identifier(user) }.compact
+    values
+  end
+
   def self.read_node_file(vm_name, repository_path = puppet_script_path)
     path = File.join(repository_path, node_file_name(vm_name))
     values = { admins: [], users: [] }
@@ -46,11 +56,7 @@ module Puppetscript
     contents = File.open(path).read
     raise 'Unsupported Format' unless node_file_correct?(vm_name, contents)
 
-    admins = contents.lines[1][/\[.*?\]/].delete('"[]').split(', ')
-    users = contents.lines[2][/\[.*?\]/].delete('"[]').split(', ')
-    values[:admins] = admins.map { |admin| User.from_mail_identifier(admin) }.compact
-    values[:users] = users.map { |user| User.from_mail_identifier(user) }.compact
-    values
+    read_node_string(contents)
   end
 
   def self.puppet_script_path

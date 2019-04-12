@@ -91,7 +91,7 @@ describe 'projects/new.html.erb', type: :feature do
       context 'when clicking the submit button' do
         it 'shows an error' do
           submit_button.click
-          expect(page).to have_text '1 error'
+          expect(page).to have_css('.alert-danger')
         end
       end
     end
@@ -124,8 +124,8 @@ describe 'projects/new.html.erb', type: :feature do
           submit_button.click
         end
 
-        it 'redirects to projects/index' do
-          expect(page).to have_current_path(projects_path)
+        it 'redirects to projects/show' do
+          expect(page).to have_current_path(project_path(Project.last))
         end
 
         it 'has created the project' do
@@ -155,8 +155,8 @@ describe 'projects/new.html.erb', type: :feature do
             submit_button.click
           end
 
-          it 'redirects to projects/index' do
-            expect(page).to have_current_path(projects_path)
+          it 'redirects to projects/show' do
+            expect(page).to have_current_path(project_path(Project.last))
           end
 
           it 'has created the project' do

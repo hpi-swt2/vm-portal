@@ -86,6 +86,9 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bootstrap_form (4.2.0)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     builder (3.2.3)
     byebug (10.0.2)
     capybara (3.13.2)
@@ -98,13 +101,6 @@ GEM
       xpath (~> 3.2)
     clipboard-rails (1.7.1)
     coderay (1.1.2)
-    coffee-rails (4.2.2)
-      coffee-script (>= 2.2.0)
-      railties (>= 4.0.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     coveralls (0.8.22)
       json (>= 1.8, < 3)
@@ -402,10 +398,10 @@ DEPENDENCIES
   binding_of_caller
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.3.1)
+  bootstrap_form (>= 4.2.0)
   byebug
   capybara (>= 2.15)
   clipboard-rails
-  coffee-rails (~> 4.2)
   coveralls
   devise
   devise-bootstrap-views (~> 1.0)

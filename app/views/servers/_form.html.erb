@@ -1,102 +1,29 @@
-<%= form_with(model: server, local: true) do |form| %>
-  <% if server.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(server.errors.count, "error") %> prohibited this server from being saved:</h2>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: server, local: true, layout: :horizontal) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-      <ul>
-      <% server.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= form.text_field :name %>
+  <%= form.text_area :description %>
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :responsible_id, User.all, :id, :human_readable_identifier,
+    options = {},
+    html_options = {multiple: false, class: 'selecttwo'} %>
 
-  <div class="field form-group">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
-  <div class="field form-group">
-    <%= form.label :description, "Description" %>
-    <%= form.text_area :description, class: 'form-control' %>
-  </div>
+  <h5>Hardware Information</h5>
+  <%= form.text_field :vendor %>
+  <%= form.text_field :model %>
+  <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
+  <%= form.number_field :ram_gb, min: 0, label: 'RAM', append: 'GB' %>
+  <%= form.number_field :storage_gb, min: 0, label: 'Storage', append: 'GB' %>
 
-  <div class="field form-group">
-    <%= form.label :responsible, "Responsible" %>
-    <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
-    <%= form.collection_select(:responsible_id, User.all, :id, :human_readable_identifier,
-                              options={prompt: true}, html_options={class: "selecttwo"}) %>
-  </div>
+  <h5>Network Information</h5>
+  <%= form.text_field :ipv4_address, label: 'IPv4 Address' %>
+  <%= form.text_field :ipv6_address, label: 'IPv6 Address' %>
+  <%= form.text_field :mac_address, label: 'MAC Address' %>
+  <%= form.text_field :fqdn, label: 'Fully Qualified Domain Name (FQDN)' %>
 
-  <div class="field">
-    <%= form.label :sudo_user_ids, "Users with sudo rights" %>
-    <%= form.select :sudo_user_ids,
-                    options_from_collection_for_select(User.all, :id, :human_readable_identifier, @server.sudo_users.map(&:id)),
-                    { include_hidden: false},
-                    { multiple: true, class: 'selecttwo form-control'} %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_ids, "Users without sudo rights" %>
-    <%= form.select :user_ids,
-                    options_from_collection_for_select(User.all, :id, :human_readable_identifier, @server.users.map(&:id)),
-                    { include_hidden: false },
-                    { multiple: true, class: 'selecttwo form-control'} %>
-  </div>
-
-  <div class="field">
-    <h5>Hardware Information</h5>
-  </div>
-      <div class="field form-group">
-        <%= form.label :vendor, "Vendor" %>
-        <%= form.text_field :vendor, class: 'form-control' %>
-      </div>
-      <div class="field form-group">
-        <%= form.label :model, "Model" %>
-        <%= form.text_field :model, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :cpu_cores, "CPU cores" %>
-        <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :ram_gb, "RAM in GB" %>
-        <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :storage_gb, "Storage in GB" %>
-        <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
-      </div>
-
-  <div class="field">
-    <h5>Network Information</h5>
-  </div>
-
-      <div class="field form-group">
-        <%= form.label :ipv4_address, "IPv4 Address" %>
-        <%= form.text_field :ipv4_address, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :ipv6_address, "IPv6 Address" %>
-        <%= form.text_field :ipv6_address, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :mac_address, "Mac Address" %>
-        <%= form.text_field :mac_address, class: 'form-control' %>
-      </div>
-
-      <div class="field form-group">
-        <%= form.label :fqdn, "Fully Qualified Domain Name (FQDN)" %>
-        <%= form.text_field :fqdn, class: 'form-control' %>
-      </div>
-
-  <div class="field">
-    <h5>Software Information</h5>
-  </div>
+  <h5>Software Information</h5>
 
   <script>
     function addInput() {
@@ -108,16 +35,17 @@
     }
   </script>
 
-  <div class="field form-group">
-    <%= form.label :installed_software, "Installed Software" %>
-    <% server.installed_software.each do |software| %>
-      <%= form.text_field :installed_software, multiple: true, value: software, class: 'form-control mb-1' %>
-    <% end %>
-
-    <span id="anchor"></span>
-    <input type="button" onclick="addInput()" value="Add Software" />
+  <div class="form-group row">
+    <%= form.label :installed_software, "Installed Software", class:'col-form-label col-sm-2' %>
+    <div class="col-sm-10">
+      <% server.installed_software.each do |software| %>
+        <%= form.text_field_without_bootstrap :installed_software,
+          multiple: true, value: software, hide_label: true, class:'form-control mb-1' %>
+      <% end %>
+      <span id="anchor"></span>
+      <input type="button" class="btn btn-secondary" onclick="addInput()" value="Add Software" />
+    </div>
   </div>
 
   <%= form.submit class: "btn btn-primary" %>
 <% end %>
-
