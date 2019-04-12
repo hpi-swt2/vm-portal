@@ -122,6 +122,12 @@ group :development do
   gem 'binding_of_caller'
   # Continous execution of unit tests
   gem 'guard' # https://github.com/guard/guard
+  # Benchmarking
+  # Supporting gem for Rails Panel (Google Chrome extension for Rails development)
+  gem 'meta_request' # https://github.com/dejan/rails_panel
+  # code profiler for MRI Ruby
+  gem 'ruby-prof' # https://github.com/ruby-prof/ruby-prof
+
 end
 
 group :test do
