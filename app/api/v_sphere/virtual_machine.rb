@@ -352,7 +352,7 @@ module VSphere
       @request ||= Request.accepted.find_by name: name
     end
 
-    #private
+    private
 
     def target_subfolder
       path = [] << case status
