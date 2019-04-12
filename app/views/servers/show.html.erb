@@ -50,7 +50,7 @@
       <tr>
         <th colspan="2" ><h4 class="mb-0">Users</h4></th>
       </tr>
-      <% (@server.all_users).uniq.each do |user| %>
+      <% @server.all_users.each do |user| %>
         <tr>
           <td>
             <%= link_to user.name, user %>

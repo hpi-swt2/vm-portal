@@ -96,4 +96,5 @@
   </div>
 
   <%= form.submit class: "btn btn-primary" %>
+  <%= link_to 'Back', server, class: 'btn btn-secondary' if server.persisted? %>
 <% end %>

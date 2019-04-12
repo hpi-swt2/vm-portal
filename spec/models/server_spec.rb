@@ -56,23 +56,28 @@ RSpec.describe Server, type: :model do
       expect(server).to be_invalid
     end
 
-    it 'is invalid with invalid ipv6 address' do
+    it 'is invalid with invalid ipv4 address' do
       server.ipv4_address = 'ad:aasdf:ad:ad:ad:ad:ad'
       expect(server).to be_invalid
     end
 
-    it 'is invalid with invalid ipv6 address' do
+    it 'is invalid with invalid ipv4 address' do
       server.ipv4_address = '::'
       expect(server).to be_invalid
     end
 
-    it 'is invalid with invalid mac address' do
+    it 'is invalid with invalid ipv4 address' do
       server.mac_address = '192.168.5O.100'
       expect(server).to be_invalid
     end
 
     it 'is invalid with invalid mac address' do
       server.mac_address = 'ad:ad:ad.ad:ad:ad'
+      expect(server).to be_invalid
+    end
+
+    it 'is invalid if name is duplicated' do
+      FactoryBot.create :server, name: server.name
       expect(server).to be_invalid
     end
   end
