@@ -55,7 +55,10 @@
           <td>
             <%= link_to user.name, user %>
             <% if @server.responsible == user %>
-              <span class="badge badge-primary">responsible</span>
+              <span class="badge badge-primary" data-toggle="tooltip" data-placement="bottom" title="Responsible users automatically have sudo rights">responsible</span>
+            <% end %>
+            <% if @server.sudo_users.include? user %>
+              <span class="badge badge-info">sudo user</span>
             <% end %>
           </td>
         </tr>
