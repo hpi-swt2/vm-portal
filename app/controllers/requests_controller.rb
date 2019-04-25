@@ -14,8 +14,8 @@ class RequestsController < ApplicationController
     else
       requests = Request.where(user: current_user)
     end
-    @pending_requests = requests.select(&:pending?)
-    @resolved_requests = requests.reject(&:pending?)
+    @pending_requests = requests.pending
+    @resolved_requests = requests.resolved
   end
 
   # GET /requests/1
