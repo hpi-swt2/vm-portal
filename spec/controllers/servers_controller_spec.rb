@@ -102,9 +102,9 @@ RSpec.describe ServersController, type: :controller do
       it 'updates the requested server without saving empty software fields' do
         server = FactoryBot.create(:server, installed_software: [])
         valid_attributes.update(installed_software: ['software', '', ''])
-        expect do
+        expect {
           put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
-        end.to change { server.reload.installed_software }.from(server.installed_software).to(['software'])
+        }.to change { server.reload.installed_software.size }.by 1
       end
     end
 
