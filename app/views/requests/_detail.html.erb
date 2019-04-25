@@ -1,0 +1,91 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td><strong>VM Name</strong></td>
+      <td><%= request.name %></td>
+    </tr>
+
+    <tr>
+      <td><strong>CPU Cores</strong></td>
+      <td><%= request.cpu_cores %></td>
+    </tr>
+
+    <tr>
+      <td><strong>RAM</strong></td>
+      <td><%= request.ram_gb %> GB</td>
+    </tr>
+
+    <tr>
+      <td><strong>Storage</strong></td>
+      <td><%= request.storage_gb %> GB</td>
+    </tr>
+
+    <tr>
+      <td><strong>Operating System</strong></td>
+      <td><%= request.operating_system %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Port Forwarding</strong></td>
+      <td>
+        Enabled: <%= t request.port_forwarding %><br>
+        <%= request.application_name %> <%= request.port %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Description</strong></td>
+      <td class="col-md-4"><%= request.description %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Comment</strong></td>
+      <td class="col-md-4"><%= request.comment %></td>
+    </tr>
+
+    <tr>
+      <td><strong>Status</strong></td>
+      <td>
+        <%= request.status %><br>
+        <% if request.rejected? %>
+          <strong>Rejection Information:</strong> <%= request.rejection_information %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Responsible users</strong></td>
+      <td>
+        <% request.responsible_users.each do |user| %>
+          <p><%= user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Users with sudo rights</strong></td>
+      <td>
+        <% request.sudo_user_assignments.each do |assignment| %>
+          <p><%= assignment.user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Users</strong></td>
+      <td>
+        <% request.non_sudo_user_assignments.each do |assignment| %>
+          <p><%= assignment.user.email %></p>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Request Date</strong></td>
+      <td>
+        <%= I18n.l request.created_at, format: :long %> (<%= time_ago_in_words request.created_at %> ago)
+      </td>
+    </tr>
+  </tbody>
+</table>
+

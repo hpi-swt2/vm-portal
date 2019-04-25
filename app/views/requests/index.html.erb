@@ -5,12 +5,12 @@
     title: 'New VM request',
     :data => { toggle: 'tooltip', placement: 'bottom' },
     class: "btn btn-primary float-right mt-3" %>
-  <% if current_user.admin? %>
-    <%= link_to "Templates", request_templates_path,
-      class: "btn btn-primary float-right mt-3 mr-3" %>
-    <%= link_to 'Operating Systems', operating_systems_path,
-      class: 'btn btn-primary float-right mt-3 mr-3' %>
-  <% end %>
+    <% if current_user.admin? %>
+      <%= link_to "Templates", request_templates_path,
+        class: "btn btn-primary float-right mt-3 mr-3" %>
+      <%= link_to 'Operating Systems', operating_systems_path,
+        class: 'btn btn-primary float-right mt-3 mr-3' %>
+    <% end %>
 </div>
 
 <h2 id="pending">Pending requests</h2>
@@ -58,7 +58,6 @@
     <th>Application Name</th>
     <th>Comment</th>
     <th>Status</th>
-    <th data-orderable="false">Actions</th>
   </tr>
   </thead>
   <tbody>
@@ -78,34 +77,6 @@
             title: request.status,
             :data => { toggle: 'tooltip', placement: 'right' },
             class: "round #{request.accepted? ? 'bg-success' : 'bg-warning'}" %>
-        </td>
-        <td>
-          <% if request.accepted? %>
-            <a class="btn btn-primary btn-sm fa fa-code text-white" data-toggle="modal" title="Puppet script" data-target=<%= '#puppet-script-' + request.name %>>
-            </a>
-            <div class="modal fade" id=<%= 'puppet-script-' + request.name %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="puppet-scriptTite">Puppet Script</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <pre>
-                        <%= debug puppet_node_script(request) %>
-                        <%= debug puppet_name_script(request) %>
-                      </pre>
-                  </div>
-                  <div class="modal-footer">
-                    <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
         </td>
       </tr>
     <% end %> <%# @resolved_requests&.each %>

@@ -75,7 +75,7 @@ end %>
 
 <div class="container mb-3 mt-0 pl-0 pr-0 lead clearfix" style="width: 100%">
   <div class="float-left">Host: <%= link_to @vm.host_name, controller: "hosts", action: "show", id: @vm.host_name unless @vm.nil? %></div>
-  <div class="text-right">Project: <%= @vm.project.nil? ? 'No project found!' : @vm.project.name %></div>
+  <div class="text-right">Project: <%= @vm.project.nil? ? 'No project' : @vm.project.name %></div>
 </div>
 
 <%
@@ -107,6 +107,15 @@ end %>
 <div class="table-active container mb-3 pb-3 pt-3">
   <h4 class="mb-4">Description</h4>
   <%= simple_format(@vm&.config&.description) %>
+  <div class="mb-4">
+      VM created by HART: <%= t @vm_request.present? %>
+      <% if @vm_request.present? %>
+        <button class="btn btn-sm btn-secondary text-white"
+          data-toggle="modal" data-target="#vm_request">
+          Show Request
+        </button>
+      <% end %>
+  </div>
 </div>
 <div class="container mb-3 pb-3 pl-0 pr-0 clearfix" style="width: 100%; display: flex;">
   <div class="column float-left mr-3 half-screen-box">
@@ -116,7 +125,18 @@ end %>
     <table class="table table-borderless" style="width: 100%">
       <tbody class="table-active">
         <tr>
-          <th colspan="2" ><h4 class="mb-0">Users</h4></th>
+          <th colspan="2" >
+            <h4 class="mb-0">
+              Users 
+              <%# Button that shows the Puppet Script modal %>
+              <% if @vm.config.present? && current_user.admin? %>
+                <button class="btn btn-sm btn-secondary text-white float-right"
+                  data-toggle="modal" data-target="#puppetscript">
+                  <%= fa_icon('code', text: 'Show Puppet Scripts') %>
+                </button>
+              <% end %>
+            </h4>
+          </th>
         </tr>
         <% (@vm.users + @vm.sudo_users + @vm.responsible_users).uniq.each do |user| %>
         <tr>
@@ -135,3 +155,46 @@ end %>
     </table>
   </div>
 </div>
+
+<% if @vm.config.present? && current_user.admin? %>
+  <%# Modal for Puppet Script display %>
+  <%= render 'application/modal', {title: 'Puppet Scripts', id: 'puppetscript', dialog_class: 'modal-lg'} do %>
+    <div class="card">
+      <div class="card-header">
+        Generated Node Script<br>
+        <small>
+          <span class="text-monospace"><%= Puppetscript.node_file_name(@vm.name) %></span>
+          <%= link_to "(in '#{AppSetting.instance.git_repository_name}' GitHub repository)",
+            AppSetting.instance.github_base_file_url + Puppetscript.node_file_name(@vm.name) %>
+        </small>
+      </div>
+      <div class="card-body">
+        <pre class="mb-0"><%= @vm.config.node_script %></pre>
+      </div>
+    </div><%# card %>
+    <div class="card mt-4">
+      <div class="card-header">
+        Generated Name Script<br>
+        <small>
+          <span class="text-monospace"><%= Puppetscript.class_file_name(@vm.name) %></span>
+          <%= link_to "(in '#{AppSetting.instance.git_repository_name}' GitHub repository)",
+            AppSetting.instance.github_base_file_url + Puppetscript.class_file_name(@vm.name) %>
+        </small>
+      </div><%# card-header %>
+      <div class="card-body">
+        <pre class="mb-0"><%= Puppetscript.name_script @vm.name %></pre>
+      </div>
+    </div><%# card %>
+    <div class="modal-footer">
+      <%= link_to "Push to git", push_to_git_request_path(request), method: :post, class: "btn btn-primary" %>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @vm_request.present? %>
+  <%# Modal for displaying associated request %>
+  <%= render 'application/modal', {title: "#{@vm_request.name} VM Request", id: 'vm_request', dialog_class: 'modal-lg'} do %>
+    <%= render "requests/detail", request: @vm_request %>
+  <% end %>
+<% end %>
