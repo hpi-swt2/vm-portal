@@ -1,98 +1,83 @@
 # frozen_string_literal: true
 
 class RequestsController < ApplicationController
-  before_action :set_request, only: %i[show edit update push_to_git destroy request_state_change]
+  @@resource_name = Request.model_name.human.titlecase
+
+  before_action :set_request, only: %i[show edit update push_to_git destroy reject]
+  before_action :set_request_templates, only: %i[show new edit update create reject]
   before_action :authenticate_employee
-  before_action :authenticate_state_change, only: %i[request_change_state]
 
   # GET /requests
-  # GET /requests.json
   def index
-    requests = current_user.admin? ? Request.all : Request.select { |r| r.user == current_user }
-    split_requests(requests)
+    if current_user.admin?
+      requests = Request.all
+    else
+      requests = Request.where(user: current_user)
+    end
+    @pending_requests = requests.pending
+    @resolved_requests = requests.resolved
   end
 
   # GET /requests/1
-  # GET /requests/1.json
   def show
     redirect_to edit_request_path(@request) if current_user.admin? && @request.pending?
-    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/new
   def new
     @request = Request.new
-    @request_templates = RequestTemplate.all
   end
 
   # GET /requests/1/edit
   def edit
     redirect_to @request unless @request.pending?
-    @request_templates = RequestTemplate.all
-  end
-
-  def notify_users(title, message, link)
-    ([@request.user] + @request.users + User.admin).uniq.each do |each|
-      each.notify(title, message, link)
-    end
   end
 
   # POST /requests
-  # POST /requests.json
   def create
-    prepare_params
-
     @request = Request.new(request_params.merge(user: current_user))
     @request.assign_sudo_users(request_params[:sudo_user_ids])
-    respond_to do |format|
-      # check for validity first, before checking enough_resources?
-      # this is neccessary to ensure that the request contains all information needed for enough_resources?
-      if @request.valid? && enough_resources? && @request.save
-        successful_save(format)
-      else
-        unsuccessful_action(format, :new)
-      end
+    # check for validity first, before checking enough_resources?
+    # this is neccessary to ensure that the request contains all information needed for enough_resources?
+    if @request.valid? && enough_resources? && @request.save
+      notify_users('New VM request', @request.description_text, @request.description_url(host_url))
+      redirect_to requests_path, notice: t('flash.create.notice', resource: @@resource_name, model: @request.name)
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /requests/1
-  # PATCH/PUT /requests/1.json
   def update
-    respond_to do |format|
-      prepare_params
-      @request.assign_sudo_users(request_params[:sudo_user_ids])
-      @request.accept!
-      if @request.update(request_params)
-        notify_request_update
-        safe_create_vm_for format, @request
-      else
-        unsuccessful_action format, :edit
-      end
+    @request.assign_sudo_users(request_params[:sudo_user_ids])
+    @request.accept!
+    if @request.update(request_params)
+      notify_request_update
+      safe_create_vm_for @request
+    else
+      render :edit
     end
   end
 
+  # PATCH /requests/reject/1
   def reject
-    @request = Request.find params[:id]
-    respond_to do |format|
-      @request.reject!
-      if @request&.update(rejection_params)
-        notify_request_update
-        format.html { redirect_to requests_path, notice: "Request '#{@request.name}' rejected!" }
-        format.json { render status: :ok, action: :index }
-      else
-        unsuccessful_action format, :edit
-      end
+    @request.reject!
+    if @request.update(rejection_params)
+      notify_request_update
+      redirect_to requests_path, notice: "Request '#{@request.name}' rejected!"
+    else
+      render :edit
     end
   end
 
   # DELETE /requests/1
-  # DELETE /requests/1.json
   def destroy
-    @request.destroy
-    respond_to do |format|
-      format.html { redirect_to requests_url, notice: 'Request was successfully destroyed.' }
-      format.json { head :no_content }
+    if @request.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @request.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @request.name)
     end
+    redirect_to requests_url, notice: notice, alert: alert
   end
 
   # Creates puppet files for request and pushes the created files into a git repository
@@ -103,26 +88,15 @@ class RequestsController < ApplicationController
 
   private
 
-  def notice_for(vm, warning) # rubocop:disable Naming/UncommunicativeMethodParamName
-    if warning
-      { alert: warning }
-    elsif vm
-      { notice: 'VM was successfully created!' }
-    else
-      { alert: 'VM could not be created due to an unkown error! Please create it manually in vSphere' }
-    end
-  end
-
-  def safe_create_vm_for(format, request)
+  def safe_create_vm_for(request)
     vm, warning = request.create_vm
-    notices = notice_for vm, warning
     if vm
-      format.html { redirect_to({ controller: :vms, action: 'edit_config', id: vm.name }, { method: :get }.merge(notices)) }
+      redirect_to edit_config_path(vm.name), notice: 'VM was successfully created!'
     else
-      format.html { redirect_to requests_path, notices }
+      redirect_to requests_path, alert: "Error while creating VM! #{warning || 'Please create it manually in vSphere'}"
     end
   rescue RbVmomi::Fault => fault
-    format.html { redirect_to requests_path, alert: "VM could not be created, error: \"#{fault.message}\"" }
+    redirect_to requests_path, alert: "Error while creating VM! #{fault.message}"
   end
 
   def host_url
@@ -134,10 +108,14 @@ class RequestsController < ApplicationController
     @request = Request.find(params[:id])
   end
 
-  def authenticate_state_change
-    @request = Request.find(params[:id])
-    authenticate_admin
-    redirect_to @request, alert: I18n.t('request.unauthorized_state_change') if @request.user == current_user && !current_user.admin?
+  def set_request_templates
+    @request_templates = RequestTemplate.all
+  end
+
+  def notify_users(title, message, link)
+    ([@request.user] + @request.users + User.admin).uniq.each do |each|
+      each.notify(title, message, link)
+    end
   end
 
   def notify_request_update
@@ -158,33 +136,17 @@ class RequestsController < ApplicationController
     end
   end
 
-  def successful_save(format)
-    notify_users('New VM request', @request.description_text, @request.description_url(host_url))
-    format.html { redirect_to requests_path, notice: 'Request was successfully created.' }
-    format.json { render :show, status: :created, location: @request }
-  end
-
-  def unsuccessful_action(format, method)
-    @request_templates = RequestTemplate.all
-    format.html { render method }
-    format.json { render json: @request.errors, status: :unprocessable_entity }
-  end
-
-  # Storage and RAM are displayed in GB but internally stored in MB.
-  # sudo_user_ids always contain one empty element which must be removed
-  def prepare_params
-    request_parameters = params[:request]
-    return unless request_parameters
-
-    request_parameters[:sudo_user_ids] &&= request_parameters[:sudo_user_ids][1..-1]
-
-    # the user_ids must contain the ids of ALL users, sudo or not
-    request_parameters[:user_ids] ||= []
-    request_parameters[:user_ids] += request_parameters[:sudo_user_ids] if request_parameters[:sudo_user_ids]
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
+  # Modify parameters received from the request form
   def request_params
+    if params[:request]
+      # sudo_user_ids always contain one empty element which must be removed
+      params[:request][:sudo_user_ids].reject!(&:blank?)
+      # the user_ids must contain the ids of ALL users, sudo or not
+      params[:request][:user_ids] ||= []
+      params[:request][:user_ids] += params[:request][:sudo_user_ids] if params[:request][:sudo_user_ids]
+    end
+
     params.require(:request).permit(:name, :cpu_cores, :ram_gb, :storage_gb, :operating_system,
                                     :port, :application_name, :description, :comment, :project_id, :port_forwarding,
                                     :rejection_information, responsible_user_ids: [],
@@ -205,11 +167,6 @@ class RequestsController < ApplicationController
   end
 
   helper_method :puppet_name_script
-
-  def split_requests(requests)
-    @pending_requests = requests.select(&:pending?)
-    @resolved_requests = requests.reject(&:pending?)
-  end
 
   def enough_resources?
     hosts = VSphere::Host.all

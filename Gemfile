@@ -34,8 +34,6 @@ gem 'omniauth_openid_connect' # https://github.com/m0n9oose/omniauth_openid_conn
 gem 'pundit' # https://github.com/varvet/pundit
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false # https://github.com/Shopify/bootsnap
-# Build JSON APIs with ease.
-gem 'jbuilder', '~> 2.5' # https://github.com/rails/jbuilder
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password

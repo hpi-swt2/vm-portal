@@ -16,6 +16,8 @@ class Request < ApplicationRecord
   MAX_NAME_LENGTH = 20
 
   enum status: %i[pending accepted rejected]
+  scope :resolved, -> { where.not(status: :pending) }
+
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
             format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }

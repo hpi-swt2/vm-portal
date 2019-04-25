@@ -40,7 +40,7 @@ RSpec.describe 'End to End testing', type: :feature do
     select(@project.name, from: 'request_project_id')
     fill_in('Description', with: 'test')
     click_on 'Create Request'
-    expect(page).to have_text('Request was successfully created.')
+    expect(page).to have_css '.alert-success'
     expect(page).to have_current_path('/vms/requests')
     click_on @requestname
     expect(page.body).to have_text('Request Information')
