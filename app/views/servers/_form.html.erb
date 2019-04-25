@@ -11,7 +11,6 @@
     <div class="col-6">
       <%= form.text_field :name %>
       <%= form.text_area :description %>
-      <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
     </div>
   </div>
 
@@ -24,6 +23,7 @@
       need access.
     </div>
     <div class="col-6">
+      <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
       <%= form.collection_select :responsible_id, User.all, :id, :human_readable_identifier,
         options = {selected: server.responsible_users.collect(&:id)},
         html_options = {multiple: false, class: 'selecttwo'} %>
