@@ -34,8 +34,6 @@ gem 'omniauth_openid_connect' # https://github.com/m0n9oose/omniauth_openid_conn
 gem 'pundit' # https://github.com/varvet/pundit
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false # https://github.com/Shopify/bootsnap
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2' # https://github.com/rails/coffee-rails
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -122,6 +120,12 @@ group :development do
   gem 'binding_of_caller'
   # Continous execution of unit tests
   gem 'guard' # https://github.com/guard/guard
+  # Benchmarking
+  # Supporting gem for Rails Panel (Google Chrome extension for Rails development)
+  gem 'meta_request' # https://github.com/dejan/rails_panel
+  # code profiler for MRI Ruby
+  gem 'ruby-prof' # https://github.com/ruby-prof/ruby-prof
+
 end
 
 group :test do
