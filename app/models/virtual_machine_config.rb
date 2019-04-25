@@ -38,6 +38,10 @@ class VirtualMachineConfig < ApplicationRecord
   def all_users
     (users + sudo_users + responsible_users).uniq
   end
+  
+  def node_script
+    Puppetscript.node_script(name, (sudo_users + responsible_users).uniq, all_users)
+  end
 
   private
 
@@ -70,10 +74,6 @@ class VirtualMachineConfig < ApplicationRecord
     else
       ''
     end
-  end
-
-  def node_script
-    Puppetscript.node_script(name, (sudo_users + responsible_users).uniq, all_users)
   end
 
   def write_puppetscripts(git_writer, name_script, node_script)
