@@ -25,6 +25,10 @@ class AppSetting < ApplicationRecord
     @instance
   end
 
+  def github_base_file_url
+    "https://github.com/#{github_user_name}/#{git_repository_name}/blob/#{git_branch}"
+  end
+
   private
 
   def apply_settings
