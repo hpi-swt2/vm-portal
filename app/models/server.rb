@@ -4,7 +4,7 @@
 # https://www.rubydoc.info/stdlib/resolv/Resolv
 require 'resolv'
 
-class Server < ApplicationRecord
+class Server < Machine
   belongs_to :responsible, class_name: :User
 
   validates :name, :cpu_cores, :ram_gb, :storage_gb, :mac_address, :fqdn, :responsible_id, presence: true
@@ -98,16 +98,6 @@ class Server < ApplicationRecord
 
   def convert_to_user(user_or_id)
     user.is_a? User ? user : User.find(user_or_id)
-  end
-
-  def commit_message(git_writer)
-    if git_writer.added?
-      'Add ' + name
-    elsif git_writer.updated?
-      'Update ' + name
-    else
-      ''
-    end
   end
 
   def node_script

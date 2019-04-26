@@ -3,7 +3,7 @@
 require './lib/puppetscript'
 require './lib/git_helper'
 
-class VirtualMachineConfig < ApplicationRecord
+class VirtualMachineConfig < Machine
   has_and_belongs_to_many :responsible_users, class_name: 'User'
   belongs_to :project, optional: true
 
@@ -64,16 +64,6 @@ class VirtualMachineConfig < ApplicationRecord
 
   def convert_to_user(user_or_id)
     user.is_a? User ? user : User.find(user_or_id)
-  end
-
-  def commit_message(git_writer)
-    if git_writer.added?
-      'Add ' + name
-    elsif git_writer.updated?
-      'Update ' + name
-    else
-      ''
-    end
   end
 
   def write_puppetscripts(git_writer, name_script, node_script)
