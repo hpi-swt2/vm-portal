@@ -33,11 +33,7 @@ class Server < Machine
     message: 'is not a valid MAC address'
   }
 
-  after_commit :save_users
   after_initialize :assign_defaults
-
-  attr_writer :sudo_users
-  attr_writer :users
 
   # There is actually only ever one responsible user
   # This method is a convenience accessor to allow for easier array concatination

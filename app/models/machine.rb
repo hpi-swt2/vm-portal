@@ -3,7 +3,12 @@
 # Abstract superclass for Servers and VM objects
 class Machine < ApplicationRecord
   self.abstract_class = true
-  
+
+  after_commit :save_users
+
+  attr_writer :sudo_users
+  attr_writer :users
+
   def user_ids=(new_user_ids)
     @users = User.find(new_user_ids)
   end
