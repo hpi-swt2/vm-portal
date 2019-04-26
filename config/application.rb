@@ -17,7 +17,8 @@ module VmPortal
     # Load files in lib
     config.eager_load_paths << Rails.root.join('lib')
 
-    # set custom formatter to support creating Notifications when an error is logged
+    # Use custom log formatter which creates Notification objects for admin users
+    # when an application error is logged, making errors visisble in the application
     config.log_formatter = HartFormatter.new
 
     # Use normal JS (default), not coffeescript
