@@ -60,7 +60,7 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
       let(:count) { 3 }
 
       it 'displays the count' do
-        expect(rendered).to have_text(count.to_s + ' times')
+        expect(rendered).to have_text("#{count} times")
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
       let(:count) { 1 }
 
       it 'does not display the count' do
-        expect(rendered).not_to have_text(count.to_s + ' times')
+        expect(rendered).not_to have_text("#{count} times")
       end
     end
   end
