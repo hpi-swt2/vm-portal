@@ -54,7 +54,8 @@ class User < ApplicationRecord
   # notifications
   def notify(title, message, link = '', type: :default)
     last_notification = notifications.first
-    notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link
+    # Set the `created_at` attribute, so that it can be compared by the `duplicate_of`
+    notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link, created_at: DateTime.current
 
     if notification.duplicate_of last_notification
       last_notification.update(count: last_notification.count + 1)

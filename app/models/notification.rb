@@ -14,11 +14,6 @@ class Notification < ApplicationRecord
     # we consider two notifications to be a duplicate of each other if they have the same contents and were created within one minute of each other
   end
 
-  def created_at
-    creation_date = super
-    creation_date.nil? ? DateTime.current : creation_date
-  end
-
   private
 
   def state
