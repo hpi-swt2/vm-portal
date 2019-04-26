@@ -37,7 +37,7 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
     end
 
     it 'renders an error icon' do
-      assert_select 'i[class="fa fa-exclamation-triangle"]'
+      expect(rendered).to have_css('i', class: 'fa fa-exclamation-triangle')
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
     end
 
     it 'does not render an error icon' do
-      assert_select 'i[class="fa fa-exclamation-triangle"]', false
+      expect(rendered).not_to have_css('i', class: 'fa fa-exclamation-triangle')
     end
   end
 
