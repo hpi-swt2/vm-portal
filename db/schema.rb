@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_18_170254) do
+ActiveRecord::Schema.define(version: 2019_04_06_192841) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
@@ -56,6 +56,8 @@ ActiveRecord::Schema.define(version: 2019_03_18_170254) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "link"
+    t.integer "notification_type", default: 0
+    t.integer "count", default: 1
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
