@@ -44,4 +44,11 @@ class Machine < ApplicationRecord
     @users = @sudo_users = nil
     read_users
   end
+
+  def write_puppetscripts(git_writer, name_script, node_script)
+    git_writer.write_file(Puppetscript.class_file_name(name), name_script)
+    git_writer.write_file(Puppetscript.node_file_name(name), node_script)
+    message = commit_message(git_writer)
+    git_writer.save(message)
+  end
 end
