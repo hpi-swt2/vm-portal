@@ -29,6 +29,6 @@ describe HartFormatter do
 
   it 'sets the notification count correctly' do
     3.times { Rails.logger.error('My Error') }
-    expect(Notification.all.first.count).to be == 3
+    expect(Notification.all.first.count).to eq(3)
   end
 end

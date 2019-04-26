@@ -134,12 +134,12 @@ RSpec.describe User, type: :model do
 
     it 'does not create multiple duplicate notifications' do
       3.times { notify_user }
-      expect(user.notifications.size).to be == 1
+      expect(user.notifications.size).to eq(1)
     end
 
     it 'sets the count of duplicate notifications correctly' do
       4.times { notify_user }
-      expect(user.notifications.first.count).to be == 4
+      expect(user.notifications.first.count).to eq(4)
     end
 
     it 'does not notify slack for duplicate notifiations' do
