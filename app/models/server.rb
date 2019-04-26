@@ -82,8 +82,4 @@ class Server < Machine
   def convert_to_user(user_or_id)
     user.is_a? User ? user : User.find(user_or_id)
   end
-
-  def node_script
-    Puppetscript.node_script(name, (sudo_users + responsible_users).uniq, all_users)
-  end
 end

@@ -14,6 +14,10 @@ class Machine < ApplicationRecord
     end
   end
 
+  def node_script
+    Puppetscript.node_script(name, (sudo_users + responsible_users).uniq, all_users)
+  end
+
   private
 
   def read_users

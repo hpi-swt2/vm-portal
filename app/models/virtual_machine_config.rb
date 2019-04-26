@@ -38,10 +38,6 @@ class VirtualMachineConfig < Machine
   def all_users
     (users + sudo_users + responsible_users).uniq
   end
-  
-  def node_script
-    Puppetscript.node_script(name, (sudo_users + responsible_users).uniq, all_users)
-  end
 
   private
 
