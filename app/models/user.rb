@@ -64,7 +64,10 @@ class User < ApplicationRecord
     else
       notify_slack("*#{title}*\n#{message}\n#{link}")
       NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
-      notification.save # saving might fail, but there is no useful way to handle the error.
+      notification.save
+      # saving might fail, there is however no good way to handle this error.
+      # We cannot log the error, because when using the HartFormatter, logging errors creates new notifications,
+      # these might also fail to save, creating an endless recursion.
     end
   end
 
