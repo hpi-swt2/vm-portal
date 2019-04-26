@@ -34,8 +34,4 @@ class VirtualMachineConfig < Machine
 
     @users
   end
-
-  def all_users
-    (users + sudo_users + responsible_users).uniq
-  end
 end

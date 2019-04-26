@@ -62,10 +62,6 @@ class Server < Machine
     @users
   end
 
-  def all_users
-    (users + sudo_users + responsible_users).uniq
-  end
-
   # There is actually only ever one responsible user
   # This method is a convenience accessor to allow for easier array concatination
   # It is also recommended to use this method instead of :responsible because we might want to allow multiple responsible users in the future.
