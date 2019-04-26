@@ -1,7 +1,7 @@
 <% unless @notifications.empty? %>
 
   <% @notifications.each do |notification| %>
-    <div class="card mb-3 <%= 'bg-primary-light' unless notification.read %>">
+    <div class="notification card mb-3 <%= 'bg-primary-light' unless notification.read %>">
       <div class="card-body">
         <%# Delete link %>
         <%= link_to fa_icon('trash lg'), notification_path(notification),

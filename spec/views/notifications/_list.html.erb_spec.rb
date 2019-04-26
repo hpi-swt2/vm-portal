@@ -37,7 +37,9 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
     end
 
     it 'renders an error icon' do
-      expect(rendered).to have_css('i', class: 'fa fa-exclamation-triangle')
+      expect(rendered).to have_css('.notification') do
+        have_css('i', class: 'fa fa-exclamation-triangle')
+      end
     end
   end
 
@@ -47,7 +49,9 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
     end
 
     it 'does not render an error icon' do
-      expect(rendered).not_to have_css('i', class: 'fa fa-exclamation-triangle')
+      expect(rendered).to have_css('.notification') do
+        not_have_css('i', class: 'fa fa-exclamation-triangle')
+      end
     end
   end
 
@@ -60,7 +64,9 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
       let(:count) { 3 }
 
       it 'displays the count' do
-        expect(rendered).to have_text("#{count} times")
+        expect(rendered).to have_css('.notification') do
+          have_text("#{count} times")
+        end
       end
     end
 
@@ -68,7 +74,9 @@ RSpec.describe 'notifications/_list.html.erb', type: :view do
       let(:count) { 1 }
 
       it 'does not display the count' do
-        expect(rendered).not_to have_text("#{count} times")
+        expect(rendered).to have_css('.notification') do
+          not_have_text("#{count} times")
+        end
       end
     end
   end
