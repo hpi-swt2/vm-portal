@@ -38,10 +38,4 @@ class VirtualMachineConfig < Machine
   def all_users
     (users + sudo_users + responsible_users).uniq
   end
-
-  private
-
-  def convert_to_user(user_or_id)
-    user.is_a? User ? user : User.find(user_or_id)
-  end
 end

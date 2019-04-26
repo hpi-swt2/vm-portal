@@ -55,4 +55,8 @@ class Machine < ApplicationRecord
     message = commit_message(git_writer)
     git_writer.save(message)
   end
+
+  def convert_to_user(user_or_id)
+    user.is_a? User ? user : User.find(user_or_id)
+  end
 end
