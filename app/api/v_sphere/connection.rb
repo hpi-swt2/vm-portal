@@ -55,9 +55,11 @@ module VSphere
     end
 
     def connect
-      initialize_settings
       return unless configured?
+      create_connection if @vim.nil?
+    end
 
+    def create_connection
       @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
       @vm_folder = VSphere::Folder.new(@dc.vmFolder)
