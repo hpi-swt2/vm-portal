@@ -33,4 +33,15 @@ class Machine < ApplicationRecord
     @sudo_users -= responsible_users
   end
 
+  def save_users
+    GitHelper.open_git_repository for_write: true do |git_writer|
+      name_script = Puppetscript.name_script name
+      write_puppetscripts git_writer, name_script, node_script
+    end
+  rescue Git::GitExecuteError, RuntimeError => e
+    Rails.logger.error(e)
+    # update local user assignments again to reflect the written status (if available)
+    @users = @sudo_users = nil
+    read_users
+  end
 end
