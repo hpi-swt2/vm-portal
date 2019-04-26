@@ -56,7 +56,7 @@ class User < ApplicationRecord
     last_notification = notifications.first
     notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link
 
-    if last_notification == notification
+    if notification.duplicate_of last_notification
       last_notification.update(count: last_notification.count + 1)
     else
       notify_slack("*#{title}*\n#{message}\n#{link}")

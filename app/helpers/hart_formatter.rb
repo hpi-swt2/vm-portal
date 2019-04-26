@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Use default logging formatter in production mode so that PID and timestamp are not suppressed.
-class HartFormatter < Rails.env == 'production' ? ::Logger::Formatter : ActiveSupport::Logger::SimpleFormatter
+class HartFormatter < Rails.env == 'production' ? ActiveSupport::Logger::Formatter : ActiveSupport::Logger::SimpleFormatter
   def call(severity, timestamp, progname, msg)
     if severity == 'ERROR'
       User.admin.each do |admin|
