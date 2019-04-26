@@ -53,6 +53,8 @@ class User < ApplicationRecord
 
   # notifications
   def notify(title, message, link = '', type: :default)
+    # notifications are ordered by descending created_at order (see `models/notification.rb`)
+    # notifications with the newest ("largest") timestamps are first
     last_notification = notifications.first
     # Set the `created_at` attribute, so that it can be compared by the `duplicate_of`
     notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link, created_at: DateTime.current
