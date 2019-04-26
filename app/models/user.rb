@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
   has_many :servers
+  has_many :notifications
   has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -51,16 +52,23 @@ class User < ApplicationRecord
   end
 
   # notifications
-  def notify(title, message, link = '')
-    notify_slack("*#{title}*\n#{message}\n#{link}")
+  def notify(title, message, link = '', type: :default)
+    # notifications are ordered by descending created_at order (see `models/notification.rb`)
+    # notifications with the newest ("largest") timestamps are first
+    last_notification = notifications.first
+    # Set the `created_at` attribute, so that it can be compared by the `duplicate_of`
+    notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link, created_at: DateTime.current
 
-    NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
-
-    notification = Notification.new title: title, message: message
-    notification.user_id = id
-    notification.read = false
-    notification.link = link
-    notification.save # saving might fail, but there is no useful way to handle the error.
+    if notification.duplicate_of last_notification
+      last_notification.update(count: last_notification.count + 1)
+    else
+      notify_slack("*#{title}*\n#{message}\n#{link}")
+      NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
+      notification.save
+      # saving might fail, there is however no good way to handle this error.
+      # We cannot log the error, because when using the HartFormatter, logging errors creates new notifications,
+      # these might also fail to save, creating an endless recursion.
+    end
   end
 
   after_initialize :set_default_role, if: :new_record?

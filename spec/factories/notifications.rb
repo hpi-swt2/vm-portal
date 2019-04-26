@@ -8,4 +8,14 @@ FactoryBot.define do
     read { false }
     link { 'https://example.com' }
   end
+
+  factory :error_notification, parent: :notification do
+    notification_type { :error }
+    title { 'An Error occured!' }
+  end
+
+  factory :read_notification, parent: :notification do
+    title { 'This notification is already read' }
+    read { true }
+  end
 end
