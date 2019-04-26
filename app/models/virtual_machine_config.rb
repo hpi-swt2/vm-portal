@@ -11,27 +11,4 @@ class VirtualMachineConfig < Machine
 
   attr_writer :sudo_users
   attr_writer :users
-
-  def user_ids=(new_user_ids)
-    @users = User.find(new_user_ids)
-  end
-
-  def sudo_user_ids=(new_sudo_users)
-    @sudo_users = User.find(new_sudo_users)
-  end
-
-  # in this model, the groups: users, sudo_users, and responsible_users shall be seperate groups
-  # They will be merged for writing puppet scripts and seperated when reading them
-
-  def sudo_users
-    read_users if @sudo_users.nil?
-
-    @sudo_users
-  end
-
-  def users
-    read_users if @users.nil?
-
-    @users
-  end
 end
