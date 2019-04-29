@@ -47,6 +47,27 @@
   <div class="column float-right half-screen-box">
     <table class="table table-borderless" style="width: 100%">
       <tbody class="table-active">
+      <tr>
+        <th colspan="2" ><h4 class="mb-0">Users</h4></th>
+      </tr>
+      <% @server.all_users.each do |user| %>
+        <tr>
+          <td>
+            <%= link_to user.name, user %>
+            <% if @server.responsible == user %>
+              <span class="badge badge-primary" data-toggle="tooltip" data-placement="bottom" title="Responsible users automatically have sudo rights">responsible</span>
+            <% end %>
+            <% if @server.sudo_users.include? user %>
+              <span class="badge badge-info">sudo user</span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <table class="table table-borderless" style="width: 100%">
+      <tbody class="table-active">
         <tr>
           <th colspan="2"><h4 class="mb-0">Software</h4></th>
         </tr>

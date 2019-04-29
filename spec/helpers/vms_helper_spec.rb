@@ -13,7 +13,7 @@ RSpec.describe VmsHelper, type: :helper do
 
       sudo_list = false
       vm_name = 'MyTestVm'
-      notify_changed_users(users_before.map(&:id), users_after.map(&:id), sudo_list, vm_name)
+      notify_changed_users(users_before, users_after, sudo_list, vm_name)
     end
 
     it 'notifies removed users about their removal' do

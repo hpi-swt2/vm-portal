@@ -10,7 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_06_113452) do
+ActiveRecord::Schema.define(version: 2019_04_06_192841) do
+
+  create_table "app_settings", force: :cascade do |t|
+    t.integer "singleton_guard"
+    t.string "git_repository_url"
+    t.string "git_repository_name"
+    t.string "github_user_name"
+    t.string "github_user_email"
+    t.string "vsphere_server_ip"
+    t.string "vsphere_server_user"
+    t.string "vsphere_server_password"
+    t.string "email_notification_smtp_address"
+    t.integer "email_notification_smtp_port"
+    t.string "email_notification_smtp_domain"
+    t.string "email_notification_smtp_user"
+    t.string "email_notification_smtp_password"
+    t.integer "vm_archivation_timeout"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "vsphere_root_folder", default: ""
+    t.string "puppet_init_path"
+    t.string "puppet_classes_path"
+    t.string "puppet_nodes_path"
+    t.integer "min_cpu_cores"
+    t.integer "max_cpu_cores"
+    t.integer "max_ram_size"
+    t.integer "max_storage_size"
+    t.string "git_branch", default: "master"
+    t.integer "max_shown_vms", default: 10
+    t.index ["singleton_guard"], name: "index_app_settings_on_singleton_guard", unique: true
+  end
 
   create_table "archivation_requests", force: :cascade do |t|
     t.string "name", null: false
@@ -25,6 +55,9 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.boolean "read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "link"
+    t.integer "notification_type", default: 0
+    t.integer "count", default: 1
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
@@ -132,12 +165,12 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "role"
-    t.string "first_name"
-    t.string "last_name"
     t.string "provider"
     t.string "uid"
-    t.integer "user_id"
     t.string "ssh_key"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "user_id"
     t.boolean "email_notifications", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -149,8 +182,6 @@ ActiveRecord::Schema.define(version: 2019_02_06_113452) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_users_assigned_to_requests_on_request_id"
-    t.index ["user_id"], name: "index_users_assigned_to_requests_on_user_id"
   end
 
   create_table "users_virtual_machine_configs", id: false, force: :cascade do |t|

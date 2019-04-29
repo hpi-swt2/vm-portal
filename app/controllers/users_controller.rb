@@ -5,7 +5,8 @@ class UsersController < ApplicationController
 
   before_action :authenticate_current_user, only: %i[edit update]
   before_action :authenticate_current_user_or_admin, only: %i[show]
-  before_action :authenticate_admin, only: %i[index update_role]
+  # While the application is run in development mode, all users are granted access to the user settings
+  before_action :authenticate_admin, only: %i[index update_role], unless: -> { Rails.env.development? }
 
   def index
     @users = User.search(params[:search], params[:role])
@@ -29,7 +30,7 @@ class UsersController < ApplicationController
     @user.update(role: params[:role])
     time = Time.zone.now.strftime('%d/%m/%Y')
     @user.notify('Changed role',
-                 "Your role has changed from #{former_role} to #{@user.role} on #{time}: " +
+                 "Your role has changed from #{former_role} to #{@user.role}.",
                  url_for(controller: :users, action: 'show', id: @user.id))
     redirect_to users_path
   end

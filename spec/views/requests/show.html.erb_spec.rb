@@ -7,7 +7,7 @@ RSpec.describe 'requests/show', type: :view do
 
   before do
     @user = FactoryBot.create(:user)
-    @request = assign(:request, FactoryBot.create(:request, user_ids: [@user.id], user: FactoryBot.create(:employee)))
+    @request = assign(:request, FactoryBot.create(:request, name: 'myvm', user_ids: [@user.id], user: FactoryBot.create(:employee)))
     @second_user = FactoryBot.create(:user, email: 'test@test.de')
     @request.assign_sudo_users([@second_user.id])
     allow(view).to receive(:current_user).and_return(current_user)

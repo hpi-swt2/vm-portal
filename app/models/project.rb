@@ -6,15 +6,9 @@ class Project < ApplicationRecord
                           join_table: :responsible_users,
                           foreign_key: :user_id,
                           association_foreign_key: :project_id
+  has_many :virtual_machine_configs
 
   validates :name, presence: true
   validates :description, presence: true
-
-  validate :validate_responsible_users
-
-  def validate_responsible_users
-    return unless responsible_users.empty?
-
-    errors.add :responsible_users, 'Each project needs at least one responsible user'
-  end
+  validates :responsible_users, presence: true
 end

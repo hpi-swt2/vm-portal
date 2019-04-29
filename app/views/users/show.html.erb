@@ -1,4 +1,13 @@
-<h1>User profile</h1><br>
+<div class="clearfix">
+  <h1 class="float-left">User profile</h1>
+  <% if @user == current_user %>
+    <%= link_to(fa_icon('edit', text: t('actions.edit')),
+                edit_user_path(@user),
+                class: 'btn btn-primary float-right',
+                id: 'editUserButton')
+    %>
+  <% end %>
+</div>
 
 <table class="table">
   <tbody>
@@ -25,39 +34,29 @@
             <%= t('user.no_ssh_key') %>
           <% end %></td>
       </tr>
+      <tr>
+        <td>Receive E-Mail notifications</td>
+        <td>
+          <%= @user.email_notifications ? 'Yes' : 'No' %>
+        </td>
+      </tr>
     <% end %>
   </tbody>
-</table><br>
+</table>
 
 <% if @user == current_user %>
-  <%= form_for @user do |form| %>
-    <div class="float-left">
-      <%= form.label "Would you like to receive email notifications?"  %>
-      &nbsp;
-      <%= form.label :email_notifications, "Yes" %>
-      <%= form.radio_button :email_notifications, true, checked: @user.email_notifications, onclick: "this.form.submit();" %>
-      &nbsp;
-      <%= form.label :email_notifications, "No" %>
-      <%= form.radio_button :email_notifications, false, checked: !@user.email_notifications, onclick: "this.form.submit();" %>
-    </div>
-  <% end %>
-  <br /><br />
-  <div class="float-left">
-    <a href="<%= new_slack_path %>">
-      <img alt="Add to Slack"  src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-    </a>
-
-    <%= link_to(fa_icon('edit', text: t('actions.edit')),
-                edit_user_path(@user),
-                class: 'btn btn-primary',
-                id: 'editUserButton')
-    %>
-  </div>
+  <a href="<%= new_slack_path %>">
+    <img alt="Add to Slack"  src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+  </a>
 <% end %>
-<br /><br />
-<h2>Projects</h2>
+
+<h2 class="mt-3"><%= "#{@user.first_name.capitalize}'s projects" %></h2>
 <% if @user.responsible_projects.empty? %>
-  <p>You are not part of any projects. All your projects will be shown here.</p>
+  <% if @user == current_user %>
+      <p>You are not part of any projects. All your projects will be shown here.</p>
+    <% else %>
+      <p>This user is not part of any projects. All his projects will be shown here.</p>
+    <% end %>
 <% else %>
-  <%= render 'projects/list', projects: @user.responsible_projects %>
+  <%= render 'projects/table', projects: @user.responsible_projects %>
 <% end %>

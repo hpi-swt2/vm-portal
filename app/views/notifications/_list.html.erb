@@ -1,27 +1,35 @@
 <% unless @notifications.empty? %>
 
   <% @notifications.each do |notification| %>
-    <% class_names = notification.read ? "card mb-3 notification" : "card unread mb-3 notification" %>
-    <div class="<%= class_names %>" style="width:100%">
+    <div class="notification card mb-3 <%= 'bg-primary-light' unless notification.read %>">
       <div class="card-body">
+        <%# Delete link %>
+        <%= link_to fa_icon('trash lg'), notification_path(notification),
+                    method: :delete,
+                    title: 'Delete',
+                    data: {toggle: 'tooltip', placement: 'top',
+                           confirm: 'Are you sure you want to delete this notification?'},
+                    class: "float-right" %>
+        <%# Mark as read link %>
+        <%= link_to fa_icon('check lg'), mark_as_read_notification_path(notification),
+                    title: 'Mark as read',
+                    data: {toggle: 'tooltip', placement: 'top'},
+                    class: "float-right mr-2" unless notification.read %>
+        <%# Notification title %>
         <h5 class="card-title">
-          <%= notification.title %>
+          <%= link_to notification.title, mark_as_read_and_redirect_notification_path(notification) %>
+          <%= ' (' + notification.count.to_s + ' times)' if notification.count > 1 %>
+          <%= fa_icon('exclamation-triangle') if notification.error? %>
+          <br>
+          <span class="small">
+            <%= I18n.l notification.created_at, format: :short %> (<%= time_ago_in_words notification.created_at %> ago)
+          </span>
         </h5>
-        <%= # The [^\s|<] of the regex is necessary, because simple_format will add a </p> at the end of the message
-            # Without the < exclusion, this </p> would then be added to the link, which breaks it!
-            simple_format(notification.message).gsub(/(?:https?|ftp|mailto):\/\/[^\s|<]+/, '<a href="\0">\0</a>').html_safe %>
-        <div class="pull-right">
-          <%= link_to mark_as_read_notification_path(notification), class: 'icon-link check' do %>
-            <%= fa_icon('check', class: 'big-icon') %>
-          <% end unless notification.read%>
-          <%= link_to notification, method: :delete, data: { confirm: 'Are you sure you want to delete this notification?' }, class: 'icon-link delete'  do %>
-            <%= fa_icon('trash', class: 'big-icon') %>
-          <% end %>
-        </div>
+        <%= simple_format(notification.message).html_safe %>
       </div>
     </div>
   <% end %>
 
 <% else %>
-  <p>You don't have any notifications at the moment.</p>
+  <div id="no-notifications" class="text-center">No unread notifications</div>
 <% end %>

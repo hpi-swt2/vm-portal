@@ -20,28 +20,50 @@ module VSphere
   class Connection
     include Singleton
 
-    API_SERVER_IP = '192.168.30.3'
-    API_SERVER_USER = 'administrator@swt.local'
-    API_SERVER_PASSWORD = 'Vcsaswt"2018'
-
+    # Warning:
+    # This method may return nil, if no connection could be established!
     def root_folder
       connect
 
       @vm_folder
     end
 
+    # Warning:
+    # This method may return nil, if no connection could be established!
     def clusters_folder
       connect
 
       @cluster_folder
     end
 
+    def configured?
+      initialize_settings
+      not_empty?(@server_ip) && not_empty?(@server_user) && not_empty?(@server_password)
+    end
+
     private
 
+    def not_empty?(string)
+      !string.nil? && !string.empty?
+    end
+
+    def initialize_settings
+      @server_ip = AppSetting.instance.vsphere_server_ip
+      @server_user = AppSetting.instance.vsphere_server_user
+      @server_password = AppSetting.instance.vsphere_server_password
+      @root_folder_name = AppSetting.instance.vsphere_root_folder
+    end
+
     def connect
-      @vim = RbVmomi::VIM.connect(host: API_SERVER_IP, user: API_SERVER_USER, password: API_SERVER_PASSWORD, insecure: true)
+      return unless configured?
+      create_connection if @vim.nil?
+    end
+
+    def create_connection
+      @vim = RbVmomi::VIM.connect(host: @server_ip, user: @server_user, password: @server_password, insecure: true)
       @dc = @vim.serviceInstance.find_datacenter('Datacenter') || raise('datacenter not found')
-      @vm_folder = VSphere::Folder.new @dc.vmFolder
+      @vm_folder = VSphere::Folder.new(@dc.vmFolder)
+      @vm_folder = @vm_folder.ensure_subfolder(@root_folder_name) if not_empty?(@root_folder_name)
       @cluster_folder = VSphere::Folder.new @dc.hostFolder
     end
   end

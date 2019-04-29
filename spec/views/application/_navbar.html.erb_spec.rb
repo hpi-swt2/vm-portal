@@ -40,6 +40,16 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
     end
   end
 
+  context 'when the current user is not an admin but in development mode' do
+    let(:current_user) { FactoryBot.create :user }
+
+    it 'does link to users list' do
+      allow(Rails.env).to receive(:development?).and_return(true)
+      render
+      expect(rendered).to have_link(href: users_path)
+    end
+  end
+
   context 'when the current user is an employee' do
     let(:current_user) { FactoryBot.create :employee }
 
@@ -75,6 +85,17 @@ RSpec.describe 'application/_navbar.html.erb', type: :view do
   context 'when the current user is an admin' do
     let(:current_user) { FactoryBot.create :admin }
 
+    it 'links to settings list' do
+      expect(rendered).to have_link('Settings', href: edit_app_setting_path(AppSetting.instance))
+    end
+
+    it 'links to the template edit page' do
+      expect(rendered).to have_link('Templates', href: request_templates_path)
+    end
+
+    it 'links to operating systems list' do
+      expect(rendered).to have_link('Operating Systems', href: operating_systems_path)
+    end
     it 'links to users list' do
       expect(rendered).to have_link('Users', href: users_path)
     end

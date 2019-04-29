@@ -1,47 +1,35 @@
-<% if @user.errors.any? %>
-  <div id="errors">
-    <% @user.errors.messages.values.each do |messages| %>
-      <% messages.each do |message| %>
-        <div class="alert alert-danger">
-          <%= message %>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
-<% end %>
+<h1>User profile</h1>
 
-<h1>User profile</h1><br>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_for @user do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %> 
 
-<%= form_for @user do |f| %>
   <table class="table">
     <tbody>
-    <tr>
-      <td><%= User.human_attribute_name('email') %></td>
-      <td><%= @user.email %></td>
-    </tr>
-    <tr>
-      <td>Name</td>
-      <td><%= @user.name %></td>
-    </tr>
-    <% if current_user?(@user) %>
+      <tr>
+        <td><%= User.human_attribute_name('email') %></td>
+        <td><%= @user.email %></td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td><%= @user.name %></td>
+      </tr>
       <tr>
         <td><%= User.human_attribute_name('ssh_key') %></td>
-        <td><%= f.text_area :ssh_key, class: 'form-control', rows: '8', id: 'sshKeyField' %></td>
+        <td><%= form.text_area :ssh_key, rows: 8, id: 'sshKeyField', hide_label: true %></td>
       </tr>
-    <% end %>
+      <tr>
+        <td>E-Mail Preferences</td>
+        <td><%= form.check_box :email_notifications, label: 'Receive E-Mail notifications' %></td>
+      </tr>
     </tbody>
-  </table><br>
+  </table>
 
-  <button type='submit',
-  class='btn btn-primary float-right',
-  id='saveUserButton'>
-    <i class="fa fa-check"></i>
-    <%= t('actions.save') %>
-  </button>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#submit-buttons %>
+  <%= form.primary fa_icon('check', text: t('actions.save')),
+    id: 'saveUserButton', extra_class: 'float-right', render_as_button: true %>
 
-  <%= link_to(fa_icon('close', text: t('actions.cancel')),
-              user_path(@user),
-              class: 'btn btn-danger float-right mx-3',
-              id: 'editUserButton')
-  %>
+  <%= link_to fa_icon('close', text: t('actions.cancel')), user_path(@user),
+    id: 'editUserButton', class: 'btn btn-danger float-right mr-3' %>
 <% end %>

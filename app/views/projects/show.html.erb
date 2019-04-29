@@ -1,37 +1,38 @@
 <h1><%= I18n.t('project.title') %></h1>
 
-<table class="table">
-  <tbody>
-    <tr>
-      <th><%= Project.human_attribute_name('name') %></th>
-      <td><%= @project.name %></td>
-    </tr>
-    <tr>
-      <th><%= Project.human_attribute_name('description') %></th>
-      <td><%= @project.description %></td>
-    </tr>
-    <tr>
-      <th><%= Project.human_attribute_name('responsible_users') %></th>
-      <td>
-        <ul class="bulletless pl-1">
-          <% @project.responsible_users.each do |user| %>
-            <li><%= user.name %></li>
-          <% end %>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<dl>
+  <dt><strong><%= Project.human_attribute_name('name') %></strong></dt>
+  <dd><%= @project.name %></dd>
+  <dt><strong><%= Project.human_attribute_name('description') %></strong></dt>
+  <dd><%= @project.description %></dd>
+  <dt><strong>VMs</strong></dt>
+  <dd>
+    <% if @project.virtual_machine_configs.each do |config| %>
+      <%= link_to config.name, controller: "vms", action: "show", id: config.name %>
+    <% end.empty? %>
+      ---
+    <% end %>
+  </dd>
+  <dt><strong><%= Project.human_attribute_name('responsible_users') %></strong></dt>
+  <dd>
+    <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
+    <ul class="list-inline mb-0">
+      <% @project.responsible_users.each do |user| %>
+        <li class="list-inline-item"><%= link_to user.name, user %></li>
+      <% end %>
+    </ul>
+  </dd>
+</dl>
 
 <div class="float-right">
-  <%= link_to 'All Projects',
-              projects_path,
-              class: 'btn btn-primary'
-  %>
-  <% if @project.responsible_users.include? current_user  %>
-    <%= link_to 'Edit',
-                edit_project_path(@project),
-                class: 'btn btn-primary'
-    %>
+  <% if @project.responsible_users.include? current_user %>
+    <%= link_to fa_icon('pencil', text: 'Edit'), edit_project_path(@project),
+                class: 'btn btn-primary' %>
+    <% vm_names = @project.virtual_machine_configs.map(&:name).join(", ") %>
+    <% warning = "The following VMs will loose their project:\n" + vm_names %>
+    <%= link_to fa_icon('trash', text: 'Delete'), @project, method: :delete,
+                data: {confirm: ["Are you sure you want to delete this project?\n",
+                                 "#{warning if vm_names.present?}"].join('')},
+                class: 'btn btn-danger' %>
   <% end %>
 </div>

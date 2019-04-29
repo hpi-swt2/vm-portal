@@ -47,7 +47,7 @@ describe VSphere do
     end
   end
 
-  let(:user_folder_mock) { vim_folder_mock('user', [], [], []) }
+  let(:user_folder_mock) { vim_folder_mock('User.Surname-Surname2', [], [], []) }
 
   let(:active_vms_folder) { v_sphere_folder_mock('Active VMs', subfolders: [user_folder_mock]) }
 
@@ -70,6 +70,62 @@ describe VSphere do
 
   let(:clusters_mock) do
     [v_sphere_cluster_mock('cluster1', cluster1_hosts), v_sphere_cluster_mock('cluster2', cluster2_hosts)]
+  end
+
+  context 'when the connection is not configured correctly' do
+    before do
+      # connections are mocked in every test, so we need to 'unstub' it
+      allow(VSphere::Connection).to receive(:instance).and_call_original
+      allow(VSphere::Connection.instance).to receive(:configured?).and_return false
+    end
+
+    it 'returns no root_folder' do
+      expect(VSphere::Connection.instance.root_folder).to be_nil
+    end
+
+    it 'returns no clusters_folder' do
+      expect(VSphere::Connection.instance.clusters_folder).to be_nil
+    end
+
+    it 'returns no Virtual Machines' do
+      expect(VSphere::VirtualMachine.all).to be_empty
+    end
+
+    it 'returns no VM by name' do
+      expect(VSphere::VirtualMachine.find_by_name('myVM')).to be_nil
+    end
+
+    it 'returns no archived VMs' do
+      expect(VSphere::VirtualMachine.archived).to be_empty
+    end
+
+    it 'returns no pending archivation VMS' do
+      expect(VSphere::VirtualMachine.pending_archivation).to be_empty
+    end
+
+    it 'returns no pending reviving VMs' do
+      expect(VSphere::VirtualMachine.pending_revivings).to be_empty
+    end
+
+    it 'returns no rest-VMs' do
+      expect(VSphere::VirtualMachine.rest).to be_empty
+    end
+
+    it 'returns no user_vms' do
+      expect(VSphere::VirtualMachine.user_vms(FactoryBot.create(:user))).to be_empty
+    end
+
+    it 'returns no clusters' do
+      expect(VSphere::Cluster.all).to be_empty
+    end
+
+    it 'returns no hosts' do
+      expect(VSphere::Host.all).to be_empty
+    end
+
+    it 'returns no host by name' do
+      expect(VSphere::Host.get_host('myHost')).to be_nil
+    end
   end
 
   describe VSphere::Folder do
@@ -141,7 +197,7 @@ describe VSphere do
 
     it 'can move into the responsible users subfolder' do
       config = FactoryBot.create :virtual_machine_config
-      config.responsible_users = [FactoryBot.create(:user, email: 'user@user.de')]
+      config.responsible_users = [FactoryBot.create(:user, email: 'user.surname-surname2@user.de')]
       config.save!
       v_sphere_vm_mock(config.name).move_into_correct_subfolder
       expect(user_folder_mock).to have_received(:MoveIntoFolder_Task)
@@ -149,14 +205,6 @@ describe VSphere do
 
     it 'does not have users if there is no fitting request' do
       expect(VSphere::VirtualMachine.find_by_name('Archived VM2').users).to be_empty
-    end
-
-    it 'has users if a fitting request exists' do
-      skip 'git will not be tested, should have users when a fitting puppet script exists'
-      request = FactoryBot.create :accepted_request
-      request.users << FactoryBot.create(:user)
-      vm = VSphere::VirtualMachine.new(vim_vm_mock(request.name))
-      expect(vm.users).to match_array(request.users)
     end
 
     it 'does not have responsible users if there is no fitting config' do
@@ -206,21 +254,21 @@ describe VSphere do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_archived_vms_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_archived
-      expect(mock_archived_vms_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_archived_vms_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is pending_archivation' do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_pending_archivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_pending_archivation
-      expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_pending_archivings_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is pending_reviving' do
       vm = VSphere::VirtualMachine.new mock_root_folder_vms.first
       allow(mock_pending_revivings_folder).to receive_message_chain :MoveIntoFolder_Task, :wait_for_completion
       vm.set_pending_reviving
-      expect(mock_pending_revivings_folder).to have_received(:MoveIntoFolder_Task)
+      expect(mock_pending_revivings_folder).to have_received(:MoveIntoFolder_Task).at_least(:once)
     end
 
     it 'moves into the correct folder when it is revived' do

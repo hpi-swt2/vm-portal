@@ -1,0 +1,51 @@
+<table data-toggle="datatable" class="table" id=<%= id %> <%= datatable_options.map{ |k,v| "data-#{k}=#{v}" }.join(' ') %>>
+  <thead>
+  <tr>
+    <th>Status</th>
+    <th>Name</th>
+    <th>Project</th>
+    <th>Responsible</th>
+    <% unless buttons.nil? %>
+      <th data-orderable="false">Actions</th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody id="vms">
+    <% vms.each do |vm| %>
+      <tr>
+        <td data-order="<%= vm.status %>" data-search="<%= vm.status %>">
+          <%= content_tag :div, nil,
+            title: vm.status,
+            :data => { toggle: 'tooltip', placement: 'right' },
+            class: "round #{status_color vm}" %>
+        </td>
+        <%# Allow also searching for description %>
+        <td data-search='<%= "#{vm.name} #{vm.config.description if vm.config}" %>'>
+          <%= link_to vm.name, vm_path(vm.name) %>
+        </td>
+        <td>
+          <% if vm.project.nil? %>
+            No project found!
+          <% else %>
+            <%= link_to vm.project.name, project_path(vm.project) %>
+          <% end %>
+        </td>
+        <td>
+          <% if vm.responsible_users.empty? %>
+            No responsible users found!
+          <% else %>
+          <%# https://getbootstrap.com/docs/4.0/content/typography/#inline %>
+            <ul class="list-inline mb-0">
+              <% vm.responsible_users.each do |user| %>
+                <li class="list-inline-item"><%= link_to user.name, user_path(user) %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
+        <% unless buttons.nil? %>
+          <td><%= render buttons.to_s, vm: vm %></td>
+        <% end %>
+      </tr>
+    <% end %> <%# vms.each %>
+  </tbody>
+</table>

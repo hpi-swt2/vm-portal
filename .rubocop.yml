@@ -3,7 +3,7 @@ require: rubocop-rspec
 
 AllCops:
   Exclude:
-    - 'db/schema.rb'
+    - 'db/*'
 
 Metrics/BlockLength:
   Exclude:

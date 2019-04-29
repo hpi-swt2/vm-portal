@@ -47,18 +47,13 @@ RSpec.describe Request, type: :model do
         expect(request).to be_invalid
       end
 
-      it 'is invalid with no operating_system specification' do
-        request.operating_system = ''
-        expect(request).to be_invalid
-      end
-
       it 'is invalid with negative cpu_cores specifiation' do
-        request.cpu_cores = -1
+        request.cpu_cores = AppSetting.instance.min_cpu_cores - 1
         expect(request).to be_invalid
       end
 
       it 'is invalid with too many cpu_cores ' do
-        request.cpu_cores = Request::MAX_CPU_CORES + 1
+        request.cpu_cores = AppSetting.instance.max_cpu_cores + 1
         expect(request).to be_invalid
       end
 
@@ -68,8 +63,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with too much ram' do
-        request.ram_gb = Request::MAX_RAM_GB + 1
-        expect(request).to be_invalid
+        expect(request).not_to allow_value(AppSetting.instance.max_ram_size + 1).for(:ram_gb)
       end
 
       it 'is invalid with negative storage specifiation' do
@@ -78,7 +72,7 @@ RSpec.describe Request, type: :model do
       end
 
       it 'is invalid with too much storage' do
-        request.storage_gb = Request::MAX_STORAGE_GB + 1
+        request.storage_gb = AppSetting.instance.max_storage_size + 1
         expect(request).to be_invalid
       end
 
@@ -215,7 +209,7 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'create_vm' do
-    let(:request) { FactoryBot.create(:request) }
+    let(:request) { FactoryBot.create :request, name: 'myvm' }
 
     it 'saves the responsible users in the VM' do
       request.responsible_users = [FactoryBot.create(:admin)]
@@ -225,44 +219,39 @@ RSpec.describe Request, type: :model do
   end
 
   describe 'puppet script helper methods' do
-    let(:request) { FactoryBot.create(:request_with_users) }
+    let(:request) { FactoryBot.create :request_with_users, name: 'myvm' }
 
     it 'returns correct declaration script for a given request' do
       script = request.generate_puppet_name_script
       expected_string = <<~NAME_SCRIPT
-        node \'myvm\'{
-
-            if defined( node_myvm) {
-                        class { node_myvm: }
-            }
+        node \'myvm\' {
+          if defined( node_myvm ) {
+            class { node_myvm: }
+          }
         }
       NAME_SCRIPT
       expect(script).to eq(expected_string)
     end
 
     it 'returns correct initialization script for a given request' do
-      users = request.users
-      email = users[0].email.split('@').first
-      email2 = users[1].email.split('@').first
-      email3 = users[2].email.split('@').first
-      email4 = users[3].email.split('@').first
+      users = request.users + request.responsible_users
+      emails = users.map(&:human_readable_identifier)
       script = request.generate_puppet_node_script
       expected_string = <<~NODE_SCRIPT
         class node_myvm {
-                $admins = []
-                $users = ["#{email}", "#{email2}", "#{email3}", "#{email4}"]
+          $admins = ["#{emails[4]}"]
+          $users = ["#{emails[0]}", "#{emails[1]}", "#{emails[2]}", "#{emails[3]}", "#{emails[4]}"]
 
-                realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
-                realize(Accounts::Virtual[$users])
+          realize(Accounts::Virtual[$admins], Accounts::Sudoroot[$admins])
+          realize(Accounts::Virtual[$users])
         }
       NODE_SCRIPT
-      format(expected_string, email, email2, email3, email4)
       expect(script).to eq(expected_string)
     end
   end
 
   describe 'push to git' do
-    let(:request) { FactoryBot.build :request }
+    let(:request) { FactoryBot.build :request, name: 'myvm' }
 
     before do
       @git_stub = create_git_stub
@@ -274,7 +263,7 @@ RSpec.describe Request, type: :model do
 
     it 'correctly calls git' do
       expect(@git_stub.git).to receive(:config).with('user.name', 'test_user_name')
-      expect(@git_stub.git).to receive(:config).with('user.email', 'test_user_email')
+      expect(@git_stub.git).to receive(:config).with('user.email', 'test@email.com')
       request.push_to_git
     end
 

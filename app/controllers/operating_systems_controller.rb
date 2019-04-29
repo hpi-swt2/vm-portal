@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class OperatingSystemsController < ApplicationController
+  @@resource_name = OperatingSystem.model_name.human.titlecase
+
   before_action :set_operating_system, only: %i[edit update destroy]
   before_action :authenticate_admin
 
   # GET /operating_systems
-  # GET /operating_systems.json
   def index
     @operating_systems = OperatingSystem.all
   end
@@ -19,39 +20,34 @@ class OperatingSystemsController < ApplicationController
   def edit; end
 
   # POST /operating_systems
-  # POST /operating_systems.json
   def create
     @operating_system = OperatingSystem.new(operating_system_params)
-
-    respond_to do |format|
-      if @operating_system.save
-        format.html { redirect_to operating_systems_url, notice: 'Operating system was successfully created.' }
-      else
-        format.html { render :new }
-      end
+    if @operating_system.save
+      redirect_to operating_systems_path, notice: t('flash.create.notice',
+        resource: @@resource_name, model: @operating_system.name)
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /operating_systems/1
-  # PATCH/PUT /operating_systems/1.json
   def update
-    respond_to do |format|
-      if @operating_system.update(operating_system_params)
-        format.html { redirect_to operating_systems_url, notice: 'Operating system was successfully updated.' }
-      else
-        format.html { render :edit }
-      end
+    if @operating_system.update(operating_system_params)
+      redirect_to operating_systems_path, notice: t('flash.update.notice',
+        resource: @@resource_name, model: @operating_system.name)
+    else
+      render :edit
     end
   end
 
   # DELETE /operating_systems/1
-  # DELETE /operating_systems/1.json
   def destroy
-    @operating_system.destroy
-    respond_to do |format|
-      format.html { redirect_to operating_systems_url, notice: 'Operating system was successfully destroyed.' }
-      format.json { head :no_content }
+    if @operating_system.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @operating_system.name)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @operating_system.name)
     end
+    redirect_to operating_systems_path, notice: notice, alert: alert
   end
 
   private

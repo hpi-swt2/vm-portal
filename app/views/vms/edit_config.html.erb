@@ -1,47 +1,35 @@
-<h1>Editing configuration of VM '<%= @vm.name %>'</h1>
+<h1>Configuring IP and DNS for VM '<%= @vm.name %>'</h1>
 
-<%= form_with(model: @vm.config, url: { :controller => "vms", :action => "update_config", id: @vm.config.name }, local: true) do |form| %>
-  <div class="field">
-    <p>Network Adapters</p>
-    <table class="table">
-      <tr>
-        <th>Adapter</th>
-        <th>MAC Address</th>
-      </tr>
-      <% @vm.macs.each do |each| %>
-        <tr>
-          <td><%= each.first %></td>
-          <td><%= each.second %></td>
-        </tr>
-      <% end %>
-    </table>
-  </div>
+<% if @vm.request %>
+  <h5>Operating System</h5>
+  <dl>
+    <dt>Name</dt>
+    <dd><%= @vm.request.operating_system %></dd>
+    <% unless @vm.request.comment.blank? %>
+      <dt>Comment</dt>
+      <dd><%= @vm.request.comment %></dd>
+    <% end %>
+  </dl>
+<% end %>
 
-  <div class="field">
-    <%= form.label :ip, "IP" %>
-    <%= form.text_field :ip, class: 'form-control' %>
-  </div>
+<h5>Network Adapters</h5>
+<dl>
+  <% @vm.macs.each do |adapter_name, mac_address| %>
+    <dt><%= adapter_name %></dt>
+    <dd>
+      <%= mac_address %>
+      <%# Copy to clipboard button, JS matches on 'clipboard-btn' class %>
+      <span class="btn btn-outline-primary btn-sm fa fa-copy clipboard-btn"
+        title="Copy MAC address to clipboard"
+        data-clipboard-text="<%= mac_address %>">
+      </span>
+    </dd>
+  <% end %>
+</dl>
 
-  <div class="field">
-    <%= form.label :dns, "DNS" %>
-    <%= form.text_field :dns, class: 'form-control' %>
-  </div>
-
-  <table class="table table-fixed-columns table-flex-width">
-    <tbody>
-      <tr>
-        <td><strong>Operating System:</strong></td>
-        <td><%= @vm.request.operating_system %></td>
-      </tr>
-
-      <tr>
-        <td><strong>Comment:</strong></td>
-        <td class="col-md-4"><%= @vm.request.comment %></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="actions">
-    <%= form.submit 'Update Configuration', class: "btn btn-primary" %>
-  </div>
+<h5>IP and DNS</h5>
+<%= bootstrap_form_with(scope: :vm_info, model: @vm.config, url: {:controller => "vms", :action => "update_config", id: @vm.config.name}, local: true, layout: :horizontal) do |form| %>
+  <%= form.text_field :ip, label: 'IP' %>
+  <%= form.text_field :dns, label: 'DNS' %>
+  <%= form.submit 'Update', class: "btn btn-primary" %>
 <% end %>

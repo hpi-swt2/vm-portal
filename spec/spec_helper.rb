@@ -42,11 +42,6 @@ require 'support/factory_bot'
 require './app/api/v_sphere/connection'
 require './spec/api/v_sphere_api_mocker'
 
-ENV['GIT_REPOSITORY_URL'] ||= 'test_repository_url'
-ENV['GIT_REPOSITORY_NAME'] ||= 'test_repository_name'
-ENV['GITHUB_USER_NAME'] ||= 'test_user_name'
-ENV['GITHUB_USER_EMAIL'] ||= 'test_user_email'
-
 def associate_users_with_vms(users: [], admins: [], vms: [])
   users.each do |user|
     allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)
@@ -55,15 +50,24 @@ def associate_users_with_vms(users: [], admins: [], vms: [])
     allow(VSphere::VirtualMachine).to receive(:user_vms).with(user).and_return(vms)
   end
   vms.each do |vm|
-    allow(Puppetscript).to receive(:read_node_file).with(vm.name).and_return('admins' => admins, 'users' => users)
+    # force reload of cached users
+    vm.ensure_config.users = nil
+    vm.ensure_config.sudo_users = nil
+    allow(Puppetscript).to receive(:read_node_file).with(vm.name).and_return(admins: admins, users: users)
   end
 end
 
 RSpec.configure do |config|
+  config.include(RedirectBack, type: :controller)
+
+  config.before(:suite) do
+    Rails.application.load_seed
+  end
+
   config.before do
     cluster_mock = vim_cluster_mock('MockCluster', [])
     allow(VSphere::VirtualMachine).to receive(:user_vms).and_return []
-    allow(Puppetscript).to receive(:read_node_file).and_return('admins' => [], 'users' => [])
+    allow(Puppetscript).to receive(:read_node_file).and_return(admins: [], users: [])
     allow(VSphere::Connection).to receive(:instance).and_return(v_sphere_connection_mock(clusters: [cluster_mock]))
     @git_stub = create_git_stub
     allow_any_instance_of(User).to receive(:update_repository)

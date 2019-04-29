@@ -103,15 +103,56 @@ RSpec.describe User, type: :model do
   end
 
   context 'setting the user id' do
-    let(:user) { FactoryBot.create :user }
+    let!(:user) { FactoryBot.create :user }
 
-    it 'is set to 4000 when the first user is created' do
-      expect(user.user_id).to eq(4000)
+    it 'larger than or equal to 4000' do
+      expect(user.user_id).to be >= 4000
     end
 
     it 'increments the user id when more users are created' do
-      FactoryBot.create :user
-      expect(user.user_id).to eq(4001)
+      user2 = FactoryBot.create :user
+      expect(user2.user_id).to be > user.user_id
+    end
+  end
+
+  describe 'notifying the user' do
+    let(:user) { FactoryBot.create :user }
+
+    def notify_user
+      user.notify 'my notification', 'some message', 'https://www.google.com/'
+    end
+
+    it 'creates a notification object' do
+      expect { notify_user }.to change(Notification, :count).by(1)
+    end
+
+    it 'notifies slack' do
+      allow(user).to receive(:notify_slack)
+      notify_user
+      expect(user).to have_received(:notify_slack)
+    end
+
+    it 'does not create multiple duplicate notifications' do
+      3.times { notify_user }
+      expect(user.notifications.size).to eq(1)
+    end
+
+    it 'sets the count of duplicate notifications correctly' do
+      4.times { notify_user }
+      expect(user.notifications.first.count).to eq(4)
+    end
+
+    it 'does not notify slack for duplicate notifiations' do
+      allow(user).to receive(:notify_slack)
+      3.times { notify_user }
+      expect(user).to have_received(:notify_slack).once
+    end
+
+    it 'does create notifications if the duplicates are one minute apart' do
+      notify_user
+      new_time = Time.now + 61 # seconds
+      allow(Time).to receive(:now).and_return new_time
+      expect { notify_user }.to change(Notification, :count).by(1)
     end
   end
 end

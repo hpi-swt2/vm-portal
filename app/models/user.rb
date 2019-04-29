@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'sshkey'
-require 'vmapi.rb'
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -21,6 +20,7 @@ class User < ApplicationRecord
   has_many :users_assigned_to_requests
   has_many :requests, through: :users_assigned_to_requests
   has_many :servers
+  has_many :notifications
   has_and_belongs_to_many :request_responsibilities, class_name: 'Request', join_table: 'requests_responsible_users'
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -52,15 +52,23 @@ class User < ApplicationRecord
   end
 
   # notifications
-  def notify(title, message)
-    notify_slack("*#{title}*\n#{message}")
+  def notify(title, message, link = '', type: :default)
+    # notifications are ordered by descending created_at order (see `models/notification.rb`)
+    # notifications with the newest ("largest") timestamps are first
+    last_notification = notifications.first
+    # Set the `created_at` attribute, so that it can be compared by the `duplicate_of`
+    notification = Notification.new title: title, message: message, notification_type: type, user_id: id, read: false, link: link, created_at: DateTime.current
 
-    NotificationMailer.with(user: self, title: title.to_s, message: message.to_s).notify_email.deliver_now if email_notifications
-
-    notification = Notification.new title: title, message: message
-    notification.user_id = id
-    notification.read = false
-    notification.save # saving might fail, but there is no useful way to handle the error.
+    if notification.duplicate_of last_notification
+      last_notification.update(count: last_notification.count + 1)
+    else
+      notify_slack("*#{title}*\n#{message}\n#{link}")
+      NotificationMailer.with(user: self, title: '[HART] ' + title.to_s, message: (message + link).to_s).notify_email.deliver_now if email_notifications
+      notification.save
+      # saving might fail, there is however no good way to handle this error.
+      # We cannot log the error, because when using the HartFormatter, logging errors creates new notifications,
+      # these might also fail to save, creating an endless recursion.
+    end
   end
 
   after_initialize :set_default_role, if: :new_record?
@@ -74,11 +82,12 @@ class User < ApplicationRecord
   end
 
   def human_readable_identifier
-    email.split(/@/).first
+    email.split(/@/).first.capitalize.gsub(/[-.][a-z]/, &:upcase) # Capitalize the first letter and upcase every letter that follows a . or -
   end
 
   def valid_ssh_key
-    errors.add(:danger, 'Invalid SSH-Key') unless valid_ssh_key?
+    # https://api.rubyonrails.org/classes/ActiveModel/Errors.html#method-i-add
+    errors.add(:ssh_key, :invalid, message: "must be a valid SSH-Key") unless valid_ssh_key?
   end
 
   def self.from_omniauth(auth)
@@ -93,12 +102,9 @@ class User < ApplicationRecord
 
   def self.from_mail_identifier(mail_id)
     all.each do |user|
-      return user if user.email.split('@').first.casecmp(mail_id).zero?
+      return user if user.human_readable_identifier.casecmp(mail_id).zero?
     end
-  end
-
-  def vm_infos
-    VmApi.instance.user_vms(self)
+    nil
   end
 
   def vms
@@ -127,8 +133,8 @@ class User < ApplicationRecord
   end
 
   def update_repository
-    GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
-      git_writer.write_file(File.join('Init', 'init.pp'), generate_puppet_init_script)
+    GitHelper.open_git_repository(for_write: true) do |git_writer|
+      git_writer.write_file(Puppetscript.init_file_name, generate_puppet_init_script)
       message = if git_writer.added?
                   'Create init.pp'
                 else
@@ -141,7 +147,7 @@ class User < ApplicationRecord
   end
 
   def generate_puppet_init_script
-    Puppetscript.init_scrit(User.all)
+    Puppetscript.init_script(User.unscoped.order(user_id: :asc))
   end
 
   def valid_ssh_key?

@@ -1,53 +1,42 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
-  before_action :set_notification, only: %i[show edit update destroy mark_as_read]
+  @@resource_name = Notification.model_name.human.titlecase
+
+  before_action :set_notification, only: %i[destroy mark_as_read mark_as_read_and_redirect]
 
   # GET /notifications
-  # GET /notifications.json
   def index
     @notifications = Notification.where(user: current_user)
   end
 
-  # GET /notifications/new
-  def new
-    @notification = Notification.new
-  end
-
-  # POST /notifications
-  # POST /notifications.json
-  def create
-    @notification = Notification.new(notification_params)
-    @notification.user_id = current_user.id
-    @notification.read = false
-
-    respond_to do |format|
-      if @notification.save
-        format.html { redirect_to notifications_path }
-      else
-        format.html { render :new }
-      end
-    end
-  end
-
   # DELETE /notifications/1
-  # DELETE /notifications/1.json
   def destroy
-    @notification.destroy
-    respond_to do |format|
-      format.html { redirect_back fallback_location: notifications_url }
-      format.json { head :no_content }
+    if @notification.destroy
+      notice = t('flash.destroy.notice', resource: @@resource_name, model: @notification.title)
+    else
+      alert = t('flash.destroy.alert', resource: @@resource_name, model: @notification.title)
+    end
+    redirect_back fallback_location: notifications_path, notice: notice, alert: alert
+  end
+  
+  # GET /notifications/1/mark_as_read_and_redirect
+  def mark_as_read_and_redirect
+    @notification.update(read: true) unless @notification.read
+    if @notification.link.present?
+      redirect_to @notification.link
+    else
+      redirect_back fallback_location: notifications_path
     end
   end
-
+  
+  # GET /notifications/1/mark_as_read
   def mark_as_read
     @notification.read = true
-    respond_to do |format|
-      if @notification.save
-        format.html { redirect_back fallback_location: notifications_path }
-      else
-        format.html { redirect_back fallback_location: notifications_path, alert: 'Something went wrong.' }
-      end
+    if @notification.save
+      redirect_back fallback_location: notifications_path
+    else
+      redirect_back fallback_location: notifications_path, alert: 'Error while marking notification as read.'
     end
   end
 

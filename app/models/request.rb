@@ -14,30 +14,36 @@ class Request < ApplicationRecord
   attr_accessor :sudo_user_ids
 
   MAX_NAME_LENGTH = 20
-  MAX_CPU_CORES = 64
-  MAX_RAM_GB = 256
-  MAX_STORAGE_GB = 1_000
 
   enum status: %i[pending accepted rejected]
+  scope :resolved, -> { where.not(status: :pending) }
+
   validates :name,
             length: { maximum: MAX_NAME_LENGTH, message: 'only allows a maximum of %{count} characters' },
-            format: { with: /\A[a-z0-9\-]+\z/, message: 'only letters and numbers allowed' },
-            uniqueness: true
-  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :operating_system, :description, presence: true
-  validates :cpu_cores, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_CPU_CORES }
-  validates :ram_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_RAM_GB }
-  validates :storage_gb, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: MAX_STORAGE_GB }
+            format: { with: /\A[a-z0-9\-]+\z/, message: 'only allows lowercase letters, numbers and "-"' }
+  validate :name_uniqueness
+  validates :responsible_users, :project_id, :cpu_cores, :ram_gb, :storage_gb, :description, presence: true
+  validates_with VmValidator
+
   with_options if: :port_forwarding do |request|
     request.validates :port, presence: true, numericality: { only_integer: true }
     request.validates :application_name, presence: true
   end
 
-  def description_text(host_name)
+  def name_uniqueness
+    errors.add(:name, ': vSphere already has a VM with the same name') if VSphere::VirtualMachine.all.map(&:name).include?(name)
+    errors.add(:name, ': There is already a request with the same name') if (Request.pending + Request.accepted - [self]).map(&:name).include?(name)
+  end
+
+  def description_text
     description  = "- VM Name: #{name}\n"
     description += "- Responsible: #{responsible_users.first.name}\n"
     description += comment.empty? ? '' : "- Comment: #{comment}\n"
-    description += url(host_name) + "\n"
     description
+  end
+
+  def description_url(host_name)
+    Rails.application.routes.url_helpers.request_url self, host: host_name
   end
 
   def accept!
@@ -74,33 +80,39 @@ class Request < ApplicationRecord
 
   def create_vm
     clusters = VSphere::Cluster.all
-    return nil, nil if clusters.empty?
+    return nil, 'VM could not be created, as there are no clusters available in vSphere!' if clusters.empty?
 
-    warning = nil
-    begin
-      push_to_git
-    rescue Git::GitExecuteError => e
-      logger.error(e)
-      warning = "Your VM was created, but users could not be associated with the VM! Push to git failed, error: \"#{e.message}\""
-    end
-    [create_vm_in_cluster(clusters.sample), warning]
+    cluster = clusters.sample
+    return nil, 'VM could not be created, there is no network available in the cluster' if cluster.networks.empty?
+
+    warning = push_to_git_with_warnings
+    [create_vm_in_cluster(cluster), warning]
   end
 
   def create_vm_in_cluster(cluster)
     vm = VSphere::Connection.instance.root_folder.create_vm(cpu_cores, gibi_to_mibi(ram_gb), gibi_to_kibi(storage_gb), name, cluster)
-    vm.ensure_config.responsible_users = responsible_users
-    vm.config.project = project
-    vm.config.description = description
-    vm.config.save
+    vm.ensure_config.update(
+      responsible_users: responsible_users,
+      project: project,
+      description: description
+    )
     vm.move_into_correct_subfolder
     vm
   end
 
-  # Error handling has been moved into create_vm to provide easier feedback for the user
+  def push_to_git_with_warnings
+    push_to_git
+    nil # no warning
+  rescue Git::GitExecuteError => error
+    logger.error error
+    "Your VM was created, but users could not be associated with the VM! Push to git failed, error:\n\"#{error.message}\""
+  end
+
+  # Error handling has been moved into push_to_git_with_warnings to provide easier feedback for the user
   def push_to_git
-    GitHelper.open_repository(Puppetscript.puppet_script_path, for_write: true) do |git_writer|
-      git_writer.write_file(File.join('Node', "node-#{name}.pp"), generate_puppet_node_script)
-      git_writer.write_file(File.join('Name', "#{name}.pp"), generate_puppet_name_script)
+    GitHelper.open_git_repository(for_write: true) do |git_writer|
+      git_writer.write_file(Puppetscript.node_file_name(name), generate_puppet_node_script)
+      git_writer.write_file(Puppetscript.class_file_name(name), generate_puppet_name_script)
       git_writer.save(commit_message(git_writer))
     end
   end
@@ -116,9 +128,11 @@ class Request < ApplicationRecord
   end
 
   def generate_puppet_node_script
-    admin_users = users_assigned_to_requests.select(&:sudo).to_a
-    admin_users.map!(&:user)
-    Puppetscript.node_script(name, admin_users, users.to_a)
+    admin_users = users_assigned_to_requests.select(&:sudo).map(&:user)
+    # Every responsible person has sudo rights on the VM
+    admin_users = (admin_users + responsible_users).uniq
+    non_admin_users = (users + responsible_users).uniq
+    Puppetscript.node_script(name, admin_users, non_admin_users)
   end
 
   def generate_puppet_name_script
@@ -126,10 +140,6 @@ class Request < ApplicationRecord
   end
 
   private
-
-  def url(host_name)
-    Rails.application.routes.url_helpers.request_url self, host: host_name
-  end
 
   def gibi_to_mibi(gibi)
     gibi * 1024

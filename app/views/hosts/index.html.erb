@@ -1,37 +1,27 @@
-<h1>
-  Hosts
-</h1>
+<h1>Hosts</h1>
 
-<input class="mb-3 bg-secondary border-0 rounded text-white filter-box" type="text" id="filter" onkeyup="filter_table('filter', 'hosts', document)" placeholder="Search">
-
-<table data-toggle="table" class="table" id="hosts">
+<table class="table" id="hosts" data-toggle="datatable">
   <thead>
-  <tr>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-left">Name</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Vendor</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white">Model</th>
-    <th scope="col" data-sortable="true" class="bg-primary text-white rounded-right">Status</th>
-  </tr>
+    <tr>
+      <th>Name</th>
+      <th>Vendor</th>
+      <th>Model</th>
+      <th>Status</th>
+    </tr>
   </thead>
   <tbody>
   <% @hosts.each do |host| %>
     <tr>
-      <td class="table-active"><%= link_to host.name, {controller: :hosts, action: 'show', id: host.name},
-                      method: :get, class: "btn btn-link" %></td>
-      <td class="table-active"><%= host.vendor %></td>
-      <td class="table-active"><%= host.model %></td>
-      <td class="table-active align-middle">
-        <div class="round 
-          <%= host.connection_state == 'connected' ? 'bg-success' : 'bg-warning'  %>"
-          title="<%= host.connection_state %>">
-        </div>
+      <td><%= link_to host.name, host_path(host.name) %></td>
+      <td><%= host.vendor %></td>
+      <td><%= host.model %></td>
+      <td data-order="<%= host.connection_state %>" data-search="<%= host.connection_state %>">
+        <%= content_tag :div, nil,
+          title: host.connection_state,
+          :data => { toggle: 'tooltip', placement: 'right' },
+          class: "round #{host.connection_state == 'connected' ? 'bg-success' : 'bg-warning'}" %>
       </td>
     </tr>
-  <% end %>
+  <% end %> <%# @hosts.each %>
   </tbody>
 </table>
-
-<!-- Minified script sources for sortable tables -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css"
-      xmlns="http://www.w3.org/1999/html">
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>

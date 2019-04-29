@@ -9,17 +9,51 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
-
- *= require font-awesome
- *= require_self
- *= require_tree .
  */
+ 
+ /*
+ * Remove all the *= require and *= require_tree statements from the Sass file.
+ * Instead, use @import to import Sass files.
+ * Do not use *= require in Sass or your other stylesheets will not be 
+ * able to access the Bootstrap mixins and variables.
+ * See: https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
+ */
+ 
+// Custom bootstrap variables must be set or *before* bootstrap is imported
+$primary: #0C415F;
+$danger: #a80833;
+$primary-active: #1f6993;
+$primary-hover: #1a5b82;
 
+// https://github.com/bokmann/font-awesome-rails#sass-support
+@import "font-awesome";
+// https://github.com/twbs/bootstrap-rubygem#a-ruby-on-rails
+@import "bootstrap";
+// https://github.com/argerim/select2-rails/issues/135
+@import "select2";
+@import "select2-bootstrap";
+// Custom styles for select2: app/assets/stylesheets/custom.scss
+@import "select2-custom";
+// https://github.com/bootstrap-ruby/bootstrap_form#installation
+@import 'rails_bootstrap_forms';
+// Bootstrap styling for datatables
+// https://github.com/mkhairi/jquery-datatables#stylesheets
+@import 'datatables/dataTables.bootstrap4';
+// Custom styles for datatables: app/assets/stylesheets/datatables-custom.scss
+@import 'datatables-custom';
+// optional datatables styles for extensions, include when used
+//@import 'datatables/extensions/AutoFill/autoFill.bootstrap4';
+//@import 'datatables/extensions/Buttons/buttons.bootstrap4';
+//@import 'datatables/extensions/ColReorder/colReorder.bootstrap4';
+//@import 'datatables/extensions/FixedColumns/fixedColumns.bootstrap4';
+//@import 'datatables/extensions/FixedHeader/fixedHeader.bootstrap4';
+//@import 'datatables/extensions/KeyTable/keyTable.bootstrap4';
+//@import 'datatables/extensions/Responsive/responsive.bootstrap4';
+//@import 'datatables/extensions/RowGroup/rowGroup.bootstrap4';
+//@import 'datatables/extensions/RowReorder/rowReorder.bootstrap4';
+//@import 'datatables/extensions/Scroller/scroller.bootstrap4';
+//@import 'datatables/extensions/Select/select.bootstrap4';
 
-.bulletless {
-  list-style-type: none;
-}
+// All custom CSS: app/assets/stylesheets/custom.scss
+@import 'custom';
 
-#menu-profile-dropdown {
-  padding-top: 3px;
-}

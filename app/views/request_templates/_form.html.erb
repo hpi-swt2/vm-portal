@@ -1,43 +1,17 @@
-<%= form_with(model: request_template, local: true) do |form| %>
-  <% if request_template.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(request_template.errors.count, "error") %> prohibited this request template from being saved:</h2>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: request_template, local: true, layout: :horizontal) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: false %>
 
-      <ul>
-      <% request_template.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= form.text_field :name, label: 'Template Name' %>
+  <%= form.number_field :cpu_cores, min: 0, label: 'CPU Cores' %>
 
-  <div class="create-form">
-    <div class="field form-group">
-      <%= form.label 'Template name' %>
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
+  <%= form.number_field :ram_gb, min: 0, label: 'RAM', append: 'GB' %>
+  <%= form.number_field :storage_gb, min: 0, label: 'Storage', append: 'GB' %>
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :operating_system, OperatingSystem.all, :name, :name,
+    options = {include_blank: t('blank_text'), label: 'Operating System'},
+    html_options = {class: 'selecttwo'} %>
 
-    <div class="field form-group">
-      <%= form.label :cpu_cores, "CPU cores" %>
-      <%= form.number_field :cpu_cores, min: 0, class: 'form-control' %>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :ram_gb, "RAM in GB" %>
-      <%= form.number_field :ram_gb, min: 0, class: 'form-control' %>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :storage_gb, "Storage in GB" %>
-      <%= form.number_field :storage_gb, min: 0, class: 'form-control' %>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :operating_system, "Operating System" %>
-      <%= form.select :operating_system, operating_system_options, {}, {class: 'form-control'}%>
-    </div>
-  </div>
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
-  </div>
+  <%= form.submit class: "btn btn-primary" %>
 <% end %>

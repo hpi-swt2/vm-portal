@@ -50,13 +50,13 @@ describe 'projects/new.html.erb', type: :feature do
     end
 
     it 'selects the current_user per default' do
-      expect(page).to have_select('project[responsible_user_ids][]', selected: employee.email)
+      expect(page).to have_select('project[responsible_user_ids][]', selected: employee.human_readable_identifier)
     end
 
     context 'when the name is empty' do
       before do
         fill_in 'project[description]', with: project_description
-        page.select employee.email, from: 'project[responsible_user_ids][]'
+        page.select employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
@@ -70,7 +70,7 @@ describe 'projects/new.html.erb', type: :feature do
     context 'when the description is empty' do
       before do
         fill_in 'project[name]', with: project_name
-        page.select employee.email, from: 'project[responsible_user_ids][]'
+        page.select employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
@@ -85,13 +85,13 @@ describe 'projects/new.html.erb', type: :feature do
       before do
         fill_in 'project[name]', with: project_name
         fill_in 'project[description]', with: project_description
-        page.unselect employee.email, from: 'project[responsible_user_ids][]'
+        page.unselect employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
         it 'shows an error' do
           submit_button.click
-          expect(page).to have_text '1 error'
+          expect(page).to have_css('.alert-danger')
         end
       end
     end
@@ -99,14 +99,14 @@ describe 'projects/new.html.erb', type: :feature do
     context 'when something is not correctly filled' do
       context 'when only multiple responsible users are selected' do
         before do
-          page.select employee.email, from: 'project[responsible_user_ids][]'
-          page.select admin.email, from: 'project[responsible_user_ids][]'
+          page.select employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
+          page.select admin.human_readable_identifier, from: 'project[responsible_user_ids][]'
         end
 
         context 'when clicking the submit button' do
           it 'still selects the selected responsible user' do
             submit_button.click
-            expect(page).to have_select('project[responsible_user_ids][]', selected: [employee.email, admin.email])
+            expect(page).to have_select('project[responsible_user_ids][]', selected: [employee.human_readable_identifier, admin.human_readable_identifier])
           end
         end
       end
@@ -116,7 +116,7 @@ describe 'projects/new.html.erb', type: :feature do
       before do
         fill_in 'project[name]', with: project_name
         fill_in 'project[description]', with: project_description
-        page.select employee.email, from: 'project[responsible_user_ids][]'
+        page.select employee.human_readable_identifier, from: 'project[responsible_user_ids][]'
       end
 
       context 'when clicking the submit button' do
@@ -124,8 +124,8 @@ describe 'projects/new.html.erb', type: :feature do
           submit_button.click
         end
 
-        it 'redirects to projects/index' do
-          expect(page).to have_current_path(projects_path)
+        it 'redirects to projects/show' do
+          expect(page).to have_current_path(project_path(Project.last))
         end
 
         it 'has created the project' do
@@ -147,7 +147,7 @@ describe 'projects/new.html.erb', type: :feature do
         before do
           fill_in 'project[name]', with: project_name
           fill_in 'project[description]', with: project_description
-          page.select admin.email, from: 'project[responsible_user_ids][]'
+          page.select admin.human_readable_identifier, from: 'project[responsible_user_ids][]'
         end
 
         context 'when clicking the submit button' do
@@ -155,8 +155,8 @@ describe 'projects/new.html.erb', type: :feature do
             submit_button.click
           end
 
-          it 'redirects to projects/index' do
-            expect(page).to have_current_path(projects_path)
+          it 'redirects to projects/show' do
+            expect(page).to have_current_path(project_path(Project.last))
           end
 
           it 'has created the project' do

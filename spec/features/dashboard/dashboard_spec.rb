@@ -16,7 +16,6 @@ describe 'Dashboard', type: :feature do
   end
 
   it 'does render a list of servers for a signed user' do
-    skip('user is not yet connected to his hosts')
     visit(:dashboard)
     expect(page).to(have_text('Hosts'))
   end
@@ -37,28 +36,22 @@ describe 'Dashboard', type: :feature do
       expect(page).to have_text(@notifications.first.message)
     end
 
-    it 'does not redirect after marking notification as read' do
-      visit dashboard_path
-      all(:css, '.check.icon-link').first.click
-      expect(current_path).to eql(dashboard_path)
-    end
-
     it 'does not redirect after deleting notification' do
       visit dashboard_path
-      all(:css, '.delete.icon-link').first.click
+      find(:css, "a[data-method='delete'][href='#{notification_path(@notifications.second)}']").click
       expect(current_path).to eql(dashboard_path)
     end
 
     it 'does not display more than 3 notifications' do
       visit dashboard_path
-      expect(page).to have_selector('.check.icon-link', count: 3)
+      expect(page).to have_selector('.card-title', count: 3)
     end
   end
 
   context 'without notifications' do
     it 'informs about no notifications' do
       visit dashboard_path
-      expect(page).to have_text('You don\'t have any notifications at the moment.')
+      expect(page).to have_css('#no-notifications', count: 1)
     end
   end
 end

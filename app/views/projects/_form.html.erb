@@ -1,38 +1,16 @@
-<%= form_with(model: project, local: true) do |form| %>
-  <% if project.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+<%# https://github.com/bootstrap-ruby/bootstrap_form %>
+<%= bootstrap_form_with(model: project, local: true, layout: :horizontal) do |form| %>
+  <%# https://github.com/bootstrap-ruby/bootstrap_form#alert-messages %>
+  <%= form.alert_message "Please fix the errors below.", error_summary: true %>
 
-      <ul>
-        <% project.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= form.text_field :name %>
+  <%= form.text_area :description %>
 
-  <div class="field form-group">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: 'form-control' %>
-  </div>
+  <% selected = project.responsible_users.collect(&:id) %>
+  <%# form.collection_select(method, collection, value_method, text_method, options = {}, html_options = {}) %>
+  <%= form.collection_select :responsible_user_ids, User.all, :id, :human_readable_identifier,
+    options = {label: "Responsible Users", selected: selected.present? ? selected : current_user.id},
+    html_options = {multiple: true, class: "selecttwo"} %>
 
-  <div class="field form-group">
-    <%= form.label :description %>
-    <%= form.text_area :description, cols: "40", rows: "4", class: 'form-control' %>
-  </div>
-
-  <p>Responsible users:</p>
-  <%= form.select 'responsible_user_ids',
-                  options_from_collection_for_select(User.all,
-                                                     :id,
-                                                     :email,
-                                                     selected: selected_user_ids),
-                  {},
-                  { multiple: true, class: "selecttwo form-group", data: { placeholder: 'Responsible users' }}
-  %>
-
-  <div class="actions">
-    <br />
-    <%= form.submit id: 'submitProjectButton', class: "btn btn-primary" %>
-  </div>
+  <%= form.submit id: 'submitProjectButton', class: "btn btn-primary" %>
 <% end %>

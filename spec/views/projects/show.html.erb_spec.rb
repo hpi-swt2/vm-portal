@@ -28,12 +28,8 @@ RSpec.describe 'projects/show', type: :view do
       expect(rendered).to include project.responsible_users[1].name
     end
 
-    it 'has a link to go to the all projects page' do
-      expect(rendered).to have_link('All Projects', href: projects_path)
-    end
-
     it 'shows a link to edit the project' do
-      expect(rendered).to have_link('Edit', href: edit_project_path(project))
+      expect(rendered).to have_link(href: edit_project_path(project))
     end
   end
 
@@ -41,7 +37,16 @@ RSpec.describe 'projects/show', type: :view do
     let(:current_user) { FactoryBot.create :user }
 
     it 'does not show a link to edit the project' do
-      expect(rendered).not_to have_link('Edit', href: edit_project_path(project))
+      expect(rendered).not_to have_link(href: edit_project_path(project))
+    end
+  end
+
+  context 'with a project that is connected to VM configs' do
+    it 'shows names of VMs with links' do
+      config = FactoryBot.create :virtual_machine_config, responsible_users: [current_user]
+      project.virtual_machine_configs << config
+      render
+      expect(rendered).to have_link(config.name, href: vm_path(config.name))
     end
   end
 end

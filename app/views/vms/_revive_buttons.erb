@@ -1,0 +1,17 @@
+<% if current_user.admin? %>
+  <%= link_to fa_icon('arrow-circle-up'),
+              {controller: :vms, action: 'revive_vm', id: vm.name},
+              method: :post,
+              data: { confirm: "Are you sure you want to revive '#{vm.name}'?",
+                      toggle: 'tooltip', placement: 'top' },
+              title: "Revive VM",
+              class: "btn btn-primary btn-sm" %>
+<% else %>
+  <%= link_to fa_icon('arrow-circle-up'),
+              {controller: :vms, action: 'request_vm_revive', id: vm.name},
+              method: :post,
+              data: { confirm: "Are you sure you want to request revival of '#{vm.name}'?",
+                      toggle: 'tooltip', placement: 'top' },
+              title: "Request revival",
+              class: "btn btn-primary btn-sm" %>
+<% end %>

@@ -8,7 +8,7 @@ require_relative 'host'
 module VSphere
   class Cluster
     def self.all
-      VSphere::Connection.instance.clusters_folder.clusters recursive: true
+      VSphere::Connection.instance.clusters_folder&.clusters(recursive: true) || []
     end
 
     def initialize(rbvmomi_cluster)
@@ -33,6 +33,10 @@ module VSphere
 
     def ==(other)
       equal? other
+    end
+
+    def networks
+      @cluster.network
     end
 
     private

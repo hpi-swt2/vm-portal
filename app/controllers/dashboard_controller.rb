@@ -12,20 +12,22 @@ class DashboardController < ApplicationController
     redirect_to '/users/sign_in' if current_user.nil?
     initialize_vm_categories
     filter_vm_categories current_user unless current_user.admin?
-    @notifications = Notification.where(user: current_user).slice(0, number_of_notifications)
+    @notifications = Notification.where(user: current_user, read: false).limit(number_of_notifications)
   end
 
   private
 
   def initialize_vm_categories
     @vms = VSphere::VirtualMachine.rest
-    @pending_archivation_vms = VSphere::VirtualMachine.pending_archivation
+    @archivable = VSphere::VirtualMachine.pending_archivation.select(&:archivable?)
+    @revivable = VSphere::VirtualMachine.pending_revivings
   end
 
   def filter_vm_categories(user)
     user_vms = VSphere::VirtualMachine.user_vms(user)
     @vms = @vms.select { |vm| user_vms.include?(vm) }
-    @pending_archivation_vms = @pending_archivation_vms.select { |vm| user_vms.include?(vm) }
+    @archivable = @archivable.select { |vm| user_vms.include?(vm) }
+    @revivable = @revivable.select { |vm| user_vms.include?(vm) }
   end
 
   def number_of_notifications

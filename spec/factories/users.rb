@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 require 'faker'
-require 'sshkey'
 
 FactoryBot.define do
   factory :user do
     # https://github.com/stympy/faker/blob/master/doc/v1.9.1/internet.md#fakerinternet
-    email { Faker::Internet.safe_email }
+    email { Faker::Internet.unique.safe_email }
     password { Faker::Internet.password(10, 20, true, true) }
     password_confirmation { password }
     first_name { 'Max' }
     last_name { 'Mustermann' }
-    ssh_key { SSHKey.generate.ssh_public_key }
+    # Dynamically generating SSH keys using the 'SSHKey' library is expensive
+    ssh_key { 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAABwOmFJTGQfc=' }
     responsible_projects { [] }
   end
 

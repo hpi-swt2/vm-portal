@@ -3,17 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe 'vms/edit.html.erb', type: :view do
-  let(:vm) do
-    v_sphere_vm_mock 'VM', vm_ware_tools: 'toolsInstalled'
-  end
+  let(:configuration) { FactoryBot.create :virtual_machine_config }
+
+  let(:current_user) { FactoryBot.create :user }
 
   before do
-    assign(:vm, vm)
+    sign_in current_user
+    assign(:configuration, configuration)
     render
   end
 
   it 'shows vm name' do
-    expect(rendered).to have_text vm.name
+    expect(rendered).to have_text configuration.name
   end
 
   it 'says edit' do
