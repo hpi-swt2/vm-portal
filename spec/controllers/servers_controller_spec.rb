@@ -7,7 +7,7 @@ RSpec.describe ServersController, type: :controller do
     employee = FactoryBot.create(:employee)
     FactoryBot.attributes_for(:server, responsible_id: employee.id)
   end
-  
+
   let(:invalid_attributes) do
     { cpu_cores: 'twelve-hundred', mac_address: 1234 }
   end
@@ -69,7 +69,7 @@ RSpec.describe ServersController, type: :controller do
       end
 
       it 'creates a new Server without saving empty software fields' do
-        valid_attributes.update(installed_software: ['software','',''])
+        valid_attributes.update(installed_software: ['software', '', ''])
         post :create, params: { server: valid_attributes }, session: valid_session
         expect(Server.last.installed_software).to eq(['software'])
       end
@@ -98,13 +98,13 @@ RSpec.describe ServersController, type: :controller do
         put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
         expect(response).to redirect_to(server)
       end
-      
+
       it 'updates the requested server without saving empty software fields' do
         server = FactoryBot.create(:server, installed_software: [])
-        valid_attributes.update(installed_software: ['software','',''])
-        expect{
+        valid_attributes.update(installed_software: ['software', '', ''])
+        expect {
           put :update, params: { id: server.to_param, server: valid_attributes }, session: valid_session
-        }.to change{ server.reload.installed_software }.from(server.installed_software).to(['software'])
+        }.to change { server.reload.installed_software.size }.by 1
       end
     end
 
