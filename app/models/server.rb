@@ -33,6 +33,7 @@ class Server < Machine
     message: 'is not a valid MAC address'
   }
 
+  # ActiveRecord defaults can't be used here, as the instance might not be saved
   after_initialize :assign_defaults
 
   # There is actually only ever one responsible user
