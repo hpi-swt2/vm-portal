@@ -56,7 +56,15 @@ module VSphere
 
     def connect
       return unless configured?
-      create_connection if @vim.nil?
+
+      # only create new connection if there is no other valid, because otherwise it will allocate more and more tcp
+      # connections until it is not possible to create more and thus the server will throw an error
+      create_connection if @vim.nil? || !connected?
+    end
+
+    # currentSession is nil if session does not exist, e.g. because it disconnected
+    def connected?
+      !@vim.serviceContent.sessionManager.currentSession.nil?
     end
 
     def create_connection
