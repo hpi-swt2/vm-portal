@@ -1,3 +1,4 @@
 <h1>HART Settings</h1>
 
 <%= render 'form', app_setting: @app_setting %>
+<%= button_to 'Import', controller: :app_settings, action: :import %>

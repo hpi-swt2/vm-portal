@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   # '/dashboard'
   get '/dashboard' => 'dashboard#index', as: :dashboard
   # '/app_settings/...'
-  resources :app_settings, only: %i[update edit]
+  resources :app_settings, only: %i[update edit] do
+    member do
+      post :import
+    end
+  end
   # '/projects/...'
   resources :projects
   # '/servers/...'
