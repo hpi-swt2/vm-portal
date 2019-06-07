@@ -100,6 +100,15 @@ class User < ApplicationRecord
     end
   end
 
+  # This is only to get users from a imported init.pp file.
+  # They are not able to login because the callback checks only
+  # user with hpi as provider (this is wanted behaviour)
+  def self.extern(user_name)
+    first_name, last_name = user_name.scan(/((?:\w|[-äöüÄÖÜß])+) (.*)/).first
+    create(provider: :extern, first_name: first_name, last_name: last_name,
+           email: "#{first_name}.#{last_name}@mail.com", password: 'test12345!')
+  end
+
   def self.from_mail_identifier(mail_id)
     all.each do |user|
       return user if user.human_readable_identifier.casecmp(mail_id).zero?

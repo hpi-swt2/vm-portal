@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AppSettingsController < ApplicationController
-  before_action :set_app_setting, only: %i[edit update]
+  before_action :set_app_setting, only: %i[edit update import]
   before_action :authenticate_admin
 
   # GET /app_settings/1/edit
@@ -14,6 +14,24 @@ class AppSettingsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def import
+    current_users = User.all.collect {|each| each.name}
+    GitHelper.open_git_repository(for_write: true) {}
+    initpp = File.read(File.join(Puppetscript.init_path, Puppetscript.init_file_name))
+    all_initpp_users = initpp.scan(/realname\s*=>\s*'(.+?)'/).flatten
+    initpp_only_users = all_initpp_users - current_users
+
+    successful_created_users = 0
+
+    initpp_only_users.each do |each|
+      user = User.extern each
+      puts 'enter'
+      successful_created_users += 1 if user.persisted?
+    end
+
+    redirect_to edit_app_setting_path(@app_setting), notice: "Successfully added #{successful_created_users} users."
   end
 
   private
