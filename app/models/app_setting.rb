@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require './app/api/v_sphere/folder'
+#require './app/api/github/github_helper'
 
 class AppSetting < ApplicationRecord
+
   validates_inclusion_of :singleton_guard, in: [0]
   validates :github_user_name, :git_repository_name, :git_repository_url, :git_branch, :github_user_password, presence: true
   validates :email_notification_smtp_port, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 65_535 }, allow_nil: true
@@ -34,6 +36,7 @@ class AppSetting < ApplicationRecord
     self.class.clear_cache
     apply_mail_settings
     GitHelper.reset
+    GithubHelper.init
   end
 
   def apply_mail_settings
