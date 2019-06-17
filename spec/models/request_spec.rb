@@ -263,7 +263,7 @@ RSpec.describe Request, type: :model do
 
     it 'correctly calls git' do
       expect(@git_stub.git).to receive(:config).with('user.name', 'test_user_name')
-      expect(@git_stub.git).to receive(:config).with('user.email', 'test@email.com')
+      expect(@git_stub.git).to receive(:config).with('user.password', 'securePassword')
       request.push_to_git
     end
 

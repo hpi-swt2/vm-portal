@@ -34,7 +34,7 @@ RSpec.describe AppSettingsController, type: :controller do
       git_repository_url: 'test',
       git_repository_name: 'test',
       github_user_name: 'test',
-      github_user_email: 'gummybear@space.tld',
+      github_user_password: 'securePassword',
       vsphere_server_ip: '127.0.0.1',
       vsphere_server_user: 'gozsdgfou2!§hdsfj',
       vsphere_server_password: '6§$%95r9v932',
@@ -50,7 +50,6 @@ RSpec.describe AppSettingsController, type: :controller do
 
   let(:invalid_attributes) do
     valid_attributes.merge(
-      github_user_email: 'helloWorld',
       email_notification_smtp_port: 'NoInteger',
       vm_archivation_timeout: 'NoInteger2',
       vsphere_root_folder: 'ThisIsATooLongStringThatContains/\%WhichIsInvalid...............................' # 80 chars are not allowed

@@ -17,7 +17,7 @@ RSpec.describe 'app_settings/edit', type: :view do
 
       assert_select 'input[name=?]', 'app_setting[github_user_name]'
 
-      assert_select 'input[name=?]', 'app_setting[github_user_email]'
+      assert_select 'input[name=?]', 'app_setting[github_user_password]'
 
       assert_select 'input[name=?]', 'app_setting[vsphere_server_ip]'
 

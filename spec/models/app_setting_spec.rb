@@ -13,8 +13,8 @@ RSpec.describe AppSetting, type: :model do
         expect(app_setting).to be_invalid
       end
 
-      it 'is invalid if the github user email is not a valid mail address' do
-        app_setting.github_user_email = 'noEmailAddress'
+      it 'is invalid if the github user password is empty' do
+        app_setting.github_user_password = ''
         expect(app_setting).to be_invalid
       end
 

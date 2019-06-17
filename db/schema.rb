@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_06_192841) do
+ActiveRecord::Schema.define(version: 2019_06_17_145505) do
 
   create_table "app_settings", force: :cascade do |t|
     t.integer "singleton_guard"
     t.string "git_repository_url"
     t.string "git_repository_name"
     t.string "github_user_name"
-    t.string "github_user_email"
+    t.string "github_user_password"
     t.string "vsphere_server_ip"
     t.string "vsphere_server_user"
     t.string "vsphere_server_password"
@@ -30,9 +30,9 @@ ActiveRecord::Schema.define(version: 2019_04_06_192841) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "vsphere_root_folder", default: ""
-    t.string "puppet_init_path"
-    t.string "puppet_classes_path"
-    t.string "puppet_nodes_path"
+    t.string "puppet_init_path", default: "/"
+    t.string "puppet_classes_path", default: "/Name"
+    t.string "puppet_nodes_path", default: "/Node"
     t.integer "min_cpu_cores"
     t.integer "max_cpu_cores"
     t.integer "max_ram_size"

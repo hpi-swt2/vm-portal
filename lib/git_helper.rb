@@ -61,12 +61,12 @@ module GitHelper
       @repository_name = AppSetting.instance.git_repository_name
       @repository_branch = AppSetting.instance.git_branch
       @user_name = AppSetting.instance.github_user_name
-      @user_email = AppSetting.instance.github_user_email
+      @user_password = AppSetting.instance.github_user_password
     end
 
     def set_github_credentials
       @git.config('user.name', @user_name)
-      @git.config('user.email', @user_email)
+      @git.config('user.password', @user_password)
     end
 
     def pull

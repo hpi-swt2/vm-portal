@@ -14,7 +14,7 @@ OperatingSystem.create([{ name: 'CentOS 7' }, { name: 'SLES 11 SP3' }, { name: '
 if AppSetting.all.empty?
   AppSetting.create({singleton_guard: 0,
                      github_user_name: 'MyUserName',
-                     github_user_email: 'example@email.com',
+                     github_user_password: 'securePassword',
                      git_repository_name: 'repository',
                      git_repository_url: 'https://github.com/hpi-swt2/vm-portal.git',
                      puppet_init_path: '/',

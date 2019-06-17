@@ -15,7 +15,7 @@ FactoryBot.define do
     git_repository_name { 'repoName' }
     git_branch { 'master' }
     github_user_name { 'userName' }
-    github_user_email { 'user@domain.tld' }
+    github_user_password { 'securePassword' }
     puppet_init_path { '/' }
     puppet_classes_path { '/Name' }
     puppet_nodes_path { '/Node' }

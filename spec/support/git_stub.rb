@@ -35,7 +35,7 @@ def create_git_stub
     git_repository_name: repository_name,
     git_branch: 'master',
     github_user_name: 'test_user_name',
-    github_user_email: 'test@email.com'
+    github_user_password: 'securePassword'
   )
 
   GitStub.new(git_class, path, git, status)
